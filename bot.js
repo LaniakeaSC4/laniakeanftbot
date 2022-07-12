@@ -8,17 +8,18 @@ client.on('ready', () => {
 client.on('ready', () => {
   client.api.applications(client.user.id).guilds('828194078113529856').commands.post({
     data: {
-      name: "Check Rarity",
+      name: "checkrarity",
       description: "hello world command"
       // possible options here e.g. options: [{...}]
     }
   });
+});
 
   client.ws.on('INTERACTION_CREATE', async interaction => {
     const command = interaction.data.name.toLowerCase();
     const args = interaction.data.options;
 
-    if (command === 'Check Rarity') {
+    if (command === 'checkrarity') {
       // here you could do anything. in this sample
       // i reply with an api interaction
       client.api.interactions(interaction.id, interaction.token).callback.post({
@@ -31,6 +32,5 @@ client.on('ready', () => {
       })
     }
   });
-});
 
-client.login(process.env.TOKEN);
+client.login(process.env.BOTTOKEN);
