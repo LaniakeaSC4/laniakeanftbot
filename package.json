@@ -10,8 +10,7 @@
 
   "scripts": {
 
-    "start": "node bot.js", 
-    "register": "node -r dotenv/config register.js"
+    "start": "node bot.js"
 
   },
 
