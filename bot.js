@@ -37,7 +37,7 @@ client.on('ready', () => {
         data: {
          type: 4,
          data: {
-          content: toString(args[0])
+          content: 'NFT Number ' + toString(args[0].value) + 'is rarity: '
         }
        }
      })
