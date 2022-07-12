@@ -8,10 +8,16 @@ client.on('ready', () => {
 client.on('ready', () => {
   client.api.applications(client.user.id).guilds('828194078113529856').commands.post({
     data: {
-      name: "hello",
-      description: "hello world command"
-      // possible options here e.g. options: [{...}]
-    }
+        "name": "Check Rarity",
+        "description": "Check the Rarity of your MonkeyPox NFT",
+        "options": [
+          {
+            "type": 4,
+            "name": "Enter NFT #",
+            "required": true
+          }
+        ]
+    } 
   });
 
 
@@ -19,7 +25,7 @@ client.on('ready', () => {
     const command = interaction.data.name.toLowerCase();
     const args = interaction.data.options;
 
-    if (command === 'hello') {
+    if (command === 'Check Rarity') {
       // here you could do anything. in this sample
       // i reply with an api interaction
       client.api.interactions(interaction.id, interaction.token).callback.post({
