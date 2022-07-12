@@ -6,7 +6,7 @@ client.on('ready', () => {
 });
 
 client.on('ready', () => {
-  client.api.applications(client.user.id).guilds(828194078113529856).commands.post({
+  client.api.applications(client.user.id).guilds('828194078113529856').commands.post({
     data: {
       name: "hello",
       description: "hello world command"
