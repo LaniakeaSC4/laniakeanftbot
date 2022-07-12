@@ -40,7 +40,7 @@ client.on('ready', () => {
        // }
      // })
      
-     await interaction.reply('Pong!');
+     await client.api.interactions(interaction.id, interaction.token).reply('Pong!');
      
     }
   });
