@@ -8,18 +8,11 @@ client.on('ready', () => {
 client.on('ready', () => {
   client.api.applications(client.user.id).guilds('828194078113529856').commands.post({
     data: {
-        "name": "Check Rarity",
-        "description": "Check the Rarity of your MonkeyPox NFT",
-        "options": [
-          {
-            "type": 4,
-            "name": "Enter NFT #",
-            "required": true
-          }
-        ]
-    } 
+      name: "Check Rarity",
+      description: "hello world command"
+      // possible options here e.g. options: [{...}]
+    }
   });
-
 
   client.ws.on('INTERACTION_CREATE', async interaction => {
     const command = interaction.data.name.toLowerCase();
