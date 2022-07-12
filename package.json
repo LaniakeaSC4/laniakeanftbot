@@ -13,15 +13,10 @@
     "start": "node bot.js"
 
   },
-  
-  "engines": {
-      "node": "18.x",
-      "npm": "*"
-  }, 
 
   "dependencies": {
 
-    "discord.js": "12",
+    "discord.js": "^12.3.1", 
 
     "request": "2.81.0"
 
