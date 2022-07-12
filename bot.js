@@ -5,11 +5,6 @@ client.on('ready', () => {
   console.log(`Logged in....`);
 });
 
-await rest.put(
-	Routes.applicationCommands(clientId),
-	{ body: commands },
-); 
-
 const { SlashCommandBuilder } = require('@discordjs/builders');
 
 const data = new SlashCommandBuilder()
