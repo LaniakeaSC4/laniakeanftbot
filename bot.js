@@ -28,7 +28,7 @@ client.on('ready', () => {
     const command = interaction.data.name.toLowerCase();
     const args = interaction.data.options;
     console.log('args is')
-    console.log(args);
+    console.log(args[0]);
 
     if (command === 'checkrarity') {
       // here you could do anything. in this sample
@@ -37,7 +37,7 @@ client.on('ready', () => {
         data: {
          type: 4,
          data: {
-          content: 'NFT Number ' + toString(args.value) + ' is rarity: '
+          content: 'NFT Number ' + toString(args[0].value) + ' is rarity: '
         }
        }
      })
