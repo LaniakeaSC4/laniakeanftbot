@@ -9,7 +9,7 @@ client.on('ready', () => {
   client.api.applications(client.user.id).guilds('828194078113529856').commands.post({
     data: {
       name: "checkrarity",
-      description: "Check Rarity Command"
+      description: "Check Rarity Command", 
       
       "options": [
     {
