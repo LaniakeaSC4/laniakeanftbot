@@ -14,7 +14,7 @@ client.on('ready', () => {
       "options": [
     {
       "type": 4,
-      "name": "MonkeyPox NFT #",
+      "name": "MonkeyPoxNFT#",
       "description": "Enter NFT #",
       "required": true
     }
