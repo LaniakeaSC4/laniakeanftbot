@@ -10,7 +10,16 @@ client.on('ready', () => {
     data: {
       name: "checkrarity",
       description: "Check Rarity Command"
-      // possible options here e.g. options: [{...}]
+      
+      "options": [
+    {
+      "type": 4,
+      "name": "MonkeyPox NFT #",
+      "description": "Enter NFT #",
+      "required": true
+    }
+  ] 
+      
     }
   });
 });
