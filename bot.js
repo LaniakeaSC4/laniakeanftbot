@@ -35,7 +35,7 @@ client.on('ready', () => {
         data: {
          type: 4,
          data: {
-          content: string(args[0])
+          content: toString(args[0])
         }
        }
      })
