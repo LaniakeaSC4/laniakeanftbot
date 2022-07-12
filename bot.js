@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const client = new Discord.Client({ intents: allIntents });
+const client = new Discord.Client({ allIntents });
 
 client.on('ready', () => {
   console.log(`Logged in....`);
