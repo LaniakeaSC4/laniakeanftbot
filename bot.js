@@ -27,8 +27,8 @@ client.on('ready', () => {
   client.ws.on('INTERACTION_CREATE', async interaction => {
     const command = interaction.data.name.toLowerCase();
     const args = interaction.data.options;
-    console.log('args is')
-    console.log(args[0]);
+    console.log('args value is')
+    console.log(args[0].value);
 
     if (command === 'checkrarity') {
       // here you could do anything. in this sample
@@ -37,7 +37,7 @@ client.on('ready', () => {
         data: {
          type: 4,
          data: {
-          content: 'NFT Number ' + toString(args[0].value) + ' is rarity: '
+          content: 'NFT Number ' + toString(args[0] .value) + ' is rarity: '
         }
        }
      })
