@@ -22,7 +22,7 @@ client.on('ready', () => {
     if (command === 'checkrarity') {
       // here you could do anything. in this sample
       // i reply with an api interaction
-      client.api.interactions(interaction.id, interaction.token).callback.post({
+      client.api.interactions(interaction.id, interaction.bottoken).callback.post({
         data: {
           type: 4,
           data: {
