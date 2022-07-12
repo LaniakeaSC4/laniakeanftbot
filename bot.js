@@ -31,16 +31,14 @@ client.on('ready', () => {
     if (command === 'checkrarity') {
       // here you could do anything. in this sample
       // i reply with an api interaction
-     // client.api.interactions(interaction.id, //interaction.token).callback.post({
-        //data: {
-         // type: 4,
-         // data: {
-         //   content: "hello world!!!"
-        //  }
-       // }
-     // })
-     
-     await client.api.interactions(interaction.id, interaction.token).reply('Pong!');
+     client.api.interactions(interaction.id, interaction.token).callback.post({
+        data: {
+         type: 4,
+         data: {
+          content: args[0]
+        }
+       }
+     })
      
     }
   });
