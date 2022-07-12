@@ -9,7 +9,7 @@ client.on('ready', () => {
   client.api.applications(client.user.id).guilds('828194078113529856').commands.post({
     data: {
       name: "checkrarity",
-      description: "hello world command"
+      description: "Check Rarity Command"
       // possible options here e.g. options: [{...}]
     }
   });
@@ -22,7 +22,7 @@ client.on('ready', () => {
     if (command === 'checkrarity') {
       // here you could do anything. in this sample
       // i reply with an api interaction
-      client.api.interactions(interaction.id, interaction.bottoken).callback.post({
+      client.api.interactions(interaction.id, interaction.token).callback.post({
         data: {
           type: 4,
           data: {
