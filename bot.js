@@ -27,12 +27,13 @@ client.on('ready', () => {
   client.ws.on('INTERACTION_CREATE', async interaction => {
     const command = interaction.data.name.toLowerCase();
     const args = interaction.data.options;
-    console.log('interaction channel ID is')
-    console.log(interaction.channel_id);
 
     if (command === 'checkrarity') {
-      // here you could do anything. in this sample
-      // i reply with an api interaction
+      
+    console.log('args[0] is ' + args[0])
+    const nftnum = 'nft' + args[0]
+    console.log('nftnum is ' + nftnum) 
+      
       client.api.interactions(interaction.id, interaction.token).callback.post({data: {
         type: 4,
         data: {
@@ -72,8 +73,7 @@ client.on('ready', () => {
                   "url": "https://upload.wikimedia.org/wikipedia/commons/5/5a/A_picture_from_China_every_day_108.jpg"
                 },
                 "footer": {
-                  "text": "Woah! So cool! :smirk:",
-                  "icon_url": "https://i.imgur.com/fKL31aD.jpg"
+                  "text": "Rarity data provided by"
                 }
                 }
               ]
