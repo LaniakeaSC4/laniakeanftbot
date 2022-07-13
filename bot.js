@@ -30,8 +30,8 @@ client.on('ready', () => {
 
     if (command === 'checkrarity') {
       
-    console.log('args[0] is ' + args[0].name);
-    const nftnum = 'nft' + args[0].name;
+    console.log('args[0] is ' + args[0].value);
+    const nftnum = 'nft' + args[0].value;
     console.log('nftnum is ' + nftnum); 
       
       client.api.interactions(interaction.id, interaction.token).callback.post({data: {
