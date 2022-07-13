@@ -33,12 +33,12 @@ client.on('ready', () => {
     //set nftnum equal to the command argument value. This is a key in the data object
     const nftnum = 'nft' + args[0].value;
     
-    const mythicstart = 0;
-    const mythicend = Math.floor(nftdata['collection1'].nftcount*pmythic);
+    var mythicstart = 0;
+    var mythicend = Math.floor(nftdata['collection1'].nftcount*pmythic);
     
-    const legendarystart = Math.ceil(nftdata['collection1'].nftcount*pmythic);
+    var legendarystart = Math.ceil(nftdata['collection1'].nftcount*pmythic);
     if (legendarystart === mythicend) {legendarystart = legendarystart + 1} 
-    const legendaryend = Math.floor(nftdata['collection1'].nftcount*plegendary);
+    var legendaryend = Math.floor(nftdata['collection1'].nftcount*plegendary);
     
     console.log('mythic ' + mythicstart + ' - ' + mythicend)
     console.log('legendary ' + legendarystart + ' - ' + legendaryend)
