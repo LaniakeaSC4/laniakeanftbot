@@ -66,7 +66,7 @@ const pepic = 0.2;
 const prare = 0.3;
 const puncommon = 0.5;
 
-const mythicstart = nftdata['collection1'].nftcount
+//const mythicstart = nftdata['collection1'].nftcount
 
 var nftdata = {
   
