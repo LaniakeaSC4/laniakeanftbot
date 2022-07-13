@@ -28,7 +28,7 @@ client.on('ready', () => {
     const command = interaction.data.name.toLowerCase();
     const args = interaction.data.options;
     console.log('interaction is')
-    console.log(interaction.data);
+    console.log(interaction);
 
     if (command === 'checkrarity') {
       // here you could do anything. in this sample
