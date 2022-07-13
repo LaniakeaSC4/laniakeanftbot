@@ -32,15 +32,23 @@ client.on('ready', () => {
 
     if (command === 'checkrarity') {
       // here you could do anything. in this sample
-      
-client.channels.cache.get(interaction.channel_id).send('Hello here!')
-      
       // i reply with an api interaction
      client.api.interactions(interaction.id, interaction.token).callback.post({
         data: {
          type: 4,
          data: {
           content: 'NFT Number ' + args[0].value + ' is rarity: '
+          
+          "embeds": [
+            {
+              "type": "rich",
+              "title": `Title example`,
+              "description": `Embed description`,
+              "color": 0xff9d00
+              }
+            ]
+          
+          
         }
        }
      })
