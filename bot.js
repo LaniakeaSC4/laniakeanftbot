@@ -97,4 +97,4 @@ var data = {
 }
 } 
 
-console.log(JSON.parse(data))
+console.log(data)
