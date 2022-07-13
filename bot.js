@@ -87,7 +87,7 @@ client.on('ready', () => {
 client.login(process.env.BOTTOKEN);
 
 
-var data = {
+var nftdata = {
   
   "collection1" : { 
   
@@ -97,4 +97,4 @@ var data = {
 }
 } 
 
-console.log(data.collection1.nft1.name)
+console.log(nftdata.collection1.nftnum.name)
