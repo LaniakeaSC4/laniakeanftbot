@@ -41,31 +41,14 @@ client.on('ready', () => {
         data: {
             embeds: [
               {
-                "author": {
-                  "name": "MonkeyPoxNFT Rarity Bot"
-                },
-                "title": "Title",
-                "url": "https://google.com/",
+                "title": nftdata['collection1'][nftnum].name,
                 "description": "Text message. You can use Markdown here. *Italic* **bold** __underline__ ~~strikeout~~ [hyperlink](https://google.com) `code`",
                 "color": 15258703,
                 "fields": [
                   {
-                    "name": "Text",
-                    "value": "More text",
+                    "name": "Rarity",
+                    "value": nftdata['collection1'][nftnum].rarity,
                     "inline": true
-                    },
-                  {
-                    "name": "Even more text",
-                    "value": "Yup",
-                    "inline": true
-                    },
-                  {
-                    "name": "Use `\"inline\": true` parameter, if you want to display fields in the same line.",
-                    "value": "okay..."
-                    },
-                  {
-                    "name": "Thanks!",
-                    "value": "You're welcome :wink:"
                     }
                   ],
                 "thumbnail": {
