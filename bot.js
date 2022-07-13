@@ -86,12 +86,15 @@ client.on('ready', () => {
 
 client.login(process.env.BOTTOKEN);
 
-console.log(JSON.parse(data))
 
-var data = {"collection1" : { 
+var data = {
+  
+  "collection1" : { 
   
   "1" : { name : "MonkeyPoxNFT #1", rarity : "11"}, 
   "2" : { name : "MonkeyPoxNFT #2", rarity : "22"}
   
 }
 } 
+
+console.log(JSON.parse(data))
