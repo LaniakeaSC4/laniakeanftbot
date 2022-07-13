@@ -16,7 +16,12 @@ client.on('ready', () => {
       "type": 4,
       "name": "nftnumber",
       "description": "Enter NFT #",
-      );
+      "required": true
+    }
+  ] 
+      
+    }
+  });
 });
 
   client.ws.on('INTERACTION_CREATE', async interaction => {
