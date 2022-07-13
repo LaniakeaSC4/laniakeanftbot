@@ -30,11 +30,8 @@ client.on('ready', () => {
 
     if (command === 'checkrarity') {
       
-    console.log('args[0] is ' + args[0].value);
+    //set nftnum equal to the command argument value. This is a key in the data object
     const nftnum = 'nft' + args[0].value;
-    console.log('nftnum is ' + nftnum); 
-      
-    console.log(nftdata['collection1'][nftnum].name) 
       
       client.api.interactions(interaction.id, interaction.token).callback.post({data: {
         type: 4,
@@ -47,16 +44,10 @@ client.on('ready', () => {
                 "fields": [
                   {
                     "name": "Rarity",
-                    "value": nftdata['collection1'][nftnum].rarity,
+                    "value": nftdata['collection1'][nftnum].rarity + '/' + nftdata[nftcount].value,
                     "inline": true
                     }
                   ],
-                "thumbnail": {
-                  "url": "https://upload.wikimedia.org/wikipedia/commons/3/38/4-Nature-Wallpapers-2014-1_ukaavUI.jpg"
-                },
-                "image": {
-                  "url": "https://upload.wikimedia.org/wikipedia/commons/5/5a/A_picture_from_China_every_day_108.jpg"
-                },
                 "footer": {
                   "text": "Rarity data provided by"
                 }
@@ -64,8 +55,6 @@ client.on('ready', () => {
               ]
         }
     }})
-     
-     
    }
   });
 
@@ -75,6 +64,8 @@ client.login(process.env.BOTTOKEN);
 var nftdata = {
   
   "collection1" : { 
+  
+  "nftcount" : 2500,
   
   "nft1" : { name : "MonkeyPoxNFT #1", rarity : "11"}, 
   "nft2" : { name : "MonkeyPoxNFT #2", rarity : "22"}
