@@ -34,9 +34,13 @@ client.on('ready', () => {
     const nftnum = 'nft' + args[0].value;
     
     const mythicstart = 0;
-    const mythicend = Math.floor(nftdata['collection1'].nftcount*pmythic)
+    const mythicend = Math.floor(nftdata['collection1'].nftcount*pmythic);
     
-    console.log(mythicstart + ' - ' + mythicend)
+    const legendarystart = Math.ceil(nftdata['collection1'].nftcount*pmythic);
+    const legendaryend = Math.floor(nftdata['collection1'].nftcount*plegendary);
+    
+    console.log('mythic ' + mythicstart + ' - ' + mythicend)
+    console.log('legendary ' + legendarystart + ' - ' + legendaryend)
       
       client.api.interactions(interaction.id, interaction.token).callback.post({data: {
         type: 4,
