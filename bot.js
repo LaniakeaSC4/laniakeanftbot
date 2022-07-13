@@ -33,14 +33,16 @@ client.on('ready', () => {
     //set nftnum equal to the command argument value. This is a key in the data object
     const nftnum = 'nft' + args[0].value;
     
+    //mythic range
     var mythicstart = 0;
     var mythicend = Math.floor(nftdata['collection1'].nftcount*pmythic);
     
+    //legendary range
     var legendarystart = Math.ceil(nftdata['collection1'].nftcount*pmythic);
     if (legendarystart === mythicend) {legendarystart = legendarystart + 1} 
     var legendaryend = Math.floor(nftdata['collection1'].nftcount*plegendary);
     
-    
+    //epic range
     var epicstart = Math.ceil(nftdata['collection1'].nftcount*plegendary);
     if (epicstart === legendaryend) {epicstart = epicstart + 1} 
     var epicend = Math.floor(nftdata['collection1'].nftcount*pepic);
@@ -48,6 +50,11 @@ client.on('ready', () => {
     console.log('mythic ' + mythicstart + ' - ' + mythicend)
     console.log('legendary ' + legendarystart + ' - ' + legendaryend)
     console.log('epic ' + epicstart + ' - ' + epicend)
+      
+      
+      var raritydescription = "";
+      
+      if (nftdata['collection1'][nftnum].rarity >= mythicstart && nftdata['collection1'][nftnum].rarity <= mythicend) {console.log('mythic!')} 
       
       client.api.interactions(interaction.id, interaction.token).callback.post({data: {
         type: 4,
@@ -89,7 +96,7 @@ var nftdata = {
   "nftcount" : 2500,
   
   "nft1" : { name : "MonkeyPoxNFT #1", rarity : "11"}, 
-  "nft2" : { name : "MonkeyPoxNFT #2", rarity : "22"}
+  "nft2" : { name : "MonkeyPoxNFT #2", rarity : "222"}
   
 }
 } 
