@@ -49,7 +49,7 @@ client.on('ready', () => {
 //         }
  //     })
      
-    await interaction.channel.send(
+    await interaction.reply(
        
        {
            "content": "Congrats on sending your command!",
