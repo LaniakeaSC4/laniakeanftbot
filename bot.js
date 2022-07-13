@@ -91,10 +91,10 @@ var data = {
   
   "collection1" : { 
   
-  "1" : { name : "MonkeyPoxNFT #1", rarity : "11"}, 
-  "2" : { name : "MonkeyPoxNFT #2", rarity : "22"}
+  "nft1" : { name : "MonkeyPoxNFT #1", rarity : "11"}, 
+  "nft2" : { name : "MonkeyPoxNFT #2", rarity : "22"}
   
 }
 } 
 
-console.log(data.collection1.1.name)
+console.log(data.collection1.nft1.name)
