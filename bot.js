@@ -32,6 +32,11 @@ client.on('ready', () => {
       
     //set nftnum equal to the command argument value. This is a key in the data object
     const nftnum = 'nft' + args[0].value;
+    
+    const mythicstart = 0;
+    const mythicend = Math.floor(nftdata['collection1'].nftcount*pmythic)
+    
+    console.log(mythicstart + ' - ' + mythicend)
       
       client.api.interactions(interaction.id, interaction.token).callback.post({data: {
         type: 4,
@@ -65,8 +70,6 @@ const plegendary = 0.1;
 const pepic = 0.2;
 const prare = 0.3;
 const puncommon = 0.5;
-
-//const mythicstart = nftdata['collection1'].nftcount
 
 var nftdata = {
   
