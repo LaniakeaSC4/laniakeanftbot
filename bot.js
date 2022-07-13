@@ -34,6 +34,8 @@ client.on('ready', () => {
     const nftnum = 'nft' + args[0].value;
     console.log('nftnum is ' + nftnum); 
       
+    console.log(nftdata[collection1][nftnum].name) 
+      
       client.api.interactions(interaction.id, interaction.token).callback.post({data: {
         type: 4,
         data: {
@@ -96,5 +98,3 @@ var nftdata = {
   
 }
 } 
-
-console.log(nftdata[collection1][nftnum].name)
