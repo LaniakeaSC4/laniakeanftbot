@@ -97,4 +97,4 @@ var data = {
 }
 } 
 
-console.log(data collection1.1)
+console.log(data.collection1.1.name)
