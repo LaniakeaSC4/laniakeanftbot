@@ -40,8 +40,14 @@ client.on('ready', () => {
     if (legendarystart === mythicend) {legendarystart = legendarystart + 1} 
     var legendaryend = Math.floor(nftdata['collection1'].nftcount*plegendary);
     
+    
+    var epicstart = Math.ceil(nftdata['collection1'].nftcount*plegendary);
+    if (epicstart === legendaryend) {epicstart = epicstart + 1} 
+    var epicend = Math.floor(nftdata['collection1'].nftcount*pepic);
+    
     console.log('mythic ' + mythicstart + ' - ' + mythicend)
     console.log('legendary ' + legendarystart + ' - ' + legendaryend)
+    console.log('epic ' + epicstart + ' - ' + epicend)
       
       client.api.interactions(interaction.id, interaction.token).callback.post({data: {
         type: 4,
