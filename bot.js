@@ -54,7 +54,7 @@ client.on('ready', () => {
       
       var raritydescription = "";
       
-      if (nftdata['collection1'][nftnum].rarity >= mythicstart && nftdata['collection1'][nftnum].rarity <= mythicend) {console.log('mythic!')} 
+      if (nftdata['collection1'][nftnum].rarity >= mythicstart && nftdata['collection1'][nftnum].rarity <= mythicend) {console.log('mythic!')} else if (nftdata['collection1'][nftnum].rarity >= legendarystart && nftdata['collection1'][nftnum].rarity <= legendaryend) {console.log('legendary!')} else {console.log('not ranked')}
       
       client.api.interactions(interaction.id, interaction.token).callback.post({data: {
         type: 4,
@@ -96,7 +96,9 @@ var nftdata = {
   "nftcount" : 2500,
   
   "nft1" : { name : "MonkeyPoxNFT #1", rarity : "11"}, 
-  "nft2" : { name : "MonkeyPoxNFT #2", rarity : "222"}
+  "nft2" : { name : "MonkeyPoxNFT #2", rarity : "222"}, 
+  
+  "nft3" : { name : "MonkeyPoxNFT #3", rarity : "251"} 
   
 }
 } 
