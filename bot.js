@@ -44,7 +44,7 @@ client.on('ready', () => {
                 "fields": [
                   {
                     "name": "Rarity",
-                    "value": nftdata['collection1'][nftnum].rarity + '/' + nftdata[nftcount].value,
+                    "value": nftdata['collection1'][nftnum].rarity + '/' + nftdata['nftcount'].value,
                     "inline": true
                     }
                   ],
