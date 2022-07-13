@@ -36,9 +36,15 @@ client.on('ready', () => {
      client.api.interactions(interaction.id, interaction.token).callback.post({
          "type": 4,
          "data": {
-           "tts": False,
            "content": "Congrats on sending your command!",
-           "embeds": [],
+           "embeds": [
+             {
+               "type": "rich",
+               "title": `Title example`,
+               "description": `Embed description`,
+               "color": 0xff9d00
+               }
+             ],
            "allowed_mentions": { "parse": [] }
          }
        })
@@ -47,5 +53,23 @@ client.on('ready', () => {
   });
 
 client.login(process.env.BOTTOKEN);
+
+
+
+const lib = require('lib')({ token: process.env.STDLIB_SECRET_TOKEN });
+
+await lib.discord.channels['@0.3.0'].messages.create({
+  "channel_id": `${context.params.event.channel_id}`,
+  "content": "",
+  "tts": false,
+  "embeds": [
+    {
+      "type": "rich",
+      "title": `Title example`,
+      "description": `Embed description`,
+      "color": 0xff9d00
+    }
+  ]
+});
 
 
