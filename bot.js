@@ -32,6 +32,9 @@ client.on('ready', () => {
 
     if (command === 'checkrarity') {
       // here you could do anything. in this sample
+      
+client.channels.cache.get(interaction.channel_id).send('Hello here!')
+      
       // i reply with an api interaction
      client.api.interactions(interaction.id, interaction.token).callback.post({
         data: {
