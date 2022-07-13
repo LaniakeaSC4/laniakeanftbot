@@ -37,6 +37,7 @@ client.on('ready', () => {
     const mythicend = Math.floor(nftdata['collection1'].nftcount*pmythic);
     
     const legendarystart = Math.ceil(nftdata['collection1'].nftcount*pmythic);
+    if (legendarystart === mythicend) {legendarystart = legendarystart + 1} 
     const legendaryend = Math.floor(nftdata['collection1'].nftcount*plegendary);
     
     console.log('mythic ' + mythicstart + ' - ' + mythicend)
