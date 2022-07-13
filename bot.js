@@ -97,4 +97,4 @@ var nftdata = {
 }
 } 
 
-console.log(nftdata.collection1[nftnum].name)
+console.log(nftdata[collection1][nftnum].name)
