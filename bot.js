@@ -33,23 +33,40 @@ client.on('ready', () => {
     if (command === 'checkrarity') {
       // here you could do anything. in this sample
       // i reply with an api interaction
-     client.api.interactions(interaction.id, interaction.token).callback.post({
-         "type": 4,
-         "data": {
-           "content": "Congrats on sending your command!",
-           "embeds": [
-             {
-               "type": "rich",
-               "title": `Title example`,
-               "description": `Embed description`,
-               "color": 0xff9d00
-               }
-             ],
-           "allowed_mentions": { "parse": [] }
-         }
-       })
+//     client.api.interactions(interaction.id, interaction.token).callback.post({
+  //       "type": 4,
+//         "data": {
+//           "content": "Congrats on sending your command!",
+ //          "embeds": [
+//             {
+//               "type": "rich",
+//               "title": `Title example`,
+ //              "description": `Embed description`,
+ //              "color": 0xff9d00
+//               }
+//             ],
+//           "allowed_mentions": { "parse": [] }
+//         }
+ //     })
      
-    }
+     interaction.reply(
+       
+       {
+           "content": "Congrats on sending your command!",
+          "embeds": [
+            {
+             "type": "rich",             
+             "title": `Title example`,
+             "description": `Embed description`,
+               "color": 0xff9d00
+              }
+            ],
+         }
+       
+       )
+     
+     
+   }
   });
 
 client.login(process.env.BOTTOKEN);
