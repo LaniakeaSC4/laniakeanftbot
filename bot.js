@@ -44,7 +44,7 @@ client.on('ready', () => {
                 "fields": [
                   {
                     "name": "Rarity",
-                    "value": nftdata['collection1'][nftnum].rarity + '/' + nftdata['nftcount'].value,
+                    "value": nftdata['collection1'][nftnum].rarity + '/' + nftdata['collection1']['nftcount'],
                     "inline": true
                     }
                   ],
@@ -60,6 +60,13 @@ client.on('ready', () => {
 
 client.login(process.env.BOTTOKEN);
 
+const pmythic = 0.05;
+const plegendary = 0.1;
+const pepic = 0.2;
+const prare = 0.3;
+const puncommon = 0.5;
+
+const mythicstart = nftdata['collection1']['nftcount']
 
 var nftdata = {
   
