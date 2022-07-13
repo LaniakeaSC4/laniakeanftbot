@@ -39,9 +39,7 @@ client.on('ready', () => {
             embeds: [
               {
                 "author": {
-                  "name": "Birdie♫",
-                  "url": "https://www.reddit.com/r/cats/",
-                  "icon_url": "https://i.imgur.com/R66g1Pe.jpg"
+                  "name": "MonkeyPoxNFT Rarity Bot"
                 },
                 "title": "Title",
                 "url": "https://google.com/",
@@ -88,4 +86,12 @@ client.on('ready', () => {
 
 client.login(process.env.BOTTOKEN);
 
+console.log(JSON.parse(data))
 
+data = {"collection1" : { 
+  
+  "1" : { name : "MonkeyPoxNFT #1", rarity : "11"}, 
+  "2" : { name : "MonkeyPoxNFT #2", rarity : "22"}
+  
+}
+} 
