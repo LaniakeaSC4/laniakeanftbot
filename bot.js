@@ -27,8 +27,8 @@ client.on('ready', () => {
   client.ws.on('INTERACTION_CREATE', async interaction => {
     const command = interaction.data.name.toLowerCase();
     const args = interaction.data.options;
-    console.log('args value is')
-    console.log(args[0].value);
+    console.log('interaction is')
+    console.log(interaction.data);
 
     if (command === 'checkrarity') {
       // here you could do anything. in this sample
