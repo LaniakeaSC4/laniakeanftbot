@@ -16,12 +16,7 @@ client.on('ready', () => {
       "type": 4,
       "name": "nftnumber",
       "description": "Enter NFT #",
-      "required": true
-    }
-  ] 
-      
-    }
-  });
+      );
 });
 
   client.ws.on('INTERACTION_CREATE', async interaction => {
@@ -34,26 +29,18 @@ client.on('ready', () => {
       // here you could do anything. in this sample
       // i reply with an api interaction
      client.api.interactions(interaction.id, interaction.token).callback.post({
-        data: {
-         type: 4,
-         data: {
-          content: 'NFT Number ' + args[0].value + ' is rarity: '
-          
-          "embeds": [
-            {
-              "type": "rich",
-              "title": `Title example`,
-              "description": `Embed description`,
-              "color": 0xff9d00
-              }
-            ]
-          
-          
-        }
-       }
-     })
+         "type": 4,
+         "data": {
+           "tts": False,
+           "content": "Congrats on sending your command!",
+           "embeds": [],
+           "allowed_mentions": { "parse": [] }
+         }
+       })
      
     }
   });
 
 client.login(process.env.BOTTOKEN);
+
+
