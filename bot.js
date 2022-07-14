@@ -33,6 +33,12 @@ client.on('ready', () => {
     //set nftnum equal to the command argument value. This is a key in the data object
     const nftnum = 'nft' + args[0].value;
     
+const pmythic = 0.05;
+const plegendary = 0.1;
+const pepic = 0.2;
+const prare = 0.3;
+const puncommon = 0.5; 
+    
     //mythic range
     var mythicstart = 0;
     var mythicend = Math.floor(nftdata['collection1'].nftcount*pmythic);
@@ -100,17 +106,11 @@ client.on('ready', () => {
 
 client.login(process.env.BOTTOKEN);
 
-const pmythic = 0.05;
-const plegendary = 0.1;
-const pepic = 0.2;
-const prare = 0.3;
-const puncommon = 0.5;
-
 var nftdata = {
   
   "collection1" : { 
   
-  "nftcount" : 2500,
+  "nftcount" : 795,
   
   "nft1" : { name : "MonkeyPoxNFT #1", rarity : "11"}, 
   "nft2" : { name : "MonkeyPoxNFT #2", rarity : "222"}, 
