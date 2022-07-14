@@ -8,14 +8,14 @@ client.on('ready', () => {
 client.on('ready', () => {
   client.api.applications(client.user.id).guilds('828194078113529856').commands.post({
     data: {
-      name: "checkrarity",
+      name: "rarity",
       description: "Check Rarity Command", 
       
       "options": [
     {
       "type": 4,
       "name": "nftnumber",
-      "description": "Enter NFT #",
+      "description": "Enter MonkeyPoxNFT #",
       "required": true
     }
   ] 
@@ -30,6 +30,7 @@ client.on('ready', () => {
 
     if (command === 'checkrarity') {
       
+      if (args[0].value <= nftdata['collection1'].nftcount) {
     //set nftnum equal to the command argument value. This is a key in the data object
     const nftnum = 'nft' + args[0].value;
     
@@ -99,7 +100,6 @@ const puncommon = 0.5;
         emoji = '<:epic:997263308539318322>'
                embedcolor = 0x9901f6;
       
-      
       }
       
       else if (nftdata['collection1'][nftnum].rarity >= rarestart && nftdata['collection1'][nftnum].rarity <= rareend) {
@@ -148,7 +148,7 @@ const puncommon = 0.5;
                 "fields": [
                   {
                     "name": "Rarity",
-                    "value": emoji + emoji + '| ' + nftdata['collection1'][nftnum].rarity + '/' + nftdata['collection1'].nftcount + ' - ' + raritydescription + ' |'+ emoji + emoji,
+                    "value": emoji + emoji + '|  ' + nftdata['collection1'][nftnum].rarity + ' - ' + raritydescription + '  |'+ emoji + emoji,
                     "inline": true
                     }
                   ],
@@ -163,9 +163,10 @@ const puncommon = 0.5;
                 }
                 }
               ]
-        }
-    }})
-   }
+        }//end data
+    }})//end post()
+    }//end if <= nft count else 
+   }//end if command = rarity
   });
 
 client.login(process.env.BOTTOKEN);
