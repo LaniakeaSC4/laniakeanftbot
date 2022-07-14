@@ -82,7 +82,7 @@ const puncommon = 0.5;
         
         console.log('mythic!')
         raritydescription = 'Mythic'
-        emoji = ':mythic:'
+        emoji = '<:mythic:997191007932268555>'
         
       } 
       
