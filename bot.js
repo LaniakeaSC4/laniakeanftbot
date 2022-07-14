@@ -76,11 +76,13 @@ const puncommon = 0.5;
     console.log('common ' + commonstart + ' - ' + commonend)
       
       var raritydescription = "";
+      var emoji = "";
       
       if (nftdata['collection1'][nftnum].rarity >= mythicstart && nftdata['collection1'][nftnum].rarity <= mythicend) {
         
         console.log('mythic!')
         raritydescription = 'Mythic'
+        emoji = ':mythic:'
         
       } 
       
@@ -137,7 +139,7 @@ const puncommon = 0.5;
                 "fields": [
                   {
                     "name": "Rarity",
-                    "value": nftdata['collection1'][nftnum].rarity + '/' + nftdata['collection1'].nftcount + ' ' + raritydescription,
+                    "value": emoji + ' ' + nftdata['collection1'][nftnum].rarity + '/' + nftdata['collection1'].nftcount + ' ' + raritydescription,
                     "inline": true
                     }
                   ],
