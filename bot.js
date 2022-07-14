@@ -47,10 +47,21 @@ client.on('ready', () => {
     if (epicstart === legendaryend) {epicstart = epicstart + 1} 
     var epicend = Math.floor(nftdata['collection1'].nftcount*pepic);
     
+    //rare range
+      var rarestart = Math.ceil(nftdata['collection1'].nftcount*pepic);
+    if (rarestart === epicend) {rarestart = rarestart + 1} 
+    var rareend = Math.floor(nftdata['collection1'].nftcount*prare);
+    
+    //uncommon range
+    var uncommonstart = Math.ceil(nftdata['collection1'].nftcount*puncommon);
+    if (uncommonstart === rareend) {uncommomstart = uncommonstart + 1} 
+    var uncommonend = Math.floor(nftdata['collection1'].nftcount*puncommon);
+    
     console.log('mythic ' + mythicstart + ' - ' + mythicend)
     console.log('legendary ' + legendarystart + ' - ' + legendaryend)
     console.log('epic ' + epicstart + ' - ' + epicend)
-      
+    console.log('rare ' + rarestart + ' - ' + rareend)
+    console.log('uncommon ' + uncommonstart + ' - ' + uncommonend)
       
       var raritydescription = "";
       
