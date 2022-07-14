@@ -139,7 +139,7 @@ const puncommon = 0.5;
                 "fields": [
                   {
                     "name": "Rarity",
-                    "value": emoji + ' ' + nftdata['collection1'][nftnum].rarity + '/' + nftdata['collection1'].nftcount + ' ' + raritydescription,
+                    "value": emoji + emoji + ' ' + nftdata['collection1'][nftnum].rarity + '/' + nftdata['collection1'].nftcount + ' ' + raritydescription + ' '+ emoji + emoji,
                     "inline": true
                     }
                   ],
