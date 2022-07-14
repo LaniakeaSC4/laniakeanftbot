@@ -84,7 +84,7 @@ const puncommon = 0.5;
         console.log('mythic!')
         raritydescription = 'Mythic'
         emoji = '<:mythic:997191007932268555>'
-        embedcolor = '#ed2839';
+        embedcolor = '3093151';
         
       } 
       
@@ -92,7 +92,7 @@ const puncommon = 0.5;
         
         console.log('legendary!')
         raritydescription = 'Legendary'
-               embedcolor = '#ed2839';
+               embedcolor = '3093151';
         
       } 
       
@@ -100,7 +100,7 @@ const puncommon = 0.5;
       
         console.log('epic!')
         raritydescription = 'Epic'
-               embedcolor = '#ed2839';
+               embedcolor = '3093151';
       
       
       }
@@ -109,7 +109,7 @@ const puncommon = 0.5;
       
         console.log('Rare!')
         raritydescription = 'Rare'
-               embedcolor = '#ed2839';
+               embedcolor = '3093151';
       
       }
       
@@ -117,7 +117,7 @@ const puncommon = 0.5;
       
         console.log('uncommmon!')
         raritydescription = 'Uncommom'
-               embedcolor = '#ed2839';
+               embedcolor = '3093151';
       
       }
       
@@ -125,7 +125,7 @@ const puncommon = 0.5;
       
          console.log('Common')
          raritydescription = 'Common'
-                embedcolor = '#ed2839';
+                embedcolor = '3093151';
       
        }
       
@@ -133,7 +133,7 @@ const puncommon = 0.5;
         
         console.log('not ranked')
         raritydescription = 'not ranked'
-               embedcolor = '#ed2839';
+               embedcolor = '3093151';
         
       }
       
