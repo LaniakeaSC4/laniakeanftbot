@@ -28,7 +28,7 @@ client.on('ready', () => {
     const command = interaction.data.name.toLowerCase();
     const args = interaction.data.options;
 
-    if (command === 'checkrarity') {
+    if (command === 'rarity') {
       
       if (args[0].value <= nftdata['collection1'].nftcount) {
     //set nftnum equal to the command argument value. This is a key in the data object
