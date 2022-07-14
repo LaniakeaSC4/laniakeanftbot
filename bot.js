@@ -80,40 +80,52 @@ const puncommon = 0.5;
       if (nftdata['collection1'][nftnum].rarity >= mythicstart && nftdata['collection1'][nftnum].rarity <= mythicend) {
         
         console.log('mythic!')
+        raritydescription = 'Mythic'
         
       } 
       
       else if (nftdata['collection1'][nftnum].rarity >= legendarystart && nftdata['collection1'][nftnum].rarity <= legendaryend) {
         
         console.log('legendary!')
+        raritydescription = 'Legendary'
         
       } 
       
       else if (nftdata['collection1'][nftnum].rarity >= epicstart && nftdata['collection1'][nftnum].rarity <= epicend) {
       
         console.log('epic!')
+        raritydescription = 'Epic'
+      
       
       }
       
       else if (nftdata['collection1'][nftnum].rarity >= rarestart && nftdata['collection1'][nftnum].rarity <= rareend) {
       
         console.log('Rare!')
+        raritydescription = 'Rare'
       
       }
       
       else if (nftdata['collection1'][nftnum].rarity >= uncommonstart && nftdata['collection1'][nftnum].rarity <= uncommonend) {
       
         console.log('uncommmon!')
+        raritydescription = 'Uncommom'
       
       }
       
        else if (nftdata['collection1'][nftnum].rarity >= commonstart && nftdata['collection1'][nftnum].rarity <= commonend) {
       
          console.log('Common')
+         raritydescription = 'Common'
       
        }
       
-      else {console.log('not ranked')}
+      else {
+        
+        console.log('not ranked')
+        raritydescription = 'not ranked'
+        
+      }
       
       client.api.interactions(interaction.id, interaction.token).callback.post({data: {
         type: 4,
@@ -121,12 +133,11 @@ const puncommon = 0.5;
             embeds: [
               {
                 "title": nftdata['collection1'][nftnum].name,
-                "description": "Text message. You can use Markdown here. *Italic* **bold** __underline__ ~~strikeout~~ [hyperlink](https://google.com) `code`",
                 "color": 15258703,
                 "fields": [
                   {
                     "name": "Rarity",
-                    "value": nftdata['collection1'][nftnum].rarity + '/' + nftdata['collection1'].nftcount,
+                    "value": nftdata['collection1'][nftnum].rarity + '/' + nftdata['collection1'].nftcount + ' ' + raritydescription,
                     "inline": true
                     }
                   ],
