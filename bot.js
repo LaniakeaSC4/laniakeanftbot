@@ -67,18 +67,13 @@ const puncommon = 0.5;
     var commonstart = Math.ceil(nftdata['collection1'].nftcount*puncommon);
     if (commonstart === uncommonend) {commomstart = commonstart + 1} 
     var commonend = nftdata['collection1'].nftcount;
-    
-    console.log('mythic ' + mythicstart + ' - ' + mythicend)
-    console.log('legendary ' + legendarystart + ' - ' + legendaryend)
-    console.log('epic ' + epicstart + ' - ' + epicend)
-    console.log('rare ' + rarestart + ' - ' + rareend)
-    console.log('uncommon ' + uncommonstart + ' - ' + uncommonend)
-    console.log('common ' + commonstart + ' - ' + commonend)
-      
+ 
+ //initialise variables needed to build embed
       var raritydescription = "";
       var emoji = "";
       var embedcolor = "";
       
+      //if this nft is mythic rarity
       if (nftdata['collection1'][nftnum].rarity >= mythicstart && nftdata['collection1'][nftnum].rarity <= mythicend) {
         
         console.log('mythic!')
@@ -92,7 +87,8 @@ const puncommon = 0.5;
         
         console.log('legendary!')
         raritydescription = 'Legendary'
-               embedcolor = 0xed2839;
+        emoji = '<:legendary:997263205653020673>'
+               embedcolor = 0xfe8100;
         
       } 
       
@@ -100,7 +96,8 @@ const puncommon = 0.5;
       
         console.log('epic!')
         raritydescription = 'Epic'
-               embedcolor = 0xed2839;
+        emoji = '<:epic:997263308539318322>'
+               embedcolor = 0x9901f6;
       
       
       }
@@ -109,7 +106,8 @@ const puncommon = 0.5;
       
         console.log('Rare!')
         raritydescription = 'Rare'
-               embedcolor = 0xed2839;
+        emoji = '<:rare:997263425891729418>'
+               embedcolor = 0x19aaeb;
       
       }
       
@@ -117,7 +115,8 @@ const puncommon = 0.5;
       
         console.log('uncommmon!')
         raritydescription = 'Uncommom'
-               embedcolor = 0xed2839;
+        emoji = '<:uncommon:997263503649939576>'
+               embedcolor = 0x20d48a;
       
       }
       
@@ -125,7 +124,8 @@ const puncommon = 0.5;
       
          console.log('Common')
          raritydescription = 'Common'
-                embedcolor = 0xed2839;
+         emoji = '<:common:997263606729167040>'
+                embedcolor = 0x939394;
       
        }
       
@@ -133,7 +133,8 @@ const puncommon = 0.5;
         
         console.log('not ranked')
         raritydescription = 'not ranked'
-               embedcolor = 0xed2839;
+        emoji = '<:common:997263606729167040>'
+               embedcolor = 0x939394;
         
       }
       
@@ -147,7 +148,7 @@ const puncommon = 0.5;
                 "fields": [
                   {
                     "name": "Rarity",
-                    "value": emoji + emoji + ' ' + nftdata['collection1'][nftnum].rarity + '/' + nftdata['collection1'].nftcount + ' - ' + raritydescription + ' '+ emoji + emoji,
+                    "value": emoji + emoji + '| ' + nftdata['collection1'][nftnum].rarity + '/' + nftdata['collection1'].nftcount + ' - ' + raritydescription + ' |'+ emoji + emoji,
                     "inline": true
                     }
                   ],
@@ -175,10 +176,16 @@ var nftdata = {
   
   "nftcount" : 2500,
   
-  "nft1" : { name : "MonkeyPoxNFT #1", rarity : "11"}, 
-  "nft2" : { name : "MonkeyPoxNFT #2", rarity : "222"}, 
+  "nft1" : { name : "MonkeyPoxNFT #1", rarity : "1"}, 
+  "nft2" : { name : "MonkeyPoxNFT #2", rarity : "50"}, 
   
-  "nft3" : { name : "MonkeyPoxNFT #3", rarity : "1560"} 
+  "nft3" : { name : "MonkeyPoxNFT #3", rarity : "130"}, 
+  
+    "nft4" : { name : "MonkeyPoxNFT #4", rarity : "300"}, 
+    
+      "nft5" : { name : "MonkeyPoxNFT #5", rarity : "900"}, 
+      
+        "nft6" : { name : "MonkeyPoxNFT #6", rarity : "1900"}
   
 }
 } 
