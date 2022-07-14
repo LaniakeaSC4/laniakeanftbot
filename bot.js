@@ -60,7 +60,7 @@ client.on('ready', () => {
    //common range
     var commonstart = Math.ceil(nftdata['collection1'].nftcount*puncommon);
     if (commonstart === uncommonend) {commomstart = commonstart + 1} 
-    var uncommonend = nftdata['collection1'].nftcount;
+    var commonend = nftdata['collection1'].nftcount;
     
     console.log('mythic ' + mythicstart + ' - ' + mythicend)
     console.log('legendary ' + legendarystart + ' - ' + legendaryend)
