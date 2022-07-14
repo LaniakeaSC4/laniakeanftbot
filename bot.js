@@ -84,7 +84,7 @@ const puncommon = 0.5;
         console.log('mythic!')
         raritydescription = 'Mythic'
         emoji = '<:mythic:997191007932268555>'
-        embedcolor = '3093151';
+        embedcolor = '0xed2839';
         
       } 
       
@@ -92,7 +92,7 @@ const puncommon = 0.5;
         
         console.log('legendary!')
         raritydescription = 'Legendary'
-               embedcolor = '3093151';
+               embedcolor = '0xed2839';
         
       } 
       
@@ -100,7 +100,7 @@ const puncommon = 0.5;
       
         console.log('epic!')
         raritydescription = 'Epic'
-               embedcolor = '3093151';
+               embedcolor = '0xed2839';
       
       
       }
@@ -109,7 +109,7 @@ const puncommon = 0.5;
       
         console.log('Rare!')
         raritydescription = 'Rare'
-               embedcolor = '3093151';
+               embedcolor = '0xed2839';
       
       }
       
@@ -117,7 +117,7 @@ const puncommon = 0.5;
       
         console.log('uncommmon!')
         raritydescription = 'Uncommom'
-               embedcolor = '3093151';
+               embedcolor = '0xed2839';
       
       }
       
@@ -125,7 +125,7 @@ const puncommon = 0.5;
       
          console.log('Common')
          raritydescription = 'Common'
-                embedcolor = '3093151';
+                embedcolor = '0xed2839';
       
        }
       
@@ -133,7 +133,7 @@ const puncommon = 0.5;
         
         console.log('not ranked')
         raritydescription = 'not ranked'
-               embedcolor = '3093151';
+               embedcolor = '0xed2839';
         
       }
       
@@ -147,7 +147,7 @@ const puncommon = 0.5;
                 "fields": [
                   {
                     "name": "Rarity",
-                    "value": emoji + emoji + ' ' + nftdata['collection1'][nftnum].rarity + '/' + nftdata['collection1'].nftcount + ' ' + raritydescription + ' '+ emoji + emoji,
+                    "value": emoji + emoji + ' ' + nftdata['collection1'][nftnum].rarity + '/' + nftdata['collection1'].nftcount + ' - ' + raritydescription + ' '+ emoji + emoji,
                     "inline": true
                     }
                   ],
