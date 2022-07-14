@@ -141,6 +141,12 @@ const puncommon = 0.5;
                     "inline": true
                     }
                   ],
+                      "image": {
+        "url": `https://igvzgsmvdzfq4nhxlmbegcppryqucc6ar3amxhg6b4r5ndm6.arweave.net/QauTSZUeSw4091sCQwnvjiFBC8COwMuc3g8j1_o2_eI?ext=png`,
+        "height": 100,
+        "width": 100
+      },
+                
                 "footer": {
                   "text": "Rarity data provided by"
                 }
