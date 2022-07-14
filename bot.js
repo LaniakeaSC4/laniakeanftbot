@@ -38,7 +38,7 @@ const plegendary = 0.1;
 const pepic = 0.2;
 const prare = 0.3;
 const puncommon = 0.5; 
-    
+
     //mythic range
     var mythicstart = 0;
     var mythicend = Math.floor(nftdata['collection1'].nftcount*pmythic);
@@ -77,7 +77,43 @@ const puncommon = 0.5;
       
       var raritydescription = "";
       
-      if (nftdata['collection1'][nftnum].rarity >= mythicstart && nftdata['collection1'][nftnum].rarity <= mythicend) {console.log('mythic!')} else if (nftdata['collection1'][nftnum].rarity >= legendarystart && nftdata['collection1'][nftnum].rarity <= legendaryend) {console.log('legendary!')} else {console.log('not ranked')}
+      if (nftdata['collection1'][nftnum].rarity >= mythicstart && nftdata['collection1'][nftnum].rarity <= mythicend) {
+        
+        console.log('mythic!')
+        
+      } 
+      
+      else if (nftdata['collection1'][nftnum].rarity >= legendarystart && nftdata['collection1'][nftnum].rarity <= legendaryend) {
+        
+        console.log('legendary!')
+        
+      } 
+      
+      else if (nftdata['collection1'][nftnum].rarity >= epicstart && nftdata['collection1'][nftnum].rarity <= epicend) {
+      
+        console.log('epic!')
+      
+      }
+      
+      else if (nftdata['collection1'][nftnum].rarity >= rarestart && nftdata['collection1'][nftnum].rarity <= rareend) {
+      
+        console.log('Rare!')
+      
+      }
+      
+      else if (nftdata['collection1'][nftnum].rarity >= uncommonstart && nftdata['collection1'][nftnum].rarity <= uncommonend) {
+      
+        console.log('uncommmon!')
+      
+      }
+      
+       else if (nftdata['collection1'][nftnum].rarity >= commonstart && nftdata['collection1'][nftnum].rarity <= commonend) {
+      
+         console.log('Common')
+      
+       }
+      
+      else {console.log('not ranked')}
       
       client.api.interactions(interaction.id, interaction.token).callback.post({data: {
         type: 4,
@@ -110,12 +146,12 @@ var nftdata = {
   
   "collection1" : { 
   
-  "nftcount" : 795,
+  "nftcount" : 2500,
   
   "nft1" : { name : "MonkeyPoxNFT #1", rarity : "11"}, 
   "nft2" : { name : "MonkeyPoxNFT #2", rarity : "222"}, 
   
-  "nft3" : { name : "MonkeyPoxNFT #3", rarity : "251"} 
+  "nft3" : { name : "MonkeyPoxNFT #3", rarity : "1560"} 
   
 }
 } 
