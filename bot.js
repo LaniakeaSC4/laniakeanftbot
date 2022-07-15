@@ -169,6 +169,24 @@ const puncommon = 0.6;
    }//end if command = rarity
   });
 
+
+
+
+client.on("messageCreate", (message) => {
+  
+let embed = message.embeds[0]
+
+console.log(message.author)
+
+if (embed != undefined && message.author == 'me bot') 
+{
+  
+} 
+
+}) 
+
+
+
 client.login(process.env.BOTTOKEN);
 
 var nftdata = {
