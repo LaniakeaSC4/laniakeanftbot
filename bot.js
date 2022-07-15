@@ -6,7 +6,7 @@ client.on('ready', () => {
 });
 
 client.on('ready', () => {
-  client.api.applications(client.user.id).guilds('828194078113529856').commands.post({
+  client.api.applications(client.user.id).guilds('978975057739124767').commands.post({
     data: {
       name: "rarity",
       description: "Check Rarity Command", 
@@ -79,7 +79,7 @@ const puncommon = 0.6;
         
         console.log('mythic!')
         raritydescription = 'Mythic'
-        emoji = '<:mythic:997191007932268555>'
+        emoji = '<:mythic:997639717665386586>'
         embedcolor = 0xed2839;
         
       } 
@@ -88,7 +88,7 @@ const puncommon = 0.6;
         
         console.log('legendary!')
         raritydescription = 'Legendary'
-        emoji = '<:legendary:997263205653020673>'
+        emoji = '<:legendary:997639764943585421>'
                embedcolor = 0xfe8100;
         
       } 
@@ -97,7 +97,7 @@ const puncommon = 0.6;
       
         console.log('epic!')
         raritydescription = 'Epic'
-        emoji = '<:epic:997263308539318322>'
+        emoji = '<:epic:997639797558497421>'
                embedcolor = 0x9901f6;
       
       }
@@ -106,7 +106,7 @@ const puncommon = 0.6;
       
         console.log('Rare!')
         raritydescription = 'Rare'
-        emoji = '<:rare:997263425891729418>'
+        emoji = '<:rare:997639830844477471>'
                embedcolor = 0x19aaeb;
       
       }
@@ -115,7 +115,7 @@ const puncommon = 0.6;
       
         console.log('uncommmon!')
         raritydescription = 'Uncommom'
-        emoji = '<:uncommon:997263503649939576>'
+        emoji = '<:uncommon:997639865065799770>'
                embedcolor = 0x20d48a;
       
       }
@@ -124,7 +124,7 @@ const puncommon = 0.6;
       
          console.log('Common')
          raritydescription = 'Common'
-         emoji = '<:common:997263606729167040>'
+         emoji = '<:common:997639893306064997>'
                 embedcolor = 0x939394;
       
        }
@@ -133,7 +133,7 @@ const puncommon = 0.6;
         
         console.log('not ranked')
         raritydescription = 'not ranked'
-        emoji = '<:common:997263606729167040>'
+        emoji = '<:common:997639893306064997>'
                embedcolor = 0x939394;
         
       }
