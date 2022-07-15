@@ -34,11 +34,11 @@ client.on('ready', () => {
     //set nftnum equal to the command argument value. This is a key in the data object
     const nftnum = 'nft' + args[0].value;
     
-const pmythic = 0.05;
-const plegendary = 0.1;
-const pepic = 0.2;
-const prare = 0.3;
-const puncommon = 0.5; 
+const pmythic = 0.01;
+const plegendary = 0.5;
+const pepic = 0.15;
+const prare = 0.35;
+const puncommon = 0.6; 
 
     //mythic range
     var mythicstart = 0;
