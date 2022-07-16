@@ -90,10 +90,7 @@ var embedcolor = "";
 if (nftdata['collection1'].hasOwnProperty(nftkey)) {
   
   console.log('this key was found in the object')
-  
-}
-
-    //if this nft is mythic rarity
+     //if this nft is mythic rarity
       if (nftdata['collection1'][nftkey].rarity >= mythicstart && nftdata['collection1'][nftkey].rarity <= mythicend) {
         
         console.log('mythic!')
@@ -159,6 +156,12 @@ if (nftdata['collection1'].hasOwnProperty(nftkey)) {
 
 var nftproperties = [nftkey, raritydescription, emoji, embedcolor]
 return(nftproperties)   
+} else {
+ var nftproperties = [nftkey, 'Not found', '<:common:997639893306064997>', 0x000000]
+return(nftproperties)    
+}//end if nft is in object
+
+ 
 }
 
 //respond to slash command
