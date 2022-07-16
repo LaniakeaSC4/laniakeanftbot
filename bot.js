@@ -173,15 +173,28 @@ const puncommon = 0.6;
 
 
 client.on("messageCreate", (message) => {
-  
+var snipeschannel = '997778592517865512'
+var mebotid = '980154113637646346'
+
 let embed = message.embeds[0]
 
 console.log(message.author.id)
 
-if (embed != undefined && message.author.id == '980154113637646346') 
+if (embed != undefined && message.author.id == mebotid) 
 {
 
-console.log('logged a me bit post')
+let arr = embed.description.split(' ')
+
+for (var i = 0; i < arr.length; i++) {
+  
+  if (arr[i] = 'SOL') {
+    
+    let x = i-1
+    console.log('the price is ' + arr[x])
+    
+  } 
+} 
+console.log('logged a me bot post')
 console.log(embed.description)
   
 } 
