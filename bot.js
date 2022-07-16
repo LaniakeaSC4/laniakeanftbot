@@ -176,6 +176,8 @@ return(nftproperties)
       
       var nftproperties = checkrarity(args[0].value);
       
+      console.log(nftproperties)
+      
 var nftkey = nftproperties[0];
 var raritydescription = nftproperties[1];
 var emoji = nftproperties[2];
