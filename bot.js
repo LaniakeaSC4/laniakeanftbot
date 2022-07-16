@@ -222,16 +222,16 @@ console.log(embed.description)
 var thispricestring = ''
 var thisprice = 0
 
-let arr = embed.description.split(' ')
+let descriptionarr = embed.description.split(' ')
 
-for (var i = 0; i < arr.length; i++) {
-  let checkthis = arr[i]
+for (var i = 0; i < descriptionarr.length; i++) {
+  let checkthis = descriptionarr[i]
   if (checkthis === 'SOL') {
     
     let x = i-1
-    thispricestring = arr[x]
+    thispricestring = descriptionarr[x]
     thisprice = parseFloat(thispricestring)
-    console.log(thisprice) 
+    console.log('Listed for: ' + thisprice) 
     
   } 
 }//end for loop checking each word in the listing description for the list price
@@ -241,19 +241,36 @@ var floorprice = 0
 var floorchan = client.channels.cache.get(floorchannel)
 
 var floorarr = floorchan.name.split(' ')
-console.log(floorarr)
-console.log(floorarr[1])
-var length = floorarr[1].length
-var floorpricestring = floorarr[1].substring(1,length)
+var flength = floorarr[1].length
+var floorpricestring = floorarr[1].substring(1,flength)
 
 floorprice = parseFloat(floorpricestring)
-console.log(floorprice)
+console.log('Floor price: ' + floorprice)
 
 //get rarity of this listing
+var nftid = ''
+
 //get nft ID
+for (var i = 0; i < descriptionarr.length; i++) {
+  let checkthis = descriptionarr[i]
+  if (checkthis.contains('#')) {
+    
+    var nlength = checkthis.length
+    nftid = checkthis.substring(1,nlength)
+    console.log('NFT ID is: ' + nftid) 
+    
+  } 
+}
+
+//get rarity of nft with function (need whole rarity database)
 
 
-  
+//make calculation of if this is a snipe using rarity, floor price and nft price
+
+
+//if this is a snipe, send alert to snipe channel
+
+
 }//end if sender is ME Bot 
 }//end if listingschannel
 
