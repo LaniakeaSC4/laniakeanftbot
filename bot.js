@@ -50,6 +50,7 @@ client.on('ready', () => {
     if (commonstart === uncommonend) {commomstart = commonstart + 1} 
     commonend = nftdata['collection1'].nftcount;
   
+  console.log('Mythic: ' + mythicstart + ' - ' + mythicend + '. Legendary: ' + legendarystart + ' - ' + legendaryend + '. Epic: ' + epicstart + ' - ' + epicend + '. Rare: ' + rarestart + ' - ' + rareend + '. Uncommon: ' + uncommomstart + ' - ' + uncommonend + '. Common: ' + commonend + ' - ' + commonend + '.')
   console.log(`I'm Ready!`);
 });
 
