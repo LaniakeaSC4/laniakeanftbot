@@ -185,9 +185,11 @@ if (embed != undefined && message.author.id == mebotid)
 
 let arr = embed.description.split(' ')
 
+console.log(arr)
+
 for (var i = 0; i < arr.length; i++) {
-  
-  if (arr[i] = 'SOL') {
+  let checkthis = arr[i]
+  if (checkthis = 'SOL') {
     
     let x = i-1
     console.log('the price is ' + arr[x])
