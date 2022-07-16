@@ -176,10 +176,13 @@ client.on("messageCreate", (message) => {
   
 let embed = message.embeds[0]
 
-console.log(message.author)
+console.log(message.author.id)
 
-if (embed != undefined && message.author == 'me bot') 
+if (embed != undefined && message.author.id == '980154113637646346') 
 {
+
+console.log('logged a me bit post')
+console.log(embed.description)
   
 } 
 
