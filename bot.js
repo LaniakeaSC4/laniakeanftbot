@@ -157,7 +157,7 @@ if (nftdata['collection1'].hasOwnProperty(nftkey)) {
 var nftproperties = [nftkey, raritydescription, emoji, embedcolor]
 return(nftproperties)   
 } else {
- var nftproperties = [nftkey, 'Not found', '<:common:997639893306064997>', 0x000000]
+ var nftproperties = [nftkey, 'Not found', '<:common:997639893306064997>', 0x3b0202]
 return(nftproperties)    
 }//end if nft is in object
 
@@ -172,7 +172,7 @@ return(nftproperties)
 
     if (command === 'rarity') {
       
-      if (args[0].value <= nftdata['collection1'].nftcount) {
+   //   if (args[0].value <= nftdata['collection1'].nftcount) {
       
       var nftproperties = checkrarity(args[0].value);
       
@@ -182,7 +182,7 @@ var nftkey = nftproperties[0];
 var raritydescription = nftproperties[1];
 var emoji = nftproperties[2];
 var embedcolor = nftproperties[3]; 
-  
+
       client.api.interactions(interaction.id, interaction.token).callback.post({data: {
         type: 4,
         data: {
@@ -210,7 +210,7 @@ var embedcolor = nftproperties[3];
               ]
         }//end data
     }})//end post()
-    }//end if <= nft count else 
+   // }//end if <= nft count else 
    }//end if command = rarity
   });
 
