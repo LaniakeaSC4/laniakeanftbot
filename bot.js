@@ -141,8 +141,8 @@ var embedcolor = "";
         
       }
 
-var nftdata = [raritydescription, emoji, embedcolor]
-return(nftdata)   
+var nftproperties = [raritydescription, emoji, embedcolor]
+return(nftproperties)   
 }
 
   client.ws.on('INTERACTION_CREATE', async interaction => {
@@ -157,7 +157,7 @@ return(nftdata)
            //set nftnum equal to the command argument value. This is a key in the data object
       const nftnum = 'nft' + args[0].value;
       
-      var nftdata = setrarity(nftnum);
+      var nftproperties = setrarity(nftnum);
   
       client.api.interactions(interaction.id, interaction.token).callback.post({data: {
         type: 4,
