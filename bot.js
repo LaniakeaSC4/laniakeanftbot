@@ -60,7 +60,7 @@ client.on('ready', () => {
 
 //setup slash command
 client.on('ready', () => {
-  client.api.applications(client.user.id).guilds.monkeyserver.commands.post({
+  client.api.applications(client.user.id).guilds(monkeyserver).commands.post({
     data: {
       name: "rarity",
       description: "Check Rarity Command", 
