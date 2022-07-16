@@ -2,9 +2,9 @@ const { Client, Intents } = require('discord.js');
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES] });
 
  //initialise variables needed to build embed
-      var raritydescription = "";
-      var emoji = "";
-      var embedcolor = ""; 
+var raritydescription = "";
+var emoji = "";
+var embedcolor = ""; 
       
 const pmythic = 0.01;
 const plegendary = 0.5;
@@ -72,19 +72,10 @@ client.on('ready', () => {
   });
 });
 
-  client.ws.on('INTERACTION_CREATE', async interaction => {
-    const command = interaction.data.name.toLowerCase();
-    const args = interaction.data.options;
-    
+function setrarity(nftnum) {
+  
 
-    if (command === 'rarity') {
-      
-         //set nftnum equal to the command argument value. This is a key in the data object
-      const nftnum = 'nft' + args[0].value;
-      
-      if (args[0].value <= nftdata['collection1'].nftcount) {
-      
-      //if this nft is mythic rarity
+    //if this nft is mythic rarity
       if (nftdata['collection1'][nftnum].rarity >= mythicstart && nftdata['collection1'][nftnum].rarity <= mythicend) {
         
         console.log('mythic!')
@@ -148,6 +139,22 @@ client.on('ready', () => {
         
       }
       
+}
+
+  client.ws.on('INTERACTION_CREATE', async interaction => {
+    const command = interaction.data.name.toLowerCase();
+    const args = interaction.data.options;
+    
+
+    if (command === 'rarity') {
+      
+      if (args[0].value <= nftdata['collection1'].nftcount) {
+      
+           //set nftnum equal to the command argument value. This is a key in the data object
+      const nftnumber = 'nft' + args[0].value;
+      
+      setrarity(nftnumber);
+  
       client.api.interactions(interaction.id, interaction.token).callback.post({data: {
         type: 4,
         data: {
