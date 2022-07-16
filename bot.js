@@ -151,9 +151,9 @@ function setrarity(nftnum) {
       if (args[0].value <= nftdata['collection1'].nftcount) {
       
            //set nftnum equal to the command argument value. This is a key in the data object
-      const nftnumber = 'nft' + args[0].value;
+      const nftnum = 'nft' + args[0].value;
       
-      setrarity(nftnumber);
+      setrarity(nftnum);
   
       client.api.interactions(interaction.id, interaction.token).callback.post({data: {
         type: 4,
