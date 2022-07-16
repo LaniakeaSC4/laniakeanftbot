@@ -1,7 +1,14 @@
 const { Client, Intents } = require('discord.js');
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES] });
 
-      
+//channels and servers
+const monkeyserver = '978975057739124767'
+const floorchannel = '992114091374157926'
+const snipeschannel = '997778592517865512'
+const listingschannel = '992439605569790072'
+const mebotid = '980154113637646346' 
+
+//set rarity thresholds
 const pmythic = 0.01;
 const plegendary = 0.05;
 const pepic = 0.15;
@@ -15,6 +22,7 @@ var rarestart = 0; var rareend = 0;
 var uncommomstart = 0; var uncommonend =0;
 var commonend = 0; var commonend = 0;
 
+//establish ranges for collection(s)
 client.on('ready', () => {
     
     //mythic range
@@ -50,8 +58,9 @@ client.on('ready', () => {
   console.log(`I'm Ready!`);
 });
 
+//setup slash command
 client.on('ready', () => {
-  client.api.applications(client.user.id).guilds('978975057739124767').commands.post({
+  client.api.applications(client.user.id).guilds.monkeyserver.commands.post({
     data: {
       name: "rarity",
       description: "Check Rarity Command", 
@@ -69,6 +78,7 @@ client.on('ready', () => {
   });
 });
 
+//get rarity rank by nft#
 function setrarity(nftnumber) {
   
             //set nftnum equal to the command argument value. This is a key in the data object
@@ -145,6 +155,7 @@ var nftproperties = [nftkey, raritydescription, emoji, embedcolor]
 return(nftproperties)   
 }
 
+//respond to slash command
   client.ws.on('INTERACTION_CREATE', async interaction => {
     const command = interaction.data.name.toLowerCase();
     const args = interaction.data.options;
@@ -196,33 +207,41 @@ var embedcolor = nftproperties[3];
 
 
 client.on("messageCreate", (message) => {
-var snipeschannel = '997778592517865512'
-var mebotid = '980154113637646346'
+  
+  if (message.channel.id == listingschannel) {
 
 let embed = message.embeds[0]
 
-console.log(message.author.id)
-
-if (embed != undefined && message.author.id == mebotid) 
+//if there is an embed, the message was from the right bot and it's a listing rather than a sale...
+if (embed != undefined && message.author.id == mebotid && embed.description.includes('listed')) 
 {
 
-let arr = embed.description.split(' ')
+console.log(embed.description)
 
-console.log(arr)
+var thisprice = 0
+
+let arr = embed.description.split(' ')
 
 for (var i = 0; i < arr.length; i++) {
   let checkthis = arr[i]
   if (checkthis === 'SOL') {
     
     let x = i-1
-    console.log('the price is ' + arr[x])
+    thisprice = arr[x]
+    console.log('the price is ' + thisprice) 
     
   } 
-} 
-console.log('logged a me bot post')
-console.log(embed.description)
+}//end for loop checking each word in the listing description for the list price
+
+//get floor goes here
+
   
-} 
+}//end if sender is ME Bot 
+}//end if listingschannel
+
+var getfloor = client.channels.cache.get(floorchannel)
+
+console.log(getfloor.name)
 
 }) 
 
