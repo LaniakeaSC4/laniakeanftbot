@@ -296,7 +296,7 @@ var nftdata = {
     
       "nft5" : { name : "MonkeyPoxNFT #5", rarity : "900"}, 
       
-        "nft6" : { name : "MonkeyPoxNFT #6", rarity : "1900"}
+        "nft766" : { name : "MonkeyPoxNFT #766", rarity : "2027"}
   
 }
 } 
