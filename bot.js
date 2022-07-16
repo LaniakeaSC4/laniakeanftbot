@@ -218,6 +218,8 @@ if (embed != undefined && message.author.id == mebotid && embed.description.incl
 
 console.log(embed.description)
 
+//get list price
+var thispricestring = ''
 var thisprice = 0
 
 let arr = embed.description.split(' ')
@@ -227,27 +229,33 @@ for (var i = 0; i < arr.length; i++) {
   if (checkthis === 'SOL') {
     
     let x = i-1
-    thisprice = arr[x]
-    console.log('the price is ' + thisprice) 
+    thispricestring = arr[x]
+    thisprice = parseFloat(thispricestring)
+    console.log(thisprice) 
     
   } 
 }//end for loop checking each word in the listing description for the list price
 
-//get floor goes here
+//get floor price
+var floorprice = 0
+var floorchan = client.channels.cache.get(floorchannel)
+
+var floorarr = floorchan.name.split(' ')
+console.log(floorarr)
+console.log(floorarr[1])
+var length = floorarr[1].length
+var floorpricestring = floorarr[1].substring(1,length)
+
+floorprice = parseFloat(floorpricestring)
+console.log(floorprice)
+
+//get rarity of this listing
+//get nft ID
+
 
   
 }//end if sender is ME Bot 
 }//end if listingschannel
-
-var getfloor = client.channels.cache.get(floorchannel)
-
-var floorarr = getfloor.name.split(' ')
-console.log(floorarr)
-console.log(floorarr[1])
-var length = floorarr[1].length
-var floorprice = floorarr[1].substring(1,length)
-console.log(floorprice)
-
 
 
 }) 
