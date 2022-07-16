@@ -69,16 +69,16 @@ client.on('ready', () => {
   });
 });
 
-function setrarity(nftnum) {
+function setrarity(nftnumber) {
   
-  
- //initialise variables needed to build embed
+            //set nftnum equal to the command argument value. This is a key in the data object
+var nftkey = 'nft' + nftnumber;
 var raritydescription = "";
 var emoji = "";
 var embedcolor = ""; 
 
     //if this nft is mythic rarity
-      if (nftdata['collection1'][nftnum].rarity >= mythicstart && nftdata['collection1'][nftnum].rarity <= mythicend) {
+      if (nftdata['collection1'][nftkey].rarity >= mythicstart && nftdata['collection1'][nftkey].rarity <= mythicend) {
         
         console.log('mythic!')
         raritydescription = 'Mythic'
@@ -87,7 +87,7 @@ var embedcolor = "";
         
       } 
       
-      else if (nftdata['collection1'][nftnum].rarity >= legendarystart && nftdata['collection1'][nftnum].rarity <= legendaryend) {
+      else if (nftdata['collection1'][nftkey].rarity >= legendarystart && nftdata['collection1'][nftkey].rarity <= legendaryend) {
         
         console.log('legendary!')
         raritydescription = 'Legendary'
@@ -96,7 +96,7 @@ var embedcolor = "";
         
       } 
       
-      else if (nftdata['collection1'][nftnum].rarity >= epicstart && nftdata['collection1'][nftnum].rarity <= epicend) {
+      else if (nftdata['collection1'][nftkey].rarity >= epicstart && nftdata['collection1'][nftkey].rarity <= epicend) {
       
         console.log('epic!')
         raritydescription = 'Epic'
@@ -105,7 +105,7 @@ var embedcolor = "";
       
       }
       
-      else if (nftdata['collection1'][nftnum].rarity >= rarestart && nftdata['collection1'][nftnum].rarity <= rareend) {
+      else if (nftdata['collection1'][nftkey].rarity >= rarestart && nftdata['collection1'][nftkey].rarity <= rareend) {
       
         console.log('Rare!')
         raritydescription = 'Rare'
@@ -114,7 +114,7 @@ var embedcolor = "";
       
       }
       
-      else if (nftdata['collection1'][nftnum].rarity >= uncommonstart && nftdata['collection1'][nftnum].rarity <= uncommonend) {
+      else if (nftdata['collection1'][nftkey].rarity >= uncommonstart && nftdata['collection1'][nftkey].rarity <= uncommonend) {
       
         console.log('uncommmon!')
         raritydescription = 'Uncommom'
@@ -123,7 +123,7 @@ var embedcolor = "";
       
       }
       
-       else if (nftdata['collection1'][nftnum].rarity >= commonstart && nftdata['collection1'][nftnum].rarity <= commonend) {
+       else if (nftdata['collection1'][nftkey].rarity >= commonstart && nftdata['collection1'][nftkey].rarity <= commonend) {
       
          console.log('Common')
          raritydescription = 'Common'
@@ -141,7 +141,7 @@ var embedcolor = "";
         
       }
 
-var nftproperties = [raritydescription, emoji, embedcolor]
+var nftproperties = [nftkey, raritydescription, emoji, embedcolor]
 return(nftproperties)   
 }
 
@@ -154,10 +154,12 @@ return(nftproperties)
       
       if (args[0].value <= nftdata['collection1'].nftcount) {
       
-           //set nftnum equal to the command argument value. This is a key in the data object
-      const nftnum = 'nft' + args[0].value;
+      var nftproperties = setrarity(args[0].value);
       
-      var nftproperties = setrarity(nftnum);
+var nftkey = nftproperties[0];
+var raritydescription = nftproperties[1];
+var emoji = nftproperties[2];
+var embedcolor = nftproperties[3]; 
   
       client.api.interactions(interaction.id, interaction.token).callback.post({data: {
         type: 4,
