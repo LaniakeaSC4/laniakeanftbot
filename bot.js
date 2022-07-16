@@ -79,13 +79,19 @@ client.on('ready', () => {
 });
 
 //get rarity rank by nft#
-function setrarity(nftnumber) {
+function checkrarity(nftnumber) {
   
             //set nftnum equal to the command argument value. This is a key in the data object
 var nftkey = 'nft' + nftnumber;
 var raritydescription = "";
 var emoji = "";
 var embedcolor = ""; 
+
+if (nftdata['collection1'].hasOwnProperty(nftkey)) {
+  
+  console.log('this key was found in the object')
+  
+}
 
     //if this nft is mythic rarity
       if (nftdata['collection1'][nftkey].rarity >= mythicstart && nftdata['collection1'][nftkey].rarity <= mythicend) {
@@ -165,7 +171,7 @@ return(nftproperties)
       
       if (args[0].value <= nftdata['collection1'].nftcount) {
       
-      var nftproperties = setrarity(args[0].value);
+      var nftproperties = checkrarity(args[0].value);
       
 var nftkey = nftproperties[0];
 var raritydescription = nftproperties[1];
