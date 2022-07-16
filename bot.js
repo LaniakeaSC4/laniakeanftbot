@@ -166,12 +166,12 @@ var embedcolor = nftproperties[3];
         data: {
             embeds: [
               {
-                "title": nftdata['collection1'][nftnum].name,
+                "title": nftdata['collection1'][nftkey].name,
                 "color": embedcolor,
                 "fields": [
                   {
                     "name": "Rarity",
-                    "value": emoji + emoji + '|  ' + nftdata['collection1'][nftnum].rarity + ' - ' + raritydescription + '  |'+ emoji + emoji,
+                    "value": emoji + emoji + '|  ' + nftdata['collection1'][nftkey].rarity + ' - ' + raritydescription + '  |'+ emoji + emoji,
                     "inline": true
                     }
                   ],
