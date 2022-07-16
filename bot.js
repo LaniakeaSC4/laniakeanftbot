@@ -1,7 +1,55 @@
 const { Client, Intents } = require('discord.js');
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES] });
 
+ //initialise variables needed to build embed
+      var raritydescription = "";
+      var emoji = "";
+      var embedcolor = ""; 
+      
+const pmythic = 0.01;
+const plegendary = 0.5;
+const pepic = 0.15;
+const prare = 0.35;
+const puncommon = 0.6; 
+
+var mythicstart = 0; var mythicend = 0;
+var legendarystart = 0; var legendaryend = 0;
+var epicstart = 0; var epicend = 0;
+var rarestart = 0; var rareend = 0;
+var uncommomstart = 0; var Uncommonend =0;
+var commonend = 0; var commonend = 0;
+
 client.on('ready', () => {
+    
+    //mythic range
+    mythicstart = 0;
+    mythicend = Math.floor(nftdata['collection1'].nftcount*pmythic);
+    
+    //legendary range
+    legendarystart = Math.ceil(nftdata['collection1'].nftcount*pmythic);
+    if (legendarystart === mythicend) {legendarystart = legendarystart + 1} 
+    legendaryend = Math.floor(nftdata['collection1'].nftcount*plegendary);
+    
+    //epic range
+    epicstart = Math.ceil(nftdata['collection1'].nftcount*plegendary);
+    if (epicstart === legendaryend) {epicstart = epicstart + 1} 
+    epicend = Math.floor(nftdata['collection1'].nftcount*pepic);
+    
+    //rare range
+      rarestart = Math.ceil(nftdata['collection1'].nftcount*pepic);
+    if (rarestart === epicend) {rarestart = rarestart + 1} 
+    rareend = Math.floor(nftdata['collection1'].nftcount*prare);
+    
+    //uncommon range
+    uncommonstart = Math.ceil(nftdata['collection1'].nftcount*prare);
+    if (uncommonstart === rareend) {uncommomstart = uncommonstart + 1} 
+    uncommonend = Math.floor(nftdata['collection1'].nftcount*puncommon);
+  
+   //common range
+    commonstart = Math.ceil(nftdata['collection1'].nftcount*puncommon);
+    if (commonstart === uncommonend) {commomstart = commonstart + 1} 
+    commonend = nftdata['collection1'].nftcount;
+  
   console.log(`I'm Ready!`);
 });
 
@@ -27,52 +75,14 @@ client.on('ready', () => {
   client.ws.on('INTERACTION_CREATE', async interaction => {
     const command = interaction.data.name.toLowerCase();
     const args = interaction.data.options;
+    
 
     if (command === 'rarity') {
       
+         //set nftnum equal to the command argument value. This is a key in the data object
+      const nftnum = 'nft' + args[0].value;
+      
       if (args[0].value <= nftdata['collection1'].nftcount) {
-    //set nftnum equal to the command argument value. This is a key in the data object
-    const nftnum = 'nft' + args[0].value;
-    
-const pmythic = 0.01;
-const plegendary = 0.5;
-const pepic = 0.15;
-const prare = 0.35;
-const puncommon = 0.6; 
-
-    //mythic range
-    var mythicstart = 0;
-    var mythicend = Math.floor(nftdata['collection1'].nftcount*pmythic);
-    
-    //legendary range
-    var legendarystart = Math.ceil(nftdata['collection1'].nftcount*pmythic);
-    if (legendarystart === mythicend) {legendarystart = legendarystart + 1} 
-    var legendaryend = Math.floor(nftdata['collection1'].nftcount*plegendary);
-    
-    //epic range
-    var epicstart = Math.ceil(nftdata['collection1'].nftcount*plegendary);
-    if (epicstart === legendaryend) {epicstart = epicstart + 1} 
-    var epicend = Math.floor(nftdata['collection1'].nftcount*pepic);
-    
-    //rare range
-      var rarestart = Math.ceil(nftdata['collection1'].nftcount*pepic);
-    if (rarestart === epicend) {rarestart = rarestart + 1} 
-    var rareend = Math.floor(nftdata['collection1'].nftcount*prare);
-    
-    //uncommon range
-    var uncommonstart = Math.ceil(nftdata['collection1'].nftcount*prare);
-    if (uncommonstart === rareend) {uncommomstart = uncommonstart + 1} 
-    var uncommonend = Math.floor(nftdata['collection1'].nftcount*puncommon);
-  
-   //common range
-    var commonstart = Math.ceil(nftdata['collection1'].nftcount*puncommon);
-    if (commonstart === uncommonend) {commomstart = commonstart + 1} 
-    var commonend = nftdata['collection1'].nftcount;
- 
- //initialise variables needed to build embed
-      var raritydescription = "";
-      var emoji = "";
-      var embedcolor = "";
       
       //if this nft is mythic rarity
       if (nftdata['collection1'][nftnum].rarity >= mythicstart && nftdata['collection1'][nftnum].rarity <= mythicend) {
