@@ -189,7 +189,7 @@ console.log(arr)
 
 for (var i = 0; i < arr.length; i++) {
   let checkthis = arr[i]
-  if (checkthis = 'SOL') {
+  if (checkthis === 'SOL') {
     
     let x = i-1
     console.log('the price is ' + arr[x])
