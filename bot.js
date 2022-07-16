@@ -241,7 +241,14 @@ for (var i = 0; i < arr.length; i++) {
 
 var getfloor = client.channels.cache.get(floorchannel)
 
-console.log(getfloor.name)
+var floorarr = getfloor.name.split(' ')
+console.log(floorarr)
+console.log(floorarr[1])
+var length = floorarr[1].length
+var floorprice = floorarr[1].substring(1,length)
+console.log(floorprice)
+
+
 
 }) 
 
