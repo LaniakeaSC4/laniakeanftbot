@@ -172,8 +172,6 @@ return(nftproperties)
 
     if (command === 'rarity') {
       
-   //   if (args[0].value <= nftdata['collection1'].nftcount) {
-      
       var nftproperties = checkrarity(args[0].value);
       
       console.log(nftproperties)
@@ -182,6 +180,8 @@ var nftkey = nftproperties[0];
 var raritydescription = nftproperties[1];
 var emoji = nftproperties[2];
 var embedcolor = nftproperties[3]; 
+
+if (raritydescription != 'Not found') {
 
       client.api.interactions(interaction.id, interaction.token).callback.post({data: {
         type: 4,
@@ -210,7 +210,30 @@ var embedcolor = nftproperties[3];
               ]
         }//end data
     }})//end post()
-   // }//end if <= nft count else 
+   } else {//end if rarity description != not found
+   
+   client.api.interactions(interaction.id, interaction.token).callback.post({data: {
+        type: 4,
+        data: {
+            embeds: [
+              {
+                "title": 'Token not found in database',
+                "color": embedcolor,
+                "fields": [
+                  {
+                    "name": "Rarity",
+                    "value": emoji + emoji + '|  ' + ' - ' + raritydescription + '  |'+ emoji + emoji,
+                    "inline": true
+                    }
+                  ],
+                "footer": {
+                  "text": "Rarity data provided by"
+                }
+                }
+              ]
+        }//end data
+    }})//end post()
+   }
    }//end if command = rarity
   });
 
