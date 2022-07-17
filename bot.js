@@ -298,7 +298,7 @@ for (var i = 0; i < descriptionarr.length; i++) {
 
 //get rarity of nft with function (need whole rarity database).or handle function returning 0
 var checkthisrarity = checkrarity(nftid)
-var thisrarity = checkthisrariry[4]
+var thisrarity = checkthisrarity[4]
 console.log('Rarity is: ' + thisrarity)
 
 //make calculation of if this is a snipe using rarity, floor price and nft price
