@@ -198,7 +198,7 @@ if (raritydescription != 'Not found') {
                     }
                   ],
                       "image": {
-        "url": `https://igvzgsmvdzfq4nhxlmbegcppryqucc6ar3amxhg6b4r5ndm6.arweave.net/QauTSZUeSw4091sCQwnvjiFBC8COwMuc3g8j1_o2_eI?ext=png`,
+        "url": nftdata['collection1'][nftkey].imgurl,
         "height": 75,
         "width": 75
       },
@@ -323,16 +323,17 @@ var nftdata = {
   
   "nftcount" : 2500,
   
-  "nft1" : { name : "MonkeyPoxNFT #1", rarity : "1"}, 
-  "nft2" : { name : "MonkeyPoxNFT #2", rarity : "50"}, 
+  "nft1" : { name : "MonkeyPoxNFT #1", rarity : "1", imgurl : `https://igvzgsmvdzfq4nhxlmbegcppryqucc6ar3amxhg6b4r5ndm6.arweave.net/QauTSZUeSw4091sCQwnvjiFBC8COwMuc3g8j1_o2_eI?ext=png`},
   
-  "nft3" : { name : "MonkeyPoxNFT #3", rarity : "130"}, 
+  "nft2" : { name : "MonkeyPoxNFT #2", rarity : "50", imgurl : `https://igvzgsmvdzfq4nhxlmbegcppryqucc6ar3amxhg6b4r5ndm6.arweave.net/QauTSZUeSw4091sCQwnvjiFBC8COwMuc3g8j1_o2_eI?ext=png`}, 
   
-    "nft4" : { name : "MonkeyPoxNFT #4", rarity : "300"}, 
+  "nft3" : { name : "MonkeyPoxNFT #3", rarity : "130", imgurl : `https://igvzgsmvdzfq4nhxlmbegcppryqucc6ar3amxhg6b4r5ndm6.arweave.net/QauTSZUeSw4091sCQwnvjiFBC8COwMuc3g8j1_o2_eI?ext=png`}, 
+  
+    "nft4" : { name : "MonkeyPoxNFT #4", rarity : "300", imgurl : `https://igvzgsmvdzfq4nhxlmbegcppryqucc6ar3amxhg6b4r5ndm6.arweave.net/QauTSZUeSw4091sCQwnvjiFBC8COwMuc3g8j1_o2_eI?ext=png`}, 
     
-      "nft5" : { name : "MonkeyPoxNFT #5", rarity : "900"}, 
+      "nft5" : { name : "MonkeyPoxNFT #5", rarity : "900", imgurl : `https://igvzgsmvdzfq4nhxlmbegcppryqucc6ar3amxhg6b4r5ndm6.arweave.net/QauTSZUeSw4091sCQwnvjiFBC8COwMuc3g8j1_o2_eI?ext=png`}, 
       
-        "nft766" : { name : "MonkeyPoxNFT #766", rarity : "2027"}
+        "nft766" : { name : "MonkeyPoxNFT #766", rarity : "2027", imgurl : `https://igvzgsmvdzfq4nhxlmbegcppryqucc6ar3amxhg6b4r5ndm6.arweave.net/QauTSZUeSw4091sCQwnvjiFBC8COwMuc3g8j1_o2_eI?ext=png`}
   
 }
 } 
