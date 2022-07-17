@@ -4,7 +4,7 @@ const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_
 //channels and servers
 const monkeyserver = '978975057739124767'
 const floorchannel = '992114091374157926'
-const snipeschannel = '997778592517865512'
+const snipeschannel = '996130357260845156'
 const listingschannel = '992439605569790072'
 const mebotid = '980154113637646346' 
 
