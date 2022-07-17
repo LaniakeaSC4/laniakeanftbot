@@ -300,12 +300,13 @@ for (var i = 0; i < descriptionarr.length; i++) {
 var checkthisrarity = checkrarity(nftid)
 var thisrarity = checkthisrarity[4]
 console.log('Rarity is: ' + thisrarity)
+var raritydescription = nftproperties[1];
 
 //make calculation of if this is a snipe using rarity, floor price and nft price
 
 
 //if this is a snipe, send alert to snipe channel
-
+client.guilds.cache.get(monkeyserver).channels.cache.get(snipeschannel).send(embed.title + ' was just listed for ' + thisprice + '. The current floor price is ' + floorprice + ' and given that this ' + raritydescription + ' NFT rarity is ' + thisrarity + ' it could be a snipe!' )
 
 }//end if sender is ME Bot 
 }//end if listingschannel
