@@ -333,7 +333,7 @@ var nftdata = {
     
       "nft5" : { name : "MonkeyPoxNFT #5", rarity : "900", imgurl : `https://igvzgsmvdzfq4nhxlmbegcppryqucc6ar3amxhg6b4r5ndm6.arweave.net/QauTSZUeSw4091sCQwnvjiFBC8COwMuc3g8j1_o2_eI?ext=png`}, 
       
-        "nft766" : { name : "MonkeyPoxNFT #766", rarity : "2027", imgurl : `https://igvzgsmvdzfq4nhxlmbegcppryqucc6ar3amxhg6b4r5ndm6.arweave.net/QauTSZUeSw4091sCQwnvjiFBC8COwMuc3g8j1_o2_eI?ext=png`}
+        "nft766" : { name : "MonkeyPoxNFT #766", rarity : "2027", imgurl : 'https://g2scosbrhsa5mcy2nhucmkbj3inovwjwfnyumxpoz3ttoucbtu.arweave.net/NqQnSDE8gd-YLGmnoJigp2hrq2TYrcUZd7s7nN1BBnY?ext=png '}
   
 }
 } 
