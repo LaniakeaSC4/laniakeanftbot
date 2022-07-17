@@ -300,7 +300,7 @@ for (var i = 0; i < descriptionarr.length; i++) {
 var checkthisrarity = checkrarity(nftid)
 var thisrarity = checkthisrarity[4]
 console.log('Rarity is: ' + thisrarity)
-var raritydescription = nftproperties[1];
+var raritydescription = checkrarity[1];
 
 //make calculation of if this is a snipe using rarity, floor price and nft price
 
