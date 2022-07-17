@@ -157,7 +157,7 @@ if (nftdata['collection1'].hasOwnProperty(nftkey)) {
 var nftproperties = [nftkey, raritydescription, emoji, embedcolor, nftdata['collection1'][nftkey].rarity]
 return(nftproperties)   
 } else {
- var nftproperties = [nftkey, 'Not found', '<:common:997639893306064997>', 0x3b0202, '0']
+ var nftproperties = [nftkey, 'Not found', '<:common:997639893306064997>', 0x3b0202, 'Not Found']
 return(nftproperties)    
 }//end if nft is in object
 
@@ -297,7 +297,9 @@ for (var i = 0; i < descriptionarr.length; i++) {
 }
 
 //get rarity of nft with function (need whole rarity database).or handle function returning 0
-
+var checkthisrarity = checkrarity(nftid)
+var thisrarity = checkthisrariry[4]
+console.log('Rarity is: ' + thisrarity)
 
 //make calculation of if this is a snipe using rarity, floor price and nft price
 
