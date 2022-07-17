@@ -306,8 +306,7 @@ var raritydescription = checkrarity[1];
 
 
 //if this is a snipe, send alert to snipe channel
-const channel = await client.channels.fetch(snipeschannel);
-channel.send({ content: embed.title + ' was just listed for ' + thisprice + '. The current floor price is ' + floorprice + ' and given that this ' + raritydescription + ' NFT rarity is ' + thisrarity + ' it could be a snipe!' });
+client.guilds.cache.get(monkeyserver).channels.cache.get(snipeschannel).send({ content: embed.title + ' was just listed for ' + thisprice + '. The current floor price is ' + floorprice + ' and given that this ' + raritydescription + ' NFT rarity is ' + thisrarity + ' it could be a snipe!' })
 
 }//end if sender is ME Bot 
 }//end if listingschannel
