@@ -91,17 +91,29 @@ client.on('ready', () => {
 function checkrarity(nftnumber) {
 
   //set nftnum equal to the command argument value. This is a key in the data object
-  var nftkey = 'nft' + nftnumber//establish key
+  //var nftkey = 'nft' + nftnumber//establish key
   var raritydescription = ""//initalise as string
   var emoji = ""//initalise as string
   var embedcolor = ""//initalise as string
+var thisrarity = ""
 
-  if (nftdata['collection1'].hasOwnProperty(nftkey)) {//look through NFT data base for one with matching key
+for (var i = 0;i < mpoxdata.result.data.items.length; i++) {
+  
+  if (mpoxdata.result.data.items[i].id === nftnumber) {
+    console.log('found ' + mpoxdata.result.data.items[i].name)
+    thisrarity = mpoxdata.result.data.items[i].all_ranks.statistical_rarity
+    console.log('this rarity is: ' + thisrarity)
+  }
+  
+}
+
+
+  if (thisrarity != null) {
 
     console.log('NFT found by key in the databse')
 
     //if mythic
-    if (nftdata['collection1'][nftkey].rarity >= mythicstart && nftdata['collection1'][nftkey].rarity <= mythicend) {
+    if (thisrarity >= mythicstart && thisrarity <= mythicend) {
       console.log('mythic!')
       raritydescription = 'Mythic'
       emoji = '<:mythic:997639717665386586>'
@@ -109,7 +121,7 @@ function checkrarity(nftnumber) {
     }
 
     //if Legendary
-    else if (nftdata['collection1'][nftkey].rarity >= legendarystart && nftdata['collection1'][nftkey].rarity <= legendaryend) {
+    else if (thisrarity >= legendarystart && thisrarity <= legendaryend) {
       console.log('legendary!')
       raritydescription = 'Legendary'
       emoji = '<:legendary:997639764943585421>'
@@ -117,7 +129,7 @@ function checkrarity(nftnumber) {
     }
 
     //if epic
-    else if (nftdata['collection1'][nftkey].rarity >= epicstart && nftdata['collection1'][nftkey].rarity <= epicend) {
+    else if (thisrarity >= epicstart && thisrarity <= epicend) {
       console.log('epic!')
       raritydescription = 'Epic'
       emoji = '<:epic:997639797558497421>'
@@ -125,7 +137,7 @@ function checkrarity(nftnumber) {
     }
 
     //if rare
-    else if (nftdata['collection1'][nftkey].rarity >= rarestart && nftdata['collection1'][nftkey].rarity <= rareend) {
+    else if (thisrarity >= rarestart && thisrarity <= rareend) {
       console.log('Rare!')
       raritydescription = 'Rare'
       emoji = '<:rare:997639830844477471>'
@@ -133,7 +145,7 @@ function checkrarity(nftnumber) {
     }
 
     //if uncommon
-    else if (nftdata['collection1'][nftkey].rarity >= uncommonstart && nftdata['collection1'][nftkey].rarity <= uncommonend) {
+    else if (thisrarity >= uncommonstart && thisrarity <= uncommonend) {
       console.log('uncommmon!')
       raritydescription = 'Uncommom'
       emoji = '<:uncommon:997639865065799770>'
@@ -141,7 +153,7 @@ function checkrarity(nftnumber) {
     }
 
     //if common
-    else if (nftdata['collection1'][nftkey].rarity >= commonstart && nftdata['collection1'][nftkey].rarity <= commonend) {
+    else if (thisrarity >= commonstart && thisrarity <= commonend) {
       console.log('Common')
       raritydescription = 'Common'
       emoji = '<:common:997639893306064997>'
@@ -153,7 +165,7 @@ function checkrarity(nftnumber) {
     }
 
     //set up array to return
-    var nftproperties = [nftkey, raritydescription, emoji, embedcolor, nftdata['collection1'][nftkey].rarity]
+    var nftproperties = [nftkey, raritydescription, emoji, embedcolor, thisrarity]
     return (nftproperties)//return arrary
 
   } else {//if nftkey was not found in DB
@@ -208,7 +220,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 "fields": [
                   {
                     "name": "Rarity",
-                    "value": emoji + emoji + '|  ' + nftdata['collection1'][nftkey].rarity + ' - ' + raritydescription + '  |' + emoji + emoji,
+                    "value": emoji + emoji + '|  ' + thisrarity + ' - ' + raritydescription + '  |' + emoji + emoji,
                     "inline": true
                   }
                 ],
