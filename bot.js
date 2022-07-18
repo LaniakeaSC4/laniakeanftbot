@@ -1,5 +1,10 @@
-const { Client, Intents } = require('discord.js');
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES] });
+const { Client, Intents } = require('discord.js')
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES] })
+client.login(process.env.BOTTOKEN);
+
+//================
+//====  Setup  ===
+//================
 
 //channels and servers
 const monkeyserver = '978975057739124767'
@@ -22,6 +27,10 @@ var epicstart = 0; var epicend = 0
 var rarestart = 0; var rareend = 0
 var uncommomstart = 0; var uncommonend = 0
 var commonend = 0; var commonend = 0
+
+//=================
+//====  Statup  ===
+//=================
 
 //establish ranges for collection(s)
 client.on('ready', () => {
@@ -59,23 +68,9 @@ client.on('ready', () => {
   console.log(`I'm Ready!`);
 });//end client.on Ready to establish ranges
 
-//setup discord slash command
-client.on('ready', () => {
-  client.api.applications(client.user.id).guilds(monkeyserver).commands.post({//adding commmand sepcificlly to our server
-    data: {
-      name: "rarity",//defines the slash (e.g. /rarity)
-      description: "Check Rarity Command",
-      "options": [
-        {
-          "type": 4,//type 4 is a text input (as oposed to a button or list - https://discord.com/developers/docs/interactions/message-components)
-          "name": "nftnumber",
-          "description": "Enter MonkeyPoxNFT #",
-          "required": true
-        }
-      ]//end options
-    }//end data
-  });//end post
-});//end client on ready
+//====================
+//====  Functions  ===
+//====================
 
 //get rarity rank by nft#. NFT # (only) is passed to function.
 function checkrarity(nftnumber) {
@@ -95,7 +90,7 @@ function checkrarity(nftnumber) {
       console.log('mythic!')
       raritydescription = 'Mythic'
       emoji = '<:mythic:997639717665386586>'
-      embedcolor = 0xed2839;
+      embedcolor = 0xed2839
     }
 
     //if Legendary
@@ -130,53 +125,63 @@ function checkrarity(nftnumber) {
       embedcolor = 0x20d48a
     }
 
+    //if common
     else if (nftdata['collection1'][nftkey].rarity >= commonstart && nftdata['collection1'][nftkey].rarity <= commonend) {
-
       console.log('Common')
       raritydescription = 'Common'
       emoji = '<:common:997639893306064997>'
-      embedcolor = 0x939394;
-
+      embedcolor = 0x939394
     }
 
-    else {
-
-      console.log('not ranked')
-      raritydescription = 'not ranked'
-      emoji = '<:common:997639893306064997>'
-      embedcolor = 0x939394;
-
+    else {//this shouldnt trigger if the key is found and the data is complete
+      console.log('not ranked');raritydescription = 'not ranked';emoji = '<:common:997639893306064997>';embedcolor = 0x939394
     }
 
+    //set up array to return
     var nftproperties = [nftkey, raritydescription, emoji, embedcolor, nftdata['collection1'][nftkey].rarity]
-    return (nftproperties)
-  } else {
+    return (nftproperties)//return arrary
+
+  } else {//if nftkey was not found in DB
     var nftproperties = [nftkey, 'Not found', '<:common:997639893306064997>', 0x3b0202, 'Not Found']
     return (nftproperties)
   }//end if nft is in object
+}//end checkrarity function
 
+//==============================
+//====  Setup slash command  ===
+//==============================
 
-}
+//setup discord slash command
+client.on('ready', () => {
+  client.api.applications(client.user.id).guilds(monkeyserver).commands.post({//adding commmand sepcificlly to our server
+    data: {
+      name: "rarity",//defines the slash (e.g. /rarity)
+      description: "Check Rarity Command",
+      "options": [
+        {
+          "type": 4,//type 4 is a text input (as oposed to a button or list - https://discord.com/developers/docs/interactions/message-components)
+          "name": "nftnumber",
+          "description": "Enter MonkeyPoxNFT #",
+          "required": true
+        }
+      ]//end options
+    }//end data
+  });//end post
+});//end client on ready
 
 //respond to slash command
 client.ws.on('INTERACTION_CREATE', async interaction => {
-  const command = interaction.data.name.toLowerCase();
-  const args = interaction.data.options;
-
+  const command = interaction.data.name.toLowerCase()
+  const args = interaction.data.options//array of the provided data after the slash
 
   if (command === 'rarity') {
 
-    var nftproperties = checkrarity(args[0].value);
+    var nftproperties = checkrarity(args[0].value)//first argument should be the nft #. Send it to checkrarity function. Returns array.
 
-    console.log(nftproperties)
+    //split up returned array
+    var nftkey = nftproperties[0];var raritydescription = nftproperties[1];var emoji = nftproperties[2];var embedcolor = nftproperties[3];
 
-    var nftkey = nftproperties[0];
-    var raritydescription = nftproperties[1];
-    var emoji = nftproperties[2];
-    var embedcolor = nftproperties[3];
-
-    if (raritydescription != 'Not found') {
-
+    if (raritydescription != 'Not found') {//if NFT number was not found in DB, 'Not found' would be returned. If it was found, proceed
       client.api.interactions(interaction.id, interaction.token).callback.post({
         data: {
           type: 4,
@@ -197,17 +202,16 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                   "height": 75,
                   "width": 75
                 },
-
                 "footer": {
                   "text": "Rarity data provided by"
                 }
               }
-            ]
-          }//end data
-        }
+            ]//end embed
+          }//end message data
+        }//end post data
       })//end post()
+   
     } else {//end if rarity description != not found
-
       client.api.interactions(interaction.id, interaction.token).callback.post({
         data: {
           type: 4,
@@ -227,22 +231,22 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                   "text": "Rarity data provided by"
                 }
               }
-            ]
-          }//end data
-        }
+            ]//end embed
+          }//end message data
+        }//end post data
       })//end post()
-    }
+    }//end else (if rarity description = 'Not found')
   }//end if command = rarity
-});
+})//end response to slash command
 
+//========================
+//====  Rarity Sniper  ===
+//========================
 
+client.on("messageCreate", (message) => {//watch new messages in the listings channel
+  if (message.channel.id == listingschannel) {//if channel is the listings channel from the config
 
-
-client.on("messageCreate", (message) => {
-
-  if (message.channel.id == listingschannel) {
-
-    let embed = message.embeds[0]
+    let embed = message.embeds[0]//get the embeds (if any) from the message so we can check it
 
     //if there is an embed, the message was from the right bot and it's a listing rather than a sale...
     if (embed != undefined && message.author.id == mebotid && embed.description.includes('listed')) {
@@ -311,9 +315,9 @@ client.on("messageCreate", (message) => {
 
 })
 
-
-
-client.login(process.env.BOTTOKEN);
+//===================
+//====  Database  ===
+//===================
 
 var nftdata = {
 
