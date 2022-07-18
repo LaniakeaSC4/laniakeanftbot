@@ -3,20 +3,6 @@ const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_
 const mpoxdata = require('./monkeypox_nft.json')
 client.login(process.env.BOTTOKEN)
 
-console.log('mpoxdata start')
-console.log(mpoxdata.result.data.items.length)
-
-for (var i = 0;i < mpoxdata.result.data.items.length; i++) {
-  
-  if (mpoxdata.result.data.items[i].id === '766') {
-    console.log('found 766')
-    console.log(mpoxdata.result.data.items[i].name)
-  }
-  
-}
-
-console.log('mpoxdata end')
-
 //================
 //====  Setup  ===
 //================
@@ -110,8 +96,7 @@ for (var i = 0;i < mpoxdata.result.data.items.length; i++) {
   }
   
 }
-console.log('thisrarity next')
-console.log(thisrarity)
+
   if (thisrarity != null) {
 
     console.log('NFT found by key in the databse')
@@ -234,7 +219,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                   "width": 75
                 },
                 "footer": {
-                  "text": "Rarity data provided by"
+                  "text": "Rarity data provided by howrare.is"
                 }
               }
             ]//end embed
@@ -259,7 +244,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                   }
                 ],
                 "footer": {
-                  "text": "Rarity data provided by"
+                  "text": "Rarity data provided by howrare.is"
                 }
               }
             ]//end embed
@@ -330,16 +315,48 @@ client.on("messageCreate", (message) => {//watch new messages in the listings ch
 
       //get rarity of nft with function (need whole rarity database).or handle function returning 0
       var checkthisrarity = checkrarity(nftid)
-      var thisrarity = checkthisrarity[4]
-      console.log('Rarity is: ' + thisrarity)
-      var raritydescription = checkrarity[1];
+        //split up returned array
+    var nftkey = nftproperties[0];var raritydescription = nftproperties[1];var emoji = nftproperties[2];var embedcolor = nftproperties[3]; var thisrarity = nftproperties[4]; var nftname = nftproperties[5]; var thisimage = nftproperties[6];
+ 
 
       //make calculation of if this is a snipe using rarity, floor price and nft price
 
 
       //if this is a snipe, send alert to snipe channel
-      client.guilds.cache.get(monkeyserver).channels.cache.get(snipeschannel).send({ content: embed.title + ' was just listed for ' + thisprice + '. The current floor price is ' + floorprice + ' and given that this ' + raritydescription + ' NFT rarity is ' + thisrarity + ' it could be a snipe!' })
-
+      client.guilds.cache.get(monkeyserver).channels.cache.get(snipeschannel).send({data: {
+            embeds: [
+              {
+                "title": 'Snipe Opportunity ' + thisname,
+                 "color": embedcolor,
+                "fields": [
+                  {
+                    "name": "Rarity",
+                    "value": emoji + emoji + '|  ' + thisrarity + ' - ' + raritydescription + '  |' + emoji + emoji,
+                    "inline": true
+                  },
+                  {
+                    "name": "List Price",
+                    "value": thisprice + ' SOL',
+                    "inline": true
+                  },
+                  {
+                    "name": "Floor Price",
+                    "value": floorprice + ' SOL',
+                    "inline": true
+                  }
+                ], 
+                "image": {
+                  "url": thisimage,
+                  "height": 75,
+                  "width": 75
+                },
+                "footer": {
+                  "text": "Rarity data provided by howrare.is"
+                }
+              }
+            ]//end embed
+      } 
+          })//end message data
     }//end if sender is ME Bot 
   }//end if listingschannel
 
