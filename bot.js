@@ -96,12 +96,16 @@ function checkrarity(nftnumber) {
   var emoji = ""//initalise as string
   var embedcolor = ""//initalise as string
 var thisrarity = ""
+var thisname = ""
+var thisimage = ""
 
 for (var i = 0;i < mpoxdata.result.data.items.length; i++) {
   
   if (mpoxdata.result.data.items[i].id === nftnumber) {
     console.log('found ' + mpoxdata.result.data.items[i].name)
     thisrarity = mpoxdata.result.data.items[i].all_ranks.statistical_rarity
+    thisname = mpoxdata.result.data.items[i].name
+    thisimage = mpoxdata.result.data.items[i].image
     console.log('this rarity is: ' + thisrarity)
   }
   
@@ -165,11 +169,11 @@ for (var i = 0;i < mpoxdata.result.data.items.length; i++) {
     }
 
     //set up array to return
-    var nftproperties = [nftnumber, raritydescription, emoji, embedcolor, thisrarity]
+    var nftproperties = [nftnumber, raritydescription, emoji, embedcolor, thisrarity, thisname, thisimage]
     return (nftproperties)//return arrary
 
   } else {//if nftkey was not found in DB
-    var nftproperties = [nftnumber, 'Not found', '<:common:997639893306064997>', 0x3b0202, 'Not Found']
+    var nftproperties = [nftnumber, 'Not found', '<:common:997639893306064997>', 0x3b0202, 'Not Found', 'No Name']
     return (nftproperties)
   }//end if nft is in object
 }//end checkrarity function
@@ -206,7 +210,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     var nftproperties = checkrarity(args[0].value)//first argument should be the nft #. Send it to checkrarity function. Returns array.
 
     //split up returned array
-    var nftkey = nftproperties[0];var raritydescription = nftproperties[1];var emoji = nftproperties[2];var embedcolor = nftproperties[3];
+    var nftkey = nftproperties[0];var raritydescription = nftproperties[1];var emoji = nftproperties[2];var embedcolor = nftproperties[3]; var thisrarity = nftproperties[4]; var nftname = nftproperties[5]; var thisimage = nftproperties[6];
 
     if (raritydescription != 'Not found') {//if NFT number was not found in DB, 'Not found' would be returned. If it was found, proceed
       client.api.interactions(interaction.id, interaction.token).callback.post({
@@ -215,7 +219,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
           data: {
             embeds: [
               {
-                "title": nftdata['collection1'][nftkey].name,
+                "title": nftname,
                 "color": embedcolor,
                 "fields": [
                   {
@@ -225,7 +229,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                   }
                 ],
                 "image": {
-                  "url": nftdata['collection1'][nftkey].imgurl,
+                  "url": thisimage,
                   "height": 75,
                   "width": 75
                 },
