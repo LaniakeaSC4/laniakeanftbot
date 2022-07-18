@@ -326,7 +326,7 @@ client.on("messageCreate", (message) => {//watch new messages in the listings ch
       client.guilds.cache.get(monkeyserver).channels.cache.get(snipeschannel).send({data: {
             embeds: [
               {
-                "title": 'Snipe Opportunity ' + thisname,
+                "title": 'Snipe Opportunity ' + nftname,
                  "color": embedcolor,
                 "fields": [
                   {
