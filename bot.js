@@ -323,7 +323,7 @@ client.on("messageCreate", (message) => {//watch new messages in the listings ch
 
 
       //if this is a snipe, send alert to snipe channel
-      client.guilds.cache.get(monkeyserver).channels.cache.get(snipeschannel).send({data: {
+      client.guilds.cache.get(monkeyserver).channels.cache.get(snipeschannel).send({
             embeds: [
               {
                 "title": 'Snipe Opportunity ' + nftname,
@@ -356,7 +356,7 @@ client.on("messageCreate", (message) => {//watch new messages in the listings ch
               }
             ]//end embed
       } 
-          })//end message data
+          )//end message data
     }//end if sender is ME Bot 
   }//end if listingschannel
 
