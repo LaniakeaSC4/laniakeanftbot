@@ -3,8 +3,19 @@ const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_
 const mpoxdata = require('./monkeypox_nft.json')
 client.login(process.env.BOTTOKEN)
 
-console.log('mpoxdata')
-console.log(mpoxdata.result.data.items[0])
+console.log('mpoxdata start')
+console.log(mpoxdata.result.data.items.length)
+
+for (var i = 0;i < mpoxdata.result.data.items.length; i++) {
+  
+  if (mpoxdata.result.data.items[i].id === '766') {
+    console.log('found 766')
+    console.log(mpoxdata.result.data.items[i].name)
+  }
+  
+}
+
+console.log('mpoxdata end')
 
 //================
 //====  Setup  ===
