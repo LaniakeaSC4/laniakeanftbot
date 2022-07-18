@@ -314,7 +314,7 @@ client.on("messageCreate", (message) => {//watch new messages in the listings ch
       }
 
       //get rarity of nft with function (need whole rarity database).or handle function returning 0
-      var checkthisrarity = checkrarity(nftid)
+      var nftproperties = checkrarity(nftid)
         //split up returned array
     var nftkey = nftproperties[0];var raritydescription = nftproperties[1];var emoji = nftproperties[2];var embedcolor = nftproperties[3]; var thisrarity = nftproperties[4]; var nftname = nftproperties[5]; var thisimage = nftproperties[6];
  
