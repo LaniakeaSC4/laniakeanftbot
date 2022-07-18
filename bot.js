@@ -1,9 +1,13 @@
 const { Client, Intents } = require('discord.js')
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES] })
-client.login(process.env.BOTTOKEN);
+const mpoxdata = require('./monkeypox_nft.json')
+client.login(process.env.BOTTOKEN)
+
+console.log('mpoxdata')
+console.log(mpoxdata.result.data.items[0])
 
 //================
-//====  Setup  === Test
+//====  Setup  ===
 //================
 
 //channels and servers
