@@ -110,8 +110,8 @@ for (var i = 0;i < mpoxdata.result.data.items.length; i++) {
   }
   
 }
-
-console.log(thisrarity + ' this rarity')
+console.log('thisrarity next')
+console.log(thisrarity)
   if (thisrarity != null) {
 
     console.log('NFT found by key in the databse')
