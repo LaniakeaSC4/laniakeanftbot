@@ -3,7 +3,7 @@ const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_
 client.login(process.env.BOTTOKEN);
 
 //================
-//====  Setup  ===
+//====  Setup  === Test
 //================
 
 //channels and servers
