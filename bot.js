@@ -101,7 +101,7 @@ var thisimage = ""
 
 for (var i = 0;i < mpoxdata.result.data.items.length; i++) {
   
-  if (mpoxdata.result.data.items[i].id === nftnumber) {
+  if (mpoxdata.result.data.items[i].id == nftnumber) {
     console.log('found ' + mpoxdata.result.data.items[i].name)
     thisrarity = mpoxdata.result.data.items[i].all_ranks.statistical_rarity
     thisname = mpoxdata.result.data.items[i].name
