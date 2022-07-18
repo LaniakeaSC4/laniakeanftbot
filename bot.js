@@ -165,11 +165,11 @@ for (var i = 0;i < mpoxdata.result.data.items.length; i++) {
     }
 
     //set up array to return
-    var nftproperties = [nftkey, raritydescription, emoji, embedcolor, thisrarity]
+    var nftproperties = [nftnumber, raritydescription, emoji, embedcolor, thisrarity]
     return (nftproperties)//return arrary
 
   } else {//if nftkey was not found in DB
-    var nftproperties = [nftkey, 'Not found', '<:common:997639893306064997>', 0x3b0202, 'Not Found']
+    var nftproperties = [nftnumber, 'Not found', '<:common:997639893306064997>', 0x3b0202, 'Not Found']
     return (nftproperties)
   }//end if nft is in object
 }//end checkrarity function
