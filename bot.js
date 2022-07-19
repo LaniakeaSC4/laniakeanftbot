@@ -356,7 +356,7 @@ client.on("messageCreate", (message) => {//watch new messages in the listings ch
                     "inline": false
                   },
                   {
-                    "name": "Rarity",
+                    "name": "Rarity Rank",
                     "value": thisrarity + ' - ' + raritydescription,
                     "inline": false
                   },
