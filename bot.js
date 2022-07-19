@@ -320,21 +320,47 @@ client.on("messageCreate", (message) => {//watch new messages in the listings ch
  
 
       //make calculation of if this is a snipe using rarity, floor price and nft price
+var hotrarities = ['Mythic', 'Legendary','Epic', 'Rare']
 
-
+if (hotrarities.includes(raritydescription)) {
       //if this is a snipe, send alert to snipe channel
+      
+      var mythiclimit = 100
+      var legendarylimit = 50
+      var epiclimit = 10
+      var rarelimit = 5
+      
+      var thislimit = 0
+      
+      var mythicsnipe = mythiclimit*floorprice
+      var legendarysnipe = legendarylimit*floorprice
+      var epicsnipe = epiclimit*floorprice
+      var raresnipe = rarelimit*floorprice
+      
+      var thissnipeprice = 0
+      
+      var issnipe = false
+      
+      if (raritydescription == 'Mythic' && thisprice <= mythicsnipe) {issnipe = true; thislimit = mythiclimit;thissnipeprice = mythicsnipe} else if (raritydescription == 'Legendary' && thisprice <= legendarysnipe) {issnipe = true;thislimit = legendarylimit;thissnipeprice = legendarysnipe} else if (raritydescription == 'Epic' && thisprice <= epicsnipe) {issnipe = true;thislimit = epiclimit;thissnipeprice = epicsnipe} else if (raritydescription == 'Rare' && thisprice <= raresnipe) {issnipe = true;thislimit = rarelimit;thissnipeprice = raresnipe}
+      if (issnipe == true){
       client.guilds.cache.get(monkeyserver).channels.cache.get(snipeschannel).send({
-            embeds: [
+            "content" : "@everyone", 
+            "embed" : [
               {
-                "title": 'Snipe Opportunity ' + nftname,
+                "title": 'Snipe Opportunity: ' + nftname,
                  "color": embedcolor,
                 "fields": [
                   {
                     "name": "Rarity",
-                    "value": emoji + emoji + '|  ' + thisrarity + ' - ' + raritydescription + '  |' + emoji + emoji,
+                    "value": thisrarity + ' - ' + raritydescription,
                     "inline": true
                   },
                   {
+                    "name": "Snipe Price",
+                    "value": 'For ' + raritydescription + ': ' + thislimit + 'x floor price of ' + floorprice + 'SOL (' + thissnipeprice + 'SOL)',
+                    "inline": true
+                  },
+                                    {
                     "name": "List Price",
                     "value": thisprice + ' SOL',
                     "inline": true
@@ -357,6 +383,8 @@ client.on("messageCreate", (message) => {//watch new messages in the listings ch
             ]//end embed
       } 
           )//end message data
+      } //if issnipe = true 
+} // if a hot rarity 
     }//end if sender is ME Bot 
   }//end if listingschannel
 
