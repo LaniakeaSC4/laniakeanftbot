@@ -345,7 +345,7 @@ if (hotrarities.includes(raritydescription)) {
       if (issnipe == true){
       client.guilds.cache.get(monkeyserver).channels.cache.get(snipeschannel).send({
             "content" : "@everyone", 
-            "embed" : [
+            embeds : [
               {
                 "title": 'Snipe Opportunity: ' + nftname,
                  "color": embedcolor,
