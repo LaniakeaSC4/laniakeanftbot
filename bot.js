@@ -351,13 +351,13 @@ client.on("messageCreate", (message) => {//watch new messages in the listings ch
                 "color": embedcolor,
                 "fields": [
                   {
-                    "name": "Rarity",
-                    "value": thisrarity + ' - ' + raritydescription,
+                    "name": "Why is this a snipe opportunity?",
+                    "value": 'Listing price is <' + thissnipeprice + ' SOL\n' + 'For ' + raritydescription + ' NFTs snipe price is <=' + thislimit + 'x the floor price of ' + floorprice + 'SOL',
                     "inline": false
                   },
                   {
-                    "name": "Snipe Price",
-                    "value": 'Snipe price is <' + thissnipeprice + 'SOL (' + 'For ' + raritydescription + ' NFTs snipe price is <=' + thislimit + ' the floor price of ' + floorprice + 'SOL)',
+                    "name": "Rarity",
+                    "value": thisrarity + ' - ' + raritydescription,
                     "inline": false
                   },
                   {
