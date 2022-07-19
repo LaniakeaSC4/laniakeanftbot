@@ -352,7 +352,7 @@ client.on("messageCreate", (message) => {//watch new messages in the listings ch
                 "fields": [
                   {
                     "name": "Why is this a snipe opportunity?",
-                    "value": 'Listing price is <' + thissnipeprice + ' SOL\n' + 'For ' + raritydescription + ' NFTs snipe price is <=' + thislimit + 'x the floor price of ' + floorprice + 'SOL',
+                    "value": 'Listing price is <' + thissnipeprice + ' SOL\n\n' + 'For ' + raritydescription + ' NFTs snipe price is <=' + thislimit + 'x the floor price of ' + floorprice + ' SOL',
                     "inline": false
                   },
                   {
