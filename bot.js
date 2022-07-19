@@ -36,34 +36,36 @@ var commonend = 0; var commonend = 0
 //establish ranges for collection(s)
 client.on('ready', () => {
 
+  console.log('number of items: ' + mpoxdata.result.data.items.length)
+
   //mythic range (start of range is 1)
   mythicstart = 1;
-  mythicend = Math.floor(nftdata['collection1'].nftcount * pmythic)
+  mythicend = Math.floor(mpoxdata.result.data.items.length * pmythic)
 
   //legendary range
-  legendarystart = Math.ceil(nftdata['collection1'].nftcount * pmythic)
+  legendarystart = Math.ceil(mpoxdata.result.data.items.length * pmythic)
   if (legendarystart === mythicend) { legendarystart = legendarystart + 1 }
-  legendaryend = Math.floor(nftdata['collection1'].nftcount * plegendary)
+  legendaryend = Math.floor(mpoxdata.result.data.items.length * plegendary)
 
   //epic range
-  epicstart = Math.ceil(nftdata['collection1'].nftcount * plegendary)
+  epicstart = Math.ceil(mpoxdata.result.data.items.length * plegendary)
   if (epicstart === legendaryend) { epicstart = epicstart + 1 }
-  epicend = Math.floor(nftdata['collection1'].nftcount * pepic)
+  epicend = Math.floor(mpoxdata.result.data.items.length * pepic)
 
   //rare range
-  rarestart = Math.ceil(nftdata['collection1'].nftcount * pepic)
+  rarestart = Math.ceil(mpoxdata.result.data.items.length * pepic)
   if (rarestart === epicend) { rarestart = rarestart + 1 }
-  rareend = Math.floor(nftdata['collection1'].nftcount * prare)
+  rareend = Math.floor(mpoxdata.result.data.items.length * prare)
 
   //uncommon range
-  uncommonstart = Math.ceil(nftdata['collection1'].nftcount * prare)
+  uncommonstart = Math.ceil(mpoxdata.result.data.items.length * prare)
   if (uncommonstart === rareend) { uncommonstart = uncommonstart + 1 }
-  uncommonend = Math.floor(nftdata['collection1'].nftcount * puncommon)
+  uncommonend = Math.floor(mpoxdata.result.data.items.length * puncommon)
 
   //common range (end of range is same as NFT count)
-  commonstart = Math.ceil(nftdata['collection1'].nftcount * puncommon)
+  commonstart = Math.ceil(mpoxdata.result.data.items.length * puncommon)
   if (commonstart === uncommonend) { commomstart = commonstart + 1 }
-  commonend = nftdata['collection1'].nftcount
+  commonend = mpoxdata.result.data.items.length
 
   console.log('Mythic: ' + mythicstart + ' - ' + mythicend + '. Legendary: ' + legendarystart + ' - ' + legendaryend + '. Epic: ' + epicstart + ' - ' + epicend + '. Rare: ' + rarestart + ' - ' + rareend + '. Uncommon: ' + uncommonstart + ' - ' + uncommonend + '. Common: ' + commonend + ' - ' + commonend + '.')
   console.log(`I'm Ready!`);
@@ -325,13 +327,13 @@ client.on("messageCreate", (message) => {//watch new messages in the listings ch
         var epiclimit = 10
         var rarelimit = 5
         var thislimit = 0//variable for setting what the limit is for this pariticular round so we can use it in the output
-
+        
+        //calculate ceilings that if the current price is less, this is a snipe
         var mythicsnipe = mythiclimit * floorprice
         var legendarysnipe = legendarylimit * floorprice
         var epicsnipe = epiclimit * floorprice
         var raresnipe = rarelimit * floorprice
-
-        var thissnipeprice = 0
+        var thissnipeprice = 0//variable for setting
 
         var issnipe = false
 
