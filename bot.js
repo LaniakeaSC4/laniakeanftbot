@@ -267,70 +267,64 @@ client.on("messageCreate", (message) => {//watch new messages in the listings ch
     //if there is an embed, the message was from the right bot and it's a listing rather than a sale...
     if (embed != undefined && message.author.id == mebotid && embed.description.includes('listed')) {
 
-      console.log(embed.description)
+      console.log(embed.description + " was just listed")
 
       //get list price
       var thispricestring = ''
       var thisprice = 0
 
-      let descriptionarr = embed.description.split(' ')
+      let descriptionarr = embed.description.split(' ')//split description from embed into array of each word
 
-      for (var i = 0; i < descriptionarr.length; i++) {
+      for (var i = 0; i < descriptionarr.length; i++) {//loop through description words for SOL then get the word before it which should be the price
         let checkthis = descriptionarr[i]
         if (checkthis === 'SOL') {
-
-          let x = i - 1
+          let x = i - 1//get the word before SOL
           thispricestring = descriptionarr[x]
-          thisprice = parseFloat(thispricestring)
+          thisprice = parseFloat(thispricestring)//change string to number
           console.log('Listed for: ' + thisprice)
-
-        }
+        }//end if SOL
       }//end for loop checking each word in the listing description for the list price
 
       //get floor price
       var floorprice = 0
-      var floorchan = client.channels.cache.get(floorchannel)
+      var floorchan = client.channels.cache.get(floorchannel)//get floor price channel (which is updated by SolMate bot)
 
-      var floorarr = floorchan.name.split(' ')
-      var flength = floorarr[1].length
-      var floorpricestring = floorarr[1].substring(1, flength)
+      var floorarr = floorchan.name.split(' ')//split it at the space to find the price part - this depends on exact channel layout
+      var flength = floorarr[1].length//find the lenght of the substring after the space
+      var floorpricestring = floorarr[1].substring(1, flength)//drop the first charter to get just the number
 
-      floorprice = parseFloat(floorpricestring)
+      floorprice = parseFloat(floorpricestring)//change string to number
       console.log('Floor price: ' + floorprice)
 
       //get rarity of this listing
       var nftid = ''
 
       //get nft ID
-      for (var i = 0; i < descriptionarr.length; i++) {
+      for (var i = 0; i < descriptionarr.length; i++) {//loop through description words from listing look for the # before the NFT number
         let checkthis = descriptionarr[i]
         if (checkthis.includes('#')) {
-
           var nlength = checkthis.length
           nftid = checkthis.substring(1, nlength)
           console.log('NFT ID is: ' + nftid)
-
-        }
-      }
+        }//end if includes #
+      }//end for loop
 
       //get rarity of nft with function (need whole rarity database).or handle function returning 0
       var nftproperties = checkrarity(nftid)
       //split up returned array
       var nftkey = nftproperties[0]; var raritydescription = nftproperties[1]; var emoji = nftproperties[2]; var embedcolor = nftproperties[3]; var thisrarity = nftproperties[4]; var nftname = nftproperties[5]; var thisimage = nftproperties[6];
 
-
       //make calculation of if this is a snipe using rarity, floor price and nft price
-      var hotrarities = ['Mythic', 'Legendary', 'Epic', 'Rare']
-
+      var hotrarities = ['Mythic', 'Legendary', 'Epic', 'Rare']//we only want to snipe these ones
       if (hotrarities.includes(raritydescription)) {
         //if this is a snipe, send alert to snipe channel
 
+        //set multipliers. If the currently listed NFT is less than these multipliers of the floor price
         var mythiclimit = 100
         var legendarylimit = 50
         var epiclimit = 10
         var rarelimit = 5
-
-        var thislimit = 0
+        var thislimit = 0//variable for setting what the limit is for this pariticular round so we can use it in the output
 
         var mythicsnipe = mythiclimit * floorprice
         var legendarysnipe = legendarylimit * floorprice
@@ -390,28 +384,3 @@ client.on("messageCreate", (message) => {//watch new messages in the listings ch
 
 
 })
-
-//===================
-//====  Database  ===
-//===================
-
-var nftdata = {
-
-  "collection1": {
-
-    "nftcount": 2500,
-
-    "nft1": { name: "MonkeyPoxNFT #1", rarity: "1", imgurl: `https://igvzgsmvdzfq4nhxlmbegcppryqucc6ar3amxhg6b4r5ndm6.arweave.net/QauTSZUeSw4091sCQwnvjiFBC8COwMuc3g8j1_o2_eI?ext=png` },
-
-    "nft2": { name: "MonkeyPoxNFT #2", rarity: "50", imgurl: `https://igvzgsmvdzfq4nhxlmbegcppryqucc6ar3amxhg6b4r5ndm6.arweave.net/QauTSZUeSw4091sCQwnvjiFBC8COwMuc3g8j1_o2_eI?ext=png` },
-
-    "nft3": { name: "MonkeyPoxNFT #3", rarity: "130", imgurl: `https://igvzgsmvdzfq4nhxlmbegcppryqucc6ar3amxhg6b4r5ndm6.arweave.net/QauTSZUeSw4091sCQwnvjiFBC8COwMuc3g8j1_o2_eI?ext=png` },
-
-    "nft4": { name: "MonkeyPoxNFT #4", rarity: "300", imgurl: `https://igvzgsmvdzfq4nhxlmbegcppryqucc6ar3amxhg6b4r5ndm6.arweave.net/QauTSZUeSw4091sCQwnvjiFBC8COwMuc3g8j1_o2_eI?ext=png` },
-
-    "nft5": { name: "MonkeyPoxNFT #5", rarity: "900", imgurl: `https://igvzgsmvdzfq4nhxlmbegcppryqucc6ar3amxhg6b4r5ndm6.arweave.net/QauTSZUeSw4091sCQwnvjiFBC8COwMuc3g8j1_o2_eI?ext=png` },
-
-    "nft766": { name: "MonkeyPoxNFT #766", rarity: "2027", imgurl: 'https://g2scosbrhsa5mcy2nhucmkbj3inovwjwfnyumxpoz3ttoucbtu.arweave.net/NqQnSDE8gd-YLGmnoJigp2hrq2TYrcUZd7s7nN1BBnY?ext=png ' }
-
-  }
-} 
