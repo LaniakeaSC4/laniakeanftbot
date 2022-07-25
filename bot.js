@@ -93,7 +93,7 @@ for (var i = 0;i < mpoxdata.result.data.items.length; i++) {
     thisrarity = mpoxdata.result.data.items[i].all_ranks.statistical_rarity
     thisname = mpoxdata.result.data.items[i].name
     thisimage = mpoxdata.result.data.items[i].image
-    thismelink = 'https://magiceden.io/item-details/' + thisimage.substring(thisimage.LastIndexOf("/") + 1, thisimage.lastIndexOf("?")) 
+    thismelink = 'https://magiceden.io/item-details/' + thisimage.substring(thisimage.lastIndexOf("/") + 1, thisimage.lastIndexOf("?")) 
     console.log('this rarity is: ' + thisrarity)
   }
   
