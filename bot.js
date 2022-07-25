@@ -346,7 +346,7 @@ if (hotrarities.includes(raritydescription)) {
       if (raritydescription == 'Mythic' && thisprice <= mythicsnipe) {issnipe = true; thislimit = mythiclimit;thissnipeprice = mythicsnipe} else if (raritydescription == 'Legendary' && thisprice <= legendarysnipe) {issnipe = true;thislimit = legendarylimit;thissnipeprice = legendarysnipe} else if (raritydescription == 'Epic' && thisprice <= epicsnipe) {issnipe = true;thislimit = epiclimit;thissnipeprice = epicsnipe} else if (raritydescription == 'Rare' && thisprice <= raresnipe) {issnipe = true;thislimit = rarelimit;thissnipeprice = raresnipe}
       if (issnipe == true){
       client.guilds.cache.get(monkeyserver).channels.cache.get(snipeschannel).send({
-            "content" : "@everyone - " + melink, 
+            "content" : "@everyone", 
             embeds : [
               {
                 "title": 'Snipe Opportunity: ' + nftname,
