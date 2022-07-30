@@ -11,7 +11,7 @@ client.login(process.env.BOTTOKEN)
 const monkeyserver = '978975057739124767'
 const floorchannel = '992114091374157926'
 const snipeschannel = '996130357260845156'
-const listingschannel = '992439605569790072'
+const mpoxlistingschannel = '992439605569790072'
 const mebotid = '980154113637646346'
 
 //set rarity threshold percentages
@@ -261,10 +261,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 //====  Rarity Sniper  ===
 //========================
 
-client.on("messageCreate", (message) => {//watch new messages in the listings channel
-  if (message.channel.id == listingschannel) {//if channel is the listings channel from the config
-
-    let embed = message.embeds[0]//get the embeds (if any) from the message so we can check it
+function checksnipe(message) {
+  
+  let embed = message.embeds[0]//get the embeds (if any) from the message so we can check it
 
     //if there is an embed, the message was from the right bot and it's a listing rather than a sale...
     if (embed != undefined && message.author.id == mebotid && embed.description.includes('listed')) {
@@ -388,7 +387,15 @@ if (hotrarities.includes(raritydescription)) {
       } //if issnipe = true 
 } // if a hot rarity 
     }//end if sender is ME Bot 
-  }//end if listingschannel
+  
+}
+
+client.on("messageCreate", (message) => {//watch new messages in the listings channel
+  if (message.channel.id == mpoxlistingschannel) {//if channel is the listings channel from the config
+
+checksnipe(message)
+
+  }//end if mpoxlistingschannel
 
 
 })
