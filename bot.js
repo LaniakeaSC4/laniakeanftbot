@@ -45,32 +45,32 @@ function setranges(collection){
 
   //mythic range (start of range is 1)
   mythicstart = 1;
-  mythicend = Math.floor(collection.result.data.items.length * pmythic)
+  mythicend = Math.floor([collection].result.data.items.length * pmythic)
 
   //legendary range
-  legendarystart = Math.ceil(collection.result.data.items.length * pmythic)
+  legendarystart = Math.ceil([collection].result.data.items.length * pmythic)
   if (legendarystart === mythicend) { legendarystart = legendarystart + 1 }
-  legendaryend = Math.floor(collection.result.data.items.length * plegendary)
+  legendaryend = Math.floor([collection].result.data.items.length * plegendary)
 
   //epic range
-  epicstart = Math.ceil(collection.result.data.items.length * plegendary)
+  epicstart = Math.ceil([collection].result.data.items.length * plegendary)
   if (epicstart === legendaryend) { epicstart = epicstart + 1 }
-  epicend = Math.floor(collection.result.data.items.length * pepic)
+  epicend = Math.floor([collection].result.data.items.length * pepic)
 
   //rare range
-  rarestart = Math.ceil(collection.result.data.items.length * pepic)
+  rarestart = Math.ceil([collection].result.data.items.length * pepic)
   if (rarestart === epicend) { rarestart = rarestart + 1 }
-  rareend = Math.floor(collection.result.data.items.length * prare)
+  rareend = Math.floor([collection].result.data.items.length * prare)
 
   //uncommon range
-  uncommonstart = Math.ceil(collection.result.data.items.length * prare)
+  uncommonstart = Math.ceil([collection].result.data.items.length * prare)
   if (uncommonstart === rareend) { uncommomstart = uncommonstart + 1 }
-  uncommonend = Math.floor(collection.result.data.items.length * puncommon)
+  uncommonend = Math.floor([collection].result.data.items.length * puncommon)
 
   //common range (end of range is same as NFT count)
-  commonstart = Math.ceil(collection.result.data.items.length * puncommon)
+  commonstart = Math.ceil([collection].result.data.items.length * puncommon)
   if (commonstart === uncommonend) { commomstart = commonstart + 1 }
-  commonend = collection.result.data.items.length
+  commonend = [collection].result.data.items.length
 
   console.log('Mythic: ' + mythicstart + ' - ' + mythicend + '. Legendary: ' + legendarystart + ' - ' + legendaryend + '. Epic: ' + epicstart + ' - ' + epicend + '. Rare: ' + rarestart + ' - ' + rareend + '. Uncommon: ' + uncommomstart + ' - ' + uncommonend + '. Common: ' + commonend + ' - ' + commonend + '.')
 
