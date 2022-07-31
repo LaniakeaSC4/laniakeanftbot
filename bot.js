@@ -417,28 +417,3 @@ checksnipe(message,'mpox')
 
 
 })
-
-//===================
-//====  Database  ===
-//===================
-
-var nftdata = {
-
-  "collection1": {
-
-    "nftcount": 2500,
-
-    "nft1": { name: "MonkeyPoxNFT #1", rarity: "1", imgurl: `https://igvzgsmvdzfq4nhxlmbegcppryqucc6ar3amxhg6b4r5ndm6.arweave.net/QauTSZUeSw4091sCQwnvjiFBC8COwMuc3g8j1_o2_eI?ext=png` },
-
-    "nft2": { name: "MonkeyPoxNFT #2", rarity: "50", imgurl: `https://igvzgsmvdzfq4nhxlmbegcppryqucc6ar3amxhg6b4r5ndm6.arweave.net/QauTSZUeSw4091sCQwnvjiFBC8COwMuc3g8j1_o2_eI?ext=png` },
-
-    "nft3": { name: "MonkeyPoxNFT #3", rarity: "130", imgurl: `https://igvzgsmvdzfq4nhxlmbegcppryqucc6ar3amxhg6b4r5ndm6.arweave.net/QauTSZUeSw4091sCQwnvjiFBC8COwMuc3g8j1_o2_eI?ext=png` },
-
-    "nft4": { name: "MonkeyPoxNFT #4", rarity: "300", imgurl: `https://igvzgsmvdzfq4nhxlmbegcppryqucc6ar3amxhg6b4r5ndm6.arweave.net/QauTSZUeSw4091sCQwnvjiFBC8COwMuc3g8j1_o2_eI?ext=png` },
-
-    "nft5": { name: "MonkeyPoxNFT #5", rarity: "900", imgurl: `https://igvzgsmvdzfq4nhxlmbegcppryqucc6ar3amxhg6b4r5ndm6.arweave.net/QauTSZUeSw4091sCQwnvjiFBC8COwMuc3g8j1_o2_eI?ext=png` },
-
-    "nft766": { name: "MonkeyPoxNFT #766", rarity: "2027", imgurl: 'https://g2scosbrhsa5mcy2nhucmkbj3inovwjwfnyumxpoz3ttoucbtu.arweave.net/NqQnSDE8gd-YLGmnoJigp2hrq2TYrcUZd7s7nN1BBnY?ext=png ' }
-
-  }
-} 
