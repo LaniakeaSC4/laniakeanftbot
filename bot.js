@@ -79,7 +79,7 @@ function setranges(collection){
   if (commonstart === uncommonend) { commonstart = commonstart + 1 }
   commonend = collections[collection].result.data.items.length
 
-  console.log('Mythic: ' + mythicstart + ' - ' + mythicend + '. Legendary: ' + legendarystart + ' - ' + legendaryend + '. Epic: ' + epicstart + ' - ' + epicend + '. Rare: ' + rarestart + ' - ' + rareend + '. Uncommon: ' + Uncommonstart + ' - ' + uncommonend + '. Common: ' + commonend + ' - ' + commonend + '.')
+  console.log('Mythic: ' + mythicstart + ' - ' + mythicend + '. Legendary: ' + legendarystart + ' - ' + legendaryend + '. Epic: ' + epicstart + ' - ' + epicend + '. Rare: ' + rarestart + ' - ' + rareend + '. Uncommon: ' + uncommonstart + ' - ' + uncommonend + '. Common: ' + commonstart + ' - ' + commonend + '.')
 
 }//end setranges function
 
