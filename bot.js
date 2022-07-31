@@ -38,32 +38,32 @@ client.on('ready', () => {
 
   //mythic range (start of range is 1)
   mythicstart = 1;
-  mythicend = Math.floor(nftdata['collection1'].nftcount * pmythic)
+  mythicend = Math.floor(mpoxdata.result.data.items.length * pmythic)
 
   //legendary range
-  legendarystart = Math.ceil(nftdata['collection1'].nftcount * pmythic)
+  legendarystart = Math.ceil(mpoxdata.result.data.items.length * pmythic)
   if (legendarystart === mythicend) { legendarystart = legendarystart + 1 }
-  legendaryend = Math.floor(nftdata['collection1'].nftcount * plegendary)
+  legendaryend = Math.floor(mpoxdata.result.data.items.length * plegendary)
 
   //epic range
-  epicstart = Math.ceil(nftdata['collection1'].nftcount * plegendary)
+  epicstart = Math.ceil(mpoxdata.result.data.items.length * plegendary)
   if (epicstart === legendaryend) { epicstart = epicstart + 1 }
-  epicend = Math.floor(nftdata['collection1'].nftcount * pepic)
+  epicend = Math.floor(mpoxdata.result.data.items.length * pepic)
 
   //rare range
-  rarestart = Math.ceil(nftdata['collection1'].nftcount * pepic)
+  rarestart = Math.ceil(mpoxdata.result.data.items.length * pepic)
   if (rarestart === epicend) { rarestart = rarestart + 1 }
-  rareend = Math.floor(nftdata['collection1'].nftcount * prare)
+  rareend = Math.floor(mpoxdata.result.data.items.length * prare)
 
   //uncommon range
-  uncommonstart = Math.ceil(nftdata['collection1'].nftcount * prare)
+  uncommonstart = Math.ceil(mpoxdata.result.data.items.length * prare)
   if (uncommonstart === rareend) { uncommomstart = uncommonstart + 1 }
-  uncommonend = Math.floor(nftdata['collection1'].nftcount * puncommon)
+  uncommonend = Math.floor(mpoxdata.result.data.items.length * puncommon)
 
   //common range (end of range is same as NFT count)
-  commonstart = Math.ceil(nftdata['collection1'].nftcount * puncommon)
+  commonstart = Math.ceil(mpoxdata.result.data.items.length * puncommon)
   if (commonstart === uncommonend) { commomstart = commonstart + 1 }
-  commonend = nftdata['collection1'].nftcount
+  commonend = mpoxdata.result.data.items.length
 
   console.log('Mythic: ' + mythicstart + ' - ' + mythicend + '. Legendary: ' + legendarystart + ' - ' + legendaryend + '. Epic: ' + epicstart + ' - ' + epicend + '. Rare: ' + rarestart + ' - ' + rareend + '. Uncommon: ' + uncommomstart + ' - ' + uncommonend + '. Common: ' + commonend + ' - ' + commonend + '.')
   console.log(`I'm Ready!`);
@@ -261,7 +261,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 //====  Rarity Sniper  ===
 //========================
 
-function checksnipe(message) {
+function checksnipe(message,collection) {
   
   let embed = message.embeds[0]//get the embeds (if any) from the message so we can check it
 
@@ -393,7 +393,7 @@ if (hotrarities.includes(raritydescription)) {
 client.on("messageCreate", (message) => {//watch new messages in the listings channel
   if (message.channel.id == mpoxlistingschannel) {//if channel is the listings channel from the config
 
-checksnipe(message)
+checksnipe(message,'mpox')
 
   }//end if mpoxlistingschannel
 
