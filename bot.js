@@ -1,12 +1,15 @@
 const { Client, Intents } = require('discord.js')
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES] })
+client.login(process.env.BOTTOKEN)
 
+//main collections array
 const collections = []
+
+//import collections
 const mpoxdata = require('./monkeypox_nft.json')
 
+//add collections to arrary
 collections['mpox'] = mpoxdata
-
-client.login(process.env.BOTTOKEN)
 
 //================
 //====  Setup  ===
@@ -31,7 +34,7 @@ var mythicstart = 0; var mythicend = 0
 var legendarystart = 0; var legendaryend = 0
 var epicstart = 0; var epicend = 0
 var rarestart = 0; var rareend = 0
-var uncommomstart = 0; var uncommonend = 0
+var Uncommonstart = 0; var uncommonend = 0
 var commonend = 0; var commonend = 0
 
 //=================
@@ -68,7 +71,7 @@ function setranges(collection){
 
   //uncommon range
   uncommonstart = Math.ceil(collections[collection].result.data.items.length * prare)
-  if (uncommonstart === rareend) { uncommomstart = uncommonstart + 1 }
+  if (uncommonstart === rareend) { Uncommonstart = uncommonstart + 1 }
   uncommonend = Math.floor(collections[collection].result.data.items.length * puncommon)
 
   //common range (end of range is same as NFT count)
@@ -76,7 +79,7 @@ function setranges(collection){
   if (commonstart === uncommonend) { commomstart = commonstart + 1 }
   commonend = collections[collection].result.data.items.length
 
-  console.log('Mythic: ' + mythicstart + ' - ' + mythicend + '. Legendary: ' + legendarystart + ' - ' + legendaryend + '. Epic: ' + epicstart + ' - ' + epicend + '. Rare: ' + rarestart + ' - ' + rareend + '. Uncommon: ' + uncommomstart + ' - ' + uncommonend + '. Common: ' + commonend + ' - ' + commonend + '.')
+  console.log('Mythic: ' + mythicstart + ' - ' + mythicend + '. Legendary: ' + legendarystart + ' - ' + legendaryend + '. Epic: ' + epicstart + ' - ' + epicend + '. Rare: ' + rarestart + ' - ' + rareend + '. Uncommon: ' + Uncommonstart + ' - ' + uncommonend + '. Common: ' + commonend + ' - ' + commonend + '.')
 
 }//end setranges function
 
