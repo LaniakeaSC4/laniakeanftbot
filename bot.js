@@ -1,5 +1,6 @@
 const { Client, Intents } = require('discord.js')
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES] })
+
 const mpoxdata = require('./monkeypox_nft.json')
 client.login(process.env.BOTTOKEN)
 
@@ -35,39 +36,45 @@ var commonend = 0; var commonend = 0
 
 //establish ranges for collection(s)
 client.on('ready', () => {
+  setranges('mpoxdata')
+    console.log(`I'm Ready!`);
+});//end client.on Ready to establish ranges
+
+function setranges(collection){
+  
 
   //mythic range (start of range is 1)
   mythicstart = 1;
-  mythicend = Math.floor(mpoxdata.result.data.items.length * pmythic)
+  mythicend = Math.floor(collection.result.data.items.length * pmythic)
 
   //legendary range
-  legendarystart = Math.ceil(mpoxdata.result.data.items.length * pmythic)
+  legendarystart = Math.ceil(collection.result.data.items.length * pmythic)
   if (legendarystart === mythicend) { legendarystart = legendarystart + 1 }
-  legendaryend = Math.floor(mpoxdata.result.data.items.length * plegendary)
+  legendaryend = Math.floor(collection.result.data.items.length * plegendary)
 
   //epic range
-  epicstart = Math.ceil(mpoxdata.result.data.items.length * plegendary)
+  epicstart = Math.ceil(collection.result.data.items.length * plegendary)
   if (epicstart === legendaryend) { epicstart = epicstart + 1 }
-  epicend = Math.floor(mpoxdata.result.data.items.length * pepic)
+  epicend = Math.floor(collection.result.data.items.length * pepic)
 
   //rare range
-  rarestart = Math.ceil(mpoxdata.result.data.items.length * pepic)
+  rarestart = Math.ceil(collection.result.data.items.length * pepic)
   if (rarestart === epicend) { rarestart = rarestart + 1 }
-  rareend = Math.floor(mpoxdata.result.data.items.length * prare)
+  rareend = Math.floor(collection.result.data.items.length * prare)
 
   //uncommon range
-  uncommonstart = Math.ceil(mpoxdata.result.data.items.length * prare)
+  uncommonstart = Math.ceil(collection.result.data.items.length * prare)
   if (uncommonstart === rareend) { uncommomstart = uncommonstart + 1 }
-  uncommonend = Math.floor(mpoxdata.result.data.items.length * puncommon)
+  uncommonend = Math.floor(collection.result.data.items.length * puncommon)
 
   //common range (end of range is same as NFT count)
-  commonstart = Math.ceil(mpoxdata.result.data.items.length * puncommon)
+  commonstart = Math.ceil(collection.result.data.items.length * puncommon)
   if (commonstart === uncommonend) { commomstart = commonstart + 1 }
-  commonend = mpoxdata.result.data.items.length
+  commonend = collection.result.data.items.length
 
   console.log('Mythic: ' + mythicstart + ' - ' + mythicend + '. Legendary: ' + legendarystart + ' - ' + legendaryend + '. Epic: ' + epicstart + ' - ' + epicend + '. Rare: ' + rarestart + ' - ' + rareend + '. Uncommon: ' + uncommomstart + ' - ' + uncommonend + '. Common: ' + commonend + ' - ' + commonend + '.')
-  console.log(`I'm Ready!`);
-});//end client.on Ready to establish ranges
+
+}//end setranges function
 
 //====================
 //====  Functions  ===
