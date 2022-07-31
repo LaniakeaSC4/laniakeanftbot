@@ -81,6 +81,10 @@ function setranges(collection){
 
   console.log('Mythic: ' + mythicstart + ' - ' + mythicend + '. Legendary: ' + legendarystart + ' - ' + legendaryend + '. Epic: ' + epicstart + ' - ' + epicend + '. Rare: ' + rarestart + ' - ' + rareend + '. Uncommon: ' + uncommonstart + ' - ' + uncommonend + '. Common: ' + commonstart + ' - ' + commonend + '.')
 
+var returnranges = [collection, mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend]
+
+return(returnranges)
+
 }//end setranges function
 
 //====================
@@ -88,7 +92,7 @@ function setranges(collection){
 //====================
 
 //get rarity rank by nft#. NFT # (only) is passed to function.
-function checkrarity(nftnumber) {
+function checkrarity(nftnumber,collection) {
 
   //set nftnum equal to the command argument value. This is a key in the data object
   //var nftkey = 'nft' + nftnumber//establish key
@@ -100,13 +104,13 @@ var thisname = ""
 var thisimage = ""
 var thismelink = ""
 
-for (var i = 0;i < mpoxdata.result.data.items.length; i++) {
+for (var i = 0;i < collections[collection].result.data.items.length; i++) {
   
-  if (mpoxdata.result.data.items[i].id == nftnumber) {
-    console.log('found ' + mpoxdata.result.data.items[i].name)
-    thisrarity = mpoxdata.result.data.items[i].all_ranks.statistical_rarity
-    thisname = mpoxdata.result.data.items[i].name
-    thisimage = mpoxdata.result.data.items[i].image
+  if (collections[collection].result.data.items[i].id == nftnumber) {
+    console.log('found ' + collections[collection].result.data.items[i].name)
+    thisrarity = collections[collection].result.data.items[i].all_ranks.statistical_rarity
+    thisname = collections[collection].result.data.items[i].name
+    thisimage = collections[collection].result.data.items[i].image
     thismelink = 'https://magiceden.io/item-details/' + thisimage.substring(thisimage.lastIndexOf("/") + 1, thisimage.lastIndexOf("?")) 
     console.log('this rarity is: ' + thisrarity)
   }
@@ -208,7 +212,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
   if (command === 'rarity') {
 
-    var nftproperties = checkrarity(args[0].value)//first argument should be the nft #. Send it to checkrarity function. Returns array.
+    var nftproperties = checkrarity(args[0].value, 'mpox')//first argument should be the nft #. Send it to checkrarity function. Returns array.
 
     //split up returned array
     var nftkey = nftproperties[0];var raritydescription = nftproperties[1];var emoji = nftproperties[2];var embedcolor = nftproperties[3]; var thisrarity = nftproperties[4]; var nftname = nftproperties[5]; var thisimage = nftproperties[6]; 
@@ -329,7 +333,7 @@ function checksnipe(message,collection) {
       }
 
       //get rarity of nft with function (need whole rarity database).or handle function returning 0
-      var nftproperties = checkrarity(nftid)
+      var nftproperties = checkrarity(nftid,'mpox')
         //split up returned array
     var nftkey = nftproperties[0];var raritydescription = nftproperties[1];var emoji = nftproperties[2];var embedcolor = nftproperties[3]; var thisrarity = nftproperties[4]; var nftname = nftproperties[5]; var thisimage = nftproperties[6]; var melink = nftproperties[7]
  
