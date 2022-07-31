@@ -4,7 +4,7 @@ const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_
 const collections = []
 const mpoxdata = require('./monkeypox_nft.json')
 
-collections[mpox] = mpoxdata
+collections['mpox'] = mpoxdata
 
 client.login(process.env.BOTTOKEN)
 
