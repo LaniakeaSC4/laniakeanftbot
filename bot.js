@@ -76,7 +76,7 @@ function setranges(collection){
 
   //common range (end of range is same as NFT count)
   commonstart = Math.ceil(collections[collection].result.data.items.length * puncommon)
-  if (commonstart === uncommonend) { commomstart = commonstart + 1 }
+  if (commonstart === uncommonend) { commonstart = commonstart + 1 }
   commonend = collections[collection].result.data.items.length
 
   console.log('Mythic: ' + mythicstart + ' - ' + mythicend + '. Legendary: ' + legendarystart + ' - ' + legendaryend + '. Epic: ' + epicstart + ' - ' + epicend + '. Rare: ' + rarestart + ' - ' + rareend + '. Uncommon: ' + Uncommonstart + ' - ' + uncommonend + '. Common: ' + commonend + ' - ' + commonend + '.')
@@ -152,7 +152,7 @@ for (var i = 0;i < mpoxdata.result.data.items.length; i++) {
     //if uncommon
     else if (thisrarity >= uncommonstart && thisrarity <= uncommonend) {
       console.log('uncommmon!')
-      raritydescription = 'Uncommom'
+      raritydescription = 'Uncommon'
       emoji = '<:uncommon:997639865065799770>'
       embedcolor = 0x20d48a
     }
