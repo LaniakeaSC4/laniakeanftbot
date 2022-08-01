@@ -24,7 +24,7 @@ collections['wandering_nahavi'] = wanderingnahavidata
 //channels and servers
 const monkeyserver = '978975057739124767'
 
-const servers = {"servers" : [{"monkeypox" : '978975057739124767'}, {"secretsnake" : '901885313608200302'}]}
+const servers = {"servers" : [{"id" : '978975057739124767', "name" : "monkeypox"}, {"id" : '901885313608200302', "name":"secretsnake"}]}
 
 const snipeschannel = '996130357260845156'
 const mpoxlistingschannel = '992439605569790072'
@@ -51,7 +51,7 @@ client.on('ready', () => {
   
   console.log(servers.servers.length)
   console.log(servers.servers[0])
-  console.log(servers.servers[1])
+  console.log(servers.servers[1].id)
 
   //endable to reset commands
   //clearcommands()
