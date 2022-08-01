@@ -41,7 +41,8 @@ const puncommon = 0.6
 //establish ranges for collection(s)
 client.on('ready', () => {
 
-  client.api.applications(client.user.id).guilds(monkeyserver).commands.delete('997642644538785832')
+  //client.api.applications(client.user.id).guilds(monkeyserver).commands.delete('997642644538785832')
+  client.application.commands.cache.find(c => c.name === 'rarity').delete()
 
 });//end client.on Ready to establish ranges
 
