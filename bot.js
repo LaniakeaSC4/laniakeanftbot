@@ -62,7 +62,7 @@ client.on('ready', () => {
     // The whole response has been received. Print out the result.
     resp.on('end', () => {
       console.log(JSON.parse(data))
-      fs.writeFile('/MEAPI/monkeypox_nft.json', data)
+      fs.writeFileSync('/MEAPI/monkeypox_nft.json', data)
     });
 
   }).on("error", (err) => {
