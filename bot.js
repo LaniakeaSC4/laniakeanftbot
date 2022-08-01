@@ -279,7 +279,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
   if (command === 'rarity') {
 
-    var nftproperties = checkrarity(args[0].value, 'monkeypox_nft')//first argument should be the nft #. Send it to checkrarity function. Returns array.
+    var nftproperties = checkrarity(args[1].value, args[0].value)//first argument should be the nft #. Send it to checkrarity function. Returns array.
 
     //split up returned array
     var nftnumber = nftproperties[0]; var raritydescription = nftproperties[1]; var emoji = nftproperties[2]; var embedcolor = nftproperties[3]; var thisrarity = nftproperties[4]; var nftname = nftproperties[5]; var thisimage = nftproperties[6];
