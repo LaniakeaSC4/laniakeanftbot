@@ -38,7 +38,7 @@ const puncommon = 0.6
 
 //establish ranges for collection(s)
 client.on('ready', () => {
-  
+
   console.log(`I'm Ready!`);
 
 });//end client.on Ready to establish ranges
@@ -49,28 +49,30 @@ client.on('ready', () => {
 
 //returns floor price from Magic Eden API
 function getfloorprice(collection) {
+  return new Promise((resolve, reject) => {
 
-  //build collection URL
-  var thiscollection = 'https://api-mainnet.magiceden.dev/v2/collections/' + collection + '/stats'
+    //build collection URL
+    var thiscollection = 'https://api-mainnet.magiceden.dev/v2/collections/' + collection + '/stats'
 
-  https.get(thiscollection, (resp) => {
+    https.get(thiscollection, (resp) => {
 
-    let data = ''
-    // A chunk of data has been received.
-    resp.on('data', (chunk) => {
-      data += chunk
-    });
+      let data = ''
+      // A chunk of data has been received.
+      resp.on('data', (chunk) => {
+        data += chunk
+      });
 
-    // The whole response has been received. Print out the result.
-    resp.on('end', () => {
-      console.log('Raw JSON FP: ' + JSON.parse(data).floorPrice)
-      var rawFP = parseFloat(JSON.parse(data).floorPrice)//get FP in Sol
-      var thisFP = rawFP / 1000000000
-      console.log('rawFP: ' + rawFP)
-      console.log('thisFP: ' + thisFP)
-      return (thisFP)
-    })
-  }).on("error", (err) => { console.log("Error: " + err.message) })
+      // The whole response has been received. Print out the result.
+      resp.on('end', () => {
+        console.log('Raw JSON FP: ' + JSON.parse(data).floorPrice)
+        var rawFP = parseFloat(JSON.parse(data).floorPrice)//get FP in Sol
+        var thisFP = rawFP / 1000000000
+        console.log('rawFP: ' + rawFP)
+        console.log('thisFP: ' + thisFP)
+        resolve(thisFP)
+      })
+    }).on("error", (err) => { console.log("Error: " + err.message) })
+  }) //end promise
 }//end getfloorprice function
 
 //get ranges for this collection
@@ -351,97 +353,98 @@ function checksnipe(message, collection) {
 
     //floorprice = parseFloat(floorpricestring)
 
-    var floorprice = getfloorprice(collection)
+    await getfloorprice(collection).then(floorprice => {
 
-    console.log('Floor price in check snipe function is: ' + floorprice)
+      console.log('Floor price in check snipe function is: ' + floorprice)
 
-    //get rarity of this listing
-    var nftid = ''
+      //get rarity of this listing
+      var nftid = ''
 
-    //get nft ID
-    for (var i = 0; i < descriptionarr.length; i++) {
-      let checkthis = descriptionarr[i]
-      if (checkthis.includes('#')) {
+      //get nft ID
+      for (var i = 0; i < descriptionarr.length; i++) {
+        let checkthis = descriptionarr[i]
+        if (checkthis.includes('#')) {
 
-        var nlength = checkthis.length
-        nftid = checkthis.substring(1, nlength)
-        console.log('NFT ID is: ' + nftid)
+          var nlength = checkthis.length
+          nftid = checkthis.substring(1, nlength)
+          console.log('NFT ID is: ' + nftid)
 
-      }
-    }
-
-    //get rarity of nft with function (need whole rarity database).or handle function returning 0
-    var nftproperties = checkrarity(nftid, collection)
-    //split up returned array
-    var nftkey = nftproperties[0]; var raritydescription = nftproperties[1]; var emoji = nftproperties[2]; var embedcolor = nftproperties[3]; var thisrarity = nftproperties[4]; var nftname = nftproperties[5]; var thisimage = nftproperties[6]; var melink = nftproperties[7]
-
-
-    //make calculation of if this is a snipe using rarity, floor price and nft price
-    var hotrarities = ['Mythic', 'Legendary', 'Epic', 'Rare']
-
-    if (hotrarities.includes(raritydescription)) {
-      //if this is a snipe, send alert to snipe channel
-
-      var mythiclimit = 100
-      var legendarylimit = 50
-      var epiclimit = 10
-      var rarelimit = 5
-
-      var thislimit = 0
-
-      var mythicsnipe = mythiclimit * floorprice
-      var legendarysnipe = legendarylimit * floorprice
-      var epicsnipe = epiclimit * floorprice
-      var raresnipe = rarelimit * floorprice
-
-      var thissnipeprice = 0
-
-      var issnipe = false
-
-      if (raritydescription == 'Mythic' && thisprice <= mythicsnipe) { issnipe = true; thislimit = mythiclimit; thissnipeprice = mythicsnipe } else if (raritydescription == 'Legendary' && thisprice <= legendarysnipe) { issnipe = true; thislimit = legendarylimit; thissnipeprice = legendarysnipe } else if (raritydescription == 'Epic' && thisprice <= epicsnipe) { issnipe = true; thislimit = epiclimit; thissnipeprice = epicsnipe } else if (raritydescription == 'Rare' && thisprice <= raresnipe) { issnipe = true; thislimit = rarelimit; thissnipeprice = raresnipe }
-      if (issnipe == true) {
-        client.guilds.cache.get(monkeyserver).channels.cache.get(snipeschannel).send({
-          "content": "@everyone",
-          embeds: [
-            {
-              "title": 'Snipe Opportunity: ' + nftname,
-              "color": embedcolor,
-              "fields": [
-                {
-                  "name": "Rarity",
-                  "value": thisrarity + ' - ' + raritydescription,
-                  "inline": true
-                },
-                {
-                  "name": "Snipe Price",
-                  "value": 'For ' + raritydescription + ': ' + thislimit + 'x floor price of ' + floorprice + 'SOL (' + thissnipeprice + 'SOL)',
-                  "inline": true
-                },
-                {
-                  "name": "List Price",
-                  "value": thisprice + ' SOL',
-                  "inline": true
-                },
-                {
-                  "name": "Floor Price",
-                  "value": floorprice + ' SOL',
-                  "inline": true
-                }
-              ],
-              "image": {
-                "url": thisimage,
-                "height": 75,
-                "width": 75
-              },
-              "footer": {
-                "text": "Rarity data provided by howrare.is"
-              }
-            }
-          ]//end embed
         }
-        )//end message data
-      } //if issnipe = true 
-    } // if a hot rarity 
+      }
+
+      //get rarity of nft with function (need whole rarity database).or handle function returning 0
+      var nftproperties = checkrarity(nftid, collection)
+      //split up returned array
+      var nftkey = nftproperties[0]; var raritydescription = nftproperties[1]; var emoji = nftproperties[2]; var embedcolor = nftproperties[3]; var thisrarity = nftproperties[4]; var nftname = nftproperties[5]; var thisimage = nftproperties[6]; var melink = nftproperties[7]
+
+
+      //make calculation of if this is a snipe using rarity, floor price and nft price
+      var hotrarities = ['Mythic', 'Legendary', 'Epic', 'Rare']
+
+      if (hotrarities.includes(raritydescription)) {
+        //if this is a snipe, send alert to snipe channel
+
+        var mythiclimit = 100
+        var legendarylimit = 50
+        var epiclimit = 10
+        var rarelimit = 5
+
+        var thislimit = 0
+
+        var mythicsnipe = mythiclimit * floorprice
+        var legendarysnipe = legendarylimit * floorprice
+        var epicsnipe = epiclimit * floorprice
+        var raresnipe = rarelimit * floorprice
+
+        var thissnipeprice = 0
+
+        var issnipe = false
+
+        if (raritydescription == 'Mythic' && thisprice <= mythicsnipe) { issnipe = true; thislimit = mythiclimit; thissnipeprice = mythicsnipe } else if (raritydescription == 'Legendary' && thisprice <= legendarysnipe) { issnipe = true; thislimit = legendarylimit; thissnipeprice = legendarysnipe } else if (raritydescription == 'Epic' && thisprice <= epicsnipe) { issnipe = true; thislimit = epiclimit; thissnipeprice = epicsnipe } else if (raritydescription == 'Rare' && thisprice <= raresnipe) { issnipe = true; thislimit = rarelimit; thissnipeprice = raresnipe }
+        if (issnipe == true) {
+          client.guilds.cache.get(monkeyserver).channels.cache.get(snipeschannel).send({
+            "content": "@everyone",
+            embeds: [
+              {
+                "title": 'Snipe Opportunity: ' + nftname,
+                "color": embedcolor,
+                "fields": [
+                  {
+                    "name": "Rarity",
+                    "value": thisrarity + ' - ' + raritydescription,
+                    "inline": true
+                  },
+                  {
+                    "name": "Snipe Price",
+                    "value": 'For ' + raritydescription + ': ' + thislimit + 'x floor price of ' + floorprice + 'SOL (' + thissnipeprice + 'SOL)',
+                    "inline": true
+                  },
+                  {
+                    "name": "List Price",
+                    "value": thisprice + ' SOL',
+                    "inline": true
+                  },
+                  {
+                    "name": "Floor Price",
+                    "value": floorprice + ' SOL',
+                    "inline": true
+                  }
+                ],
+                "image": {
+                  "url": thisimage,
+                  "height": 75,
+                  "width": 75
+                },
+                "footer": {
+                  "text": "Rarity data provided by howrare.is"
+                }
+              }
+            ]//end embed
+          }
+          )//end message data
+        } //if issnipe = true 
+      } // if a hot rarity
+    })//end await floorprice
   }//end if sender is ME Bot 
 
 }
