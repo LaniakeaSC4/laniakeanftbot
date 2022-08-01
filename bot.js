@@ -24,6 +24,7 @@ collections['pixel_guild_loot_legends'] = pixelguilddata
 const monkeyserver = '978975057739124767'
 const snipeschannel = '996130357260845156'
 const mpoxlistingschannel = '992439605569790072'
+const pixelguildlistingschannel = '1003741415400022197'
 const mebotid = '980154113637646346'
 
 //set rarity threshold percentages
@@ -466,6 +467,12 @@ client.on("messageCreate", (message) => {//watch new messages in the listings ch
     checksnipe(message, 'monkeypox_nft')
 
   }//end if mpoxlistingschannel
+
+if (message.channel.id == pixelguildlistingschannel) {//if channel is the listings channel from the config
+
+    checksnipe(message, 'pixel_guild_loot_legends')
+
+  }//end if pixelguidlistingschannel
 
 
 })
