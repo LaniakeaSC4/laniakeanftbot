@@ -48,7 +48,7 @@ clearcommands()
 });//end client.on Ready to establish ranges
 
 async function clearcommands () {
-  const guild = await client.guilds.fetch(monkeyserver)
+  const guild = await client.guilds.cache.fetch(monkeyserver)
   guild.commands.set([]);
 
 
