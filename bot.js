@@ -22,7 +22,6 @@ collections['pixel_guild_loot_legends'] = pixelguilddata
 
 //channels and servers
 const monkeyserver = '978975057739124767'
-const floorchannel = '992114091374157926'
 const snipeschannel = '996130357260845156'
 const mpoxlistingschannel = '992439605569790072'
 const mebotid = '980154113637646346'
@@ -41,18 +40,18 @@ const puncommon = 0.6
 //establish ranges for collection(s)
 client.on('ready', () => {
 
-  //client.api.applications(client.user.id).guilds(monkeyserver).commands.delete('997642644538785832')
-  //client.api.applications(client.user.id).guilds(monkeyserver).commands.cache.find(c => c.name === 'rarity').delete()
-clearcommands()
+  console.log('I am ready!')
+
+  //endable to reset commands
+  //clearcommands()
 
 });//end client.on Ready to establish ranges
 
-async function clearcommands () {
-  const guild = await client.guilds.cache.fetch(monkeyserver)
+//function to reset commands
+async function clearcommands() {
+  const guild = await client.guilds.fetch(monkeyserver)
   guild.commands.set([]);
-
-
-}
+}//end function to reset commands
 
 //====================
 //====  Functions  ===
