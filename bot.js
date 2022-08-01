@@ -12,7 +12,7 @@ const collections = []
 const mpoxdata = require('./monkeypox_nft.json')
 
 //add collections to arrary
-collections['mpox'] = mpoxdata
+collections['monkeypox_nft'] = mpoxdata
 
 //================
 //====  Setup  ===
@@ -46,10 +46,10 @@ var commonend = 0; var commonend = 0
 
 //establish ranges for collection(s)
 client.on('ready', () => {
-  setranges('mpox')
+  setranges('monkeypox_nft')
   console.log(`I'm Ready!`);
 
-getfloorprice('monkeypox_nft')
+  getfloorprice('monkeypox_nft')
 
 });//end client.on Ready to establish ranges
 
@@ -57,10 +57,12 @@ getfloorprice('monkeypox_nft')
 //====  Functions  ===
 //====================
 
+//returns floor price from Magic Eden API
 function getfloorprice(collection) {
 
+  //build collection URL
   var thiscollection = 'https://api-mainnet.magiceden.dev/v2/collections/' + collection + '/stats'
-  //test HTTP get FP
+
   https.get(thiscollection, (resp) => {
 
     let data = ''
@@ -73,17 +75,15 @@ function getfloorprice(collection) {
     resp.on('end', () => {
       console.log('Raw JSON FP: ' + JSON.parse(data).floorPrice)
       var rawFP = parseFloat(JSON.parse(data).floorPrice)//get FP in Sol
-      var thisFP = rawFP/10000000000
+      var thisFP = rawFP / 1000000000
       console.log('rawFP: ' + rawFP)
       console.log('thisFP: ' + thisFP)
-    });
+      return (thisFP)
+    })
+  }).on("error", (err) => { console.log("Error: " + err.message) })
+}//end getfloorprice function
 
-  }).on("error", (err) => {
-    console.log("Error: " + err.message)
-  })
-
-}
-
+//get ranges for this collection
 function setranges(collection) {
 
   //mythic range (start of range is 1)
@@ -243,7 +243,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
   if (command === 'rarity') {
 
-    var nftproperties = checkrarity(args[0].value, 'mpox')//first argument should be the nft #. Send it to checkrarity function. Returns array.
+    var nftproperties = checkrarity(args[0].value, 'monkeypox_nft')//first argument should be the nft #. Send it to checkrarity function. Returns array.
 
     //split up returned array
     var nftkey = nftproperties[0]; var raritydescription = nftproperties[1]; var emoji = nftproperties[2]; var embedcolor = nftproperties[3]; var thisrarity = nftproperties[4]; var nftname = nftproperties[5]; var thisimage = nftproperties[6];
@@ -364,7 +364,7 @@ function checksnipe(message, collection) {
     }
 
     //get rarity of nft with function (need whole rarity database).or handle function returning 0
-    var nftproperties = checkrarity(nftid, 'mpox')
+    var nftproperties = checkrarity(nftid, 'monkeypox_nft')
     //split up returned array
     var nftkey = nftproperties[0]; var raritydescription = nftproperties[1]; var emoji = nftproperties[2]; var embedcolor = nftproperties[3]; var thisrarity = nftproperties[4]; var nftname = nftproperties[5]; var thisimage = nftproperties[6]; var melink = nftproperties[7]
 
@@ -442,7 +442,7 @@ function checksnipe(message, collection) {
 client.on("messageCreate", (message) => {//watch new messages in the listings channel
   if (message.channel.id == mpoxlistingschannel) {//if channel is the listings channel from the config
 
-    checksnipe(message, 'mpox')
+    checksnipe(message, 'monkeypox_nft')
 
   }//end if mpoxlistingschannel
 
