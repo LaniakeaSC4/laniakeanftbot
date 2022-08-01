@@ -41,6 +41,15 @@ const puncommon = 0.6
 //establish ranges for collection(s)
 client.on('ready', () => {
 
+  
+client.application.commands.fetch('997642644538785832') // id of your command
+.then( (command) => {
+console.log(`Fetched command ${command.name}`)
+// further delete it like so:
+command.delete()
+console.log(`Deleted command ${command.name}`)
+}).catch(console.error);
+
   console.log(`I'm Ready!`);
 
 });//end client.on Ready to establish ranges
@@ -219,24 +228,6 @@ function checkrarity(nftnumber, collection) {
 //==============================
 //====  Setup slash command  ===
 //==============================
-
-//setup discord slash command
-client.on('ready', () => {
-  client.api.applications(client.user.id).guilds(monkeyserver).commands.post({//adding commmand sepcificlly to our server
-    data: {
-      name: "rarity",//defines the slash (e.g. /rarity)
-      description: "Check Rarity Command",
-      "options": [
-        {
-          "type": 4,//type 4 is a text input (as oposed to a button or list - https://discord.com/developers/docs/interactions/message-components)
-          "name": "nftnumber",
-          "description": "Enter MonkeyPoxNFT #",
-          "required": true
-        }
-      ]//end options
-    }//end data
-  });//end post
-});//end client on ready
 
 //setup discord slash command
 client.on('ready', () => {
