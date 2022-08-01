@@ -238,6 +238,40 @@ client.on('ready', () => {
   });//end post
 });//end client on ready
 
+//setup discord slash command
+client.on('ready', () => {
+  client.api.applications(client.user.id).guilds(monkeyserver).commands.post({//adding commmand sepcificlly to our server
+    data: {
+      "name": "checkrarity",
+      "description": "Check the rarity of an NFT in a collection we support",
+      "options": [
+        {
+          "type": 3,
+          "name": "collection",
+          "description": "Please select a collection",
+          "choices": [
+            {
+              "name": "MonkeyPox NFT",
+              "value": "monkeypox_nft"
+            },
+            {
+              "name": "Pixel Guild",
+              "value": "pixel_guild_loot_legends"
+            }
+          ],
+          "required": true
+        },
+        {
+          "type": 3,
+          "name": "nftnumber",
+          "description": "Enter the # of the NFT to check in selected collection",
+          "required": true
+        }
+      ]
+    }//end data
+  });//end post
+});//end client on ready
+
 //respond to slash command
 client.ws.on('INTERACTION_CREATE', async interaction => {
   const command = interaction.data.name.toLowerCase()
