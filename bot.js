@@ -72,8 +72,10 @@ function getfloorprice(collection) {
     // The whole response has been received. Print out the result.
     resp.on('end', () => {
       console.log('Raw JSON FP: ' + JSON.parse(data).floorPrice)
-      let rawFP = parseFloat(data.floorPrice) / 10000000000//get FP in Sol
+      var rawFP = parseFloat(data.floorPrice)//get FP in Sol
+      var thisFP = rawFP/10000000000
       console.log('rawFP: ' + rawFP)
+      console.log('thisFP: ' + thisFP)
     });
 
   }).on("error", (err) => {
