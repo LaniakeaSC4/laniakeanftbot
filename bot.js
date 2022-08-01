@@ -41,15 +41,7 @@ const puncommon = 0.6
 //establish ranges for collection(s)
 client.on('ready', () => {
 
-  
-  client.api.applications(client.user.id).guilds(monkeyserver).commands.fetch('997642644538785832').then( (command) => {
-console.log(`Fetched command ${command.name}`)
-// further delete it like so:
-command.delete()
-console.log(`Deleted command ${command.name}`)
-}).catch(console.error);
-
-  console.log(`I'm Ready!`);
+  client.api.applications(client.user.id).guilds(monkeyserver).commands.delete('997642644538785832')
 
 });//end client.on Ready to establish ranges
 
