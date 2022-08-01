@@ -47,11 +47,21 @@ var commonend = 0; var commonend = 0
 //establish ranges for collection(s)
 client.on('ready', () => {
   setranges('mpox')
-
   console.log(`I'm Ready!`);
 
+getfloorprice('monkeypox_nft')
+
+});//end client.on Ready to establish ranges
+
+//====================
+//====  Functions  ===
+//====================
+
+function getfloorprice(collection) {
+
+  var thiscollection = 'https://api-mainnet.magiceden.dev/v2/collections/' + collection + '/stats'
   //test HTTP get FP
-  https.get('https://api-mainnet.magiceden.dev/v2/collections/monkeypox_nft/stats', (resp) => {
+  https.get(thiscollection, (resp) => {
 
     let data = ''
     // A chunk of data has been received.
@@ -61,21 +71,16 @@ client.on('ready', () => {
 
     // The whole response has been received. Print out the result.
     resp.on('end', () => {
-      console.log(JSON.parse(data))
-      //fs.writeFileSync('/ME-API/monkeypox_nft.json', data)
+      console.log('Raw JSON FP: ' + JSON.parse(data.floorPrice))
+      let rawFP = arseFloat(data.floorPrice) / 10000000000//get FP in Sol
+      console.log('rawFP: ' + rawFP)
     });
 
   }).on("error", (err) => {
     console.log("Error: " + err.message)
   })
 
-  
-
-});//end client.on Ready to establish ranges
-
-//====================
-//====  Functions  ===
-//====================
+}
 
 function setranges(collection) {
 
