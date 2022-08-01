@@ -11,10 +11,12 @@ const collections = []
 //import collections
 const mpoxdata = require('./monkeypox_nft.json')
 const pixelguilddata = require('./pixel_guild_loot_legends.json')
+const wanderingnahavidata = require('./wandering_nahavi.json')
 
 //add collections to arrary
 collections['monkeypox_nft'] = mpoxdata
 collections['pixel_guild_loot_legends'] = pixelguilddata
+collections['wandering_nahavi'] = wanderingnahavidata
 
 //================
 //====  Setup  ===
@@ -25,6 +27,8 @@ const monkeyserver = '978975057739124767'
 const snipeschannel = '996130357260845156'
 const mpoxlistingschannel = '992439605569790072'
 const pixelguildlistingschannel = '1003741415400022197'
+const wanderingnahavilistingschannel = '1003773187349287013'
+
 const mebotid = '980154113637646346'
 
 //set rarity threshold percentages
@@ -474,5 +478,10 @@ if (message.channel.id == pixelguildlistingschannel) {//if channel is the listin
 
   }//end if pixelguidlistingschannel
 
+if (message.channel.id == wanderingnahavilistingschannel) {//if channel is the listings channel from the config
+
+    checksnipe(message, 'wandering_nahavi')
+
+  }//end if pixelguidlistingschannel
 
 })
