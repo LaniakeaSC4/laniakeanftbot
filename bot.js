@@ -1,7 +1,6 @@
 const { Client, Intents } = require('discord.js')
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES] })
 const https = require('https')
-const fs = require('fs')
 
 client.login(process.env.BOTTOKEN)
 
@@ -24,6 +23,9 @@ collections['wandering_nahavi'] = wanderingnahavidata
 
 //channels and servers
 const monkeyserver = '978975057739124767'
+
+const servers = {"servers" : [{"monkeypox" : '978975057739124767'}, {"secretsnake" : '901885313608200302'}]}
+
 const snipeschannel = '996130357260845156'
 const mpoxlistingschannel = '992439605569790072'
 const pixelguildlistingschannel = '1003741415400022197'
@@ -46,6 +48,10 @@ const puncommon = 0.6
 client.on('ready', () => {
 
   console.log('I am ready!')
+  
+  console.log(servers.servers.length)
+  console.log(servers.servers[0].value)
+  console.log(servers.servers[1].value)
 
   //endable to reset commands
   //clearcommands()
