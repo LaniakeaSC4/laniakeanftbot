@@ -1,5 +1,7 @@
 const { Client, Intents } = require('discord.js')
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES] })
+const https = require('https');
+
 client.login(process.env.BOTTOKEN)
 
 //main collections array
@@ -44,11 +46,34 @@ var commonend = 0; var commonend = 0
 //establish ranges for collection(s)
 client.on('ready', () => {
   setranges('mpox')
-    console.log(`I'm Ready!`);
+  
+  console.log(`I'm Ready!`);
+
+  //test HTTP get FP
+  https.get('https://api-mainnet.magiceden.dev/v2/collections/monkeypox_nft/stats', (resp) => {
+
+    let data = ''
+    // A chunk of data has been received.
+    resp.on('data', (chunk) => {
+      data += chunk;
+    });
+
+    // The whole response has been received. Print out the result.
+    resp.on('end', () => {
+      console.log(JSON.parse(data).explanation);
+    });
+
+  }).on("error", (err) => {
+    console.log("Error: " + err.message);
+  })
+
 });//end client.on Ready to establish ranges
 
-function setranges(collection){
-  
+//====================
+//====  Functions  ===
+//====================
+
+function setranges(collection) {
 
   //mythic range (start of range is 1)
   mythicstart = 1;
@@ -81,41 +106,36 @@ function setranges(collection){
 
   console.log('Mythic: ' + mythicstart + ' - ' + mythicend + '. Legendary: ' + legendarystart + ' - ' + legendaryend + '. Epic: ' + epicstart + ' - ' + epicend + '. Rare: ' + rarestart + ' - ' + rareend + '. Uncommon: ' + uncommonstart + ' - ' + uncommonend + '. Common: ' + commonstart + ' - ' + commonend + '.')
 
-var returnranges = [collection, mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend]
+  var returnranges = [collection, mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend]
 
-return(returnranges)
+  return (returnranges)
 
 }//end setranges function
 
-//====================
-//====  Functions  ===
-//====================
-
-//get rarity rank by nft#. NFT # (only) is passed to function.
-function checkrarity(nftnumber,collection) {
+//get rarity rank by nft#
+function checkrarity(nftnumber, collection) {
 
   //set nftnum equal to the command argument value. This is a key in the data object
   //var nftkey = 'nft' + nftnumber//establish key
   var raritydescription = ""//initalise as string
   var emoji = ""//initalise as string
   var embedcolor = ""//initalise as string
-var thisrarity = ""
-var thisname = ""
-var thisimage = ""
-var thismelink = ""
+  var thisrarity = ""
+  var thisname = ""
+  var thisimage = ""
 
-for (var i = 0;i < collections[collection].result.data.items.length; i++) {
-  
-  if (collections[collection].result.data.items[i].id == nftnumber) {
-    console.log('found ' + collections[collection].result.data.items[i].name)
-    thisrarity = collections[collection].result.data.items[i].all_ranks.statistical_rarity
-    thisname = collections[collection].result.data.items[i].name
-    thisimage = collections[collection].result.data.items[i].image
-    thismelink = 'https://magiceden.io/item-details/' + thisimage.substring(thisimage.lastIndexOf("/") + 1, thisimage.lastIndexOf("?")) 
-    console.log('this rarity is: ' + thisrarity)
+  for (var i = 0; i < collections[collection].result.data.items.length; i++) {
+
+    if (collections[collection].result.data.items[i].id == nftnumber) {
+      console.log('found ' + collections[collection].result.data.items[i].name)
+      thisrarity = collections[collection].result.data.items[i].all_ranks.statistical_rarity
+      thisname = collections[collection].result.data.items[i].name
+      thisimage = collections[collection].result.data.items[i].image
+      thismelink = 'https://magiceden.io/item-details/' + thisimage.substring(thisimage.lastIndexOf("/") + 1, thisimage.lastIndexOf("?"))
+      console.log('this rarity is: ' + thisrarity)
+    }
+
   }
-  
-}
 
   if (thisrarity != null) {
 
@@ -170,15 +190,15 @@ for (var i = 0;i < collections[collection].result.data.items.length; i++) {
     }
 
     else {//this shouldnt trigger if the key is found and the data is complete
-      console.log('not ranked');raritydescription = 'not ranked';emoji = '<:common:997639893306064997>';embedcolor = 0x939394
+      console.log('not ranked'); raritydescription = 'not ranked'; emoji = '<:common:997639893306064997>'; embedcolor = 0x939394
     }
 
     //set up array to return
-    var nftproperties = [nftnumber, raritydescription, emoji, embedcolor, thisrarity, thisname, thisimage, thismelink]
+    var nftproperties = [nftnumber, raritydescription, emoji, embedcolor, thisrarity, thisname, thisimage]
     return (nftproperties)//return arrary
 
   } else {//if nftkey was not found in DB
-    var nftproperties = [nftnumber, 'Not found', '<:common:997639893306064997>', 0x3b0202, 'Not Found', 'No Name']
+    var nftproperties = [nftnumber, 'Not found', '<:common:997639893306064997>', 0x3b0202, 'Not Found', 'No Name', '']
     return (nftproperties)
   }//end if nft is in object
 }//end checkrarity function
@@ -215,7 +235,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     var nftproperties = checkrarity(args[0].value, 'mpox')//first argument should be the nft #. Send it to checkrarity function. Returns array.
 
     //split up returned array
-    var nftkey = nftproperties[0];var raritydescription = nftproperties[1];var emoji = nftproperties[2];var embedcolor = nftproperties[3]; var thisrarity = nftproperties[4]; var nftname = nftproperties[5]; var thisimage = nftproperties[6]; 
+    var nftkey = nftproperties[0]; var raritydescription = nftproperties[1]; var emoji = nftproperties[2]; var embedcolor = nftproperties[3]; var thisrarity = nftproperties[4]; var nftname = nftproperties[5]; var thisimage = nftproperties[6];
 
     if (raritydescription != 'Not found') {//if NFT number was not found in DB, 'Not found' would be returned. If it was found, proceed
       client.api.interactions(interaction.id, interaction.token).callback.post({
@@ -246,7 +266,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
           }//end message data
         }//end post data
       })//end post()
-   
+
     } else {//end if rarity description != not found
       client.api.interactions(interaction.id, interaction.token).callback.post({
         data: {
@@ -279,139 +299,139 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 //====  Rarity Sniper  ===
 //========================
 
-function checksnipe(message,collection) {
-  
+function checksnipe(message, collection) {
+
   let embed = message.embeds[0]//get the embeds (if any) from the message so we can check it
 
-    //if there is an embed, the message was from the right bot and it's a listing rather than a sale...
-    if (embed != undefined && message.author.id == mebotid && embed.description.includes('listed')) {
+  //if there is an embed, the message was from the right bot and it's a listing rather than a sale...
+  if (embed != undefined && message.author.id == mebotid && embed.description.includes('listed')) {
 
-      console.log(embed.description)
+    console.log(embed.description)
 
-      //get list price
-      var thispricestring = ''
-      var thisprice = 0
+    //get list price
+    var thispricestring = ''
+    var thisprice = 0
 
-      let descriptionarr = embed.description.split(' ')
+    let descriptionarr = embed.description.split(' ')
 
-      for (var i = 0; i < descriptionarr.length; i++) {
-        let checkthis = descriptionarr[i]
-        if (checkthis === 'SOL') {
+    for (var i = 0; i < descriptionarr.length; i++) {
+      let checkthis = descriptionarr[i]
+      if (checkthis === 'SOL') {
 
-          let x = i - 1
-          thispricestring = descriptionarr[x]
-          thisprice = parseFloat(thispricestring)
-          console.log('Listed for: ' + thisprice)
+        let x = i - 1
+        thispricestring = descriptionarr[x]
+        thisprice = parseFloat(thispricestring)
+        console.log('Listed for: ' + thisprice)
 
-        }
-      }//end for loop checking each word in the listing description for the list price
-
-      //get floor price
-      var floorprice = 0
-      var floorchan = client.channels.cache.get(floorchannel)
-
-      var floorarr = floorchan.name.split(' ')
-      var flength = floorarr[1].length
-      var floorpricestring = floorarr[1].substring(1, flength)
-
-      floorprice = parseFloat(floorpricestring)
-      console.log('Floor price: ' + floorprice)
-
-      //get rarity of this listing
-      var nftid = ''
-
-      //get nft ID
-      for (var i = 0; i < descriptionarr.length; i++) {
-        let checkthis = descriptionarr[i]
-        if (checkthis.includes('#')) {
-
-          var nlength = checkthis.length
-          nftid = checkthis.substring(1, nlength)
-          console.log('NFT ID is: ' + nftid)
-
-        }
       }
+    }//end for loop checking each word in the listing description for the list price
 
-      //get rarity of nft with function (need whole rarity database).or handle function returning 0
-      var nftproperties = checkrarity(nftid,'mpox')
-        //split up returned array
-    var nftkey = nftproperties[0];var raritydescription = nftproperties[1];var emoji = nftproperties[2];var embedcolor = nftproperties[3]; var thisrarity = nftproperties[4]; var nftname = nftproperties[5]; var thisimage = nftproperties[6]; var melink = nftproperties[7]
- 
+    //get floor price
+    var floorprice = 0
+    var floorchan = client.channels.cache.get(floorchannel)
 
-      //make calculation of if this is a snipe using rarity, floor price and nft price
-var hotrarities = ['Mythic', 'Legendary','Epic', 'Rare']
+    var floorarr = floorchan.name.split(' ')
+    var flength = floorarr[1].length
+    var floorpricestring = floorarr[1].substring(1, flength)
 
-if (hotrarities.includes(raritydescription)) {
+    floorprice = parseFloat(floorpricestring)
+    console.log('Floor price: ' + floorprice)
+
+    //get rarity of this listing
+    var nftid = ''
+
+    //get nft ID
+    for (var i = 0; i < descriptionarr.length; i++) {
+      let checkthis = descriptionarr[i]
+      if (checkthis.includes('#')) {
+
+        var nlength = checkthis.length
+        nftid = checkthis.substring(1, nlength)
+        console.log('NFT ID is: ' + nftid)
+
+      }
+    }
+
+    //get rarity of nft with function (need whole rarity database).or handle function returning 0
+    var nftproperties = checkrarity(nftid, 'mpox')
+    //split up returned array
+    var nftkey = nftproperties[0]; var raritydescription = nftproperties[1]; var emoji = nftproperties[2]; var embedcolor = nftproperties[3]; var thisrarity = nftproperties[4]; var nftname = nftproperties[5]; var thisimage = nftproperties[6]; var melink = nftproperties[7]
+
+
+    //make calculation of if this is a snipe using rarity, floor price and nft price
+    var hotrarities = ['Mythic', 'Legendary', 'Epic', 'Rare']
+
+    if (hotrarities.includes(raritydescription)) {
       //if this is a snipe, send alert to snipe channel
-      
+
       var mythiclimit = 100
       var legendarylimit = 50
       var epiclimit = 10
       var rarelimit = 5
-      
+
       var thislimit = 0
-      
-      var mythicsnipe = mythiclimit*floorprice
-      var legendarysnipe = legendarylimit*floorprice
-      var epicsnipe = epiclimit*floorprice
-      var raresnipe = rarelimit*floorprice
-      
+
+      var mythicsnipe = mythiclimit * floorprice
+      var legendarysnipe = legendarylimit * floorprice
+      var epicsnipe = epiclimit * floorprice
+      var raresnipe = rarelimit * floorprice
+
       var thissnipeprice = 0
-      
+
       var issnipe = false
-      
-      if (raritydescription == 'Mythic' && thisprice <= mythicsnipe) {issnipe = true; thislimit = mythiclimit;thissnipeprice = mythicsnipe} else if (raritydescription == 'Legendary' && thisprice <= legendarysnipe) {issnipe = true;thislimit = legendarylimit;thissnipeprice = legendarysnipe} else if (raritydescription == 'Epic' && thisprice <= epicsnipe) {issnipe = true;thislimit = epiclimit;thissnipeprice = epicsnipe} else if (raritydescription == 'Rare' && thisprice <= raresnipe) {issnipe = true;thislimit = rarelimit;thissnipeprice = raresnipe}
-      if (issnipe == true){
-      client.guilds.cache.get(monkeyserver).channels.cache.get(snipeschannel).send({
-            "content" : "@everyone", 
-            embeds : [
-              {
-                "title": 'Snipe Opportunity: ' + nftname,
-                 "color": embedcolor,
-                "fields": [
-                  {
-                    "name": "Rarity",
-                    "value": thisrarity + ' - ' + raritydescription,
-                    "inline": true
-                  },
-                  {
-                    "name": "Snipe Price",
-                    "value": 'For ' + raritydescription + ': ' + thislimit + 'x floor price of ' + floorprice + 'SOL (' + thissnipeprice + 'SOL)',
-                    "inline": true
-                  },
-                                    {
-                    "name": "List Price",
-                    "value": thisprice + ' SOL',
-                    "inline": true
-                  },
-                  {
-                    "name": "Floor Price",
-                    "value": floorprice + ' SOL',
-                    "inline": true
-                  }
-                ], 
-                "image": {
-                  "url": thisimage,
-                  "height": 75,
-                  "width": 75
+
+      if (raritydescription == 'Mythic' && thisprice <= mythicsnipe) { issnipe = true; thislimit = mythiclimit; thissnipeprice = mythicsnipe } else if (raritydescription == 'Legendary' && thisprice <= legendarysnipe) { issnipe = true; thislimit = legendarylimit; thissnipeprice = legendarysnipe } else if (raritydescription == 'Epic' && thisprice <= epicsnipe) { issnipe = true; thislimit = epiclimit; thissnipeprice = epicsnipe } else if (raritydescription == 'Rare' && thisprice <= raresnipe) { issnipe = true; thislimit = rarelimit; thissnipeprice = raresnipe }
+      if (issnipe == true) {
+        client.guilds.cache.get(monkeyserver).channels.cache.get(snipeschannel).send({
+          "content": "@everyone",
+          embeds: [
+            {
+              "title": 'Snipe Opportunity: ' + nftname,
+              "color": embedcolor,
+              "fields": [
+                {
+                  "name": "Rarity",
+                  "value": thisrarity + ' - ' + raritydescription,
+                  "inline": true
                 },
-                "footer": {
-                  "text": "Rarity data provided by howrare.is"
+                {
+                  "name": "Snipe Price",
+                  "value": 'For ' + raritydescription + ': ' + thislimit + 'x floor price of ' + floorprice + 'SOL (' + thissnipeprice + 'SOL)',
+                  "inline": true
+                },
+                {
+                  "name": "List Price",
+                  "value": thisprice + ' SOL',
+                  "inline": true
+                },
+                {
+                  "name": "Floor Price",
+                  "value": floorprice + ' SOL',
+                  "inline": true
                 }
+              ],
+              "image": {
+                "url": thisimage,
+                "height": 75,
+                "width": 75
+              },
+              "footer": {
+                "text": "Rarity data provided by howrare.is"
               }
-            ]//end embed
-      } 
-          )//end message data
+            }
+          ]//end embed
+        }
+        )//end message data
       } //if issnipe = true 
-} // if a hot rarity 
-    }//end if sender is ME Bot 
-  
+    } // if a hot rarity 
+  }//end if sender is ME Bot 
+
 }
 
 client.on("messageCreate", (message) => {//watch new messages in the listings channel
   if (message.channel.id == mpoxlistingschannel) {//if channel is the listings channel from the config
 
-checksnipe(message,'mpox')
+    checksnipe(message, 'mpox')
 
   }//end if mpoxlistingschannel
 
