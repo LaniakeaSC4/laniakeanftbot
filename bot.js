@@ -277,7 +277,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
   const command = interaction.data.name.toLowerCase()
   const args = interaction.data.options//array of the provided data after the slash
 
-  if (command === 'rarity') {
+  if (command === 'checkrarity') {
 
     var nftproperties = checkrarity(args[1].value, args[0].value)//first argument should be the nft #. Send it to checkrarity function. Returns array.
 
