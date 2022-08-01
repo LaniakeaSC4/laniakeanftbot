@@ -315,7 +315,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 //====  Rarity Sniper  ===
 //========================
 
-function checksnipe(message, collection) {
+async function checksnipe(message, collection) {
 
   let embed = message.embeds[0]//get the embeds (if any) from the message so we can check it
 
