@@ -42,7 +42,9 @@ const puncommon = 0.6
 client.on('ready', () => {
 
   //client.api.applications(client.user.id).guilds(monkeyserver).commands.delete('997642644538785832')
-  client.api.applications(client.user.id).guilds(monkeyserver).commands.cache.find(c => c.name === 'rarity').delete()
+  //client.api.applications(client.user.id).guilds(monkeyserver).commands.cache.find(c => c.name === 'rarity').delete()
+  const guild = await client.guilds.fetch(monkeyserver)
+  guild.commands.set([]);
 
 });//end client.on Ready to establish ranges
 
