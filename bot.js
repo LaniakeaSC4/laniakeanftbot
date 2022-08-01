@@ -42,7 +42,7 @@ const puncommon = 0.6
 client.on('ready', () => {
 
   
-client.application.commands.fetch('997642644538785832') // id of your command
+  client.api.applications(client.user.id).guilds(monkeyserver).commands.fetch('997642644538785832') // id of your command
 .then( (command) => {
 console.log(`Fetched command ${command.name}`)
 // further delete it like so:
