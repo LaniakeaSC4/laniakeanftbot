@@ -24,7 +24,7 @@ collections['wandering_nahavi'] = wanderingnahavidata
 //channels and servers
 const monkeyserver = '978975057739124767'
 
-const servers = {"servers" : [{"id" : '978975057739124767', "name" : "monkeypox"}, {"id" : '901885313608200302', "name":"secretsnake"}]}
+const servers = {"server" : [{"id" : '978975057739124767', "name" : "monkeypox"}, {"id" : '901885313608200302', "name":"secretsnake"}]}
 
 const snipeschannel = '996130357260845156'
 const mpoxlistingschannel = '992439605569790072'
@@ -49,9 +49,9 @@ client.on('ready', () => {
 
   console.log('I am ready!')
   
-  console.log(servers.servers.length)
-  console.log(servers.servers[0])
-  console.log(servers.servers[1].id)
+  console.log(servers.server.length)
+  console.log(servers.server[0])
+  console.log(servers.server[1].id)
 
   //endable to reset commands
   //clearcommands()
@@ -241,7 +241,9 @@ function checkrarity(nftnumber, collection) {
 
 //setup discord slash command
 client.on('ready', () => {
-  client.api.applications(client.user.id).guilds(monkeyserver).commands.post({//adding commmand sepcificlly to our server
+  
+  for (var i = 0; i < servers.server.length;i++){
+  client.api.applications(client.user.id).guilds(servers.server[i].id).commands.post({//adding commmand to our servers
     data: {
       "name": "checkrarity",
       "description": "Check the rarity of an NFT in a collection we support",
@@ -271,6 +273,7 @@ client.on('ready', () => {
       ]
     }//end data
   });//end post
+  }//end for servers loop
 });//end client on ready
 
 //respond to slash command
