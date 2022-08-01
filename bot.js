@@ -46,7 +46,7 @@ var commonend = 0; var commonend = 0
 //establish ranges for collection(s)
 client.on('ready', () => {
   setranges('mpox')
-  
+
   console.log(`I'm Ready!`);
 
   //test HTTP get FP
@@ -60,7 +60,7 @@ client.on('ready', () => {
 
     // The whole response has been received. Print out the result.
     resp.on('end', () => {
-      console.log(JSON.parse(data).explanation);
+      console.log(JSON.parse(data));
     });
 
   }).on("error", (err) => {
