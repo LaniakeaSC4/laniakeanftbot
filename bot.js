@@ -474,7 +474,7 @@ client.on("messageCreate", (message) => {//watch new messages in the listings ch
 
 if (message.channel.id == pixelguildlistingschannel) {//if channel is the listings channel from the config
 
-    checksnipe(message, 'pixel_guild_loot_legends')
+    //checksnipe(message, 'pixel_guild_loot_legends')
 
   }//end if pixelguidlistingschannel
 
