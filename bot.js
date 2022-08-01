@@ -32,21 +32,13 @@ const pepic = 0.15
 const prare = 0.35
 const puncommon = 0.6
 
-//initialise threshold variables
-var mythicstart = 0; var mythicend = 0
-var legendarystart = 0; var legendaryend = 0
-var epicstart = 0; var epicend = 0
-var rarestart = 0; var rareend = 0
-var Uncommonstart = 0; var uncommonend = 0
-var commonend = 0; var commonend = 0
-
 //=================
 //====  Statup  ===
 //=================
 
 //establish ranges for collection(s)
 client.on('ready', () => {
-  setranges('monkeypox_nft')
+  getranges('monkeypox_nft')
   console.log(`I'm Ready!`);
 
   getfloorprice('monkeypox_nft')
@@ -84,7 +76,15 @@ function getfloorprice(collection) {
 }//end getfloorprice function
 
 //get ranges for this collection
-function setranges(collection) {
+function getranges(collection) {
+
+  //initialise threshold variables
+  var mythicstart = 0; var mythicend = 0
+  var legendarystart = 0; var legendaryend = 0
+  var epicstart = 0; var epicend = 0
+  var rarestart = 0; var rareend = 0
+  var uncommonstart = 0; var uncommonend = 0
+  var commonend = 0; var commonend = 0
 
   //mythic range (start of range is 1)
   mythicstart = 1;
@@ -121,20 +121,26 @@ function setranges(collection) {
 
   return (returnranges)
 
-}//end setranges function
+}//end getranges function
 
 //get rarity rank by nft#
 function checkrarity(nftnumber, collection) {
 
-  //set nftnum equal to the command argument value. This is a key in the data object
-  //var nftkey = 'nft' + nftnumber//establish key
-  var raritydescription = ""//initalise as string
-  var emoji = ""//initalise as string
-  var embedcolor = ""//initalise as string
-  var thisrarity = ""
-  var thisname = ""
-  var thisimage = ""
+  //initalise some variables as strings
+  var raritydescription = "";var emoji = "";var embedcolor = "";var thisrarity = "";var thisname = "";var thisimage = ""
 
+  //calculate the ranges for this checkrarity test
+  var thisranges = getranges(collection)
+  
+  //seperate out ranges returned from function
+  var mythicstart = thisranges[1]; var mythicend = thisranges[2]
+  var legendarystart = thisranges[3]; var legendaryend = thisranges[4]
+  var epicstart = thisranges[5]; var epicend = thisranges[6]
+  var rarestart = thisranges[7]; var rareend = thisranges[8]
+  var uncommonstart = thisranges[9]; var uncommonend = thisranges[10]
+  var commonend = thisranges[11]; var commonend = thisranges[12]
+
+  //loop through NFTs in collection looking for NFT ID. If found set thisrarity to statistical rarity
   for (var i = 0; i < collections[collection].result.data.items.length; i++) {
 
     if (collections[collection].result.data.items[i].id == nftnumber) {
@@ -142,15 +148,14 @@ function checkrarity(nftnumber, collection) {
       thisrarity = collections[collection].result.data.items[i].all_ranks.statistical_rarity
       thisname = collections[collection].result.data.items[i].name
       thisimage = collections[collection].result.data.items[i].image
-      thismelink = 'https://magiceden.io/item-details/' + thisimage.substring(thisimage.lastIndexOf("/") + 1, thisimage.lastIndexOf("?"))
       console.log('this rarity is: ' + thisrarity)
-    }
+    }//end if
 
-  }
+  }//end for
 
   if (thisrarity != null) {
 
-    console.log('NFT found by key in the databse')
+    console.log('NFT rarity found in the databse')
 
     //if mythic
     if (thisrarity >= mythicstart && thisrarity <= mythicend) {
