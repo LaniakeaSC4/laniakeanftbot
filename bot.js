@@ -50,8 +50,8 @@ client.on('ready', () => {
   console.log('I am ready!')
   
   console.log(servers.servers.length)
-  console.log(servers.servers[0].value)
-  console.log(servers.servers[1].value)
+  console.log(servers.servers[0])
+  console.log(servers.servers[1])
 
   //endable to reset commands
   //clearcommands()
