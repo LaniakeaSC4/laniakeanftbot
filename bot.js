@@ -10,7 +10,7 @@ const collections = []
 
 //import collections
 const mpoxdata = require('./monkeypox_nft.json')
-const pixelguilddata = require('pixel_guild_loot_legends.json')
+const pixelguilddata = require('/pixel_guild_loot_legends.json')
 
 //add collections to arrary
 collections['monkeypox_nft'] = mpoxdata
