@@ -38,10 +38,8 @@ const puncommon = 0.6
 
 //establish ranges for collection(s)
 client.on('ready', () => {
-  getranges('monkeypox_nft')
+  
   console.log(`I'm Ready!`);
-
-  getfloorprice('monkeypox_nft')
 
 });//end client.on Ready to establish ranges
 
@@ -127,11 +125,11 @@ function getranges(collection) {
 function checkrarity(nftnumber, collection) {
 
   //initalise some variables as strings
-  var raritydescription = "";var emoji = "";var embedcolor = "";var thisrarity = "";var thisname = "";var thisimage = ""
+  var raritydescription = ""; var emoji = ""; var embedcolor = ""; var thisrarity = ""; var thisname = ""; var thisimage = ""
 
   //calculate the ranges for this checkrarity test
   var thisranges = getranges(collection)
-  
+
   //seperate out ranges returned from function
   var mythicstart = thisranges[1]; var mythicend = thisranges[2]
   var legendarystart = thisranges[3]; var legendaryend = thisranges[4]
@@ -251,7 +249,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     var nftproperties = checkrarity(args[0].value, 'monkeypox_nft')//first argument should be the nft #. Send it to checkrarity function. Returns array.
 
     //split up returned array
-    var nftkey = nftproperties[0]; var raritydescription = nftproperties[1]; var emoji = nftproperties[2]; var embedcolor = nftproperties[3]; var thisrarity = nftproperties[4]; var nftname = nftproperties[5]; var thisimage = nftproperties[6];
+    var nftnumber = nftproperties[0]; var raritydescription = nftproperties[1]; var emoji = nftproperties[2]; var embedcolor = nftproperties[3]; var thisrarity = nftproperties[4]; var nftname = nftproperties[5]; var thisimage = nftproperties[6];
 
     if (raritydescription != 'Not found') {//if NFT number was not found in DB, 'Not found' would be returned. If it was found, proceed
       client.api.interactions(interaction.id, interaction.token).callback.post({
@@ -343,15 +341,19 @@ function checksnipe(message, collection) {
     }//end for loop checking each word in the listing description for the list price
 
     //get floor price
-    var floorprice = 0
-    var floorchan = client.channels.cache.get(floorchannel)
+    //old
+    //var floorprice = 0
+    //var floorchan = client.channels.cache.get(floorchannel)
 
-    var floorarr = floorchan.name.split(' ')
-    var flength = floorarr[1].length
-    var floorpricestring = floorarr[1].substring(1, flength)
+    //var floorarr = floorchan.name.split(' ')
+    //var flength = floorarr[1].length
+    //var floorpricestring = floorarr[1].substring(1, flength)
 
-    floorprice = parseFloat(floorpricestring)
-    console.log('Floor price: ' + floorprice)
+    //floorprice = parseFloat(floorpricestring)
+
+    var floorprice = getfloorprice(collection)
+
+    console.log('Floor price in check snipe function is: ' + floorprice)
 
     //get rarity of this listing
     var nftid = ''
@@ -369,7 +371,7 @@ function checksnipe(message, collection) {
     }
 
     //get rarity of nft with function (need whole rarity database).or handle function returning 0
-    var nftproperties = checkrarity(nftid, 'monkeypox_nft')
+    var nftproperties = checkrarity(nftid, collection)
     //split up returned array
     var nftkey = nftproperties[0]; var raritydescription = nftproperties[1]; var emoji = nftproperties[2]; var embedcolor = nftproperties[3]; var thisrarity = nftproperties[4]; var nftname = nftproperties[5]; var thisimage = nftproperties[6]; var melink = nftproperties[7]
 
