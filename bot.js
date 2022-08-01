@@ -10,9 +10,11 @@ const collections = []
 
 //import collections
 const mpoxdata = require('./monkeypox_nft.json')
+const pixelguilddata = require('pixel_guild_loot_legends.json')
 
 //add collections to arrary
 collections['monkeypox_nft'] = mpoxdata
+collections['pixel_guild_loot_legends'] = pixelguilddata
 
 //================
 //====  Setup  ===
@@ -55,20 +57,15 @@ function getfloorprice(collection) {
     var thiscollection = 'https://api-mainnet.magiceden.dev/v2/collections/' + collection + '/stats'
 
     https.get(thiscollection, (resp) => {
-
       let data = ''
       // A chunk of data has been received.
       resp.on('data', (chunk) => {
         data += chunk
       });
-
       // The whole response has been received. Print out the result.
       resp.on('end', () => {
-        console.log('Raw JSON FP: ' + JSON.parse(data).floorPrice)
         var rawFP = parseFloat(JSON.parse(data).floorPrice)//get FP in Sol
         var thisFP = rawFP / 1000000000
-        console.log('rawFP: ' + rawFP)
-        console.log('thisFP: ' + thisFP)
         resolve(thisFP)
       })
     }).on("error", (err) => { console.log("Error: " + err.message) })
@@ -343,16 +340,6 @@ async function checksnipe(message, collection) {
     }//end for loop checking each word in the listing description for the list price
 
     //get floor price
-    //old
-    //var floorprice = 0
-    //var floorchan = client.channels.cache.get(floorchannel)
-
-    //var floorarr = floorchan.name.split(' ')
-    //var flength = floorarr[1].length
-    //var floorpricestring = floorarr[1].substring(1, flength)
-
-    //floorprice = parseFloat(floorpricestring)
-
     await getfloorprice(collection).then(floorprice => {
 
       console.log('Floor price in check snipe function is: ' + floorprice)
