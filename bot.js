@@ -1,6 +1,7 @@
 const { Client, Intents } = require('discord.js')
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES] })
-const https = require('https');
+const https = require('https')
+const fs = require('fs')
 
 client.login(process.env.BOTTOKEN)
 
@@ -55,17 +56,20 @@ client.on('ready', () => {
     let data = ''
     // A chunk of data has been received.
     resp.on('data', (chunk) => {
-      data += chunk;
+      data += chunk
     });
 
     // The whole response has been received. Print out the result.
     resp.on('end', () => {
-      console.log(JSON.parse(data));
+      console.log(JSON.parse(data))
+      fs.writeFile('/MEAPI/monkeypox_nft.json', data)
     });
 
   }).on("error", (err) => {
-    console.log("Error: " + err.message);
+    console.log("Error: " + err.message)
   })
+
+  
 
 });//end client.on Ready to establish ranges
 
