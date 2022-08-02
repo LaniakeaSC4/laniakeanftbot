@@ -48,19 +48,18 @@ client.on('ready', async () => {
   
   var starttime = Math.floor(new Date().getTime() / 1000)
 
-//get 20 on startup
-    await getnewlistings('monkeypox_nft', 20).then(thislistings => {
-console.log(thislistings)
+//get 5 on startup
+    await getnewlistings('monkeypox_nft', 5).then(thislistings => {
+
       for (var i = 0; i < thislistings.length; i++) {//for all listings recieved from getnewlistingsfunction
         var seentime = Math.floor(new Date().getTime() / 1000)
 
-
-listings.seen[thislistings[i].tokenAddress] = { "seentime": seentime}
+thislistings[i]['seentime'] = seentime
 
 
       }//end for loop of each listing recieved
-
-      console.log('added initial 20')
+console.log(thislistings)
+      console.log('added initial 5')
 
     })//end then
 
