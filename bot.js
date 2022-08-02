@@ -73,15 +73,9 @@ var seentime = Math.floor(new Date().getTime() / 1000)
       for (var i = 0; i < thislistings.length; i++) {//for all listings recieved from getnewlistingsfunction
         
 
-        for (var j = 0; j < listings.length;j++){
-          
-          if (thislistings[i].tokenAddress == listings[j].tokenAddress) {//if this listing[i] is already in the listings object
-            console.log(i + j + ' already seen ' + thislistings[i].tokenAddress + '. skipping it.')
-          } else {
-            console.log(i + j + ' not seen ' + thislistings[i].tokenAddress + '. Adding it')
-            listings.push(thislistings[i])
-          }//end else
-        }
+        if (listings.some(e => e.tokenAddress === thislistings[i].tokenAddress)) {
+  console.log('matched ' + thislistings[i].tokenAddress)
+} 
 
 
       }//end for loop of each listing recieved
