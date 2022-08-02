@@ -42,12 +42,12 @@ const puncommon = 0.6
 
 //check ME API for new listings test
 client.on('ready', () => {
-  var minutes = 5, the_interval = minutes * 60 * 1000;
+  var minutes = 0.5, the_interval = minutes * 60 * 1000;
   setInterval(async function () {
-    console.log("I am doing my 5 minute check");
-    var thislistings = await getlistings('monkeypox_nft')
-    console.log('logging [0] token mint')
-    console.log(thislistings[0].tokenMint)
+    console.log("I am doing my 0.5 minute check");
+    var thislistings = await getnewlistings('monkeypox_nft')
+    console.log('logging [0]')
+    console.log(thislistings[0])
   }, the_interval);
 
 });//end client.on Ready
@@ -55,7 +55,7 @@ client.on('ready', () => {
 
 
 //returns floor price from Magic Eden API
-function getlistings(collection) {
+function getnewlistings(collection) {
   return new Promise((resolve, reject) => {
 
     //build collection URL
