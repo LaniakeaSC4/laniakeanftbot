@@ -40,6 +40,16 @@ const pepic = 0.15
 const prare = 0.35
 const puncommon = 0.6
 
+//check ME API for new listings test
+client.on('ready', () => {
+var minutes = 1, the_interval = minutes * 60 * 1000;
+setInterval(function() {
+  console.log("I am doing my 5 minutes check");
+  // do your stuff here
+}, the_interval);
+
+});//end client.on Ready
+
 //=================
 //====  Statup  ===
 //=================
@@ -55,7 +65,7 @@ client.on('ready', () => {
   //endable to reset commands
   //clearcommands()
 
-});//end client.on Ready to establish ranges
+});//end client.on Readys
 
 //function to reset slash commands
 async function clearcommands() {
