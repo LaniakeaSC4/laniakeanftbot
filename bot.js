@@ -45,6 +45,9 @@ client.on('ready', () => {
   var minutes = 0.5, the_interval = minutes * 60 * 1000
 
   var listings = { "seen": {} }
+  
+  listings.seen['00000'] = { "seentime": '00000' }
+  
   var starttime = Math.floor(new Date().getTime() / 1000)
 
   setInterval(async function () {
