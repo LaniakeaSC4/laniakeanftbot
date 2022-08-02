@@ -50,24 +50,36 @@ client.on('ready', () => {
   
   var starttime = Math.floor(new Date().getTime() / 1000)
 
-  setInterval(async function () {
-    console.log("I am doing my 0.5 minute check");
-    await getnewlistings('monkeypox_nft').then(thislistings => {
+//get 20 on startup
+    await getnewlistings('monkeypox_nft', 10).then(thislistings => {
 
       for (var i = 0; i < thislistings.length; i++) {//for all listings recieved from getnewlistingsfunction
         var seentime = Math.floor(new Date().getTime() / 1000)
-        console.log("Token: " + thislistings[i].tokenAddress + ' ' + thislistings[i].price + " SOL seen at " + seentime)
 
-        console.log('listings.seen.length: ' + Object.keys(listings.seen).length)
+
+listings.seen[thislistings[i].tokenAddress] = { "seentime": seentime}
+
+
+      }//end for loop of each listing recieved
+
+      console.log('added initial 20')
+
+    })//end then
+
+
+  setInterval(async function () {
+    console.log("I am doing my 0.5 minute check");
+    await getnewlistings('monkeypox_nft', 5).then(thislistings => {
+
+      for (var i = 0; i < thislistings.length; i++) {//for all listings recieved from getnewlistingsfunction
+        var seentime = Math.floor(new Date().getTime() / 1000)
 
         Object.keys(listings.seen).forEach(key => {
-          var thisval = key
-          console.log('logging thisval')
-          console.log(thisval)
-          if (thisval == thislistings[i].tokenAddress) {//if this listing[i] is already in the listings object
-            console.log('already seen ' + thisval + '. skipping it.')
+          
+          if (key == thislistings[i].tokenAddress) {//if this listing[i] is already in the listings object
+            console.log(i + ' already seen ' + key + '. skipping it.')
           } else {
-            console.log('Not seen ' + thisval + '. Adding it')
+            console.log(i + ' not seen ' + key + '. Adding it')
             listings.seen[thislistings[i].tokenAddress] = { "seentime": seentime }
           }//end else
         })
@@ -86,11 +98,11 @@ client.on('ready', () => {
 
 
 //returns floor price from Magic Eden API
-function getnewlistings(collection) {
+function getnewlistings(collection, number) {
   return new Promise((resolve, reject) => {
 
     //build collection URL
-    var thiscollection = 'https://api-mainnet.magiceden.dev/v2/collections/' + collection + '/listings?offset=0&limit=3'
+    var thiscollection = 'https://api-mainnet.magiceden.dev/v2/collections/' + collection + '/listings?offset=0&limit=' + number
 
     https.get(thiscollection, (resp) => {
       let data = ''
