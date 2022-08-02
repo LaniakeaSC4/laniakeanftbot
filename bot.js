@@ -42,12 +42,12 @@ const puncommon = 0.6
 
 //check ME API for new listings test
 client.on('ready', () => {
-  var minutes = 0.5, the_interval = minutes * 60 * 1000;
+  var minutes = 5, the_interval = minutes * 60 * 1000;
   setInterval(async function () {
-    console.log("I am doing my 1 minute check");
+    console.log("I am doing my 5 minute check");
     var thislistings = await getlistings('monkeypox_nft')
-    console.log('thislistings in ready')
-    console.log(thislistings)
+    console.log('logging [0] token mint')
+    console.log(thislistings[0].tokenMint)
   }, the_interval);
 
 });//end client.on Ready
@@ -71,8 +71,6 @@ function getlistings(collection) {
       // The whole response has been received. Print out the result.
       resp.on('end', () => {
         var thislistings = JSON.parse(data)
-        console.log('thislistings in function')
-        console.log(thislistings)
         resolve(thislistings)
       })
     }).on("error", (err) => { console.log("Error: " + err.message) })
