@@ -41,7 +41,7 @@ const prare = 0.35
 const puncommon = 0.6
 
 //check ME API for new listings test
-client.on('ready', () => {
+client.on('ready', async () => {
   var minutes = 0.5, the_interval = minutes * 60 * 1000
 
   var listings = { "seen": {} }
