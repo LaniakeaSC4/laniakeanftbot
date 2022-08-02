@@ -70,7 +70,7 @@ function getlistings(collection) {
 
       // The whole response has been received. Print out the result.
       resp.on('end', () => {
-        var thislistings = parseFloat(JSON.parse(data))
+        var thislistings = JSON.parse(data)
         console.log('thislistings in function')
         console.log(thislistings)
         resolve(thislistings)
