@@ -24,7 +24,7 @@ collections['wandering_nahavi'] = wanderingnahavidata
 //channels and servers
 const monkeyserver = '978975057739124767'
 
-const servers = {"server" : [{"id" : '978975057739124767', "name" : "monkeypox"}, {"id" : '901885313608200302', "name":"secretsnake"}]}
+const servers = { "server": [{ "id": '978975057739124767', "name": "monkeypox" }, { "id": '901885313608200302', "name": "secretsnake" }] }
 
 const snipeschannel = '996130357260845156'
 const mpoxlistingschannel = '992439605569790072'
@@ -44,21 +44,20 @@ const puncommon = 0.6
 //====  Statup  ===
 //=================
 
-//establish ranges for collection(s)
+//test area
 client.on('ready', () => {
 
   console.log('I am ready!')
-  
-  console.log(servers.server.length)
-  console.log(servers.server[0])
-  console.log(servers.server[1].id)
+
+  var datetime = new Date()
+  console.log(datetime)
 
   //endable to reset commands
   //clearcommands()
 
 });//end client.on Ready to establish ranges
 
-//function to reset commands
+//function to reset slash commands
 async function clearcommands() {
   const guild = await client.guilds.fetch(monkeyserver)
   guild.commands.set([]);
@@ -135,7 +134,7 @@ function getranges(collection) {
 
   var returnranges = [collection, mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend]
 
-  return (returnranges)
+  return (returnranges)//return arrary
 
 }//end getranges function
 
@@ -241,38 +240,37 @@ function checkrarity(nftnumber, collection) {
 
 //setup discord slash command
 client.on('ready', () => {
-  
-  for (var i = 0; i < servers.server.length;i++){
-  client.api.applications(client.user.id).guilds(servers.server[i].id).commands.post({//adding commmand to our servers
-    data: {
-      "name": "checkrarity",
-      "description": "Check the rarity of an NFT in a collection we support",
-      "options": [
-        {
-          "type": 3,
-          "name": "collection",
-          "description": "Please select a collection",
-          "choices": [
-            {
-              "name": "MonkeyPox NFT",
-              "value": "monkeypox_nft"
-            },
-            {
-              "name": "Pixel Guild",
-              "value": "pixel_guild_loot_legends"
-            }
-          ],
-          "required": true
-        },
-        {
-          "type": 3,
-          "name": "nftnumber",
-          "description": "Enter the # of the NFT to check in selected collection",
-          "required": true
-        }
-      ]
-    }//end data
-  });//end post
+  for (var i = 0; i < servers.server.length; i++) {
+    client.api.applications(client.user.id).guilds(servers.server[i].id).commands.post({//adding commmand to our servers
+      data: {
+        "name": "checkrarity",
+        "description": "Check the rarity of an NFT in a collection we support",
+        "options": [
+          {
+            "type": 3,
+            "name": "collection",
+            "description": "Please select a collection",
+            "choices": [
+              {
+                "name": "MonkeyPox NFT",
+                "value": "monkeypox_nft"
+              },
+              {
+                "name": "Pixel Guild",
+                "value": "pixel_guild_loot_legends"
+              }
+            ],
+            "required": true
+          },
+          {
+            "type": 3,
+            "name": "nftnumber",
+            "description": "Enter the # of the NFT to check in selected collection",
+            "required": true
+          }
+        ]
+      }//end data
+    });//end post
   }//end for servers loop
 });//end client on ready
 
@@ -359,7 +357,7 @@ async function checksnipe(message, collection) {
 
     console.log(embed.description)
 
-    //get list price
+    //get list price from ME bot post
     var thispricestring = ''
     var thisprice = 0
 
@@ -377,7 +375,7 @@ async function checksnipe(message, collection) {
       }
     }//end for loop checking each word in the listing description for the list price
 
-    //get floor price
+    //await floor price
     await getfloorprice(collection).then(floorprice => {
 
       console.log('Floor price in check snipe function is: ' + floorprice)
@@ -394,14 +392,13 @@ async function checksnipe(message, collection) {
           nftid = checkthis.substring(1, nlength)
           console.log('NFT ID is: ' + nftid)
 
-        }
-      }
+        }//end if
+      }//end for
 
       //get rarity of nft with function (need whole rarity database).or handle function returning 0
       var nftproperties = checkrarity(nftid, collection)
       //split up returned array
       var nftkey = nftproperties[0]; var raritydescription = nftproperties[1]; var emoji = nftproperties[2]; var embedcolor = nftproperties[3]; var thisrarity = nftproperties[4]; var nftname = nftproperties[5]; var thisimage = nftproperties[6]; var melink = nftproperties[7]
-
 
       //make calculation of if this is a snipe using rarity, floor price and nft price
       var hotrarities = ['Mythic', 'Legendary', 'Epic', 'Rare']
@@ -409,13 +406,15 @@ async function checksnipe(message, collection) {
       if (hotrarities.includes(raritydescription)) {
         //if this is a snipe, send alert to snipe channel
 
+        //set multipliers above floor price at which listings become snipes
         var mythiclimit = 100
         var legendarylimit = 50
         var epiclimit = 10
         var rarelimit = 5
 
-        var thislimit = 0
+        var thislimit = 0//establish snipe limit for this round
 
+        //calculate snipe limits
         var mythicsnipe = mythiclimit * floorprice
         var legendarysnipe = legendarylimit * floorprice
         var epicsnipe = epiclimit * floorprice
@@ -465,32 +464,31 @@ async function checksnipe(message, collection) {
                 }
               }
             ]//end embed
-          }
-          )//end message data
+          })//end message send
         } //if issnipe = true 
       } // if a hot rarity
     })//end await floorprice
   }//end if sender is ME Bot 
-
-}
+}//end checksnipe function
 
 client.on("messageCreate", (message) => {//watch new messages in the listings channel
-  if (message.channel.id == mpoxlistingschannel) {//if channel is the listings channel from the config
+
+  if (message.channel.id == mpoxlistingschannel) {//if channel is the monkeypox listings channel
 
     checksnipe(message, 'monkeypox_nft')
 
   }//end if mpoxlistingschannel
 
-if (message.channel.id == pixelguildlistingschannel) {//if channel is the listings channel from the config
+  if (message.channel.id == pixelguildlistingschannel) {//if channel is the pixel guild listings channel
 
     //checksnipe(message, 'pixel_guild_loot_legends')
 
   }//end if pixelguidlistingschannel
 
-if (message.channel.id == wanderingnahavilistingschannel) {//if channel is the listings channel from the config
+  if (message.channel.id == wanderingnahavilistingschannel) {//if channel is the wandering_nahavi listings channel
 
     checksnipe(message, 'wandering_nahavi')
 
   }//end if pixelguidlistingschannel
 
-})
+})//end client on message
