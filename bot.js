@@ -54,17 +54,14 @@ client.on('ready', () => {
       for (var i = 0; i < thislistings.length; i++) {
         var seentime = Math.floor(new Date().getTime() / 1000)
         console.log("Token: " + thislistings[i].tokenAddress + ' ' + thislistings[i].price + " SOL seen at " + seentime)
+        
+        listings.seen[thislistings[i].tokenAddress] = {"seentime" : seentime}
 
-      }
-      //console.log('logging thislistings')
-      //console.log(thislistings)
+      }//end for loop of each listing recieved
 
-      
-      //console.log(seentime)
+      console.log(listings)
 
-    })
-
-
+    })//end then
 
   }, the_interval);
 
