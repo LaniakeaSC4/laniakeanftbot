@@ -59,9 +59,9 @@ client.on('ready', () => {
 
         for (var j = 0; j < (Object.keys(listings.seen).length+1); j++) {//for each listing already in the listings object
           if (listings.seen[j] == thislistings[i].tokenAddress) {//if this listing[i] is already in the listings object
-            console.log('already seen this one')
+            console.log('already seen ' + listings.seen[j] + '. skipping it.')
           } else {
-            console.log('Not seen this one. Adding it')
+            console.log('Not seen ' + listings.seen[j] + '. Adding it')
             listings.seen[thislistings[i].tokenAddress] = { "seentime": seentime }
           }//end else
         }//end for loop
