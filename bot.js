@@ -76,10 +76,10 @@ var seentime = Math.floor(new Date().getTime() / 1000)
         for (var j = 0; j < listings.length;j++){
           
           if (thislistings[i].tokenAddress == listings[j].tokenAddress) {//if this listing[i] is already in the listings object
-            console.log(i + j + ' already seen ' + thislistings[j].tokenAddress + '. skipping it.')
+            console.log(i + j + ' already seen ' + thislistings[i].tokenAddress + '. skipping it.')
           } else {
-            console.log(i + j + ' not seen ' + thislistings[j].tokenAddress + '. Adding it')
-            listings.push(thislistings[j])
+            console.log(i + j + ' not seen ' + thislistings[i].tokenAddress + '. Adding it')
+            listings.push(thislistings[i])
           }//end else
         }
 
