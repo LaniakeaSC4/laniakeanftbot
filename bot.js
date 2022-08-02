@@ -55,6 +55,9 @@ client.on('ready', async () => {
         var seentime = Math.floor(new Date().getTime() / 1000)
 
 thislistings[i]['seentime'] = seentime
+var tokentime = thislistings[i].tokenAddress + '-' + seentime
+console.log('tokentime is ' + tokentime)
+thislistings[i]['tokentime'] = tokentime
 listings[i] = thislistings[i]
 
 
