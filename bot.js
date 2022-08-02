@@ -54,11 +54,12 @@ client.on('ready', async () => {
       for (var i = 0; i < thislistings.length; i++) {//for all listings recieved from getnewlistingsfunction
         var seentime = Math.floor(new Date().getTime() / 1000)
 
-thislistings[i]['seentime'] = seentime
+listings[i]['seentime'] = seentime
 
 
       }//end for loop of each listing recieved
-console.log(thislistings)
+      console.log('logging main listings arrary')
+console.log(listings)
       console.log('added initial 5')
 
     })//end then
@@ -67,23 +68,23 @@ console.log(thislistings)
   setInterval(async function () {
     console.log("I am doing my 0.5 minute check");
     await getnewlistings('monkeypox_nft', 5).then(thislistings => {
-
+var seentime = Math.floor(new Date().getTime() / 1000)
       for (var i = 0; i < thislistings.length; i++) {//for all listings recieved from getnewlistingsfunction
-        var seentime = Math.floor(new Date().getTime() / 1000)
+        
 
-        Object.keys(listings.seen).forEach(key => {
+        for (var j = 0; j < listings.length;j++){
           
-          if (key == thislistings[i].tokenAddress) {//if this listing[i] is already in the listings object
-            console.log(i + ' already seen ' + key + '. skipping it.')
+          if (thislistings[i].tokenAddress == listings[j].tokenAddress) {//if this listing[i] is already in the listings object
+            console.log(i + j + ' already seen ' + thislistings[j].tokenAddress + '. skipping it.')
           } else {
-            console.log(i + ' not seen ' + key + '. Adding it')
-            listings.seen[thislistings[i].tokenAddress] = { "seentime": seentime }
+            console.log(i + j + ' not seen ' + thislistings[j].tokenAddress + '. Adding it')
+            listings.push(thislistings[j])
           }//end else
-        })
+        }
 
 
       }//end for loop of each listing recieved
-
+console.log('logging main listings arrary')
       console.log(listings)
 
     })//end then
