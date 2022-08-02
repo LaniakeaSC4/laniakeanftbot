@@ -42,13 +42,42 @@ const puncommon = 0.6
 
 //check ME API for new listings test
 client.on('ready', () => {
-var minutes = 1, the_interval = minutes * 60 * 1000;
-setInterval(function() {
-  console.log("I am doing my 5 minutes check");
-  // do your stuff here
-}, the_interval);
+  var minutes = 1, the_interval = minutes * 60 * 1000;
+  setInterval(async function () {
+    console.log("I am doing my 1 minute check");
+    var thislistings = await getlistings('monkeypox_nft')
+    console.log(thislistings)
+  }, the_interval);
 
 });//end client.on Ready
+
+
+
+//returns floor price from Magic Eden API
+function getlistings(collection) {
+  return new Promise((resolve, reject) => {
+
+    //build collection URL
+    var thiscollection = 'https://api-mainnet.magiceden.dev/v2/collections/' + collection + '/listings?offset=0&limit=2'
+
+    https.get(thiscollection, (resp) => {
+      let data = ''
+      // A chunk of data has been received.
+      resp.on('data', (chunk) => {
+        data += chunk
+      });
+
+      // The whole response has been received. Print out the result.
+      resp.on('end', () => {
+        var thislistings = parseFloat(JSON.parse(data))
+        resolve(thislistings)
+      })
+    }).on("error", (err) => { console.log("Error: " + err.message) })
+  }) //end promise
+}//end getfloorprice function
+
+
+
 
 //=================
 //====  Statup  ===
