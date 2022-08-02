@@ -60,8 +60,8 @@ client.on('ready', () => {
 
         console.log('listings.seen.length: ' + Object.keys(listings.seen).length)
 
-        Object.values(listings).forEach(function (value) {
-          var val = listings[value]
+        Object.values(listings).forEach(function (val) {
+          //var val = listings[val]
           console.log('logging val')
           console.log(val)
           if (val == thislistings[i].tokenAddress) {//if this listing[i] is already in the listings object
