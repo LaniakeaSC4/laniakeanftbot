@@ -42,15 +42,29 @@ const puncommon = 0.6
 
 //check ME API for new listings test
 client.on('ready', () => {
-  var minutes = 0.5, the_interval = minutes * 60 * 1000;
+  var minutes = 0.5, the_interval = minutes * 60 * 1000
+
+  var listings = {}
+  var starttime = Math.floor(new Date().getTime() / 1000)
+
   setInterval(async function () {
     console.log("I am doing my 0.5 minute check");
-    var thislistings = await getnewlistings('monkeypox_nft')
-    console.log('logging thislistings')
-    console.log(thislistings)
+    await getnewlistings('monkeypox_nft').then(thislistings => {
 
-    var datetime = Math.floor(new Date().getTime() / 1000)
-    console.log(datetime)
+      for (var i = 0; i < thislistings.length; i++) {
+        var seentime = Math.floor(new Date().getTime() / 1000)
+        console.log("Token: " + thislistings[i].tokenAddress + ' ' + thislistings[i].price + " SOL seen at " + seentime)
+
+      }
+      //console.log('logging thislistings')
+      //console.log(thislistings)
+
+      
+      //console.log(seentime)
+
+    })
+
+
 
   }, the_interval);
 
@@ -63,7 +77,7 @@ function getnewlistings(collection) {
   return new Promise((resolve, reject) => {
 
     //build collection URL
-    var thiscollection = 'https://api-mainnet.magiceden.dev/v2/collections/' + collection + '/listings?offset=0&limit=1'
+    var thiscollection = 'https://api-mainnet.magiceden.dev/v2/collections/' + collection + '/listings?offset=0&limit=3'
 
     https.get(thiscollection, (resp) => {
       let data = ''
