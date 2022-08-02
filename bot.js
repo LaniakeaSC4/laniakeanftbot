@@ -55,9 +55,9 @@ client.on('ready', () => {
         var seentime = Math.floor(new Date().getTime() / 1000)
         console.log("Token: " + thislistings[i].tokenAddress + ' ' + thislistings[i].price + " SOL seen at " + seentime)
 
-        console.log('listings.seen.length: ' + listings.seen.length)
+        console.log('listings.seen.length: ' + listings.seen.keys().length)
 
-        for (var j = 0; j < listings.seen.length+1; j++) {//for each listing already in the listings object
+        for (var j = 0; j < listings.seen.keys().length; j++) {//for each listing already in the listings object
           if (listings.seen[j] == thislistings[i].tokenAddress) {//if this listing[i] is already in the listings object
             console.log('already seen this one')
           } else {
