@@ -46,8 +46,12 @@ client.on('ready', () => {
   setInterval(async function () {
     console.log("I am doing my 0.5 minute check");
     var thislistings = await getnewlistings('monkeypox_nft')
-    console.log('logging [0]')
-    console.log(thislistings[0])
+    console.log('logging thislistings')
+    console.log(thislistings)
+
+    var datetime = Math.floor(new Date().getTime() / 1000)
+    console.log(datetime)
+
   }, the_interval);
 
 });//end client.on Ready
@@ -59,7 +63,7 @@ function getnewlistings(collection) {
   return new Promise((resolve, reject) => {
 
     //build collection URL
-    var thiscollection = 'https://api-mainnet.magiceden.dev/v2/collections/' + collection + '/listings?offset=0&limit=2'
+    var thiscollection = 'https://api-mainnet.magiceden.dev/v2/collections/' + collection + '/listings?offset=0&limit=1'
 
     https.get(thiscollection, (resp) => {
       let data = ''
@@ -89,8 +93,7 @@ client.on('ready', () => {
 
   console.log('I am ready!')
 
-  var datetime = new Date()
-  console.log(datetime)
+
 
   //endable to reset commands
   //clearcommands()
