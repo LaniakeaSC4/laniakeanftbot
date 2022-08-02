@@ -54,7 +54,7 @@ client.on('ready', async () => {
       for (var i = 0; i < thislistings.length; i++) {//for all listings recieved from getnewlistingsfunction
         var seentime = Math.floor(new Date().getTime() / 1000)
 
-thislistings[i] = {['seentime'] : seentime}
+thislistings[i]['seentime'] = seentime
 listings[i] = thislistings[i]
 
 
