@@ -44,7 +44,7 @@ const puncommon = 0.6
 client.on('ready', () => {
   var minutes = 0.5, the_interval = minutes * 60 * 1000
 
-  var listings = {}
+  var listings = { "seen" : {}}
   var starttime = Math.floor(new Date().getTime() / 1000)
 
   setInterval(async function () {
