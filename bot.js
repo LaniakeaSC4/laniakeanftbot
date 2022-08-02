@@ -44,19 +44,25 @@ const puncommon = 0.6
 client.on('ready', () => {
   var minutes = 0.5, the_interval = minutes * 60 * 1000
 
-  var listings = { "seen" : {}}
+  var listings = { "seen": {} }
   var starttime = Math.floor(new Date().getTime() / 1000)
 
   setInterval(async function () {
     console.log("I am doing my 0.5 minute check");
     await getnewlistings('monkeypox_nft').then(thislistings => {
 
-      for (var i = 0; i < thislistings.length; i++) {
+      for (var i = 0; i < thislistings.length; i++) {//for all listings recieved from getnewlistingsfunction
         var seentime = Math.floor(new Date().getTime() / 1000)
         console.log("Token: " + thislistings[i].tokenAddress + ' ' + thislistings[i].price + " SOL seen at " + seentime)
-        
-        listings.seen[thislistings[i].tokenAddress] = {"seentime" : seentime}
 
+        for (var j = 0; j < listings.seen.length; j++) {//for each listing already in the listings object
+          if (listings.seen[j] == thislistings[i].tokenAddress) {//if this listing[i] is already in the listings object
+            console.log('already seen this one')
+          } else {
+            console.log('Not seen this one. Adding it')
+            listings.seen[thislistings[i].tokenAddress] = { "seentime": seentime }
+          }//end else
+        }//end for loop
       }//end for loop of each listing recieved
 
       console.log(listings)
