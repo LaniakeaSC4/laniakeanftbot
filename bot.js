@@ -44,15 +44,13 @@ const puncommon = 0.6
 client.on('ready', async () => {
   var minutes = 0.5, the_interval = minutes * 60 * 1000
 
-  var listings = { "seen": {} }
-  
-  listings.seen['00000'] = { "seentime": '00000' }
+  var listings = []
   
   var starttime = Math.floor(new Date().getTime() / 1000)
 
 //get 20 on startup
-    await getnewlistings('monkeypox_nft', 10).then(thislistings => {
-
+    await getnewlistings('monkeypox_nft', 20).then(thislistings => {
+console.log(thislistings)
       for (var i = 0; i < thislistings.length; i++) {//for all listings recieved from getnewlistingsfunction
         var seentime = Math.floor(new Date().getTime() / 1000)
 
