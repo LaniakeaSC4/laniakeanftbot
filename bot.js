@@ -120,9 +120,12 @@ client.on('ready', async () => {
             }//end for
 
             //get rarity
-            var thisrarity = thislistings[i].rarity.moonrank.rank
+            //can we get rarity from howrare.is? otherwise use function checklocalrarity
+
+            /*var thisrarity = thislistings[i].rarity.moonrank.rank
             console.log(thislistings[i])
-            console.log('Rarity from ME is: ' + thisrarity)
+            console.log('Rarity from ME is: ' + thisrarity)*/
+
           })
 
         }
