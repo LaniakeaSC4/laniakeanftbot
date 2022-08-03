@@ -42,48 +42,43 @@ const puncommon = 0.6
 
 //check ME API for new listings test
 client.on('ready', async () => {
-  var minutes = 5, the_interval = minutes * 60 * 1000
+
+  //number of mins to set interval at
+  var minutes = 0.5, the_interval = minutes * 60 * 1000
 
   var listings = []
-  
-  
 
-//get 5 on startup
+
+
+  //get 5 on startup
+  await getnewlistings('monkeypox_nft', 3).then(thislistings => {
+
+    listings = thislistings
+
+    console.log('logging main listings arrary')
+    console.log(listings)
+    console.log('added initial 3')
+
+  })//end then
+
+
+  setInterval(async function () {
+    console.log("I am doing my " + minutes + " minute check");
     await getnewlistings('monkeypox_nft', 3).then(thislistings => {
-      
- var seentime = Math.floor(new Date().getTime() / 1000)
- var starttime = seentime
-      for (var i = 0; i < thislistings.length; i++) {//for all listings recieved from getnewlistingsfunction
-       
 
-thislistings[i]['seentime'] = seentime
-listings[i] = thislistings[i]
+      for (var i = 0; i < thislistings.length; i++) {//for all listings recieved from getnewlistingsfunction
+
+        if (listings.some(e => (e.tokenAddress === thislistings[i].tokenAddress && e.price === thislistings[i].price))) {
+          console.log('matched ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
+        } else {
+          console.log('didnt match ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
+        }
 
 
       }//end for loop of each listing recieved
       console.log('logging main listings arrary')
-console.log(listings)
-      console.log('added initial 5')
-
-    })//end then
-
-
-  setInterval(async function () {
-    console.log("I am doing my 5 minute check");
-    await getnewlistings('monkeypox_nft', 5).then(thislistings => {
-var seentime = Math.floor(new Date().getTime() / 1000)
-      for (var i = 0; i < thislistings.length; i++) {//for all listings recieved from getnewlistingsfunction
-        
-
-        if (listings.some(e => e.tokenAddress === thislistings[i].tokenAddress)) {
-  console.log('matched ' + thislistings[i].tokenAddress)
-} 
-
-
-      }//end for loop of each listing recieved
-console.log('logging main listings arrary')
       console.log(listings)
-
+      listings = thislistings
     })//end then
 
   }, the_interval);
