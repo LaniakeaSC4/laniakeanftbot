@@ -69,9 +69,9 @@ client.on('ready', async () => {
 
   //config
   var listings = []//establish the tracked listings var
-  var initialget = 3//how many will we get initially
-  var refreshget = 3//how many will we get on each check
-  var maxlength = 3//how many records will we keep
+  var initialget = 4//how many will we get initially (max 20)
+  var refreshget = 3//how many will we get on each check (max 20) - should be less then initial get or extras will count as new
+  var maxlength = 5//how many records will we keep
   var minutes = 1, the_interval = minutes * 60 * 1000//refresh interval
 
   //get some listings on startup
