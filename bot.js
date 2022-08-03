@@ -78,6 +78,7 @@ client.on('ready', async () => {
   await getnewremotelistings('monkeypox_nft', initialget).then(async thislistings => {
     listings = thislistings//fill tracked listings with the listings we just got
     console.log('added initial ' + initialget + ' listings')
+    console.log(listings[0])
   })//end then
 
   setInterval(async function () {//do this every X minutes
