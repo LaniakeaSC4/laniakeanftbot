@@ -120,13 +120,12 @@ client.on('ready', async () => {
             }//end for
 
             //get rarity
-            //can we get rarity from howrare.is? otherwise use function checklocalrarity
+            if (listings.some(e => (e.tokenAddress === thistoken.tokenAddress))) {
+          console.log('rarity of this token from listings is: '+ e.rarity.moonrank.rank)
 
-            /*var thisrarity = thislistings[i].rarity.moonrank.rank
-            console.log(thislistings[i])
-            console.log('Rarity from ME is: ' + thisrarity)*/
+        } else {console.log('token rarity not found')} 
 
-          })
+          })//end thistoken
 
         }
 
