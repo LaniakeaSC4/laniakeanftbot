@@ -50,7 +50,7 @@ client.on('ready', async () => {
 
 
 
-  //get 5 on startup
+  //get some on startup
   await getnewlistings('monkeypox_nft', 3).then(thislistings => {
 
     listings = thislistings
@@ -76,8 +76,8 @@ client.on('ready', async () => {
 
 
       }//end for loop of each listing recieved
-      console.log('logging main listings arrary')
-      console.log(listings)
+      //console.log('logging main listings arrary')
+      //console.log(listings)
       listings = thislistings
     })//end then
 
