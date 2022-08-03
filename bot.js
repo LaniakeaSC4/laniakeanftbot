@@ -42,22 +42,21 @@ const puncommon = 0.6
 
 //check ME API for new listings test
 client.on('ready', async () => {
-  var minutes = 0.5, the_interval = minutes * 60 * 1000
+  var minutes = 5, the_interval = minutes * 60 * 1000
 
   var listings = []
   
-  var starttime = Math.floor(new Date().getTime() / 1000)
+  
 
 //get 5 on startup
-    await getnewlistings('monkeypox_nft', 5).then(thislistings => {
-
+    await getnewlistings('monkeypox_nft', 3).then(thislistings => {
+      
+ var seentime = Math.floor(new Date().getTime() / 1000)
+ var starttime = seentime
       for (var i = 0; i < thislistings.length; i++) {//for all listings recieved from getnewlistingsfunction
-        var seentime = Math.floor(new Date().getTime() / 1000)
+       
 
 thislistings[i]['seentime'] = seentime
-var tokentime = thislistings[i].tokenAddress + '-' + seentime
-console.log('tokentime is ' + tokentime)
-thislistings[i]['tokentime'] = tokentime
 listings[i] = thislistings[i]
 
 
@@ -70,7 +69,7 @@ console.log(listings)
 
 
   setInterval(async function () {
-    console.log("I am doing my 0.5 minute check");
+    console.log("I am doing my 5 minute check");
     await getnewlistings('monkeypox_nft', 5).then(thislistings => {
 var seentime = Math.floor(new Date().getTime() / 1000)
       for (var i = 0; i < thislistings.length; i++) {//for all listings recieved from getnewlistingsfunction
