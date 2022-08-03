@@ -105,6 +105,19 @@ client.on('ready', async () => {
             console.log('here are the new token details')
             console.log(thistoken)
 
+            let namearr = thistoken.name.split(' ')
+            //get nft ID
+            for (var i = 0; i < namearr.length; i++) {
+              let checkthis = namearr[i]
+              if (checkthis.includes('#')) {
+
+                var nlength = checkthis.length
+                nftid = checkthis.substring(1, nlength)
+                console.log('NFT ID is: ' + nftid)
+
+              }//end if
+            }//end for
+
           })
 
         }
@@ -463,7 +476,7 @@ async function checksnipe(message, collection) {
   //if there is an embed, the message was from the right bot and it's a listing rather than a sale...
   if (embed != undefined && message.author.id == mebotid && embed.description.includes('listed')) {
 
-    console.log(embed.description)
+    //console.log(embed.description)
 
     //get list price from ME bot post
     var thispricestring = ''
@@ -478,7 +491,7 @@ async function checksnipe(message, collection) {
         let x = i - 1
         thispricestring = descriptionarr[x]
         thisprice = parseFloat(thispricestring)
-        console.log('Listed for: ' + thisprice)
+        //console.log('Listed for: ' + thisprice)
 
       }
     }//end for loop checking each word in the listing description for the list price
@@ -486,7 +499,7 @@ async function checksnipe(message, collection) {
     //await floor price
     await getremotefloorprice(collection).then(floorprice => {
 
-      console.log('Floor price in check snipe function is: ' + floorprice)
+      //console.log('Floor price in check snipe function is: ' + floorprice)
 
       //get rarity of this listing
       var nftid = ''
@@ -498,7 +511,7 @@ async function checksnipe(message, collection) {
 
           var nlength = checkthis.length
           nftid = checkthis.substring(1, nlength)
-          console.log('NFT ID is: ' + nftid)
+          //console.log('NFT ID is: ' + nftid)
 
         }//end if
       }//end for
