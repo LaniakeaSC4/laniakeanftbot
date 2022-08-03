@@ -120,9 +120,17 @@ client.on('ready', async () => {
             }//end for
 
             //get rarity
-           console.log('logging two tokens')
-          console.log(thistoken) 
-          console.log(listings[0])
+            var thisrarity = ''
+            for (var i = 0;i <listings.length;i++){
+              
+              if (thistoken.mintAddress == listings[i].tokenMint){
+                console.log('rarity of ' + thistoken.mintAddress + ' is ' + listings[i].rarity.moonrank.rank)
+                thisrarity = listings[i].rarity.moonrank.rank
+              } 
+            } 
+           //console.log('logging two tokens')
+          //console.log(thistoken) //mintAddress 
+          //console.log(listings[0])//tokenMint (rarity)
 
           })//end thistoken
 
