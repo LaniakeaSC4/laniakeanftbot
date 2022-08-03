@@ -65,7 +65,7 @@ client.on('ready', async () => {
   setInterval(async function () {
     console.log("I am doing my " + minutes + " minute check");
     await getnewlistings('monkeypox_nft', 3).then(thislistings => {
-      
+      console.log('Listings arrary length at start: ' + listings.length)
       var rebuildarrary = listings
       
       for (var i = 0; i < thislistings.length; i++) {//for all listings recieved from getnewlistingsfunction
@@ -82,8 +82,14 @@ client.on('ready', async () => {
 
 
       }//end for loop of each listing recieved
-
+      console.log('Listings arrary length at end: ' + listings.length)
       listings = rebuildarrary
+
+      if (listings.length > 4){
+        console.log('listings.lenght is more than > 4. It is: ' + listings.length)
+        console.log('logging [3] which should be the last entry?')
+        console.log(listsings[3])
+      }
     })//end then
 
   }, the_interval);
