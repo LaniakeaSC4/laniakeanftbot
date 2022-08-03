@@ -84,9 +84,9 @@ client.on('ready', async () => {
     console.log("I am doing my " + minutes + " minute check")
 
     await getnewremotelistings('monkeypox_nft', refreshget).then(thislistings => {//get latest X listings from Magic Eden
-     
+
       console.log('Listings arrary length at start: ' + listings.length)
-      
+
       var rebuildarrary = listings//save all the acquired listings in a temporary arrary
 
       for (var i = 0; i < thislistings.length; i++) {//for all listings recieved from getnewremotelistingsfunction
@@ -99,10 +99,13 @@ client.on('ready', async () => {
           //actions if token address or price does not match one we have seen before
           console.log('New/updated entry ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
           rebuildarrary.unshift(thislistings[i])//add the new entry to the start of the rebuild arrary so we can remember this one if we see it later
-          
+
           console.log('getting token details from magic eden')
-          var thistoken = await getremotetokendetails(thislistings[i].mintAddress)
-          console.log(thistoken)
+          await getremotetokendetails(thislistings[i].mintAddress).then(thistoken => {
+            console.log(thistoken)
+
+          })
+
         }
 
       }//end for loop of each listing recieved
@@ -112,7 +115,7 @@ client.on('ready', async () => {
       if (rebuildarrary.length > maxlength) {
         var numbertoremove = rebuildarrary.length - maxlength
         console.log('number to remove is: ' + numbertoremove)
-        for (var i = 0;i < numbertoremove;i++){
+        for (var i = 0; i < numbertoremove; i++) {
           console.log("1 removal loop - popping here")
           rebuildarrary.pop()//remove oldest entry
         }//end for number to remove
@@ -146,7 +149,7 @@ function getnewremotelistings(collection, number) {
 }//end getnewremotelistings function
 
 //returns token details from Magic Eden
-function getremotetokendetails(mintaddress) {
+async function getremotetokendetails(mintaddress) {
   return new Promise((resolve, reject) => {
     var thisurl = 'https://api-mainnet.magiceden.dev/v2/tokens/' + mintaddress//build token URL
 
