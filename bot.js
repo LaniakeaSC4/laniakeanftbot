@@ -55,8 +55,8 @@ client.on('ready', async () => {
 
     listings = thislistings
 
-    console.log('logging main listings arrary')
-    console.log(listings)
+    console.log('logging first listing')
+    console.log(listings[0])
     console.log('added initial 3')
 
   })//end then
@@ -65,20 +65,25 @@ client.on('ready', async () => {
   setInterval(async function () {
     console.log("I am doing my " + minutes + " minute check");
     await getnewlistings('monkeypox_nft', 3).then(thislistings => {
-
+      
+      var rebuildarrary = []
+      
       for (var i = 0; i < thislistings.length; i++) {//for all listings recieved from getnewlistingsfunction
 
         if (listings.some(e => (e.tokenAddress === thislistings[i].tokenAddress && e.price === thislistings[i].price))) {
+          //actions for matches
           console.log('matched ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
+          rebuildarrary.push(thislistings[i])
         } else {
+          //actions for non-matches
           console.log('didnt match ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
+          rebuildarrary.push(thislistings[i])
         }
 
 
       }//end for loop of each listing recieved
-      //console.log('logging main listings arrary')
-      //console.log(listings)
-      listings = thislistings
+
+      listings = rebuildarrary
     })//end then
 
   }, the_interval);
