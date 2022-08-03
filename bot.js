@@ -120,10 +120,9 @@ client.on('ready', async () => {
             }//end for
 
             //get rarity
-            if (listings.some(e => (e.tokenAddress === thistoken.tokenAddress))) {
-          console.log('rarity of this token from listings is: '+ e.rarity.moonrank.rank)
-
-        } else {console.log('token rarity not found')} 
+           console.log('logging two tokens')
+          console.log(thistoken) 
+          console.log(listings[0])
 
           })//end thistoken
 
