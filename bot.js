@@ -103,8 +103,8 @@ client.on('ready', async () => {
 
           console.log('getting token details from magic eden')
           await getremotetokendetails(thislistings[i].tokenMint).then(async thistoken => {
-            console.log('here are the new token details')
-            console.log(thistoken)
+            //console.log('here are the new token details')
+            //console.log(thistoken)
             
             //get nft ID
             let namearr = thistoken.name.split(' ')
@@ -121,6 +121,7 @@ client.on('ready', async () => {
 
             //get rarity
             var thisrarity = thislistings[i].rarity.moonrank.rank
+            console.log(thislistings[i])
             console.log('Rarity from ME is: ' + thisrarity)
           })
 
