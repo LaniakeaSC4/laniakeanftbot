@@ -77,7 +77,7 @@ client.on('ready', async () => {
         } else {
           //actions for non-matches
           console.log('didnt match ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
-          rebuildarrary.push(thislistings[i])
+          rebuildarrary.unshift(thislistings[i])
         }
 
 
