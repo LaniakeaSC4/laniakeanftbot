@@ -85,10 +85,10 @@ client.on('ready', async () => {
       console.log('Listings arrary length at end: ' + listings.length)
       listings = rebuildarrary
 
-      if (listings.length > 4){
+      if (listings.length >= 4){
         console.log('listings.lenght is more than > 4. It is: ' + listings.length)
         console.log('logging [3] which should be the last entry?')
-        console.log(listsings[3])
+        console.log(listings[3])
       }
     })//end then
 
