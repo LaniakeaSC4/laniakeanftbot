@@ -85,9 +85,9 @@ client.on('ready', async () => {
 
       console.log('Listings arrary length at end: ' + listings.length)
 
-      var maxlength = 4
+      var maxlength = 3
 
-      if (rebuildarrary.length >= maxlength) {
+      if (rebuildarrary.length > maxlength) {
         var numbertoremove = rebuildarrary.length - maxlength
         console.log('number to remove is: ' + numbertoremove)
         for (var i = 0;i < numbertoremove;i++){
