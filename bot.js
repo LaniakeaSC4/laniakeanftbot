@@ -78,7 +78,7 @@ client.on('ready', async () => {
   await getnewremotelistings('monkeypox_nft', initialget).then(async thislistings => {
     listings = thislistings//fill tracked listings with the listings we just got
     console.log('added initial ' + initialget + ' listings')
-    console.log(listings[0])
+    //console.log(listings[0])
   })//end then
 
   setInterval(async function () {//do this every X minutes
@@ -105,20 +105,23 @@ client.on('ready', async () => {
           await getremotetokendetails(thislistings[i].tokenMint).then(async thistoken => {
             console.log('here are the new token details')
             console.log(thistoken)
-
-            let namearr = thistoken.name.split(' ')
+            
             //get nft ID
+            let namearr = thistoken.name.split(' ')
             for (var i = 0; i < namearr.length; i++) {
               let checkthis = namearr[i]
               if (checkthis.includes('#')) {
 
                 var nlength = checkthis.length
                 nftid = checkthis.substring(1, nlength)
-                console.log('NFT ID is: ' + nftid)
+                console.log('NFT ID from ME is: ' + nftid)
 
               }//end if
             }//end for
 
+            //get rarity
+            var thisrarity = thislistings[i].rarity.moonrank.rank
+            console.log('Rarity from ME is: ' + thisrarity)
           })
 
         }
