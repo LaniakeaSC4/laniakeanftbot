@@ -43,17 +43,15 @@ const puncommon = 0.6
 //check ME API for new listings test
 client.on('ready', async () => {
 
-  //number of mins to set interval at
-  var minutes = 0.5, the_interval = minutes * 60 * 1000
 
+
+  //establish the tracked listings var
   var listings = []
 
-
-
-  //get some on startup
+  //get some listings on startup
   await getnewlistings('monkeypox_nft', 3).then(thislistings => {
 
-    listings = thislistings
+    listings = thislistings//fill tracked listings with the listings we just got
 
     console.log('logging first listing')
     console.log(listings[0])
@@ -61,35 +59,45 @@ client.on('ready', async () => {
 
   })//end then
 
+  //number of mins to set interval at
+  var minutes = 0.5, the_interval = minutes * 60 * 1000
 
-  setInterval(async function () {
-    console.log("I am doing my " + minutes + " minute check");
-    await getnewlistings('monkeypox_nft', 3).then(thislistings => {
+  setInterval(async function () {//do this every X minutes
+    console.log("I am doing my " + minutes + " minute check")
+
+    await getnewlistings('monkeypox_nft', 3).then(thislistings => {//get latest X listings from Magic Eden
       console.log('Listings arrary length at start: ' + listings.length)
-      var rebuildarrary = listings
-      
+      var rebuildarrary = listings//save all the acquired listings in a temporary arrary
+
       for (var i = 0; i < thislistings.length; i++) {//for all listings recieved from getnewlistingsfunction
 
         if (listings.some(e => (e.tokenAddress === thislistings[i].tokenAddress && e.price === thislistings[i].price))) {
-          //actions for matches
+          //actions if token address and price match (i.e. we've seen this one before)
           console.log('matched ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
-          
+
         } else {
-          //actions for non-matches
+          //actions if token address or price does not match one we have seen before
           console.log('didnt match ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
-          rebuildarrary.unshift(thislistings[i])
+          rebuildarrary.unshift(thislistings[i])//add the new entry to the start of the rebuild arrary
         }
 
-
       }//end for loop of each listing recieved
+
       console.log('Listings arrary length at end: ' + listings.length)
+
+      var maxlength = 4
+
+      if (rebuildarrary.length >= maxlength) {
+        var numbertoremove = rebuildarrary.length - maxlength
+        console.log('number to remove is: ' + numbertoremove)
+        for (var i = 0;i < numbertoremove;i++){
+          console.log("1 removal loop - no action for now. Should pop here")
+        }
+      }
+
       listings = rebuildarrary
 
-      if (listings.length >= 4){
-        console.log('listings.lenght is more than > 4. It is: ' + listings.length)
-        console.log('logging [3] which should be the last entry?')
-        console.log(listings[3])
-      }
+
     })//end then
 
   }, the_interval);
