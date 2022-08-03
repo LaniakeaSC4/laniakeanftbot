@@ -98,7 +98,11 @@ client.on('ready', async () => {
         } else {
           //actions if token address or price does not match one we have seen before
           console.log('New/updated entry ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
-          rebuildarrary.unshift(thislistings[i])//add the new entry to the start of the rebuild arrary
+          rebuildarrary.unshift(thislistings[i])//add the new entry to the start of the rebuild arrary so we can remember this one if we see it later
+          
+          console.log('getting token details from magic eden')
+          var thistoken = await getremotetokendetails(thislistings[i].mintAddress)
+          console.log(thistoken)
         }
 
       }//end for loop of each listing recieved
@@ -140,6 +144,28 @@ function getnewremotelistings(collection, number) {
     }).on("error", (err) => { console.log("Error: " + err.message) })
   }) //end promise
 }//end getnewremotelistings function
+
+//returns token details from Magic Eden
+function getremotetokendetails(mintaddress) {
+  return new Promise((resolve, reject) => {
+    var thisurl = 'https://api-mainnet.magiceden.dev/v2/tokens/' + mintaddress//build token URL
+
+    https.get(thisurl, (resp) => {
+      let data = ''
+      // A chunk of data has been received.
+      resp.on('data', (chunk) => {
+        data += chunk
+      })
+
+      // The whole response has been received.
+      resp.on('end', () => {
+        var thistoken = JSON.parse(data)
+        resolve(thistoken)//return the recieved tokendetails
+      })
+    }).on("error", (err) => { console.log("Error: " + err.message) })
+  }) //end promise
+}//end getremotetokendetails function
+
 
 //====================
 //====  Functions  ===
