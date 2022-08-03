@@ -72,7 +72,7 @@ client.on('ready', async () => {
   var initialget = 50//how many will we get initially
   var refreshget = 15//how many will we get on each check
   var maxlength = 50//how many records will we keep
-  var minutes = 0.5, the_interval = minutes * 60 * 1000//refresh interval
+  var minutes = 1, the_interval = minutes * 60 * 1000//refresh interval
 
   //get some listings on startup
   await getnewremotelistings('monkeypox_nft', initialget).then(thislistings => {
