@@ -69,9 +69,9 @@ client.on('ready', async () => {
 
   //config
   var listings = []//establish the tracked listings var
-  var initialget = 3//how many will we get initially
-  var refreshget = 3//how many will we get on each check
-  var maxlength = 3//how many records will we keep
+  var initialget = 50//how many will we get initially
+  var refreshget = 15//how many will we get on each check
+  var maxlength = 50//how many records will we keep
   var minutes = 0.5, the_interval = minutes * 60 * 1000//refresh interval
 
   //get some listings on startup
@@ -109,7 +109,8 @@ client.on('ready', async () => {
         var numbertoremove = rebuildarrary.length - maxlength
         console.log('number to remove is: ' + numbertoremove)
         for (var i = 0;i < numbertoremove;i++){
-          console.log("1 removal loop - no action for now. Should pop here")
+          console.log("1 removal loop - popping here")
+          rebuildarrary.pop()//remove oldest entry
         }//end for number to remove
       }//end if rebuildarrary is longer than max length
 
