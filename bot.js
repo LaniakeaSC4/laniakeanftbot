@@ -69,9 +69,9 @@ client.on('ready', async () => {
 
   //config
   var listings = []//establish the tracked listings var
-  var initialget = 4//how many will we get initially (max 20)
-  var refreshget = 3//how many will we get on each check (max 20) - should be less then initial get or extras will count as new
-  var maxlength = 5//how many records will we keep
+  var initialget = 20//how many will we get initially (max 20)
+  var refreshget = 10//how many will we get on each check (max 20) - should be less then initial get or extras will count as new
+  var maxlength = 50//how many records will we keep
   var minutes = 1, the_interval = minutes * 60 * 1000//refresh interval
 
   //get some listings on startup
@@ -93,11 +93,11 @@ client.on('ready', async () => {
 
         if (listings.some(e => (e.tokenAddress === thislistings[i].tokenAddress && e.price === thislistings[i].price))) {
           //actions if token address and price match (i.e. we've seen this one before)
-          console.log('matched ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
+          //console.log('matched ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
 
         } else {
           //actions if token address or price does not match one we have seen before
-          console.log('didnt match ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
+          console.log('New/updated entry ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
           rebuildarrary.unshift(thislistings[i])//add the new entry to the start of the rebuild arrary
         }
 
