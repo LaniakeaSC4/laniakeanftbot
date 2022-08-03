@@ -101,7 +101,8 @@ client.on('ready', async () => {
           rebuildarrary.unshift(thislistings[i])//add the new entry to the start of the rebuild arrary so we can remember this one if we see it later
 
           console.log('getting token details from magic eden')
-          await getremotetokendetails(thislistings[i].mintAddress).then(async thistoken => {
+          await getremotetokendetails(thislistings[i].tokenMint).then(async thistoken => {
+            console.log('here are the new token details')
             console.log(thistoken)
 
           })
