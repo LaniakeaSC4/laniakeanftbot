@@ -75,7 +75,7 @@ client.on('ready', async () => {
   var minutes = 1, the_interval = minutes * 60 * 1000//refresh interval
 
   //get some listings on startup
-  await getnewremotelistings('monkeypox_nft', initialget).then(thislistings => {
+  await getnewremotelistings('monkeypox_nft', initialget).then(async thislistings => {
     listings = thislistings//fill tracked listings with the listings we just got
     console.log('added initial ' + initialget + ' listings')
   })//end then
@@ -83,7 +83,7 @@ client.on('ready', async () => {
   setInterval(async function () {//do this every X minutes
     console.log("I am doing my " + minutes + " minute check")
 
-    await getnewremotelistings('monkeypox_nft', refreshget).then(thislistings => {//get latest X listings from Magic Eden
+    await getnewremotelistings('monkeypox_nft', refreshget).then(async thislistings => {//get latest X listings from Magic Eden
 
       console.log('Listings arrary length at start: ' + listings.length)
 
@@ -101,7 +101,7 @@ client.on('ready', async () => {
           rebuildarrary.unshift(thislistings[i])//add the new entry to the start of the rebuild arrary so we can remember this one if we see it later
 
           console.log('getting token details from magic eden')
-          await getremotetokendetails(thislistings[i].mintAddress).then(thistoken => {
+          await getremotetokendetails(thislistings[i].mintAddress).then(async thistoken => {
             console.log(thistoken)
 
           })
