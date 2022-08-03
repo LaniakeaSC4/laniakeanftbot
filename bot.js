@@ -40,36 +40,56 @@ const pepic = 0.15
 const prare = 0.35
 const puncommon = 0.6
 
+//=================
+//====  Statup  ===
+//=================
+
+//test area
+client.on('ready', () => {
+
+  console.log('I am ready!')
+
+  //endable to reset commands
+  //clearcommands()
+
+});//end client.on Readys
+
+//function to reset slash commands
+async function clearcommands() {
+  const guild = await client.guilds.fetch(monkeyserver)
+  guild.commands.set([]);
+}//end function to reset commands
+
+//==========================
+//====  ME new listings  ===
+//==========================
+
 //check ME API for new listings test
 client.on('ready', async () => {
 
-
-
-  //establish the tracked listings var
-  var listings = []
+  //config
+  var listings = []//establish the tracked listings var
+  var initialget = 3//how many will we get initially
+  var refreshget = 3//how many will we get on each check
+  var maxlength = 3//how many records will we keep
+  var minutes = 0.5, the_interval = minutes * 60 * 1000//refresh interval
 
   //get some listings on startup
-  await getnewlistings('monkeypox_nft', 3).then(thislistings => {
-
+  await getnewremotelistings('monkeypox_nft', initialget).then(thislistings => {
     listings = thislistings//fill tracked listings with the listings we just got
-
-    console.log('logging first listing')
-    console.log(listings[0])
-    console.log('added initial 3')
-
+    console.log('added initial ' + initialget + ' listings')
   })//end then
-
-  //number of mins to set interval at
-  var minutes = 0.5, the_interval = minutes * 60 * 1000
 
   setInterval(async function () {//do this every X minutes
     console.log("I am doing my " + minutes + " minute check")
 
-    await getnewlistings('monkeypox_nft', 3).then(thislistings => {//get latest X listings from Magic Eden
+    await getnewremotelistings('monkeypox_nft', refreshget).then(thislistings => {//get latest X listings from Magic Eden
+     
       console.log('Listings arrary length at start: ' + listings.length)
+      
       var rebuildarrary = listings//save all the acquired listings in a temporary arrary
 
-      for (var i = 0; i < thislistings.length; i++) {//for all listings recieved from getnewlistingsfunction
+      for (var i = 0; i < thislistings.length; i++) {//for all listings recieved from getnewremotelistingsfunction
 
         if (listings.some(e => (e.tokenAddress === thislistings[i].tokenAddress && e.price === thislistings[i].price))) {
           //actions if token address and price match (i.e. we've seen this one before)
@@ -85,81 +105,47 @@ client.on('ready', async () => {
 
       console.log('Listings arrary length at end: ' + listings.length)
 
-      var maxlength = 3
-
       if (rebuildarrary.length > maxlength) {
         var numbertoremove = rebuildarrary.length - maxlength
         console.log('number to remove is: ' + numbertoremove)
         for (var i = 0;i < numbertoremove;i++){
           console.log("1 removal loop - no action for now. Should pop here")
-        }
-      }
+        }//end for number to remove
+      }//end if rebuildarrary is longer than max length
 
-      listings = rebuildarrary
+      listings = rebuildarrary//overwrite main listings arrary with the temp rebuild one
 
+    })//end then after getting listings
+  }, the_interval)//end recheck listing loop
+})//end client.on Ready
 
-    })//end then
-
-  }, the_interval);
-
-});//end client.on Ready
-
-
-
-//returns floor price from Magic Eden API
-function getnewlistings(collection, number) {
+//returns x number of recent listings from Magic Eden
+function getnewremotelistings(collection, number) {
   return new Promise((resolve, reject) => {
-
-    //build collection URL
-    var thiscollection = 'https://api-mainnet.magiceden.dev/v2/collections/' + collection + '/listings?offset=0&limit=' + number
+    var thiscollection = 'https://api-mainnet.magiceden.dev/v2/collections/' + collection + '/listings?offset=0&limit=' + number//build collection URL
 
     https.get(thiscollection, (resp) => {
       let data = ''
       // A chunk of data has been received.
       resp.on('data', (chunk) => {
         data += chunk
-      });
+      })
 
-      // The whole response has been received. Print out the result.
+      // The whole response has been received.
       resp.on('end', () => {
         var thislistings = JSON.parse(data)
-        resolve(thislistings)
+        resolve(thislistings)//return the recieved X listings
       })
     }).on("error", (err) => { console.log("Error: " + err.message) })
   }) //end promise
-}//end getfloorprice function
-
-
-
-
-//=================
-//====  Statup  ===
-//=================
-
-//test area
-client.on('ready', () => {
-
-  console.log('I am ready!')
-
-
-
-  //endable to reset commands
-  //clearcommands()
-
-});//end client.on Readys
-
-//function to reset slash commands
-async function clearcommands() {
-  const guild = await client.guilds.fetch(monkeyserver)
-  guild.commands.set([]);
-}//end function to reset commands
+}//end getnewremotelistings function
 
 //====================
 //====  Functions  ===
 //====================
 
 //returns floor price from Magic Eden API
-function getfloorprice(collection) {
+function getremotefloorprice(collection) {
   return new Promise((resolve, reject) => {
 
     //build collection URL
@@ -179,10 +165,10 @@ function getfloorprice(collection) {
       })
     }).on("error", (err) => { console.log("Error: " + err.message) })
   }) //end promise
-}//end getfloorprice function
+}//end getremotefloorprice function
 
-//get ranges for this collection
-function getranges(collection) {
+//get ranges for this collection (from local data)
+function getlocalranges(collection) {
 
   //initialise threshold variables
   var mythicstart = 0; var mythicend = 0
@@ -227,16 +213,16 @@ function getranges(collection) {
 
   return (returnranges)//return arrary
 
-}//end getranges function
+}//end getlocalranges function
 
-//get rarity rank by nft#
-function checkrarity(nftnumber, collection) {
+//get rarity rank by nft# from local data
+function checklocalrarity(nftnumber, collection) {
 
   //initalise some variables as strings
   var raritydescription = ""; var emoji = ""; var embedcolor = ""; var thisrarity = ""; var thisname = ""; var thisimage = ""
 
-  //calculate the ranges for this checkrarity test
-  var thisranges = getranges(collection)
+  //calculate the ranges for this checklocalrarity test
+  var thisranges = getlocalranges(collection)
 
   //seperate out ranges returned from function
   var mythicstart = thisranges[1]; var mythicend = thisranges[2]
@@ -323,7 +309,7 @@ function checkrarity(nftnumber, collection) {
     var nftproperties = [nftnumber, 'Not found', '<:common:997639893306064997>', 0x3b0202, 'Not Found', 'No Name', '']
     return (nftproperties)
   }//end if nft is in object
-}//end checkrarity function
+}//end checklocalrarity function
 
 //==============================
 //====  Setup slash command  ===
@@ -372,7 +358,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
   if (command === 'checkrarity') {
 
-    var nftproperties = checkrarity(args[1].value, args[0].value)//first argument should be the nft #. Send it to checkrarity function. Returns array.
+    var nftproperties = checklocalrarity(args[1].value, args[0].value)//first argument should be the nft #. Send it to checklocalrarity function. Returns array.
 
     //split up returned array
     var nftnumber = nftproperties[0]; var raritydescription = nftproperties[1]; var emoji = nftproperties[2]; var embedcolor = nftproperties[3]; var thisrarity = nftproperties[4]; var nftname = nftproperties[5]; var thisimage = nftproperties[6];
@@ -467,7 +453,7 @@ async function checksnipe(message, collection) {
     }//end for loop checking each word in the listing description for the list price
 
     //await floor price
-    await getfloorprice(collection).then(floorprice => {
+    await getremotefloorprice(collection).then(floorprice => {
 
       console.log('Floor price in check snipe function is: ' + floorprice)
 
@@ -487,7 +473,7 @@ async function checksnipe(message, collection) {
       }//end for
 
       //get rarity of nft with function (need whole rarity database).or handle function returning 0
-      var nftproperties = checkrarity(nftid, collection)
+      var nftproperties = checklocalrarity(nftid, collection)
       //split up returned array
       var nftkey = nftproperties[0]; var raritydescription = nftproperties[1]; var emoji = nftproperties[2]; var embedcolor = nftproperties[3]; var thisrarity = nftproperties[4]; var nftname = nftproperties[5]; var thisimage = nftproperties[6]; var melink = nftproperties[7]
 
