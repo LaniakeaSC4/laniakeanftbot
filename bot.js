@@ -66,14 +66,14 @@ client.on('ready', async () => {
     console.log("I am doing my " + minutes + " minute check");
     await getnewlistings('monkeypox_nft', 3).then(thislistings => {
       
-      var rebuildarrary = []
+      var rebuildarrary = listings
       
       for (var i = 0; i < thislistings.length; i++) {//for all listings recieved from getnewlistingsfunction
 
         if (listings.some(e => (e.tokenAddress === thislistings[i].tokenAddress && e.price === thislistings[i].price))) {
           //actions for matches
           console.log('matched ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
-          rebuildarrary.push(thislistings[i])
+          
         } else {
           //actions for non-matches
           console.log('didnt match ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
