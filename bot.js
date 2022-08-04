@@ -134,25 +134,21 @@ client.on('ready', async () => {
             }
 
             await calculateranges(2400).then(async thisranges => {//calculate ranges (need to get number in collection)
-              await getraritydescription(thisranges, thisrarity).then(async raritydescription => {
+              await getraritydescription(thisranges, thisrarity)}).then(async raritydescription => {
                 console.log('NFT ID is: ' + nftid)
                 console.log('NFT name is: ' + thistoken.name)
                 console.log('Rarity description is: ' + raritydescription)
                 console.log('Rarity rank is: ' + thisrarity)
                 console.log('The list price is: ' + thisprice)
-                await getremotefloorprice('monkeypox_nft').then(async thisfloorprice => {
+                await getremotefloorprice('monkeypox_nft')}).then(async thisfloorprice => {
                   console.log('The floor price is: ' + thisfloorprice)
-                 await testifsnipe(raritydescription,thisprice,thisfloorprice).then(async snipe => {
+                 await testifsnipe(raritydescription,thisprice,thisfloorprice)}).then(async snipe => {
                    console.log('Snipe result is: ' + snipe)
                    
                  })
                   //then - send to a true/false function to check if its a snipe (with list price, floor price and rarity description)
                   //then - if snipe, get appropriate addons like emoji and embed color from a function
                   //then - send out to servers
-
-                })//end get floor price .then
-              })//end get rarity description .then
-            })//end calculate ranges .then
           })//end thistoken
 
         }//end else for a token we havnt seen before
