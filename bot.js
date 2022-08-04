@@ -431,22 +431,22 @@ function checklocalrarity(nftnumber, collection) {
   for (var i = 0; i < collections[collection].result.data.items.length; i++) {
 
     if (collections[collection].result.data.items[i].id == nftnumber) {
-      console.log('found ' + collections[collection].result.data.items[i].name)
+      //console.log('found ' + collections[collection].result.data.items[i].name)
       thisrarity = collections[collection].result.data.items[i].all_ranks.statistical_rarity
       thisname = collections[collection].result.data.items[i].name
       thisimage = collections[collection].result.data.items[i].image
-      console.log('this rarity is: ' + thisrarity)
+      //console.log('this rarity is: ' + thisrarity)
     }//end if
 
   }//end for
 
   if (thisrarity != null) {
 
-    console.log('NFT rarity found in the databse')
+    //console.log('NFT rarity found in the databse')
 
     //if mythic
     if (thisrarity >= mythicstart && thisrarity <= mythicend) {
-      console.log('mythic!')
+      //console.log('mythic!')
       raritydescription = 'Mythic'
       emoji = '<:mythic:997639717665386586>'
       embedcolor = 0xed2839
@@ -454,7 +454,7 @@ function checklocalrarity(nftnumber, collection) {
 
     //if Legendary
     else if (thisrarity >= legendarystart && thisrarity <= legendaryend) {
-      console.log('legendary!')
+      //console.log('legendary!')
       raritydescription = 'Legendary'
       emoji = '<:legendary:997639764943585421>'
       embedcolor = 0xfe8100
@@ -462,7 +462,7 @@ function checklocalrarity(nftnumber, collection) {
 
     //if epic
     else if (thisrarity >= epicstart && thisrarity <= epicend) {
-      console.log('epic!')
+      //console.log('epic!')
       raritydescription = 'Epic'
       emoji = '<:epic:997639797558497421>'
       embedcolor = 0x9901f6
@@ -470,7 +470,7 @@ function checklocalrarity(nftnumber, collection) {
 
     //if rare
     else if (thisrarity >= rarestart && thisrarity <= rareend) {
-      console.log('Rare!')
+      //console.log('Rare!')
       raritydescription = 'Rare'
       emoji = '<:rare:997639830844477471>'
       embedcolor = 0x19aaeb
@@ -478,7 +478,7 @@ function checklocalrarity(nftnumber, collection) {
 
     //if uncommon
     else if (thisrarity >= uncommonstart && thisrarity <= uncommonend) {
-      console.log('uncommmon!')
+      //console.log('uncommmon!')
       raritydescription = 'Uncommon'
       emoji = '<:uncommon:997639865065799770>'
       embedcolor = 0x20d48a
@@ -486,7 +486,7 @@ function checklocalrarity(nftnumber, collection) {
 
     //if common
     else if (thisrarity >= commonstart && thisrarity <= commonend) {
-      console.log('Common')
+      //console.log('Common')
       raritydescription = 'Common'
       emoji = '<:common:997639893306064997>'
       embedcolor = 0x939394
@@ -505,6 +505,7 @@ function checklocalrarity(nftnumber, collection) {
     return (nftproperties)
   }//end if nft is in object
 }//end checklocalrarity function
+
 
 async function checksnipe(message, collection) {
 
@@ -629,6 +630,7 @@ async function checksnipe(message, collection) {
   }//end if sender is ME Bot 
 }//end checksnipe function
 
+/*
 client.on("messageCreate", (message) => {//watch new messages in the listings channel
 
   if (message.channel.id == mpoxlistingschannel) {//if channel is the monkeypox listings channel
@@ -650,6 +652,7 @@ client.on("messageCreate", (message) => {//watch new messages in the listings ch
   }//end if pixelguidlistingschannel
 
 })//end client on message
+*/
 
 //=========================
 //====  Rarity checker  ===
