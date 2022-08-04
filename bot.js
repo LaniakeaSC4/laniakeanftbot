@@ -140,29 +140,18 @@ client.on('ready', async () => {
                 console.log('Rarity description is: ' + raritydescription)
                 console.log('Rarity rank is: ' + thisrarity)
                 console.log('The list price is: ' + thisprice)
+                await getremotefloorprice('monkeypox_nft').then(async thisfloorprice => {
+                  console.log('The floor price is: ' + thisfloorprice)
+                  //then - send to a true/false function to check if its a snipe (with list price, floor price and rarity description)
+                  //then - if snipe, get appropriate addons like emoji and embed color from a function
+                  //then - send out to servers
 
-                //then - get floor price (with collection ID)
-                //then - send to a true/false function to check if its a snipe (with list price, floor price and rarity description)
-                //then - if snipe, get appropriate addons like emoji and embed color from a function
-                //then - send out to servers
-
-              })
-
-            })
-
-
-
-
-            //get collection FP
-            await getremotefloorprice('monkeypox_nft').then(async thisfloorprice => {
-
-              //send snipes to all servers
-
-            })
-
+                })//end get floor price .then
+              })//end get rarity description .then
+            })//end calculate ranges .then
           })//end thistoken
 
-        }
+        }//end else for a token we havnt seen before
 
       }//end for loop of each listing recieved
 
@@ -182,6 +171,10 @@ client.on('ready', async () => {
     })//end then after getting listings
   }, the_interval)//end recheck listing loop
 })//end client.on Ready
+
+//===================================
+//====  Functions for sniper bot  ===
+//===================================
 
 //returns x number of recent listings from Magic Eden
 function getnewremotelistings(collection, number) {
@@ -224,34 +217,6 @@ async function getremotetokendetails(mintaddress) {
     }).on("error", (err) => { console.log("Error: " + err.message) })
   }) //end promise
 }//end getremotetokendetails function
-
-
-//====================
-//====  Functions  ===
-//====================
-
-//returns floor price from Magic Eden API
-async function getremotefloorprice(collection) {
-  return new Promise((resolve, reject) => {
-
-    //build collection URL
-    var thiscollection = 'https://api-mainnet.magiceden.dev/v2/collections/' + collection + '/stats'
-
-    https.get(thiscollection, (resp) => {
-      let data = ''
-      // A chunk of data has been received.
-      resp.on('data', (chunk) => {
-        data += chunk
-      });
-      // The whole response has been received. Print out the result.
-      resp.on('end', () => {
-        var rawFP = parseFloat(JSON.parse(data).floorPrice)//get FP in Sol
-        var thisFP = rawFP / 1000000000
-        resolve(thisFP)
-      })
-    }).on("error", (err) => { console.log("Error: " + err.message) })
-  }) //end promise
-}//end getremotefloorprice function
 
 async function calculateranges(collectionsize) {
   return new Promise((resolve, reject) => {
@@ -338,6 +303,59 @@ async function getraritydescription(ranges, thisrarity) {
     return ('not ranked')
   }
 }//end getraritydescription function
+
+//returns floor price from Magic Eden API
+async function getremotefloorprice(collection) {
+  return new Promise((resolve, reject) => {
+
+    //build collection URL
+    var thiscollection = 'https://api-mainnet.magiceden.dev/v2/collections/' + collection + '/stats'
+
+    https.get(thiscollection, (resp) => {
+      let data = ''
+      // A chunk of data has been received.
+      resp.on('data', (chunk) => {
+        data += chunk
+      });
+      // The whole response has been received. Print out the result.
+      resp.on('end', () => {
+        var rawFP = parseFloat(JSON.parse(data).floorPrice)//get FP in Sol
+        var thisFP = rawFP / 1000000000
+        resolve(thisFP)
+      })
+    }).on("error", (err) => { console.log("Error: " + err.message) })
+  }) //end promise
+}//end getremotefloorprice function
+
+//returns rarity description (i.e. "Mythic" if its a snipe, else returns 'false' (as a string))
+async function testifsnipe(raritydescription,thisprice,floorprice) {
+  return new Promise((resolve, reject) => {
+
+    //make calculation of if this is a snipe using rarity, floor price and nft price
+    var hotrarities = ['Mythic', 'Legendary', 'Epic', 'Rare']
+
+    if (hotrarities.includes(raritydescription)) {
+
+      //set multipliers above floor price at which listings become snipes
+      var mythiclimit = 100
+      var legendarylimit = 50
+      var epiclimit = 10
+      var rarelimit = 5
+
+      //calculate snipe limits
+      var mythicsnipe = mythiclimit * floorprice
+      var legendarysnipe = legendarylimit * floorprice
+      var epicsnipe = epiclimit * floorprice
+      var raresnipe = rarelimit * floorprice
+
+      if (raritydescription == 'Mythic' && thisprice <= mythicsnipe) {return(raritydescription)} else if (raritydescription == 'Legendary' && thisprice <= legendarysnipe) {return(raritydescription)} else if (raritydescription == 'Epic' && thisprice <= epicsnipe) {return(raritydescription)} else if (raritydescription == 'Rare' && thisprice <= raresnipe) {return(raritydescription)}
+    } else {return('false')}
+  }) //end promise
+}//end testifsnipe function
+
+//=========================
+//==== Other Functions  ===
+//=========================
 
 //get ranges for this collection (from local data)
 function getlocalranges(collection) {
@@ -483,122 +501,6 @@ function checklocalrarity(nftnumber, collection) {
   }//end if nft is in object
 }//end checklocalrarity function
 
-//==============================
-//====  Setup slash command  ===
-//==============================
-
-//setup discord slash command
-client.on('ready', () => {
-  var serverkeys = Object.keys(servers)
-  serverkeys.forEach((key, index) => {
-    console.log(servers[key].id);
-    client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
-      data: {
-        "name": "checkrarity",
-        "description": "Check the rarity of an NFT in a collection we support",
-        "options": [
-          {
-            "type": 3,
-            "name": "collection",
-            "description": "Please select a collection",
-            "choices": [
-              {
-                "name": "MonkeyPox NFT",
-                "value": "monkeypox_nft"
-              },
-              {
-                "name": "Pixel Guild",
-                "value": "pixel_guild_loot_legends"
-              }
-            ],
-            "required": true
-          },
-          {
-            "type": 3,
-            "name": "nftnumber",
-            "description": "Enter the # of the NFT to check in selected collection",
-            "required": true
-          }
-        ]
-      }//end data
-    });//end post
-  })//end for each server loop
-});//end client on ready
-
-//respond to slash command
-client.ws.on('INTERACTION_CREATE', async interaction => {
-  const command = interaction.data.name.toLowerCase()
-  const args = interaction.data.options//array of the provided data after the slash
-
-  if (command === 'checkrarity') {
-
-    var nftproperties = checklocalrarity(args[1].value, args[0].value)//first argument should be the nft #. Send it to checklocalrarity function. Returns array.
-
-    //split up returned array
-    var nftnumber = nftproperties[0]; var raritydescription = nftproperties[1]; var emoji = nftproperties[2]; var embedcolor = nftproperties[3]; var thisrarity = nftproperties[4]; var nftname = nftproperties[5]; var thisimage = nftproperties[6];
-
-    if (raritydescription != 'Not found') {//if NFT number was not found in DB, 'Not found' would be returned. If it was found, proceed
-      client.api.interactions(interaction.id, interaction.token).callback.post({
-        data: {
-          type: 4,
-          data: {
-            embeds: [
-              {
-                "title": nftname,
-                "color": embedcolor,
-                "fields": [
-                  {
-                    "name": "Rarity",
-                    "value": emoji + emoji + '|  ' + thisrarity + ' - ' + raritydescription + '  |' + emoji + emoji,
-                    "inline": true
-                  }
-                ],
-                "image": {
-                  "url": thisimage,
-                  "height": 75,
-                  "width": 75
-                },
-                "footer": {
-                  "text": "Rarity data provided by howrare.is"
-                }
-              }
-            ]//end embed
-          }//end message data
-        }//end post data
-      })//end post()
-
-    } else {//end if rarity description != not found
-      client.api.interactions(interaction.id, interaction.token).callback.post({
-        data: {
-          type: 4,
-          data: {
-            embeds: [
-              {
-                "title": 'Token not found in database',
-                "color": embedcolor,
-                "fields": [
-                  {
-                    "name": "Rarity",
-                    "value": emoji + emoji + '|  ' + ' - ' + raritydescription + '  |' + emoji + emoji,
-                    "inline": true
-                  }
-                ],
-                "footer": {
-                  "text": "Rarity data provided by howrare.is"
-                }
-              }
-            ]//end embed
-          }//end message data
-        }//end post data
-      })//end post()
-    }//end else (if rarity description = 'Not found')
-  }//end if command = rarity
-})//end response to slash command
-
-//========================
-//====  Rarity Sniper  ===
-//========================
-
 async function checksnipe(message, collection) {
 
   let embed = message.embeds[0]//get the embeds (if any) from the message so we can check it
@@ -743,3 +645,119 @@ client.on("messageCreate", (message) => {//watch new messages in the listings ch
   }//end if pixelguidlistingschannel
 
 })//end client on message
+
+//=========================
+//====  Rarity checker  ===
+//=========================
+
+//respond to slash command
+client.ws.on('INTERACTION_CREATE', async interaction => {
+  const command = interaction.data.name.toLowerCase()
+  const args = interaction.data.options//array of the provided data after the slash
+
+  if (command === 'checkrarity') {
+
+    var nftproperties = checklocalrarity(args[1].value, args[0].value)//first argument should be the nft #. Send it to checklocalrarity function. Returns array.
+
+    //split up returned array
+    var nftnumber = nftproperties[0]; var raritydescription = nftproperties[1]; var emoji = nftproperties[2]; var embedcolor = nftproperties[3]; var thisrarity = nftproperties[4]; var nftname = nftproperties[5]; var thisimage = nftproperties[6];
+
+    if (raritydescription != 'Not found') {//if NFT number was not found in DB, 'Not found' would be returned. If it was found, proceed
+      client.api.interactions(interaction.id, interaction.token).callback.post({
+        data: {
+          type: 4,
+          data: {
+            embeds: [
+              {
+                "title": nftname,
+                "color": embedcolor,
+                "fields": [
+                  {
+                    "name": "Rarity",
+                    "value": emoji + emoji + '|  ' + thisrarity + ' - ' + raritydescription + '  |' + emoji + emoji,
+                    "inline": true
+                  }
+                ],
+                "image": {
+                  "url": thisimage,
+                  "height": 75,
+                  "width": 75
+                },
+                "footer": {
+                  "text": "Rarity data provided by howrare.is"
+                }
+              }
+            ]//end embed
+          }//end message data
+        }//end post data
+      })//end post()
+
+    } else {//end if rarity description != not found
+      client.api.interactions(interaction.id, interaction.token).callback.post({
+        data: {
+          type: 4,
+          data: {
+            embeds: [
+              {
+                "title": 'Token not found in database',
+                "color": embedcolor,
+                "fields": [
+                  {
+                    "name": "Rarity",
+                    "value": emoji + emoji + '|  ' + ' - ' + raritydescription + '  |' + emoji + emoji,
+                    "inline": true
+                  }
+                ],
+                "footer": {
+                  "text": "Rarity data provided by howrare.is"
+                }
+              }
+            ]//end embed
+          }//end message data
+        }//end post data
+      })//end post()
+    }//end else (if rarity description = 'Not found')
+  }//end if command = rarity
+})//end response to slash command
+
+//==============================
+//====  Setup slash command  ===
+//==============================
+
+//setup discord slash command
+client.on('ready', () => {
+  var serverkeys = Object.keys(servers)
+  serverkeys.forEach((key, index) => {
+    console.log(servers[key].id);
+    client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
+      data: {
+        "name": "checkrarity",
+        "description": "Check the rarity of an NFT in a collection we support",
+        "options": [
+          {
+            "type": 3,
+            "name": "collection",
+            "description": "Please select a collection",
+            "choices": [
+              {
+                "name": "MonkeyPox NFT",
+                "value": "monkeypox_nft"
+              },
+              {
+                "name": "Pixel Guild",
+                "value": "pixel_guild_loot_legends"
+              }
+            ],
+            "required": true
+          },
+          {
+            "type": 3,
+            "name": "nftnumber",
+            "description": "Enter the # of the NFT to check in selected collection",
+            "required": true
+          }
+        ]
+      }//end data
+    });//end post
+  })//end for each server loop
+});//end client on ready
