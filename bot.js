@@ -324,7 +324,7 @@ async function getremotefloorprice(collection) {
       // The whole response has been received. Print out the result.
       resp.on('end', () => {
         var rawFP = parseFloat(JSON.parse(data).floorPrice)//get FP in Sol
-        var thisFP = rawFP / 1000000000
+        var thisFP = rawFP / 100000000
         resolve(thisFP)
       })
     }).on("error", (err) => { console.log("Error: " + err.message) })
