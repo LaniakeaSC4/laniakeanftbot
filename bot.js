@@ -394,7 +394,15 @@ function checklocalrarity(nftnumber, collection) {
   var raritydescription = ""; var emoji = ""; var embedcolor = ""; var thisrarity = ""; var thisname = ""; var thisimage = ""
 
   //calculate the ranges for this checklocalrarity test
+  var thisranges = getlocalranges(collection)
 
+  //seperate out ranges returned from function
+  var mythicstart = thisranges[1]; var mythicend = thisranges[2]
+  var legendarystart = thisranges[3]; var legendaryend = thisranges[4]
+  var epicstart = thisranges[5]; var epicend = thisranges[6]
+  var rarestart = thisranges[7]; var rareend = thisranges[8]
+  var uncommonstart = thisranges[9]; var uncommonend = thisranges[10]
+  var commonend = thisranges[11]; var commonend = thisranges[12]
 
   //loop through NFTs in collection looking for NFT ID. If found set thisrarity to statistical rarity
   for (var i = 0; i < collections[collection].result.data.items.length; i++) {
