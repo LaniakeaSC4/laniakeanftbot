@@ -334,12 +334,12 @@ async function getremotefloorprice(collection) {
 //returns rarity description (i.e. "Mythic" if its a snipe, else returns 'false' (as a string))
 async function testifsnipe(raritydescription,thisprice,floorprice) {
   return new Promise((resolve, reject) => {
-
+console.log('testing for a snipe')
     //make calculation of if this is a snipe using rarity, floor price and nft price
     var hotrarities = ['Mythic', 'Legendary', 'Epic', 'Rare']
-
+console.log('this description is ' + raritydescription)
     if (hotrarities.includes(raritydescription)) {
-
+console.log('hotrarities.includes out description.')
       //set multipliers above floor price at which listings become snipes
       var mythiclimit = 100
       var legendarylimit = 50
@@ -353,7 +353,7 @@ async function testifsnipe(raritydescription,thisprice,floorprice) {
       var raresnipe = rarelimit * floorprice
 
       if (raritydescription == 'Mythic' && thisprice <= mythicsnipe) {return(raritydescription)} else if (raritydescription == 'Legendary' && thisprice <= legendarysnipe) {return(raritydescription)} else if (raritydescription == 'Epic' && thisprice <= epicsnipe) {return(raritydescription)} else if (raritydescription == 'Rare' && thisprice <= raresnipe) {return(raritydescription)}
-    } else {return('false')}
+    } else { console.log('was not a hot one.returning false'); return('false')}
   }) //end promise
 }//end testifsnipe function
 
