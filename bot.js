@@ -142,6 +142,10 @@ client.on('ready', async () => {
                 console.log('The list price is: ' + thisprice)
                 await getremotefloorprice('monkeypox_nft').then(async thisfloorprice => {
                   console.log('The floor price is: ' + thisfloorprice)
+                 await testifsnipe(raritydescription,thisprice,floorprice).then(async snipe => {
+                   console.log('Snipe result is: ' + snipe)
+                   
+                 })
                   //then - send to a true/false function to check if its a snipe (with list price, floor price and rarity description)
                   //then - if snipe, get appropriate addons like emoji and embed color from a function
                   //then - send out to servers
