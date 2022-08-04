@@ -24,7 +24,7 @@ collections['wandering_nahavi'] = wanderingnahavidata
 //channels and servers
 const monkeyserver = '978975057739124767'
 
-const servers = {"monkeypox" : {'id' : '978975057739124767', 'snipeschannel' : '996130357260845156' }, "secretsnake" : {'id' : '901885313608200302'}} 
+const servers = { "monkeypox": { 'id': '978975057739124767', 'snipeschannel': '996130357260845156' }, "secretsnake": { 'id': '901885313608200302', 'snipeschannel' : '1004682983036428308' } }
 
 const snipeschannel = '996130357260845156'
 const mpoxlistingschannel = '992439605569790072'
@@ -105,7 +105,7 @@ client.on('ready', async () => {
           await getremotetokendetails(thislistings[i].tokenMint).then(async thistoken => {
             //console.log('here are the new token details')
             //console.log(thistoken)
-            
+
             //get nft ID
             let namearr = thistoken.name.split(' ')
             for (var i = 0; i < namearr.length; i++) {
@@ -121,32 +121,32 @@ client.on('ready', async () => {
 
             //get rarity
             var thisrarity = ''
-            for (var i = 0;i <listings.length;i++){
-              
-              if (thistoken.mintAddress == listings[i].tokenMint){
+            for (var i = 0; i < listings.length; i++) {
+
+              if (thistoken.mintAddress == listings[i].tokenMint) {
                 console.log('rarity of ' + thistoken.mintAddress + ' is ' + listings[i].rarity.moonrank.rank)
                 thisrarity = listings[i].rarity.moonrank.rank
                 break
-              } 
-            } 
-            
-            //calculate ranges
-             var thisranges = calculateranges(2400)
+              }
+            }
 
-  //seperate out ranges returned from function
-  var mythicstart = thisranges[1]; var mythicend = thisranges[2]
-  var legendarystart = thisranges[3]; var legendaryend = thisranges[4]
-  var epicstart = thisranges[5]; var epicend = thisranges[6]
-  var rarestart = thisranges[7]; var rareend = thisranges[8]
-  var uncommonstart = thisranges[9]; var uncommonend = thisranges[10]
-  var commonend = thisranges[11]; var commonend = thisranges[12] 
-            
+            //calculate ranges
+            var thisranges = calculateranges(2400)
+
+            //seperate out ranges returned from function
+            var mythicstart = thisranges[1]; var mythicend = thisranges[2]
+            var legendarystart = thisranges[3]; var legendaryend = thisranges[4]
+            var epicstart = thisranges[5]; var epicend = thisranges[6]
+            var rarestart = thisranges[7]; var rareend = thisranges[8]
+            var uncommonstart = thisranges[9]; var uncommonend = thisranges[10]
+            var commonend = thisranges[11]; var commonend = thisranges[12]
+
             //get collection FP
-           await getremotefloorprice('monkeypox_nft').then(async thisfloorprice =>{
-             
-             //send snipes to all servers
-             
-           })
+            await getremotefloorprice('monkeypox_nft').then(async thisfloorprice => {
+
+              //send snipes to all servers
+
+            })
 
           })//end thistoken
 
@@ -243,49 +243,49 @@ async function getremotefloorprice(collection) {
 
 async function calculateranges(collectionsize) {
   return new Promise((resolve, reject) => {
-  
-  //initialise threshold variables
-  var mythicstart = 0; var mythicend = 0
-  var legendarystart = 0; var legendaryend = 0
-  var epicstart = 0; var epicend = 0
-  var rarestart = 0; var rareend = 0
-  var uncommonstart = 0; var uncommonend = 0
-  var commonend = 0; var commonend = 0
 
-  //mythic range (start of range is 1)
-  mythicstart = 1;
-  mythicend = Math.floor(collectionsize * pmythic)
+    //initialise threshold variables
+    var mythicstart = 0; var mythicend = 0
+    var legendarystart = 0; var legendaryend = 0
+    var epicstart = 0; var epicend = 0
+    var rarestart = 0; var rareend = 0
+    var uncommonstart = 0; var uncommonend = 0
+    var commonend = 0; var commonend = 0
 
-  //legendary range
-  legendarystart = Math.ceil(collectionsize * pmythic)
-  if (legendarystart === mythicend) { legendarystart = legendarystart + 1 }
-  legendaryend = Math.floor(collectionsize * plegendary)
+    //mythic range (start of range is 1)
+    mythicstart = 1;
+    mythicend = Math.floor(collectionsize * pmythic)
 
-  //epic range
-  epicstart = Math.ceil(collectionsize * plegendary)
-  if (epicstart === legendaryend) { epicstart = epicstart + 1 }
-  epicend = Math.floor(collectionsize * pepic)
+    //legendary range
+    legendarystart = Math.ceil(collectionsize * pmythic)
+    if (legendarystart === mythicend) { legendarystart = legendarystart + 1 }
+    legendaryend = Math.floor(collectionsize * plegendary)
 
-  //rare range
-  rarestart = Math.ceil(collectionsize * pepic)
-  if (rarestart === epicend) { rarestart = rarestart + 1 }
-  rareend = Math.floor(collectionsize * prare)
+    //epic range
+    epicstart = Math.ceil(collectionsize * plegendary)
+    if (epicstart === legendaryend) { epicstart = epicstart + 1 }
+    epicend = Math.floor(collectionsize * pepic)
 
-  //uncommon range
-  uncommonstart = Math.ceil(collectionsize * prare)
-  if (uncommonstart === rareend) { Uncommonstart = uncommonstart + 1 }
-  uncommonend = Math.floor(collectionsize * puncommon)
+    //rare range
+    rarestart = Math.ceil(collectionsize * pepic)
+    if (rarestart === epicend) { rarestart = rarestart + 1 }
+    rareend = Math.floor(collectionsize * prare)
 
-  //common range (end of range is same as NFT count)
-  commonstart = Math.ceil(collectionsize * puncommon)
-  if (commonstart === uncommonend) { commonstart = commonstart + 1 }
-  commonend = collectionsize
+    //uncommon range
+    uncommonstart = Math.ceil(collectionsize * prare)
+    if (uncommonstart === rareend) { Uncommonstart = uncommonstart + 1 }
+    uncommonend = Math.floor(collectionsize * puncommon)
 
-  console.log('Mythic: ' + mythicstart + ' - ' + mythicend + '. Legendary: ' + legendarystart + ' - ' + legendaryend + '. Epic: ' + epicstart + ' - ' + epicend + '. Rare: ' + rarestart + ' - ' + rareend + '. Uncommon: ' + uncommonstart + ' - ' + uncommonend + '. Common: ' + commonstart + ' - ' + commonend + '.')
+    //common range (end of range is same as NFT count)
+    commonstart = Math.ceil(collectionsize * puncommon)
+    if (commonstart === uncommonend) { commonstart = commonstart + 1 }
+    commonend = collectionsize
 
-  var returnranges = [collectionsize, mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend]
+    console.log('Mythic: ' + mythicstart + ' - ' + mythicend + '. Legendary: ' + legendarystart + ' - ' + legendaryend + '. Epic: ' + epicstart + ' - ' + epicend + '. Rare: ' + rarestart + ' - ' + rareend + '. Uncommon: ' + uncommonstart + ' - ' + uncommonend + '. Common: ' + commonstart + ' - ' + commonend + '.')
 
-  resolve(returnranges)//return arrary
+    var returnranges = [collectionsize, mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend]
+
+    resolve(returnranges)//return arrary
   }) //end promise
 }
 
@@ -344,7 +344,7 @@ function checklocalrarity(nftnumber, collection) {
   var raritydescription = ""; var emoji = ""; var embedcolor = ""; var thisrarity = ""; var thisname = ""; var thisimage = ""
 
   //calculate the ranges for this checklocalrarity test
- 
+
 
   //loop through NFTs in collection looking for NFT ID. If found set thisrarity to statistical rarity
   for (var i = 0; i < collections[collection].result.data.items.length; i++) {
