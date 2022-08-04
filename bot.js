@@ -353,7 +353,7 @@ console.log('hotrarities.includes our description.')
       var raresnipe = rarelimit * floorprice
 console.log('epic limit is: ' + epicsnipe)
 console.log('this price is: ' + thisprice)
-      if (raritydescription == 'Mythic' && thisprice <= mythicsnipe) {return(raritydescription)} else if (raritydescription == 'Legendary' && thisprice <= legendarysnipe) {return(raritydescription)} else if (raritydescription == 'Epic' && thisprice <= epicsnipe) {return(raritydescription)} else if (raritydescription == 'Rare' && thisprice <= raresnipe) {return(raritydescription)}
+      if (raritydescription === 'Mythic' && thisprice <= mythicsnipe) {return(raritydescription)} else if (raritydescription === 'Legendary' && thisprice <= legendarysnipe) {return(raritydescription)} else if (raritydescription === 'Epic' && thisprice <= epicsnipe) {return(raritydescription)} else if (raritydescription === 'Rare' && thisprice <= raresnipe) {return(raritydescription)}
     } else { console.log('was not a hot one.returning false'); return('false')}
   }) //end promise
 }//end testifsnipe function
