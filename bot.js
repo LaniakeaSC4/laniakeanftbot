@@ -24,7 +24,7 @@ collections['wandering_nahavi'] = wanderingnahavidata
 //channels and servers
 const monkeyserver = '978975057739124767'
 
-const servers = { "monkeypox": { 'id': '978975057739124767', 'snipeschannel': '996130357260845156' }, "secretsnake": { 'id': '901885313608200302', 'snipeschannel' : '1004682983036428308' } }
+const servers = { "monkeypox": { 'id': '978975057739124767', 'snipeschannel': '996130357260845156' }, "secretsnake": { 'id': '901885313608200302', 'snipeschannel': '1004682983036428308' } }
 
 const snipeschannel = '996130357260845156'
 const mpoxlistingschannel = '992439605569790072'
@@ -101,6 +101,9 @@ client.on('ready', async () => {
           console.log('New/updated entry ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
           rebuildarrary.unshift(thislistings[i])//add the new entry to the start of the rebuild arrary so we can remember this one if we see it later
 
+          //set price of this lisitng
+          var thisprice = thislistings[i].price
+
           console.log('getting token details from magic eden')
           await getremotetokendetails(thislistings[i].tokenMint).then(async thistoken => {
             //console.log('here are the new token details')
@@ -114,7 +117,7 @@ client.on('ready', async () => {
 
                 var nlength = checkthis.length
                 nftid = checkthis.substring(1, nlength)
-                console.log('NFT ID from ME is: ' + nftid)
+                //console.log('NFT ID from ME is: ' + nftid)
 
               }//end if
             }//end for
@@ -130,16 +133,25 @@ client.on('ready', async () => {
               }
             }
 
-            //calculate ranges
-            var thisranges = calculateranges(2400)
+            await calculateranges(2400).then(async thisranges => {//calculate ranges (need to get number in collection)
+              await getraritydescription(thisranges, thisrarity).then(async raritydescription => {
+                console.log('NFT ID is: ' + nftid)
+                console.log('NFT name is: ' + thistoken.name)
+                console.log('Rarity description is: ' + raritydescription)
+                console.log('Rarity rank is: ' + thisrarity)
+                console.log('The list price is: ' + thisprice)
 
-            //seperate out ranges returned from function
-            var mythicstart = thisranges[1]; var mythicend = thisranges[2]
-            var legendarystart = thisranges[3]; var legendaryend = thisranges[4]
-            var epicstart = thisranges[5]; var epicend = thisranges[6]
-            var rarestart = thisranges[7]; var rareend = thisranges[8]
-            var uncommonstart = thisranges[9]; var uncommonend = thisranges[10]
-            var commonend = thisranges[11]; var commonend = thisranges[12]
+                //then - get floor price (with collection ID)
+                //then - send to a true/false function to check if its a snipe (with list price, floor price and rarity description)
+                //then - if snipe, get appropriate addons like emoji and embed color from a function
+                //then - send out to servers
+
+              })
+
+            })
+
+
+
 
             //get collection FP
             await getremotefloorprice('monkeypox_nft').then(async thisfloorprice => {
@@ -283,11 +295,49 @@ async function calculateranges(collectionsize) {
 
     console.log('Mythic: ' + mythicstart + ' - ' + mythicend + '. Legendary: ' + legendarystart + ' - ' + legendaryend + '. Epic: ' + epicstart + ' - ' + epicend + '. Rare: ' + rarestart + ' - ' + rareend + '. Uncommon: ' + uncommonstart + ' - ' + uncommonend + '. Common: ' + commonstart + ' - ' + commonend + '.')
 
-    var returnranges = [collectionsize, mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend]
+    var returnranges = [mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend]
 
     resolve(returnranges)//return arrary
   }) //end promise
 }
+
+async function getraritydescription(ranges, thisrarity) {
+
+  var mythicstart = ranges[0]; var mythicend = ranges[1]
+  var legendarystart = ranges[2]; var legendaryend = ranges[3]
+  var epicstart = ranges[4]; var epicend = ranges[5]
+  var rarestart = ranges[6]; var rareend = ranges[7]
+  var uncommonstart = ranges[8]; var uncommonend = ranges[9]
+  var commonend = ranges[10]; var commonend = ranges[11]
+
+  //if mythic
+  if (thisrarity >= mythicstart && thisrarity <= mythicend) {
+    return ('Mythic')
+  }
+  //if Legendary
+  else if (thisrarity >= legendarystart && thisrarity <= legendaryend) {
+    return ('Legendary')
+  }
+  //if epic
+  else if (thisrarity >= epicstart && thisrarity <= epicend) {
+    return ('Epic')
+  }
+  //if rare
+  else if (thisrarity >= rarestart && thisrarity <= rareend) {
+    return ('Rare')
+  }
+  //if uncommon
+  else if (thisrarity >= uncommonstart && thisrarity <= uncommonend) {
+    return ('Uncommon')
+  }
+  //if common
+  else if (thisrarity >= commonstart && thisrarity <= commonend) {
+    return ('Common')
+  }
+  else {//this shouldnt trigger if the key is found and the data is complete
+    return ('not ranked')
+  }
+}//end getraritydescription function
 
 //get ranges for this collection (from local data)
 function getlocalranges(collection) {
