@@ -139,7 +139,8 @@ client.on('ready', async () => {
             }
 
             await calculateranges(2400)}).then(async ranges => {
-              
+              console.log('log ranges')
+              console.log(ranges)
               thisranges = ranges//calculate ranges (need to get number in collection)
               await getraritydescription(thisranges, thisrarity)}).then(async raritydescription => {
                 
