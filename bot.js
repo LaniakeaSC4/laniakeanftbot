@@ -138,7 +138,7 @@ client.on('ready', async () => {
               }
             }
 
-            await calculateranges(2400).then(async ranges => {
+            await calculateranges(2400)}).then(async ranges => {
               
               thisranges = ranges//calculate ranges (need to get number in collection)
               await getraritydescription(thisranges, thisrarity)}).then(async raritydescription => {
@@ -161,7 +161,6 @@ client.on('ready', async () => {
                   //then - send to a true/false function to check if its a snipe (with list price, floor price and rarity description)
                   //then - if snipe, get appropriate addons like emoji and embed color from a function
                   //then - send out to servers
-          })//end thistoken
 
         }//end else for a token we havnt seen before
 
