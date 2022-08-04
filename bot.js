@@ -142,7 +142,7 @@ client.on('ready', async () => {
                 console.log('The list price is: ' + thisprice)
                 await getremotefloorprice('monkeypox_nft').then(async thisfloorprice => {
                   console.log('The floor price is: ' + thisfloorprice)
-                 await testifsnipe(raritydescription,thisprice,floorprice).then(async snipe => {
+                 await testifsnipe(raritydescription,thisprice,thisfloorprice).then(async snipe => {
                    console.log('Snipe result is: ' + snipe)
                    
                  })
