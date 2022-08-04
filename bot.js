@@ -103,6 +103,12 @@ client.on('ready', async () => {
 
           //set price of this lisitng
           var thisprice = thislistings[i].price
+          var thisnftid = ''
+          var thisrarity = ''
+          var thisranges = []
+          var thisraritydescription = ''
+          var thisfloorprice = 0
+          var thissnipe =''
 
           console.log('getting token details from magic eden')
           await getremotetokendetails(thislistings[i].tokenMint).then(async thistoken => {
@@ -116,14 +122,13 @@ client.on('ready', async () => {
               if (checkthis.includes('#')) {
 
                 var nlength = checkthis.length
-                nftid = checkthis.substring(1, nlength)
-                //console.log('NFT ID from ME is: ' + nftid)
+                thisnftid = checkthis.substring(1, nlength)
+                //console.log('NFT ID from ME is: ' + thisnftid)
 
               }//end if
             }//end for
 
             //get rarity
-            var thisrarity = ''
             for (var i = 0; i < listings.length; i++) {
 
               if (thistoken.mintAddress == listings[i].tokenMint) {
@@ -133,17 +138,24 @@ client.on('ready', async () => {
               }
             }
 
-            await calculateranges(2400).then(async thisranges => {//calculate ranges (need to get number in collection)
+            await calculateranges(2400).then(async ranges => {
+              
+              thisranges = ranges//calculate ranges (need to get number in collection)
               await getraritydescription(thisranges, thisrarity)}).then(async raritydescription => {
-                console.log('NFT ID is: ' + nftid)
+                
+                thisraritydescription = raritydescription
+                
+                console.log('NFT ID is: ' + thisnftid)
                 console.log('NFT name is: ' + thistoken.name)
-                console.log('Rarity description is: ' + raritydescription)
+                console.log('Rarity description is: ' + thisraritydescription)
                 console.log('Rarity rank is: ' + thisrarity)
                 console.log('The list price is: ' + thisprice)
-                await getremotefloorprice('monkeypox_nft')}).then(async thisfloorprice => {
+                await getremotefloorprice('monkeypox_nft')}).then(async floorprice => {
+                  thisfloorprice = floorprice
                   console.log('The floor price is: ' + thisfloorprice)
-                 await testifsnipe(raritydescription,thisprice,thisfloorprice)}).then(async snipe => {
-                   console.log('Snipe result is: ' + snipe)
+                 await testifsnipe(thisraritydescription,thisprice,thisfloorprice)}).then(async snipe => {
+                   thissnipe = snipe
+                   console.log('Snipe result is: ' + thissnipe)
                    
                  })
                   //then - send to a true/false function to check if its a snipe (with list price, floor price and rarity description)
