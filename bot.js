@@ -431,6 +431,11 @@ function checklocalrarity(nftnumber, collection) {
 
 //setup discord slash command
 client.on('ready', () => {
+  var serverkeys = Object.keys(servers)
+  serverkeys.forEach((key, index) => {
+    console.log(servers[key].id);
+})
+
   for (var i = 0; i < servers.server.length; i++) {
     client.api.applications(client.user.id).guilds(servers.server[i].id).commands.post({//adding commmand to our servers
       data: {
