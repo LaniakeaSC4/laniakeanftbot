@@ -339,7 +339,7 @@ console.log('testing for a snipe')
     var hotrarities = ['Mythic', 'Legendary', 'Epic', 'Rare']
 console.log('this description is ' + raritydescription)
     if (hotrarities.includes(raritydescription)) {
-console.log('hotrarities.includes out description.')
+console.log('hotrarities.includes our description.')
       //set multipliers above floor price at which listings become snipes
       var mythiclimit = 100
       var legendarylimit = 50
@@ -351,7 +351,8 @@ console.log('hotrarities.includes out description.')
       var legendarysnipe = legendarylimit * floorprice
       var epicsnipe = epiclimit * floorprice
       var raresnipe = rarelimit * floorprice
-
+console.log('epic limit is: ' + epicsnipe)
+console.log('this price is: ' + thisprice)
       if (raritydescription == 'Mythic' && thisprice <= mythicsnipe) {return(raritydescription)} else if (raritydescription == 'Legendary' && thisprice <= legendarysnipe) {return(raritydescription)} else if (raritydescription == 'Epic' && thisprice <= epicsnipe) {return(raritydescription)} else if (raritydescription == 'Rare' && thisprice <= raresnipe) {return(raritydescription)}
     } else { console.log('was not a hot one.returning false'); return('false')}
   }) //end promise
