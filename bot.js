@@ -434,10 +434,7 @@ client.on('ready', () => {
   var serverkeys = Object.keys(servers)
   serverkeys.forEach((key, index) => {
     console.log(servers[key].id);
-})
-
-  for (var i = 0; i < servers.server.length; i++) {
-    client.api.applications(client.user.id).guilds(servers.server[i].id).commands.post({//adding commmand to our servers
+    client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
       data: {
         "name": "checkrarity",
         "description": "Check the rarity of an NFT in a collection we support",
@@ -467,7 +464,7 @@ client.on('ready', () => {
         ]
       }//end data
     });//end post
-  }//end for servers loop
+  })//end for each server loop
 });//end client on ready
 
 //respond to slash command
