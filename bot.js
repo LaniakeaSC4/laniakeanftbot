@@ -112,38 +112,40 @@ client.on('ready', async () => {
           var thissnipe = ''
 
           console.log('getting token details from magic eden')
-          await getremotetokendetails(thislistings[i].tokenMint).then(async recievedtoken => {
+          getremotetokendetails(thislistings[i].tokenMint)
+            .then((recievedtoken) => {
 
-            thistoken = recievedtoken
-            //console.log('here are the new token details')
-            //console.log(thistoken)
+              thistoken = recievedtoken
+              //console.log('here are the new token details')
+              //console.log(thistoken)
 
-            //get nft ID
-            let namearr = thistoken.name.split(' ')
-            for (var i = 0; i < namearr.length; i++) {
-              let checkthis = namearr[i]
-              if (checkthis.includes('#')) {
+              //get nft ID
+              let namearr = thistoken.name.split(' ')
+              for (var i = 0; i < namearr.length; i++) {
+                let checkthis = namearr[i]
+                if (checkthis.includes('#')) {
 
-                var nlength = checkthis.length
-                thisnftid = checkthis.substring(1, nlength)
-                //console.log('NFT ID from ME is: ' + thisnftid)
+                  var nlength = checkthis.length
+                  thisnftid = checkthis.substring(1, nlength)
+                  //console.log('NFT ID from ME is: ' + thisnftid)
 
-              }//end if
-            }//end for
+                }//end if
+              }//end for
 
-            //get rarity
-            for (var i = 0; i < listings.length; i++) {
+              //get rarity
+              for (var i = 0; i < listings.length; i++) {
 
-              if (thistoken.mintAddress == listings[i].tokenMint) {
-                console.log('rarity of ' + thistoken.mintAddress + ' is ' + listings[i].rarity.moonrank.rank)
-                thisrarity = listings[i].rarity.moonrank.rank
-                //break
+                if (thistoken.mintAddress == listings[i].tokenMint) {
+                  console.log('rarity of ' + thistoken.mintAddress + ' is ' + listings[i].rarity.moonrank.rank)
+                  thisrarity = listings[i].rarity.moonrank.rank
+                  //break
+                }
               }
-            }
 
-            const getranges = await calculateranges(2400)
+              return calculateranges(2400)
 
-            getranges.then(async ranges => {
+            })
+            .then((ranges) => {
 
               var mythicstart = ranges[0]; var mythicend = ranges[1]
               var legendarystart = ranges[2]; var legendaryend = ranges[3]
@@ -156,36 +158,31 @@ client.on('ready', async () => {
               console.log(ranges)
               thisranges = ranges//calculate ranges (need to get number in collection)
 
-              const getdescriptions = await getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonend, commonend, thisrarity)
-
-              getdescriptions.then(async raritydescription => {
-
-                thisraritydescription = raritydescription
-
-                console.log('NFT ID is: ' + thisnftid)
-                console.log('NFT name is: ' + thistoken.name)
-                console.log('Rarity description is: ' + thisraritydescription)
-                console.log('Rarity rank is: ' + thisrarity)
-                console.log('The list price is: ' + thisprice)
-
-                const getfloorprice = await getremotefloorprice('monkeypox_nft')
-
-                getfloorprice.then(async floorprice => {
-
-                  thisfloorprice = floorprice
-                  console.log('The floor price is: ' + thisfloorprice)
-
-                  const testsnipe = await testifsnipe(thisraritydescription, thisprice, thisfloorprice)
-
-                  testsnipe.then(async snipe => {
-                    thissnipe = snipe
-                    console.log('Snipe result is: ' + thissnipe)
-
-                  })
-                })
-              })
+              return getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonend, commonend, thisrarity)
             })
-          })
+            .then((raritydescription) => {
+
+              thisraritydescription = raritydescription
+
+              console.log('NFT ID is: ' + thisnftid)
+              console.log('NFT name is: ' + thistoken.name)
+              console.log('Rarity description is: ' + thisraritydescription)
+              console.log('Rarity rank is: ' + thisrarity)
+              console.log('The list price is: ' + thisprice)
+
+              return getremotefloorprice('monkeypox_nft')
+            })
+            .then((floorprice) => {
+
+              thisfloorprice = floorprice
+              console.log('The floor price is: ' + thisfloorprice)
+
+              return testifsnipe(thisraritydescription, thisprice, thisfloorprice)
+            })
+            .then((snipe) => {
+              thissnipe = snipe
+              console.log('Snipe result is: ' + thissnipe)
+            })
           //then - send to a true/false function to check if its a snipe (with list price, floor price and rarity description)
           //then - if snipe, get appropriate addons like emoji and embed color from a function
           //then - send out to servers
