@@ -112,7 +112,7 @@ client.on('ready', async () => {
           var thissnipe = ''
 
           console.log('getting token details from magic eden')
-          await getremotetokendetails(thislistings[i].tokenMint).then((recievedtoken) => {
+          await getremotetokendetails(thislistings[i].tokenMint).then(async recievedtoken => {
 
             thistoken = recievedtoken
             //console.log('here are the new token details')
