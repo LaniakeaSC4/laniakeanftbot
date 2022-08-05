@@ -39,12 +39,12 @@ const servers = {
   "secretsnake":
   {
     'id': '901885313608200302', 'snipeschannel': '1004682983036428308', 'emoji': {
-      "Mythic": 'snake',
-      "Legendary": 'snake',
-      "Epic": 'snake',
-      "Rare": 'snake',
-      "Uncommon": 'snake',
-      "Common": 'snake'
+      "Mythic": '<:mythic:1005118725189546164>',
+      "Legendary": '<:legendary:1005118646038822962>',
+      "Epic": '<:epic:1005118595765907466>',
+      "Rare": '<:rare:1005118544377290762>',
+      "Uncommon": '<:uncommon:1005118460596060242>',
+      "Common": '<:common:1005118380988178542>'
     }
   }
 }
@@ -134,6 +134,7 @@ client.on('ready', async () => {
           var thisfloorprice = 0
           var thissnipe = ''
           var thisemojicolour = 0
+          var thissnipeprice = 0
 
           console.log('getting token details from magic eden')
           getremotetokendetails(thislistings[i].tokenMint)
@@ -174,11 +175,11 @@ client.on('ready', async () => {
               var epicstart = ranges[4]; var epicend = ranges[5]
               var rarestart = ranges[6]; var rareend = ranges[7]
               var uncommonstart = ranges[8]; var uncommonend = ranges[9]
-              var commonend = ranges[10]; var commonend = ranges[11]
+              var commonstart = ranges[10]; var commonend = ranges[11]
 
               thisranges = ranges
 
-              return getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonend, commonend, thisrarity)
+              return getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity)
             })//end .then
             .then((raritydescription) => {
 
@@ -194,8 +195,10 @@ client.on('ready', async () => {
             })//end .then
             .then((snipe) => {
 
-              thissnipe = snipe
+              thissnipe = snipe[0]
+              thissnipeprice = snipe[1]
               console.log('Snipe result is: ' + thissnipe)
+              console.log('thissnipe price is: ' + thissnipeprice)
 
               if (thissnipe != "false") {
                 return getembedcolour(thisraritydescription)
@@ -217,8 +220,8 @@ client.on('ready', async () => {
                   emojis.forEach((key, index) => {//loop through each potential emoji
                     if (key === thisraritydescription) { thisemoji = thisserver.emoji[key] }//end if key matches emoji we are looking for
                   })//end for each potential emoji loop
-                
-                  //send messages here???
+
+                  //sendsnipes(*server,*snipeschannel,*nftname,*embedcolour,*thisrarity,*raritydescription,thislimit,*floorprice,thissnipeprice,*thisprice,thisimage)
 
                 })//end for each server
               }//end if this is a snipe
@@ -335,7 +338,7 @@ async function calculateranges(collectionsize) {
   }) //end promise
 }
 
-async function getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonend, commonend, thisrarity) {
+async function getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity) {
 
   //if mythic
   if (thisrarity >= mythicstart && thisrarity <= mythicend) {
@@ -411,16 +414,16 @@ async function testifsnipe(raritydescription, thisprice, floorprice) {
       var raresnipe = rarelimit * floorprice
 
       if ((raritydescription === 'Mythic') && (thisprice <= mythicsnipe)) {
-        resolve(raritydescription)
+        resolve([raritydescription,mythicsnipe])
 
       } else if ((raritydescription === 'Legendary') && (thisprice <= legendarysnipe)) {
-        resolve(raritydescription)
+        resolve([raritydescription,legendarysnipe])
 
       } else if ((raritydescription === 'Epic') && (thisprice <= epicsnipe)) {
-        resolve(raritydescription)
+        resolve([raritydescription,epicsnipe])
 
       } else if ((raritydescription === 'Rare') && (thisprice <= raresnipe)) {
-        resolve(raritydescription)
+        resolve([raritydescription,raresnipe])
 
       } else {
         resolve('false')
@@ -441,6 +444,51 @@ async function getembedcolour(raritydescription) {
     else { resolve(0x939394) }//this shouldnt trigger but if it does, return common grey
   }) //end promise
 }//end testifsnipe function
+
+async function sendsnipes(server,snipeschannel,nftname,embedcolour,thisrarity,raritydescription,thislimit,floorprice,thissnipeprice,thisprice,thisimage) {
+  return new Promise((resolve, reject) => {
+    client.guilds.cache.get(server).channels.cache.get(snipeschannel).send({
+      "content": "@everyone",
+      embeds: [
+        {
+          "title": 'Snipe Opportunity: ' + nftname,
+          "color": embedcolour,
+          "fields": [
+            {
+              "name": "Rarity",
+              "value": thisrarity + ' - ' + raritydescription,
+              "inline": true
+            },
+            {
+              "name": "Snipe Price",
+              "value": 'For ' + raritydescription + ': ' + thislimit + 'x floor price of ' + floorprice + 'SOL (' + thissnipeprice + 'SOL)',
+              "inline": true
+            },
+            {
+              "name": "List Price",
+              "value": thisprice + ' SOL',
+              "inline": true
+            },
+            {
+              "name": "Floor Price",
+              "value": floorprice + ' SOL',
+              "inline": true
+            }
+          ],
+          "image": {
+            "url": thisimage,
+            "height": 75,
+            "width": 75
+          },
+          "footer": {
+            "text": "Bot by Laniakea#3683"
+          }
+        }
+      ]//end embed
+    })//end message send
+
+  }) //end promise
+}//end sendsnipes function
 
 //=========================
 //==== Other Functions  ===
