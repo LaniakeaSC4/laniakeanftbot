@@ -112,7 +112,7 @@ client.on('ready', async () => {
           var thissnipe = ''
 
           console.log('getting token details from magic eden')
-          await getremotetokendetails(thislistings[i].tokenMint).then(async recievedtoken => {
+          await getremotetokendetails(thislistings[i].tokenMint).then((recievedtoken) => {
 
             thistoken = recievedtoken
             //console.log('here are the new token details')
@@ -141,46 +141,50 @@ client.on('ready', async () => {
               }
             }
 
-            return await calculateranges(2400)
+            const getranges = await calculateranges(2400)
 
-          }).then(async ranges => {
+            getranges.then(async ranges => {
 
-            var mythicstart = ranges[0]; var mythicend = ranges[1]
-            var legendarystart = ranges[2]; var legendaryend = ranges[3]
-            var epicstart = ranges[4]; var epicend = ranges[5]
-            var rarestart = ranges[6]; var rareend = ranges[7]
-            var uncommonstart = ranges[8]; var uncommonend = ranges[9]
-            var commonend = ranges[10]; var commonend = ranges[11]
+              var mythicstart = ranges[0]; var mythicend = ranges[1]
+              var legendarystart = ranges[2]; var legendaryend = ranges[3]
+              var epicstart = ranges[4]; var epicend = ranges[5]
+              var rarestart = ranges[6]; var rareend = ranges[7]
+              var uncommonstart = ranges[8]; var uncommonend = ranges[9]
+              var commonend = ranges[10]; var commonend = ranges[11]
 
-            console.log('log ranges')
-            console.log(ranges)
-            thisranges = ranges//calculate ranges (need to get number in collection)
+              console.log('log ranges')
+              console.log(ranges)
+              thisranges = ranges//calculate ranges (need to get number in collection)
 
-            return await getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonend, commonend, thisrarity)
+              const getdescriptions = await getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonend, commonend, thisrarity)
 
-          }).then(async raritydescription => {
+              getdescriptions.then(async raritydescription => {
 
-            thisraritydescription = raritydescription
+                thisraritydescription = raritydescription
 
-            console.log('NFT ID is: ' + thisnftid)
-            console.log('NFT name is: ' + thistoken.name)
-            console.log('Rarity description is: ' + thisraritydescription)
-            console.log('Rarity rank is: ' + thisrarity)
-            console.log('The list price is: ' + thisprice)
+                console.log('NFT ID is: ' + thisnftid)
+                console.log('NFT name is: ' + thistoken.name)
+                console.log('Rarity description is: ' + thisraritydescription)
+                console.log('Rarity rank is: ' + thisrarity)
+                console.log('The list price is: ' + thisprice)
 
-            return await getremotefloorprice('monkeypox_nft')
+                const getfloorprice = await getremotefloorprice('monkeypox_nft')
 
-          }).then(async floorprice => {
+                getfloorprice.then(async floorprice => {
 
-            thisfloorprice = floorprice
-            console.log('The floor price is: ' + thisfloorprice)
+                  thisfloorprice = floorprice
+                  console.log('The floor price is: ' + thisfloorprice)
 
-            return await testifsnipe(thisraritydescription, thisprice, thisfloorprice)
+                  const testsnipe = await testifsnipe(thisraritydescription, thisprice, thisfloorprice)
 
-          }).then(async snipe => {
-            thissnipe = snipe
-            console.log('Snipe result is: ' + thissnipe)
+                  testsnipe.then(async snipe => {
+                    thissnipe = snipe
+                    console.log('Snipe result is: ' + thissnipe)
 
+                  })
+                })
+              })
+            })
           })
           //then - send to a true/false function to check if its a snipe (with list price, floor price and rarity description)
           //then - if snipe, get appropriate addons like emoji and embed color from a function
