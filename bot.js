@@ -381,24 +381,24 @@ async function testifsnipe(raritydescription, thisprice, floorprice) {
 
       if ((raritydescription === 'Mythic') && (thisprice <= mythicsnipe)) {
         console.log('found a mythic one')
-        return (raritydescription)
+        resolve(raritydescription)
 
       } else if ((raritydescription === 'Legendary') && (thisprice <= legendarysnipe)) {
         console.log('found a legendary one')
-        return (raritydescription)
+        resolve(raritydescription)
 
       } else if ((raritydescription === 'Epic') && (thisprice <= epicsnipe)) {
         console.log('found a epic one')
-        return (raritydescription)
+        resolve(raritydescription)
 
       } else if ((raritydescription === 'Rare') && (thisprice <= raresnipe)) {
         console.log('found a rare one')
-        return (raritydescription)
+        resolve(raritydescription)
 
       } else {
         console.log('was not a hot one.returning false')
         
-        return ('false')
+        resolve('false')
       }
     }//end if hotrarities
   }) //end promise
