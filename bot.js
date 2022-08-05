@@ -459,13 +459,14 @@ async function getembedcolour(raritydescription) {
 
 async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisemoji, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage,listinglink) {
   return new Promise((resolve, reject) => {
+    console.log('embed color is: ' + embedcolor)
     client.guilds.cache.get(server).channels.cache.get(snipeschannel).send({
-      "content": "@everyone" + listinglink,
+      "content": "@everyone",
       embeds: [
         {
           "title": 'Snipe Opportunity: ' + nftname,
           "color": embedcolour,
-          "description": thisemoji,
+          "description": 'Buy at: ' + listinglink,
           "fields": [
             {
               "name": "Rarity",
@@ -494,7 +495,7 @@ async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisemoji
             "width": 75
           },
           "footer": {
-            "text": thisemoji + " Bot by Laniakea#3683 " + thisemoji
+            "text": "Bot by Laniakea#3683"
           }
         }
       ]//end embed
