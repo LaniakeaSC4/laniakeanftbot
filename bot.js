@@ -140,8 +140,6 @@ client.on('ready', async () => {
             .then((recievedtoken) => {
 
               thistoken = recievedtoken
-              //console.log('here are the new token details')
-              //console.log(thistoken)
 
               //get nft ID
               let namearr = thistoken.name.split(' ')
@@ -168,7 +166,7 @@ client.on('ready', async () => {
 
               return calculateranges(2400)
 
-            })
+            })//end .then
             .then((ranges) => {
 
               var mythicstart = ranges[0]; var mythicend = ranges[1]
@@ -178,22 +176,22 @@ client.on('ready', async () => {
               var uncommonstart = ranges[8]; var uncommonend = ranges[9]
               var commonend = ranges[10]; var commonend = ranges[11]
 
-              thisranges = ranges//calculate ranges (need to get number in collection)
+              thisranges = ranges
 
               return getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonend, commonend, thisrarity)
-            })
+            })//end .then
             .then((raritydescription) => {
 
               thisraritydescription = raritydescription
 
               return getremotefloorprice('monkeypox_nft')
-            })
+            })//end .then
             .then((floorprice) => {
 
               thisfloorprice = floorprice
 
               return testifsnipe(thisraritydescription, thisprice, thisfloorprice)
-            })
+            })//end .then
             .then((snipe) => {
 
               thissnipe = snipe
@@ -202,35 +200,29 @@ client.on('ready', async () => {
               if (thissnipe != "false") {
                 return getembedcolour(thisraritydescription)
               }
-            })
+            })//end .then
             .then((emojicolour) => {
 
               thisemojicolour = emojicolour
               var thisserver = ''
+              var thisemoji = ''
 
               if (thissnipe != "false") {//if this is a snipe get emoji and send messages out to each server
                 var serverkeys = Object.keys(servers)
                 serverkeys.forEach((key, index) => {//for each server
-                  //console.log(servers[key].emoji)
+
                   var emojis = Object.keys(servers[key].emoji)
                   thisserver = servers[key]
-                  console.log('this server is: ')
-                  console.log(thisserver)
 
-                  emojis.forEach((key, index) => {//loop through each emoji
-                    console.log('checking key: ' + key)
-                    if (key === thisraritydescription) {//if the emoji key matches
-                      console.log('this server 2 is: ')
-                      console.log(thisserver)
-                      console.log('key is: ' + key)
-                      console.log('emoji is:' + thisserver.emoji[key])
-                    }
-                  })
-                })
+                  emojis.forEach((key, index) => {//loop through each potential emoji
+                    if (key === thisraritydescription) { thisemoji = thisserver.emoji[key] }//end if key matches emoji we are looking for
+                  })//end for each potential emoji loop
+                
+                  //send messages here???
 
-              }
-
-            })
+                })//end for each server
+              }//end if this is a snipe
+            })//end .then
 
         }//end else for a token we havnt seen before
 
