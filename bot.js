@@ -147,7 +147,7 @@ client.on('ready', async () => {
               thistoken = recievedtoken
               thisname = thistoken.name
               thisimage = thistoken.image
-              thislistinglink = 'https://magiceden.io/item-details/' + thislistings[i].tokenMint
+              thislistinglink = 'https://magiceden.io/item-details/' + thistoken.mintAddress
 
               //get nft ID
               let namearr = thistoken.name.split(' ')
