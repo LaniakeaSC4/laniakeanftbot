@@ -139,10 +139,20 @@ client.on('ready', async () => {
             }
 
             await calculateranges(2400)}).then(async ranges => {
+              
+              var mythicstart = ranges[0]; var mythicend = ranges[1]
+  var legendarystart = ranges[2]; var legendaryend = ranges[3]
+  var epicstart = ranges[4]; var epicend = ranges[5]
+  var rarestart = ranges[6]; var rareend = ranges[7]
+  var uncommonstart = ranges[8]; var uncommonend = ranges[9]
+  var commonend = ranges[10]; var commonend = ranges[11]
+  
+  
+              
               console.log('log ranges')
               console.log(ranges)
               thisranges = ranges//calculate ranges (need to get number in collection)
-              await getraritydescription(thisranges, thisrarity)}).then(async raritydescription => {
+              await getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonend, commonend, thisrarity)}).then(async raritydescription => {
                 
                 thisraritydescription = raritydescription
                 
@@ -272,20 +282,13 @@ console.log('calculating ranges with size: ' + collectionsize)
 
     console.log('Mythic: ' + mythicstart + ' - ' + mythicend + '. Legendary: ' + legendarystart + ' - ' + legendaryend + '. Epic: ' + epicstart + ' - ' + epicend + '. Rare: ' + rarestart + ' - ' + rareend + '. Uncommon: ' + uncommonstart + ' - ' + uncommonend + '. Common: ' + commonstart + ' - ' + commonend + '.')
 
-    var returnranges = [mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend]
-
-    resolve(returnranges)//return arrary
+    resolve(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend) 
   }) //end promise
 }
 
-async function getraritydescription(ranges, thisrarity) {
+async function getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonend, commonend, thisrarity) {
 
-  var mythicstart = ranges[0]; var mythicend = ranges[1]
-  var legendarystart = ranges[2]; var legendaryend = ranges[3]
-  var epicstart = ranges[4]; var epicend = ranges[5]
-  var rarestart = ranges[6]; var rareend = ranges[7]
-  var uncommonstart = ranges[8]; var uncommonend = ranges[9]
-  var commonend = ranges[10]; var commonend = ranges[11]
+  
 
   //if mythic
   if (thisrarity >= mythicstart && thisrarity <= mythicend) {
