@@ -232,7 +232,7 @@ async function getremotetokendetails(mintaddress) {
 
 async function calculateranges(collectionsize) {
   return new Promise((resolve, reject) => {
-
+console.log('calculating ranges with size: ' + collectionsize)
     //initialise threshold variables
     var mythicstart = 0; var mythicend = 0
     var legendarystart = 0; var legendaryend = 0
