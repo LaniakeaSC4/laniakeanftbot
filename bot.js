@@ -223,7 +223,7 @@ client.on('ready', async () => {
                       console.log('this server 2 is: ')
                       console.log(thisserver)
                       console.log('key is: ' + key)
-                      console.log('emoji is:' + servers[thisserver].emoji[key])
+                      console.log('emoji is:' + thisserver.emoji[key])
                     }
                   })
                 })
