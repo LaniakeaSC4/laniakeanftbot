@@ -137,6 +137,7 @@ client.on('ready', async () => {
           var thisembedcolour = 0
           var thissnipeprice = 0
           var thislimit = 0
+          var thisimage = ''
 
           console.log('getting token details from magic eden')
           getremotetokendetails(thislistings[i].tokenMint)
@@ -145,6 +146,7 @@ client.on('ready', async () => {
 console.log(recievedtoken)
               thistoken = recievedtoken
               thisname = thistoken.name
+              thisimage = thistoken.image
 
               //get nft ID
               let namearr = thistoken.name.split(' ')
@@ -228,7 +230,7 @@ console.log(recievedtoken)
                     if (key === thisraritydescription) { thisemoji = thisserver.emoji[key] }//end if key matches emoji we are looking for
                   })//end for each potential emoji loop
 
-                  //sendsnipes(*thisserver,*thissnipeschannel,*thisname,*thisembedcolour,*thisemoji,*thisrarity,*thisraritydescription,*thislimit,*thisfloorprice,*thissnipeprice,*thisprice,thisimage)
+                  sendsnipes(thisserver,thissnipeschannel,thisname,thisembedcolour,thisemoji,thisrarity,thisraritydescription,thislimit,thisfloorprice,thissnipeprice,thisprice,thisimage)
 
                 })//end for each server
               }//end if this is a snipe
