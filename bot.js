@@ -141,7 +141,8 @@ client.on('ready', async () => {
           console.log('getting token details from magic eden')
           getremotetokendetails(thislistings[i].tokenMint)
             .then((recievedtoken) => {
-
+              console.log('received token is')
+console.log(recievedtoken)
               thistoken = recievedtoken
               thisname = thistoken.name
 
@@ -162,7 +163,7 @@ client.on('ready', async () => {
               for (var i = 0; i < listings.length; i++) {
 
                 if (thistoken.mintAddress == listings[i].tokenMint) {
-                  console.log('rarity of ' + thistoken.mintAddress + ' is ' + listings[i].rarity.moonrank.rank)
+                  //console.log('rarity of ' + thistoken.mintAddress + ' is ' + listings[i].rarity.moonrank.rank)
                   thisrarity = listings[i].rarity.moonrank.rank
                   break
                 }
@@ -212,6 +213,7 @@ client.on('ready', async () => {
 
               thisembedcolour = embedcolour
               var thisserver = ''
+              var thissnipechannel = ''
               var thisemoji = ''
 
               if (thissnipe != "false") {//if this is a snipe get emoji and send messages out to each server
@@ -220,12 +222,13 @@ client.on('ready', async () => {
 
                   var emojis = Object.keys(servers[key].emoji)
                   thisserver = servers[key]
+                  thissnipechannel = servers[key].snipeschannel
 
                   emojis.forEach((key, index) => {//loop through each potential emoji
                     if (key === thisraritydescription) { thisemoji = thisserver.emoji[key] }//end if key matches emoji we are looking for
                   })//end for each potential emoji loop
 
-                  //sendsnipes(*thisserver,snipeschannel,*thisname,*thisembedcolour,*thisemoji,*thisrarity,*thisraritydescription,*thislimit,*thisfloorprice,*thissnipeprice,*thisprice,thisimage)
+                  //sendsnipes(*thisserver,*thissnipeschannel,*thisname,*thisembedcolour,*thisemoji,*thisrarity,*thisraritydescription,*thislimit,*thisfloorprice,*thissnipeprice,*thisprice,thisimage)
 
                 })//end for each server
               }//end if this is a snipe
