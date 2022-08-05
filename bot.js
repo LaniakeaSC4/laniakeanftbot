@@ -95,7 +95,6 @@ async function clearcommands() {
 //check ME API for new listings test
 client.on('ready', async () => {
 
-console.log('collection 0 is: ' + ourcollections[0][0] + ' with supply of ' + ourcollections[0][2])
   //config
   var listings = []//establish the tracked listings var
   var initialget = 20//how many will we get initially (max 20)
@@ -104,24 +103,28 @@ console.log('collection 0 is: ' + ourcollections[0][0] + ' with supply of ' + ou
   var minutes = 1, the_interval = minutes * 60 * 1000//refresh interval
 
   //get some listings on startup
-  await getnewremotelistings(ourcollections[0][0], initialget).then(async thislistings => {
-    ourcollections[0][1] = thislistings//fill tracked listings with the listings we just got
-    console.log('added initial ' + initialget + ' listings')
+  
+  for (var i = 0;i < ourcollections.length;i++){
+  await getnewremotelistings(ourcollections[i][0], initialget).then(async thislistings => {
+    ourcollections[i][1] = thislistings//fill tracked listings with the listings we just got
+    console.log('added initial ' + initialget + ' Listings for ' + ourcollections[i][0])
     //console.log(listings[0])
   })//end then
+  }//end for 
 
+for (var k = 0;k < ourcollections.length;k++) {
   setInterval(async function () {//do this every X minutes
-    console.log("I am doing my " + minutes + " minute check")
+    console.log("I am doing my " + minutes + " minute check for " + ourcollections[k][0])
 
     await getnewremotelistings('monkeypox_nft', refreshget).then(async thislistings => {//get latest X listings from Magic Eden
 
-      console.log('Listings arrary length at start: ' + ourcollections[0][1].length)
+      console.log('Listings arrary length at start: ' + ourcollections[k][1].length)
 
-      var rebuildarrary = ourcollections[0][1]//save all the acquired listings in a temporary arrary
+      var rebuildarrary = ourcollections[k][1]//save all the acquired listings in a temporary arrary
 
       for (var i = 0; i < thislistings.length; i++) {//for all listings recieved from getnewremotelistingsfunction
 
-        if (ourcollections[0][1].some(e => (e.tokenAddress === thislistings[i].tokenAddress && e.price === thislistings[i].price))) {
+        if (ourcollections[k][1].some(e => (e.tokenAddress === thislistings[i].tokenAddress && e.price === thislistings[i].price))) {
           //actions if token address and price match (i.e. we've seen this one before)
           //console.log('matched ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
 
@@ -169,11 +172,11 @@ console.log('collection 0 is: ' + ourcollections[0][0] + ' with supply of ' + ou
               }//end for
 
               //get rarity
-              for (var i = 0; i < ourcollections[0][1].length; i++) {
+              for (var i = 0; i < ourcollections[k][1].length; i++) {
 
-                if (thistoken.mintAddress == ourcollections[0][1][i].tokenMint) {
-                  //console.log('rarity of ' + thistoken.mintAddress + ' is ' + ourcollections[0][1][i].rarity.moonrank.rank)
-                  thisrarity = ourcollections[0][1][i].rarity.moonrank.rank
+                if (thistoken.mintAddress == ourcollections[k][1][i].tokenMint) {
+                  //console.log('rarity of ' + thistoken.mintAddress + ' is ' + ourcollections[k][1][i].rarity.moonrank.rank)
+                  thisrarity = ourcollections[k][1][i].rarity.moonrank.rank
                   break
                 }
               }
@@ -249,7 +252,7 @@ console.log('collection 0 is: ' + ourcollections[0][0] + ' with supply of ' + ou
 
       }//end for loop of each listing recieved
 
-      console.log('Listings arrary length at end: ' + ourcollections[0][1].length)
+      console.log('Listings arrary length at end: ' + ourcollections[k][1].length)
 
       if (rebuildarrary.length > maxlength) {
         var numbertoremove = rebuildarrary.length - maxlength
@@ -260,10 +263,11 @@ console.log('collection 0 is: ' + ourcollections[0][0] + ' with supply of ' + ou
         }//end for number to remove
       }//end if rebuildarrary is longer than max length
 
-      ourcollections[0][1] = rebuildarrary//overwrite main listings arrary with the temp rebuild one
+      ourcollections[k][1] = rebuildarrary//overwrite main listings arrary with the temp rebuild one
 
     })//end then after getting listings
   }, the_interval)//end recheck listing loop
+}//end for collections
 })//end client.on Ready
 
 //===================================
