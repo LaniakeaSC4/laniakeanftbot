@@ -49,6 +49,11 @@ const servers = {
   }
 }
 
+const ourcollections = [
+  ['monkeypox_nft',[],2400],
+  ['wandering_nahavi',[],3800]
+  ]
+
 const snipeschannel = '996130357260845156'
 const mpoxlistingschannel = '992439605569790072'
 const pixelguildlistingschannel = '1003741415400022197'
@@ -90,6 +95,7 @@ async function clearcommands() {
 //check ME API for new listings test
 client.on('ready', async () => {
 
+console.log('collection 0 is: ' + collections[0][0] + ' with supply of ' + collections[0][2])
   //config
   var listings = []//establish the tracked listings var
   var initialget = 20//how many will we get initially (max 20)
