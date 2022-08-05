@@ -138,15 +138,16 @@ client.on('ready', async () => {
           var thissnipeprice = 0
           var thislimit = 0
           var thisimage = ''
+          var thislistinglink = ''
 
           console.log('getting token details from magic eden')
           getremotetokendetails(thislistings[i].tokenMint)
             .then((recievedtoken) => {
-              console.log('received token is')
-console.log(recievedtoken)
+              
               thistoken = recievedtoken
               thisname = thistoken.name
               thisimage = thistoken.image
+              thislistinglink = 'https://magiceden.io/item-details/' + thislistings[i].tokenMint
 
               //get nft ID
               let namearr = thistoken.name.split(' ')
@@ -232,7 +233,7 @@ console.log(recievedtoken)
                     if (key === thisraritydescription) { thisemoji = thisserver.emoji[key] }//end if key matches emoji we are looking for
                   })//end for each potential emoji loop
 
-                  sendsnipes(thisserverid,thissnipechannel,thisname,thisembedcolour,thisemoji,thisrarity,thisraritydescription,thislimit,thisfloorprice,thissnipeprice,thisprice,thisimage)
+                  sendsnipes(thisserverid,thissnipechannel,thisname,thisembedcolour,thisemoji,thisrarity,thisraritydescription,thislimit,thisfloorprice,thissnipeprice,thisprice,thisimage,thislistinglink)
 
                 })//end for each server
               }//end if this is a snipe
@@ -456,10 +457,10 @@ async function getembedcolour(raritydescription) {
   }) //end promise
 }//end testifsnipe function
 
-async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisemoji, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage) {
+async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisemoji, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage,listinglink) {
   return new Promise((resolve, reject) => {
     client.guilds.cache.get(server).channels.cache.get(snipeschannel).send({
-      "content": "@everyone",
+      "content": "@everyone" + listinglink,
       embeds: [
         {
           "title": 'Snipe Opportunity: ' + nftname,
