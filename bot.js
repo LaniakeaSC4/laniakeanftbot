@@ -223,7 +223,7 @@ console.log(recievedtoken)
                 serverkeys.forEach((key, index) => {//for each server
 
                   var emojis = Object.keys(servers[key].emoji)
-                  thisserver = servers[key]
+                  thisserver = servers[key].id
                   thissnipechannel = servers[key].snipeschannel
 
                   emojis.forEach((key, index) => {//loop through each potential emoji
