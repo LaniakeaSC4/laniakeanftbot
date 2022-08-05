@@ -134,7 +134,7 @@ client.on('ready', async () => {
               if (thistoken.mintAddress == listings[i].tokenMint) {
                 console.log('rarity of ' + thistoken.mintAddress + ' is ' + listings[i].rarity.moonrank.rank)
                 thisrarity = listings[i].rarity.moonrank.rank
-                break
+                //break
               }
             }
 
