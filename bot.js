@@ -154,8 +154,6 @@ client.on('ready', async () => {
               var uncommonstart = ranges[8]; var uncommonend = ranges[9]
               var commonend = ranges[10]; var commonend = ranges[11]
 
-              console.log('log ranges')
-              console.log(ranges)
               thisranges = ranges//calculate ranges (need to get number in collection)
 
               return getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonend, commonend, thisrarity)
@@ -164,18 +162,11 @@ client.on('ready', async () => {
 
               thisraritydescription = raritydescription
 
-              console.log('NFT ID is: ' + thisnftid)
-              console.log('NFT name is: ' + thistoken.name)
-              console.log('Rarity description is: ' + thisraritydescription)
-              console.log('Rarity rank is: ' + thisrarity)
-              console.log('The list price is: ' + thisprice)
-
               return getremotefloorprice('monkeypox_nft')
             })
             .then((floorprice) => {
 
               thisfloorprice = floorprice
-              console.log('The floor price is: ' + thisfloorprice)
 
               return testifsnipe(thisraritydescription, thisprice, thisfloorprice)
             })
@@ -256,7 +247,7 @@ async function getremotetokendetails(mintaddress) {
 
 async function calculateranges(collectionsize) {
   return new Promise((resolve, reject) => {
-    console.log('calculating ranges with size: ' + collectionsize)
+
     //initialise threshold variables
     var mythicstart = 0; var mythicend = 0
     var legendarystart = 0; var legendaryend = 0
@@ -294,15 +285,11 @@ async function calculateranges(collectionsize) {
     if (commonstart === uncommonend) { commonstart = commonstart + 1 }
     commonend = collectionsize
 
-    console.log('Mythic: ' + mythicstart + ' - ' + mythicend + '. Legendary: ' + legendarystart + ' - ' + legendaryend + '. Epic: ' + epicstart + ' - ' + epicend + '. Rare: ' + rarestart + ' - ' + rareend + '. Uncommon: ' + uncommonstart + ' - ' + uncommonend + '. Common: ' + commonstart + ' - ' + commonend + '.')
-
     resolve([mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend])
   }) //end promise
 }
 
 async function getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonend, commonend, thisrarity) {
-
-
 
   //if mythic
   if (thisrarity >= mythicstart && thisrarity <= mythicend) {
@@ -359,12 +346,12 @@ async function getremotefloorprice(collection) {
 //returns rarity description (i.e. "Mythic" if its a snipe, else returns 'false' (as a string))
 async function testifsnipe(raritydescription, thisprice, floorprice) {
   return new Promise((resolve, reject) => {
-    console.log('testing for a snipe')
+
     //make calculation of if this is a snipe using rarity, floor price and nft price
     var hotrarities = ['Mythic', 'Legendary', 'Epic', 'Rare']
-    console.log('this description is ' + raritydescription)
+
     if (hotrarities.includes(raritydescription)) {
-      console.log('hotrarities.includes our description.')
+
       //set multipliers above floor price at which listings become snipes
       var mythiclimit = 100
       var legendarylimit = 50
@@ -376,28 +363,20 @@ async function testifsnipe(raritydescription, thisprice, floorprice) {
       var legendarysnipe = legendarylimit * floorprice
       var epicsnipe = epiclimit * floorprice
       var raresnipe = rarelimit * floorprice
-      console.log('epic limit is: ' + epicsnipe)
-      console.log('this price is: ' + thisprice)
 
       if ((raritydescription === 'Mythic') && (thisprice <= mythicsnipe)) {
-        console.log('found a mythic one')
         resolve(raritydescription)
 
       } else if ((raritydescription === 'Legendary') && (thisprice <= legendarysnipe)) {
-        console.log('found a legendary one')
         resolve(raritydescription)
 
       } else if ((raritydescription === 'Epic') && (thisprice <= epicsnipe)) {
-        console.log('found a epic one')
         resolve(raritydescription)
 
       } else if ((raritydescription === 'Rare') && (thisprice <= raresnipe)) {
-        console.log('found a rare one')
         resolve(raritydescription)
 
       } else {
-        console.log('was not a hot one.returning false')
-        
         resolve('false')
       }
     }//end if hotrarities
