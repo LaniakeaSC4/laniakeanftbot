@@ -214,7 +214,7 @@ client.on('ready', async () => {
                   var emojis = Object.keys(servers[key].emoji)
                   emojis.forEach((key, index) => {//loop through each emoji
                     if (key === thisraritydescription) {//if the emoji key matches
-                      console.log('this emoji is: ' + emojis[key].value)
+                      console.log('this emoji is: ' + emojis[key])
                     }
                   })
                 })
