@@ -102,6 +102,7 @@ client.on('ready', async () => {
           rebuildarrary.unshift(thislistings[i])//add the new entry to the start of the rebuild arrary so we can remember this one if we see it later
 
           //set price of this lisitng
+          var thistoken = {}
           var thisprice = thislistings[i].price
           var thisnftid = ''
           var thisrarity = ''
@@ -111,7 +112,9 @@ client.on('ready', async () => {
           var thissnipe = ''
 
           console.log('getting token details from magic eden')
-          await getremotetokendetails(thislistings[i].tokenMint).then(async thistoken => {
+          await getremotetokendetails(thislistings[i].tokenMint).then(async recievedtoken => {
+
+            thistoken = recievedtoken
             //console.log('here are the new token details')
             //console.log(thistoken)
 
@@ -139,7 +142,7 @@ client.on('ready', async () => {
             }
 
             return await calculateranges(2400)
-            
+
           }).then(async ranges => {
 
             var mythicstart = ranges[0]; var mythicend = ranges[1]
