@@ -127,20 +127,23 @@ client.on('ready', async () => {
           //set price of this lisitng
           var thistoken = {}
           var thisprice = thislistings[i].price
+          var thisname = ''
           var thisnftid = ''
           var thisrarity = ''
           var thisranges = []
           var thisraritydescription = ''
           var thisfloorprice = 0
           var thissnipe = ''
-          var thisemojicolour = 0
+          var thisembedcolour = 0
           var thissnipeprice = 0
+          var thislimit = 0
 
           console.log('getting token details from magic eden')
           getremotetokendetails(thislistings[i].tokenMint)
             .then((recievedtoken) => {
 
               thistoken = recievedtoken
+              thisname = thistoken.name
 
               //get nft ID
               let namearr = thistoken.name.split(' ')
@@ -197,6 +200,7 @@ client.on('ready', async () => {
 
               thissnipe = snipe[0]
               thissnipeprice = snipe[1]
+              thislimit = snipe[2]
               console.log('Snipe result is: ' + thissnipe)
               console.log('thissnipe price is: ' + thissnipeprice)
 
@@ -204,9 +208,9 @@ client.on('ready', async () => {
                 return getembedcolour(thisraritydescription)
               }
             })//end .then
-            .then((emojicolour) => {
+            .then((embedcolour) => {
 
-              thisemojicolour = emojicolour
+              thisembedcolour = embedcolour
               var thisserver = ''
               var thisemoji = ''
 
@@ -221,7 +225,7 @@ client.on('ready', async () => {
                     if (key === thisraritydescription) { thisemoji = thisserver.emoji[key] }//end if key matches emoji we are looking for
                   })//end for each potential emoji loop
 
-                  //sendsnipes(*server,*snipeschannel,*nftname,*embedcolour,*thisrarity,*raritydescription,thislimit,*floorprice,thissnipeprice,*thisprice,thisimage)
+                  //sendsnipes(*thisserver,snipeschannel,*thisname,*thisembedcolour,*thisemoji,*thisrarity,*thisraritydescription,*thislimit,*thisfloorprice,*thissnipeprice,*thisprice,thisimage)
 
                 })//end for each server
               }//end if this is a snipe
@@ -414,16 +418,16 @@ async function testifsnipe(raritydescription, thisprice, floorprice) {
       var raresnipe = rarelimit * floorprice
 
       if ((raritydescription === 'Mythic') && (thisprice <= mythicsnipe)) {
-        resolve([raritydescription,mythicsnipe])
+        resolve([raritydescription, mythicsnipe, mythiclimit])
 
       } else if ((raritydescription === 'Legendary') && (thisprice <= legendarysnipe)) {
-        resolve([raritydescription,legendarysnipe])
+        resolve([raritydescription, legendarysnipe, legendarylimit])
 
       } else if ((raritydescription === 'Epic') && (thisprice <= epicsnipe)) {
-        resolve([raritydescription,epicsnipe])
+        resolve([raritydescription, epicsnipe, epiclimit])
 
       } else if ((raritydescription === 'Rare') && (thisprice <= raresnipe)) {
-        resolve([raritydescription,raresnipe])
+        resolve([raritydescription, raresnipe, rarelimit])
 
       } else {
         resolve('false')
@@ -432,7 +436,7 @@ async function testifsnipe(raritydescription, thisprice, floorprice) {
   }) //end promise
 }//end testifsnipe function
 
-//function to get emoji and embed color
+//function to get embed color
 async function getembedcolour(raritydescription) {
   return new Promise((resolve, reject) => {
     if (raritydescription = 'Mythic') { resolve(0xed2839) }
@@ -445,7 +449,7 @@ async function getembedcolour(raritydescription) {
   }) //end promise
 }//end testifsnipe function
 
-async function sendsnipes(server,snipeschannel,nftname,embedcolour,thisrarity,raritydescription,thislimit,floorprice,thissnipeprice,thisprice,thisimage) {
+async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisemoji, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage) {
   return new Promise((resolve, reject) => {
     client.guilds.cache.get(server).channels.cache.get(snipeschannel).send({
       "content": "@everyone",
@@ -453,6 +457,7 @@ async function sendsnipes(server,snipeschannel,nftname,embedcolour,thisrarity,ra
         {
           "title": 'Snipe Opportunity: ' + nftname,
           "color": embedcolour,
+          "description": thisemoji + thisemoji + thisemoji,
           "fields": [
             {
               "name": "Rarity",
