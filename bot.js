@@ -108,7 +108,7 @@ client.on('ready', async () => {
           var thisranges = []
           var thisraritydescription = ''
           var thisfloorprice = 0
-          var thissnipe =''
+          var thissnipe = ''
 
           console.log('getting token details from magic eden')
           await getremotetokendetails(thislistings[i].tokenMint).then(async thistoken => {
@@ -138,40 +138,50 @@ client.on('ready', async () => {
               }
             }
 
-            await calculateranges(2400)}).then(async ranges => {
-              
-              var mythicstart = ranges[0]; var mythicend = ranges[1]
-  var legendarystart = ranges[2]; var legendaryend = ranges[3]
-  var epicstart = ranges[4]; var epicend = ranges[5]
-  var rarestart = ranges[6]; var rareend = ranges[7]
-  var uncommonstart = ranges[8]; var uncommonend = ranges[9]
-  var commonend = ranges[10]; var commonend = ranges[11]
-  
-  
-              
-              console.log('log ranges')
-              console.log(ranges)
-              thisranges = ranges//calculate ranges (need to get number in collection)
-              await getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonend, commonend, thisrarity)}).then(async raritydescription => {
-                
-                thisraritydescription = raritydescription
-                
-                console.log('NFT ID is: ' + thisnftid)
-                console.log('NFT name is: ' + thistoken.name)
-                console.log('Rarity description is: ' + thisraritydescription)
-                console.log('Rarity rank is: ' + thisrarity)
-                console.log('The list price is: ' + thisprice)
-                await getremotefloorprice('monkeypox_nft')}).then(async floorprice => {
-                  thisfloorprice = floorprice
-                  console.log('The floor price is: ' + thisfloorprice)
-                 await testifsnipe(thisraritydescription,thisprice,thisfloorprice)}).then(async snipe => {
-                   thissnipe = snipe
-                   console.log('Snipe result is: ' + thissnipe)
-                   
-                 })
-                  //then - send to a true/false function to check if its a snipe (with list price, floor price and rarity description)
-                  //then - if snipe, get appropriate addons like emoji and embed color from a function
-                  //then - send out to servers
+            return await calculateranges(2400)
+            
+          }).then(async ranges => {
+
+            var mythicstart = ranges[0]; var mythicend = ranges[1]
+            var legendarystart = ranges[2]; var legendaryend = ranges[3]
+            var epicstart = ranges[4]; var epicend = ranges[5]
+            var rarestart = ranges[6]; var rareend = ranges[7]
+            var uncommonstart = ranges[8]; var uncommonend = ranges[9]
+            var commonend = ranges[10]; var commonend = ranges[11]
+
+            console.log('log ranges')
+            console.log(ranges)
+            thisranges = ranges//calculate ranges (need to get number in collection)
+
+            return await getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonend, commonend, thisrarity)
+
+          }).then(async raritydescription => {
+
+            thisraritydescription = raritydescription
+
+            console.log('NFT ID is: ' + thisnftid)
+            console.log('NFT name is: ' + thistoken.name)
+            console.log('Rarity description is: ' + thisraritydescription)
+            console.log('Rarity rank is: ' + thisrarity)
+            console.log('The list price is: ' + thisprice)
+
+            return await getremotefloorprice('monkeypox_nft')
+
+          }).then(async floorprice => {
+
+            thisfloorprice = floorprice
+            console.log('The floor price is: ' + thisfloorprice)
+
+            return await testifsnipe(thisraritydescription, thisprice, thisfloorprice)
+
+          }).then(async snipe => {
+            thissnipe = snipe
+            console.log('Snipe result is: ' + thissnipe)
+
+          })
+          //then - send to a true/false function to check if its a snipe (with list price, floor price and rarity description)
+          //then - if snipe, get appropriate addons like emoji and embed color from a function
+          //then - send out to servers
 
         }//end else for a token we havnt seen before
 
@@ -242,7 +252,7 @@ async function getremotetokendetails(mintaddress) {
 
 async function calculateranges(collectionsize) {
   return new Promise((resolve, reject) => {
-console.log('calculating ranges with size: ' + collectionsize)
+    console.log('calculating ranges with size: ' + collectionsize)
     //initialise threshold variables
     var mythicstart = 0; var mythicend = 0
     var legendarystart = 0; var legendaryend = 0
@@ -282,13 +292,13 @@ console.log('calculating ranges with size: ' + collectionsize)
 
     console.log('Mythic: ' + mythicstart + ' - ' + mythicend + '. Legendary: ' + legendarystart + ' - ' + legendaryend + '. Epic: ' + epicstart + ' - ' + epicend + '. Rare: ' + rarestart + ' - ' + rareend + '. Uncommon: ' + uncommonstart + ' - ' + uncommonend + '. Common: ' + commonstart + ' - ' + commonend + '.')
 
-    resolve(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend) 
+    resolve(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend)
   }) //end promise
 }
 
 async function getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonend, commonend, thisrarity) {
 
-  
+
 
   //if mythic
   if (thisrarity >= mythicstart && thisrarity <= mythicend) {
@@ -343,14 +353,14 @@ async function getremotefloorprice(collection) {
 }//end getremotefloorprice function
 
 //returns rarity description (i.e. "Mythic" if its a snipe, else returns 'false' (as a string))
-async function testifsnipe(raritydescription,thisprice,floorprice) {
+async function testifsnipe(raritydescription, thisprice, floorprice) {
   return new Promise((resolve, reject) => {
-console.log('testing for a snipe')
+    console.log('testing for a snipe')
     //make calculation of if this is a snipe using rarity, floor price and nft price
     var hotrarities = ['Mythic', 'Legendary', 'Epic', 'Rare']
-console.log('this description is ' + raritydescription)
+    console.log('this description is ' + raritydescription)
     if (hotrarities.includes(raritydescription)) {
-console.log('hotrarities.includes our description.')
+      console.log('hotrarities.includes our description.')
       //set multipliers above floor price at which listings become snipes
       var mythiclimit = 100
       var legendarylimit = 50
@@ -362,25 +372,25 @@ console.log('hotrarities.includes our description.')
       var legendarysnipe = legendarylimit * floorprice
       var epicsnipe = epiclimit * floorprice
       var raresnipe = rarelimit * floorprice
-console.log('epic limit is: ' + epicsnipe)
-console.log('this price is: ' + thisprice)
+      console.log('epic limit is: ' + epicsnipe)
+      console.log('this price is: ' + thisprice)
 
       if (raritydescription === 'Mythic' && thisprice <= mythicsnipe) {
-        return(raritydescription)
-        
+        return (raritydescription)
+
       } else if (raritydescription === 'Legendary' && thisprice <= legendarysnipe) {
-        return(raritydescription)
-        
+        return (raritydescription)
+
       } else if (raritydescription === 'Epic' && thisprice <= epicsnipe) {
-        return(raritydescription)
-        
+        return (raritydescription)
+
       } else if (raritydescription === 'Rare' && thisprice <= raresnipe) {
-        return(raritydescription)
-        
-        } else {
-          console.log('was not a hot one.returning false')
-          return('false') 
-        }
+        return (raritydescription)
+
+      } else {
+        console.log('was not a hot one.returning false')
+        return ('false')
+      }
     }//end if
   }) //end promise
 }//end testifsnipe function
