@@ -95,7 +95,7 @@ async function clearcommands() {
 //check ME API for new listings test
 client.on('ready', async () => {
 
-console.log('collection 0 is: ' + collections[0][0] + ' with supply of ' + collections[0][2])
+console.log('collection 0 is: ' + ourcollections[0][0] + ' with supply of ' + ourcollections[0][2])
   //config
   var listings = []//establish the tracked listings var
   var initialget = 20//how many will we get initially (max 20)
