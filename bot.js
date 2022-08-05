@@ -210,9 +210,12 @@ client.on('ready', async () => {
               if (thissnipe != "false") {//if this is a snipe get emoji and send messages out to each server
                 var serverkeys = Object.keys(servers)
                 serverkeys.forEach((key, index) => {//for each server
-                  console.log(servers[key].emoji)
+                  //console.log(servers[key].emoji)
                   var emojis = Object.keys(servers[key].emoji)
+                  console.log('emojis is')
+                  console.log(emojis)
                   emojis.forEach((key, index) => {//loop through each emoji
+                    console.log('checking key: ' + key)
                     if (key === thisraritydescription) {//if the emoji key matches
                       console.log('this emoji is: ' + emojis[key])
                     }
