@@ -215,6 +215,7 @@ console.log(recievedtoken)
 
               thisembedcolour = embedcolour
               var thisserver = ''
+              var thisserverid = ''
               var thissnipechannel = ''
               var thisemoji = ''
 
@@ -223,14 +224,15 @@ console.log(recievedtoken)
                 serverkeys.forEach((key, index) => {//for each server
 
                   var emojis = Object.keys(servers[key].emoji)
-                  thisserver = servers[key].id
+                  thisserver = servers[key]
+                  thisserverid = servers[key].id
                   thissnipechannel = servers[key].snipeschannel
 
                   emojis.forEach((key, index) => {//loop through each potential emoji
                     if (key === thisraritydescription) { thisemoji = thisserver.emoji[key] }//end if key matches emoji we are looking for
                   })//end for each potential emoji loop
 
-                  sendsnipes(thisserver,thissnipechannel,thisname,thisembedcolour,thisemoji,thisrarity,thisraritydescription,thislimit,thisfloorprice,thissnipeprice,thisprice,thisimage)
+                  sendsnipes(thisserverid,thissnipechannel,thisname,thisembedcolour,thisemoji,thisrarity,thisraritydescription,thislimit,thisfloorprice,thissnipeprice,thisprice,thisimage)
 
                 })//end for each server
               }//end if this is a snipe
