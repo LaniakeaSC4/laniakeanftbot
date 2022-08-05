@@ -459,7 +459,7 @@ async function getembedcolour(raritydescription) {
 
 async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisemoji, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage,listinglink) {
   return new Promise((resolve, reject) => {
-    console.log('embed color is: ' + embedcolor)
+    console.log('embed color is: ' + embedcolour)
     client.guilds.cache.get(server).channels.cache.get(snipeschannel).send({
       "content": "@everyone",
       embeds: [
