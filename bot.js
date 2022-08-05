@@ -24,7 +24,30 @@ collections['wandering_nahavi'] = wanderingnahavidata
 //channels and servers
 const monkeyserver = '978975057739124767'
 
-const servers = { "monkeypox": { 'id': '978975057739124767', 'snipeschannel': '996130357260845156' }, "secretsnake": { 'id': '901885313608200302', 'snipeschannel': '1004682983036428308' } }
+const servers = {
+  "monkeypox":
+  {
+    'id': '978975057739124767', 'snipeschannel': '996130357260845156', 'emoji': {
+      "Mythic": '<:mythic:997639717665386586>',
+      "Legendary": '<:legendary:997639764943585421>',
+      "Epic": '<:epic:997639797558497421>',
+      "Rare": '<:rare:997639830844477471>',
+      "Uncommon": '<:uncommon:997639865065799770>',
+      "Common": '<:common:997639893306064997>'
+    }
+  },
+  "secretsnake":
+  {
+    'id': '901885313608200302', 'snipeschannel': '1004682983036428308', 'emoji': {
+      "Mythic": 'snake',
+      "Legendary": 'snake',
+      "Epic": 'snake',
+      "Rare": 'snake',
+      "Uncommon": 'snake',
+      "Common": 'snake'
+    }
+  }
+}
 
 const snipeschannel = '996130357260845156'
 const mpoxlistingschannel = '992439605569790072'
@@ -110,6 +133,7 @@ client.on('ready', async () => {
           var thisraritydescription = ''
           var thisfloorprice = 0
           var thissnipe = ''
+          var thisemojicolour = 0
 
           console.log('getting token details from magic eden')
           getremotetokendetails(thislistings[i].tokenMint)
@@ -171,12 +195,29 @@ client.on('ready', async () => {
               return testifsnipe(thisraritydescription, thisprice, thisfloorprice)
             })
             .then((snipe) => {
+
               thissnipe = snipe
               console.log('Snipe result is: ' + thissnipe)
+
+              if (thissnipe != "false") {
+                return getembedcolour(thisraritydescription)
+              }
             })
-          //then - send to a true/false function to check if its a snipe (with list price, floor price and rarity description)
-          //then - if snipe, get appropriate addons like emoji and embed color from a function
-          //then - send out to servers
+            .then((emojicolour) => {
+
+              thisemojicolour = emojicolour
+
+              if (thissnipe != "false") {//if this is a snipe get emoji and send messages out to each server
+                var serverkeys = Object.keys(servers)
+                serverkeys.forEach((key, index) => {
+                  console.log(servers[key])
+                  console.log(servers[key].emoji)
+                  //getemoji(thisraritydescription, server)
+                })
+
+              }
+
+            })
 
         }//end else for a token we havnt seen before
 
@@ -380,6 +421,19 @@ async function testifsnipe(raritydescription, thisprice, floorprice) {
         resolve('false')
       }
     }//end if hotrarities
+  }) //end promise
+}//end testifsnipe function
+
+//function to get emoji and embed color
+async function getembedcolour(raritydescription) {
+  return new Promise((resolve, reject) => {
+    if (raritydescription = 'Mythic') { resolve(0xed2839) }
+    else if (raritydescription = 'Legendary') { resolve(0xfe8100) }
+    else if (raritydescription = 'Epic') { resolve(0x9901f6) }
+    else if (raritydescription = 'Rare') { resolve(0x19aaeb) }
+    else if (raritydescription = 'Uncommon') { resolve(0x20d48a) }
+    else if (raritydescription = 'Common') { resolve(0x939394) }
+    else { resolve(0x939394) }//this shouldnt trigger but if it does, return common grey
   }) //end promise
 }//end testifsnipe function
 
