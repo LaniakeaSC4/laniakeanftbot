@@ -447,19 +447,18 @@ async function testifsnipe(raritydescription, thisprice, floorprice) {
 //function to get embed color
 async function getembedcolour(raritydescription) {
   return new Promise((resolve, reject) => {
-    if (raritydescription = 'Mythic') { resolve('0xed2839') }
-    else if (raritydescription = 'Legendary') { resolve('0xfe8100') }
-    else if (raritydescription = 'Epic') { resolve('0x9901f6') }
-    else if (raritydescription = 'Rare') { resolve('0x19aaeb') }
-    else if (raritydescription = 'Uncommon') { resolve('0x20d48a') }
-    else if (raritydescription = 'Common') { resolve('0x939394') }
+    if (raritydescription === 'Mythic') { resolve('0xed2839') }
+    else if (raritydescription === 'Legendary') { resolve('0xfe8100') }
+    else if (raritydescription === 'Epic') { resolve('0x9901f6') }
+    else if (raritydescription === 'Rare') { resolve('0x19aaeb') }
+    else if (raritydescription === 'Uncommon') { resolve('0x20d48a') }
+    else if (raritydescription === 'Common') { resolve('0x939394') }
     else { resolve('0x939394') }//this shouldnt trigger but if it does, return common grey
   }) //end promise
 }//end testifsnipe function
 
 async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisemoji, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage,listinglink) {
   return new Promise((resolve, reject) => {
-    console.log('embed color is: ' + embedcolour)
     client.guilds.cache.get(server).channels.cache.get(snipeschannel).send({
       "content": "@everyone",
       embeds: [
