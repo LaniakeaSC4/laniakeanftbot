@@ -49,17 +49,11 @@ const servers = {
   }
 }
 
+//what are the requirements? Moonrank data on ME? Anything else? 
 const ourcollections = [
   ['monkeypox_nft',[],2400],
   ['crypto_coral_tribe',[],6565]
   ]
-
-const snipeschannel = '996130357260845156'
-const mpoxlistingschannel = '992439605569790072'
-const pixelguildlistingschannel = '1003741415400022197'
-const wanderingnahavilistingschannel = '1003773187349287013'
-
-const mebotid = '980154113637646346'
 
 //set rarity threshold percentages
 const pmythic = 0.01
@@ -95,8 +89,6 @@ async function clearcommands() {
 //check ME API for new listings test
 client.on('ready', async () => {
 
-  //config
-  var listings = []//establish the tracked listings var
   var initialget = 20//how many will we get initially (max 20)
   var refreshget = 10//how many will we get on each check (max 20) - should be less then initial get or extras will count as new
   var maxlength = 50//how many records will we keep
@@ -119,7 +111,7 @@ client.on('ready', async () => {
 
     await getnewremotelistings(ourcollections[k][0], refreshget).then(async thislistings => {//get latest X listings from Magic Eden
 
-      console.log('Listings arrary length at start: ' + ourcollections[k][1].length)
+      console.log(ourcollections[k][0] + 'listings arrary length at start: ' + ourcollections[k][1].length)
 
       var rebuildarrary = ourcollections[k][1]//save all the acquired listings in a temporary arrary
 
@@ -131,7 +123,7 @@ client.on('ready', async () => {
 
         } else {
           //actions if token address or price does not match one we have seen before
-          console.log('New/updated entry ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
+          console.log('New/updated ' + ourcollections[k][0] + ' entry ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
           rebuildarrary.unshift(thislistings[i])//add the new entry to the start of the rebuild arrary so we can remember this one if we see it later
 
           //set price of this lisitng
@@ -150,7 +142,7 @@ client.on('ready', async () => {
           var thisimage = ''
           var thislistinglink = ''
 
-          console.log('getting token details from magic eden')
+          console.log('getting ' +  ourcollections[k][0] + ' token details from magic eden')
           getremotetokendetails(thislistings[i].tokenMint)
             .then((recievedtoken) => {
               
@@ -167,7 +159,6 @@ client.on('ready', async () => {
 
                   var nlength = checkthis.length
                   thisnftid = checkthis.substring(1, nlength)
-                  //console.log('NFT ID from ME is: ' + thisnftid)
 
                 }//end if
               }//end for
@@ -176,8 +167,7 @@ client.on('ready', async () => {
               for (var i = 0; i < ourcollections[k][1].length; i++) {
 
                 if (thistoken.mintAddress == ourcollections[k][1][i].tokenMint) {
-                  //console.log('rarity of ' + thistoken.mintAddress + ' is ' + ourcollections[k][1][i].rarity.moonrank.rank)
-                  thisrarity = ourcollections[k][1][i].rarity.moonrank.rank
+                  thisrarity = ourcollections[k][1][i].rarity.moonrank.rank//end moonrank data from ME
                   break
                 }
               }
@@ -194,37 +184,37 @@ client.on('ready', async () => {
               var uncommonstart = ranges[8]; var uncommonend = ranges[9]
               var commonstart = ranges[10]; var commonend = ranges[11]
 
-              thisranges = ranges
+              thisranges = ranges//store outside subsection so we can access it
 
               return getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity)
             })//end .then
             .then((raritydescription) => {
 
-              thisraritydescription = raritydescription
+              thisraritydescription = raritydescription//store outside subsection so we can access it
 
               return getremotefloorprice(ourcollections[k][0])
             })//end .then
             .then((floorprice) => {
 
-              thisfloorprice = floorprice
+              thisfloorprice = floorprice//store outside subsection so we can access it
 
               return testifsnipe(thisraritydescription, thisprice, thisfloorprice)
             })//end .then
             .then((snipe) => {
 
+//store outside subsection so we can access it
               thissnipe = snipe[0]
               thissnipeprice = snipe[1]
               thislimit = snipe[2]
-              console.log('Snipe result is: ' + thissnipe)
-              console.log('thissnipe price is: ' + thissnipeprice)
 
               if (thissnipe != "false") {
+                console.log('we have a ' + ourcollections[k][0] + ' snipe!')
                 return getembedcolour(thisraritydescription)
               }
             })//end .then
             .then((embedcolour) => {
 
-              thisembedcolour = embedcolour
+              thisembedcolour = embedcolour//store outside subsection so we can access it
               var thisserver = ''
               var thisserverid = ''
               var thissnipechannel = ''
@@ -234,6 +224,7 @@ client.on('ready', async () => {
                 var serverkeys = Object.keys(servers)
                 serverkeys.forEach((key, index) => {//for each server
 
+                  //get the snipes channel id from the servers config object
                   var emojis = Object.keys(servers[key].emoji)
                   thisserver = servers[key]
                   thisserverid = servers[key].id
@@ -243,6 +234,7 @@ client.on('ready', async () => {
                     if (key === thisraritydescription) { thisemoji = thisserver.emoji[key] }//end if key matches emoji we are looking for
                   })//end for each potential emoji loop
 
+                  //send snipes
                   sendsnipes(thisserverid,thissnipechannel,thisname,thisembedcolour,thisemoji,thisrarity,thisraritydescription,thislimit,thisfloorprice,thissnipeprice,thisprice,thisimage,thislistinglink)
 
                 })//end for each server
@@ -253,8 +245,9 @@ client.on('ready', async () => {
 
       }//end for loop of each listing recieved
 
-      console.log('Listings arrary length at end: ' + ourcollections[k][1].length)
+      console.log(ourcollections[k][0] + ' listings arrary length at end: ' + ourcollections[k][1].length)
 
+      //for each collection we store a max history. Clear the oldest ones if it's longer than that. 
       if (rebuildarrary.length > maxlength) {
         var numbertoremove = rebuildarrary.length - maxlength
         console.log('number to remove is: ' + numbertoremove)
@@ -359,37 +352,40 @@ async function calculateranges(collectionsize) {
 
     resolve([mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend])
   }) //end promise
-}
+}//end calculate ranges
 
+//takes the ranges for this collection and returns string of its rarity description
 async function getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity) {
+  return new Promise((resolve, reject) => {
 
   //if mythic
   if (thisrarity >= mythicstart && thisrarity <= mythicend) {
-    return ('Mythic')
+    resolve('Mythic')
   }
   //if Legendary
   else if (thisrarity >= legendarystart && thisrarity <= legendaryend) {
-    return ('Legendary')
+    resolve('Legendary')
   }
   //if epic
   else if (thisrarity >= epicstart && thisrarity <= epicend) {
-    return ('Epic')
+    resolve('Epic')
   }
   //if rare
   else if (thisrarity >= rarestart && thisrarity <= rareend) {
-    return ('Rare')
+    resolve('Rare')
   }
   //if uncommon
   else if (thisrarity >= uncommonstart && thisrarity <= uncommonend) {
-    return ('Uncommon')
+    resolve('Uncommon')
   }
   //if common
   else if (thisrarity >= commonstart && thisrarity <= commonend) {
-    return ('Common')
+    resolve('Common')
   }
   else {//this shouldnt trigger if the key is found and the data is complete
-    return ('not ranked')
-  }
+    resolve('not ranked')
+  }//end else
+  })//end promise
 }//end getraritydescription function
 
 //returns floor price from Magic Eden API
@@ -415,7 +411,7 @@ async function getremotefloorprice(collection) {
   }) //end promise
 }//end getremotefloorprice function
 
-//returns rarity description (i.e. "Mythic" if its a snipe, else returns 'false' (as a string))
+//returns rarity description (i.e. "Mythic" if its a snipe, else returns 'false') also returns 
 async function testifsnipe(raritydescription, thisprice, floorprice) {
   return new Promise((resolve, reject) => {
 
@@ -430,7 +426,7 @@ async function testifsnipe(raritydescription, thisprice, floorprice) {
       var epiclimit = 10
       var rarelimit = 5
 
-      //calculate snipe limits
+      //calculate snipe limits of x*fp
       var mythicsnipe = mythiclimit * floorprice
       var legendarysnipe = legendarylimit * floorprice
       var epicsnipe = epiclimit * floorprice
@@ -510,7 +506,6 @@ async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisemoji
         }
       ]//end embed
     })//end message send
-
   }) //end promise
 }//end sendsnipes function
 
@@ -661,154 +656,6 @@ function checklocalrarity(nftnumber, collection) {
     return (nftproperties)
   }//end if nft is in object
 }//end checklocalrarity function
-
-
-async function checksnipe(message, collection) {
-
-  let embed = message.embeds[0]//get the embeds (if any) from the message so we can check it
-
-  //if there is an embed, the message was from the right bot and it's a listing rather than a sale...
-  if (embed != undefined && message.author.id == mebotid && embed.description.includes('listed')) {
-
-    //console.log(embed.description)
-
-    //get list price from ME bot post
-    var thispricestring = ''
-    var thisprice = 0
-
-    let descriptionarr = embed.description.split(' ')
-
-    for (var i = 0; i < descriptionarr.length; i++) {
-      let checkthis = descriptionarr[i]
-      if (checkthis === 'SOL') {
-
-        let x = i - 1
-        thispricestring = descriptionarr[x]
-        thisprice = parseFloat(thispricestring)
-        //console.log('Listed for: ' + thisprice)
-
-      }
-    }//end for loop checking each word in the listing description for the list price
-
-    //await floor price
-    await getremotefloorprice(collection).then(floorprice => {
-
-      //console.log('Floor price in check snipe function is: ' + floorprice)
-
-      //get rarity of this listing
-      var nftid = ''
-
-      //get nft ID
-      for (var i = 0; i < descriptionarr.length; i++) {
-        let checkthis = descriptionarr[i]
-        if (checkthis.includes('#')) {
-
-          var nlength = checkthis.length
-          nftid = checkthis.substring(1, nlength)
-          //console.log('NFT ID is: ' + nftid)
-
-        }//end if
-      }//end for
-
-      //get rarity of nft with function (need whole rarity database).or handle function returning 0
-      var nftproperties = checklocalrarity(nftid, collection)
-      //split up returned array
-      var nftkey = nftproperties[0]; var raritydescription = nftproperties[1]; var emoji = nftproperties[2]; var embedcolor = nftproperties[3]; var thisrarity = nftproperties[4]; var nftname = nftproperties[5]; var thisimage = nftproperties[6]; var melink = nftproperties[7]
-
-      //make calculation of if this is a snipe using rarity, floor price and nft price
-      var hotrarities = ['Mythic', 'Legendary', 'Epic', 'Rare']
-
-      if (hotrarities.includes(raritydescription)) {
-        //if this is a snipe, send alert to snipe channel
-
-        //set multipliers above floor price at which listings become snipes
-        var mythiclimit = 100
-        var legendarylimit = 50
-        var epiclimit = 10
-        var rarelimit = 5
-
-        var thislimit = 0//establish snipe limit for this round
-
-        //calculate snipe limits
-        var mythicsnipe = mythiclimit * floorprice
-        var legendarysnipe = legendarylimit * floorprice
-        var epicsnipe = epiclimit * floorprice
-        var raresnipe = rarelimit * floorprice
-
-        var thissnipeprice = 0
-
-        var issnipe = false
-
-        if (raritydescription == 'Mythic' && thisprice <= mythicsnipe) { issnipe = true; thislimit = mythiclimit; thissnipeprice = mythicsnipe } else if (raritydescription == 'Legendary' && thisprice <= legendarysnipe) { issnipe = true; thislimit = legendarylimit; thissnipeprice = legendarysnipe } else if (raritydescription == 'Epic' && thisprice <= epicsnipe) { issnipe = true; thislimit = epiclimit; thissnipeprice = epicsnipe } else if (raritydescription == 'Rare' && thisprice <= raresnipe) { issnipe = true; thislimit = rarelimit; thissnipeprice = raresnipe }
-        if (issnipe == true) {
-          client.guilds.cache.get(monkeyserver).channels.cache.get(snipeschannel).send({
-            "content": "@everyone",
-            embeds: [
-              {
-                "title": 'Snipe Opportunity: ' + nftname,
-                "color": embedcolor,
-                "fields": [
-                  {
-                    "name": "Rarity",
-                    "value": thisrarity + ' - ' + raritydescription,
-                    "inline": true
-                  },
-                  {
-                    "name": "Snipe Price",
-                    "value": 'For ' + raritydescription + ': ' + thislimit + 'x floor price of ' + floorprice + 'SOL (' + thissnipeprice + 'SOL)',
-                    "inline": true
-                  },
-                  {
-                    "name": "List Price",
-                    "value": thisprice + ' SOL',
-                    "inline": true
-                  },
-                  {
-                    "name": "Floor Price",
-                    "value": floorprice + ' SOL',
-                    "inline": true
-                  }
-                ],
-                "image": {
-                  "url": thisimage,
-                  "height": 75,
-                  "width": 75
-                },
-                "footer": {
-                  "text": "Rarity data provided by howrare.is"
-                }
-              }
-            ]//end embed
-          })//end message send
-        } //if issnipe = true 
-      } // if a hot rarity
-    })//end await floorprice
-  }//end if sender is ME Bot 
-}//end checksnipe function
-
-/*
-client.on("messageCreate", (message) => {//watch new messages in the listings channel
-
-  if (message.channel.id == mpoxlistingschannel) {//if channel is the monkeypox listings channel
-
-    checksnipe(message, 'monkeypox_nft')
-
-  }//end if mpoxlistingschannel
-
-  if (message.channel.id == pixelguildlistingschannel) {//if channel is the pixel guild listings channel
-
-    //checksnipe(message, 'pixel_guild_loot_legends')
-
-  }//end if pixelguidlistingschannel
-
-  if (message.channel.id == wanderingnahavilistingschannel) {//if channel is the wandering_nahavi listings channel
-
-    checksnipe(message, 'wandering_nahavi')
-
-  }//end if pixelguidlistingschannel
-
-})//end client on message
-*/
 
 //=========================
 //====  Rarity checker  ===
