@@ -52,7 +52,8 @@ const servers = {
 //what are the requirements? Moonrank data on ME? Anything else? 
 const ourcollections = [
   ['monkeypox_nft',[],2400],
-  ['crypto_coral_tribe',[],6565]
+  ['crypto_coral_tribe',[],6565],
+  ['okay_bears',[],10000]
   ]
 
 var sequences = []
