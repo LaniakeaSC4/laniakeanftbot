@@ -98,7 +98,7 @@ async function clearcommands() {
 //check ME API for new listings test
 client.on('ready', async () => {
 
-
+/*
   //get some listings on startup
   for (var i = 0;i < ourcollections.length;i++){
   await getnewremotelistings(ourcollections[i][0], initialget).then(async thislistings => {
@@ -107,9 +107,9 @@ client.on('ready', async () => {
     //console.log(listings[0])
   })//end then
   }//end for 
+*/
 
-
-//initalisecollections() 
+initalisecollections() 
 
 startsniper()
 
@@ -363,7 +363,7 @@ async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisemoji
 async function initalisecollections() {
   await Promise.all(sequences.map(async value => {
     var thisinterval = 1100
-    await setInterval(async function (i) {
+    await setTimeout(async function (i) {
     await getnewremotelistings(ourcollections[i][0], initialget).then(async thislistings => {
     ourcollections[i][1] = thislistings//fill tracked listings with the listings we just got
     console.log('added initial ' + initialget + ' Listings for ' + ourcollections[i][0])
