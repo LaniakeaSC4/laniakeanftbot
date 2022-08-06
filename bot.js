@@ -112,8 +112,9 @@ client.on('ready', async () => {
   })//end then
   }//end for 
 
-for (var k = 0;k < ourcollections.length;k++) {
+
   setInterval(async function () {//do this every X minutes
+  for (var k = 0;k < ourcollections.length;k++) {
     console.log("I am doing my " + minutes + " minute check for " + ourcollections[k][0])
 
     await getnewremotelistings('monkeypox_nft', refreshget).then(async thislistings => {//get latest X listings from Magic Eden
@@ -265,9 +266,9 @@ for (var k = 0;k < ourcollections.length;k++) {
 
       ourcollections[k][1] = rebuildarrary//overwrite main listings arrary with the temp rebuild one
 
-    })//end then after getting listings
+    })//end then after getting 
+  }//end for collections
   }, the_interval)//end recheck listing loop
-}//end for collections
 })//end client.on Ready
 
 //===================================
