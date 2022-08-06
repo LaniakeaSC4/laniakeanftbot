@@ -150,7 +150,7 @@ client.on('ready', async () => {
               thisname = thistoken.name
               thisimage = thistoken.image
               thislistinglink = 'https://magiceden.io/item-details/' + thistoken.mintAddress
-
+console.log(thislistinglink)
               //get nft ID
               let namearr = thistoken.name.split(' ')
               for (var i = 0; i < namearr.length; i++) {
@@ -185,7 +185,7 @@ client.on('ready', async () => {
               var commonstart = ranges[10]; var commonend = ranges[11]
 
               thisranges = ranges//store outside subsection so we can access it
-
+console.log('epicstart is:' + epicstart)
               return getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity)
             })//end .then
             .then((raritydescription) => {
@@ -197,6 +197,7 @@ client.on('ready', async () => {
             .then((floorprice) => {
 
               thisfloorprice = floorprice//store outside subsection so we can access it
+              console.log('Floor price is: ' + thisfloorprice)
 
               return testifsnipe(thisraritydescription, thisprice, thisfloorprice)
             })//end .then
@@ -412,6 +413,7 @@ async function getremotefloorprice(collection) {
 //returns rarity description (i.e. "Mythic" if its a snipe, else returns 'false') also returns 
 async function testifsnipe(raritydescription, thisprice, floorprice) {
   return new Promise((resolve, reject) => {
+    console.log('testing for snipe with ' + raritydescription + thisprice + floorprice)
 
     //make calculation of if this is a snipe using rarity, floor price and nft price
     var hotrarities = ['Mythic', 'Legendary', 'Epic', 'Rare']
