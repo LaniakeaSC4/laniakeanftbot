@@ -114,7 +114,7 @@ async function runloops() {
   for (value of sequences) {
     console.log('executing a function. Value is: ' + value)
 
-  setInterval(async function (k) {//do this every X minutes
+  await setInterval(async function (k) {//do this every X minutes
     console.log("I am doing my " + minutes + " minute check for " + ourcollections[k][0])
 
     await getnewremotelistings(ourcollections[k][0], refreshget).then(async thislistings => {//get latest X listings from Magic Eden
@@ -272,7 +272,7 @@ console.log('epicstart is:' + epicstart)
 
   }, the_interval, value)//end recheck listing loop
   } 
-} 
+}
 
 runloops()
 })//end client.on Ready
