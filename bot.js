@@ -111,7 +111,9 @@ for (var i = 0;i < ourcollections.length;i++) {
 }
 
 async function runloops() {
-  for (value of sequences) {
+  
+  await Promise.all(sequences.map(async value => {
+    
     console.log('executing a function. Value is: ' + value)
 
   await setInterval(async function (k) {//do this every X minutes
@@ -271,7 +273,8 @@ console.log('epicstart is:' + epicstart)
     })//end then after getting 
 
   }, the_interval, value)//end recheck listing loop
-  } 
+  })
+)
 }
 
 runloops()
