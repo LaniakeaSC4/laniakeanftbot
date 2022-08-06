@@ -116,6 +116,8 @@ async function runloops() {
   }
 }
 
+runloops()
+
 for (var k = 0;k < ourcollections.length;k++) {
   
 
