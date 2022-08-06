@@ -55,6 +55,12 @@ const ourcollections = [
   ['crypto_coral_tribe',[],6565]
   ]
 
+var sequences = []
+for (var i = 0;i < ourcollections.length;i++) {
+  sequences.push(i)
+  console.log(sequences)
+}
+
 //set rarity threshold percentages
 const pmythic = 0.01
 const plegendary = 0.05
@@ -104,11 +110,7 @@ client.on('ready', async () => {
   })//end then
   }//end for 
 
-var sequences = []
-for (var i = 0;i < ourcollections.length;i++) {
-  sequences.push(i)
-  console.log(sequences)
-}
+
 
 startsniper()
 
