@@ -117,7 +117,7 @@ client.on('ready', async () => {
   for (var k = 0;k < ourcollections.length;k++) {
     console.log("I am doing my " + minutes + " minute check for " + ourcollections[k][0])
 
-    await getnewremotelistings('monkeypox_nft', refreshget).then(async thislistings => {//get latest X listings from Magic Eden
+    await getnewremotelistings(ourcollections[k][0], refreshget).then(async thislistings => {//get latest X listings from Magic Eden
 
       console.log('Listings arrary length at start: ' + ourcollections[k][1].length)
 
@@ -182,7 +182,7 @@ client.on('ready', async () => {
                 }
               }
 
-              return calculateranges(2400)
+              return calculateranges(ourcollections[k][2])
 
             })//end .then
             .then((ranges) => {
@@ -202,7 +202,7 @@ client.on('ready', async () => {
 
               thisraritydescription = raritydescription
 
-              return getremotefloorprice('monkeypox_nft')
+              return getremotefloorprice(ourcollections[k][0])
             })//end .then
             .then((floorprice) => {
 
