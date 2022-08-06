@@ -356,36 +356,34 @@ async function calculateranges(collectionsize) {
 
 //takes the ranges for this collection and returns string of its rarity description
 async function getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity) {
-  return new Promise((resolve, reject) => {
 
   //if mythic
   if (thisrarity >= mythicstart && thisrarity <= mythicend) {
-    resolve('Mythic')
+    return ('Mythic')
   }
   //if Legendary
   else if (thisrarity >= legendarystart && thisrarity <= legendaryend) {
-    resolve('Legendary')
+    return ('Legendary')
   }
   //if epic
   else if (thisrarity >= epicstart && thisrarity <= epicend) {
-    resolve('Epic')
+    return ('Epic')
   }
   //if rare
   else if (thisrarity >= rarestart && thisrarity <= rareend) {
-    resolve('Rare')
+    return ('Rare')
   }
   //if uncommon
   else if (thisrarity >= uncommonstart && thisrarity <= uncommonend) {
-    resolve('Uncommon')
+    return ('Uncommon')
   }
   //if common
   else if (thisrarity >= commonstart && thisrarity <= commonend) {
-    resolve('Common')
+    return ('Common')
   }
   else {//this shouldnt trigger if the key is found and the data is complete
-    resolve('not ranked')
+    return ('not ranked')
   }//end else
-  })//end promise
 }//end getraritydescription function
 
 //returns floor price from Magic Eden API
