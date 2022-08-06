@@ -113,7 +113,7 @@ for (var i = 0;i < ourcollections.length;i++) {
 async function runloops() {
   
   await Promise.all(sequences.map(async value => {
-    var thisinterval = the_interval + 3000
+    var thisinterval = the_interval + (value*3000)
     console.log('executing a function. Value is: ' + value + '. Setting interval to: ' + thisinterval)
 
   await setInterval(async function (k) {//do this every X minutes
