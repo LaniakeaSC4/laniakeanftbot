@@ -110,174 +110,8 @@ for (var i = 0;i < ourcollections.length;i++) {
   console.log(sequences)
 }
 
-async function runloops() {
-  
-  await Promise.all(sequences.map(async value => {
-    var thisinterval = the_interval + (value*3000)
-    console.log('executing a function. Value is: ' + value + '. Setting interval to: ' + thisinterval)
+startsniper()
 
-  await setInterval(async function (k) {//do this every X minutes
-    console.log("I am doing my " + minutes + " minute check for " + ourcollections[k][0])
-
-    await getnewremotelistings(ourcollections[k][0], refreshget).then(async thislistings => {//get latest X listings from Magic Eden
-
-      console.log(ourcollections[k][0] + 'listings arrary length at start: ' + ourcollections[k][1].length)
-
-      var rebuildarrary = ourcollections[k][1]//save all the acquired listings in a temporary arrary
-
-      for (var i = 0; i < thislistings.length; i++) {//for all listings recieved from getnewremotelistingsfunction
-
-        if (ourcollections[k][1].some(e => (e.tokenAddress === thislistings[i].tokenAddress && e.price === thislistings[i].price))) {
-          //actions if token address and price match (i.e. we've seen this one before)
-          //console.log('matched ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
-
-        } else {
-          //actions if token address or price does not match one we have seen before
-          console.log('New/updated ' + ourcollections[k][0] + ' entry ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
-          rebuildarrary.unshift(thislistings[i])//add the new entry to the start of the rebuild arrary so we can remember this one if we see it later
-
-          //set price of this lisitng
-          var thistoken = {}
-          var thisprice = thislistings[i].price
-          var thisname = ''
-          var thisnftid = ''
-          var thisrarity = ''
-          var thisranges = []
-          var thisraritydescription = ''
-          var thisfloorprice = 0
-          var thissnipe = ''
-          var thisembedcolour = ''
-          var thissnipeprice = 0
-          var thislimit = 0
-          var thisimage = ''
-          var thislistinglink = ''
-
-          console.log('getting ' +  ourcollections[k][0] + ' token details from magic eden')
-          getremotetokendetails(thislistings[i].tokenMint)
-            .then((recievedtoken) => {
-              
-              thistoken = recievedtoken
-              thisname = thistoken.name
-              thisimage = thistoken.image
-              thislistinglink = 'https://magiceden.io/item-details/' + thistoken.mintAddress
-console.log(thislistinglink)
-              //get nft ID
-              let namearr = thistoken.name.split(' ')
-              for (var i = 0; i < namearr.length; i++) {
-                let checkthis = namearr[i]
-                if (checkthis.includes('#')) {
-
-                  var nlength = checkthis.length
-                  thisnftid = checkthis.substring(1, nlength)
-
-                }//end if
-              }//end for
-
-              //get rarity
-              for (var i = 0; i < ourcollections[k][1].length; i++) {
-
-                if (thistoken.mintAddress == ourcollections[k][1][i].tokenMint) {
-                  thisrarity = ourcollections[k][1][i].rarity.moonrank.rank//end moonrank data from ME
-                  break
-                }
-              }
-
-              return calculateranges(ourcollections[k][2])
-
-            })//end .then
-            .then((ranges) => {
-
-              var mythicstart = ranges[0]; var mythicend = ranges[1]
-              var legendarystart = ranges[2]; var legendaryend = ranges[3]
-              var epicstart = ranges[4]; var epicend = ranges[5]
-              var rarestart = ranges[6]; var rareend = ranges[7]
-              var uncommonstart = ranges[8]; var uncommonend = ranges[9]
-              var commonstart = ranges[10]; var commonend = ranges[11]
-
-              thisranges = ranges//store outside subsection so we can access it
-console.log('epicstart is:' + epicstart)
-              return getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity)
-            })//end .then
-            .then((raritydescription) => {
-
-              thisraritydescription = raritydescription//store outside subsection so we can access it
-
-              return getremotefloorprice(ourcollections[k][0])
-            })//end .then
-            .then((floorprice) => {
-
-              thisfloorprice = floorprice//store outside subsection so we can access it
-              console.log('Floor price is: ' + thisfloorprice)
-
-              return testifsnipe(thisraritydescription, thisprice, thisfloorprice)
-            })//end .then
-            .then((snipe) => {
-
-//store outside subsection so we can access it
-              thissnipe = snipe[0]
-              thissnipeprice = snipe[1]
-              thislimit = snipe[2]
-
-              if (thissnipe != "false") {
-                console.log('we have a ' + ourcollections[k][0] + ' snipe!')
-                return getembedcolour(thisraritydescription)
-              }
-            })//end .then
-            .then((embedcolour) => {
-
-              thisembedcolour = embedcolour//store outside subsection so we can access it
-              var thisserver = ''
-              var thisserverid = ''
-              var thissnipechannel = ''
-              var thisemoji = ''
-
-              if (thissnipe != "false") {//if this is a snipe get emoji and send messages out to each server
-                var serverkeys = Object.keys(servers)
-                serverkeys.forEach((key, index) => {//for each server
-
-                  //get the snipes channel id from the servers config object
-                  var emojis = Object.keys(servers[key].emoji)
-                  thisserver = servers[key]
-                  thisserverid = servers[key].id
-                  thissnipechannel = servers[key].snipeschannel
-
-                  emojis.forEach((key, index) => {//loop through each potential emoji
-                    if (key === thisraritydescription) { thisemoji = thisserver.emoji[key] }//end if key matches emoji we are looking for
-                  })//end for each potential emoji loop
-
-                  //send snipes
-                  sendsnipes(thisserverid,thissnipechannel,thisname,thisembedcolour,thisemoji,thisrarity,thisraritydescription,thislimit,thisfloorprice,thissnipeprice,thisprice,thisimage,thislistinglink)
-
-                })//end for each server
-              }//end if this is a snipe
-            })//end .then
-
-        }//end else for a token we havnt seen before
-
-      }//end for loop of each listing recieved
-
-      console.log(ourcollections[k][0] + ' listings arrary length at end: ' + ourcollections[k][1].length)
-
-      //for each collection we store a max history. Clear the oldest ones if it's longer than that. 
-      if (rebuildarrary.length > maxlength) {
-        var numbertoremove = rebuildarrary.length - maxlength
-        console.log('number to remove is: ' + numbertoremove)
-        for (var i = 0; i < numbertoremove; i++) {
-          console.log("1 removal loop - popping here")
-          rebuildarrary.pop()//remove oldest entry
-        }//end for number to remove
-      }//end if rebuildarrary is longer than max length
-
-      ourcollections[k][1] = rebuildarrary//overwrite main listings arrary with the temp rebuild one
-
-    })//end then after getting 
-
-  }, thisinterval, value)//end recheck listing loop
-  })
-)
-}
-
-runloops()
 })//end client.on Ready
 
 //===================================
@@ -523,6 +357,174 @@ async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisemoji
     })//end message send
   }) //end promise
 }//end sendsnipes function
+
+//main sniper function
+async function startsniper() {
+  
+  await Promise.all(sequences.map(async value => {
+    var thisinterval = the_interval + (value*1100)//interval for each collection is 1.1 seconds longer to avoid more than 2 ME API requests per second
+    console.log('executing a function. Value is: ' + value + '. Setting interval to: ' + thisinterval)
+
+  await setInterval(async function (k) {//do this every X minutes
+    console.log("I am doing my " + minutes + " minute check for " + ourcollections[k][0])
+
+    await getnewremotelistings(ourcollections[k][0], refreshget).then(async thislistings => {//get latest X listings from Magic Eden
+
+      console.log(ourcollections[k][0] + 'listings arrary length at start: ' + ourcollections[k][1].length)
+
+      var rebuildarrary = ourcollections[k][1]//save all the acquired listings in a temporary arrary
+
+      for (var i = 0; i < thislistings.length; i++) {//for all listings recieved from getnewremotelistingsfunction
+
+        if (ourcollections[k][1].some(e => (e.tokenAddress === thislistings[i].tokenAddress && e.price === thislistings[i].price))) {
+          //actions if token address and price match (i.e. we've seen this one before)
+          //console.log('matched ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
+
+        } else {
+          //actions if token address or price does not match one we have seen before
+          console.log('New/updated ' + ourcollections[k][0] + ' entry ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
+          rebuildarrary.unshift(thislistings[i])//add the new entry to the start of the rebuild arrary so we can remember this one if we see it later
+
+          //set price of this lisitng
+          var thistoken = {}
+          var thisprice = thislistings[i].price
+          var thisname = ''
+          var thisnftid = ''
+          var thisrarity = ''
+          var thisranges = []
+          var thisraritydescription = ''
+          var thisfloorprice = 0
+          var thissnipe = ''
+          var thisembedcolour = ''
+          var thissnipeprice = 0
+          var thislimit = 0
+          var thisimage = ''
+          var thislistinglink = ''
+
+          console.log('getting ' +  ourcollections[k][0] + ' token details from magic eden')
+          getremotetokendetails(thislistings[i].tokenMint)
+            .then((recievedtoken) => {
+              
+              thistoken = recievedtoken
+              thisname = thistoken.name
+              thisimage = thistoken.image
+              thislistinglink = 'https://magiceden.io/item-details/' + thistoken.mintAddress
+console.log(thislistinglink)
+              //get nft ID
+              let namearr = thistoken.name.split(' ')
+              for (var i = 0; i < namearr.length; i++) {
+                let checkthis = namearr[i]
+                if (checkthis.includes('#')) {
+
+                  var nlength = checkthis.length
+                  thisnftid = checkthis.substring(1, nlength)
+
+                }//end if
+              }//end for
+
+              //get rarity
+              for (var i = 0; i < ourcollections[k][1].length; i++) {
+
+                if (thistoken.mintAddress == ourcollections[k][1][i].tokenMint) {
+                  thisrarity = ourcollections[k][1][i].rarity.moonrank.rank//end moonrank data from ME
+                  break
+                }
+              }
+
+              return calculateranges(ourcollections[k][2])
+
+            })//end .then
+            .then((ranges) => {
+
+              var mythicstart = ranges[0]; var mythicend = ranges[1]
+              var legendarystart = ranges[2]; var legendaryend = ranges[3]
+              var epicstart = ranges[4]; var epicend = ranges[5]
+              var rarestart = ranges[6]; var rareend = ranges[7]
+              var uncommonstart = ranges[8]; var uncommonend = ranges[9]
+              var commonstart = ranges[10]; var commonend = ranges[11]
+
+              thisranges = ranges//store outside subsection so we can access it
+console.log('epicstart is:' + epicstart)
+              return getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity)
+            })//end .then
+            .then((raritydescription) => {
+
+              thisraritydescription = raritydescription//store outside subsection so we can access it
+
+              return getremotefloorprice(ourcollections[k][0])
+            })//end .then
+            .then((floorprice) => {
+
+              thisfloorprice = floorprice//store outside subsection so we can access it
+              console.log('Floor price is: ' + thisfloorprice)
+
+              return testifsnipe(thisraritydescription, thisprice, thisfloorprice)
+            })//end .then
+            .then((snipe) => {
+
+//store outside subsection so we can access it
+              thissnipe = snipe[0]
+              thissnipeprice = snipe[1]
+              thislimit = snipe[2]
+
+              if (thissnipe != "false") {
+                console.log('we have a ' + ourcollections[k][0] + ' snipe!')
+                return getembedcolour(thisraritydescription)
+              }
+            })//end .then
+            .then((embedcolour) => {
+
+              thisembedcolour = embedcolour//store outside subsection so we can access it
+              var thisserver = ''
+              var thisserverid = ''
+              var thissnipechannel = ''
+              var thisemoji = ''
+
+              if (thissnipe != "false") {//if this is a snipe get emoji and send messages out to each server
+                var serverkeys = Object.keys(servers)
+                serverkeys.forEach((key, index) => {//for each server
+
+                  //get the snipes channel id from the servers config object
+                  var emojis = Object.keys(servers[key].emoji)
+                  thisserver = servers[key]
+                  thisserverid = servers[key].id
+                  thissnipechannel = servers[key].snipeschannel
+
+                  emojis.forEach((key, index) => {//loop through each potential emoji
+                    if (key === thisraritydescription) { thisemoji = thisserver.emoji[key] }//end if key matches emoji we are looking for
+                  })//end for each potential emoji loop
+
+                  //send snipes
+                  sendsnipes(thisserverid,thissnipechannel,thisname,thisembedcolour,thisemoji,thisrarity,thisraritydescription,thislimit,thisfloorprice,thissnipeprice,thisprice,thisimage,thislistinglink)
+
+                })//end for each server
+              }//end if this is a snipe
+            })//end .then
+
+        }//end else for a token we havnt seen before
+
+      }//end for loop of each listing recieved
+
+      console.log(ourcollections[k][0] + ' listings arrary length at end: ' + ourcollections[k][1].length)
+
+      //for each collection we store a max history. Clear the oldest ones if it's longer than that. 
+      if (rebuildarrary.length > maxlength) {
+        var numbertoremove = rebuildarrary.length - maxlength
+        console.log('number to remove is: ' + numbertoremove)
+        for (var i = 0; i < numbertoremove; i++) {
+          console.log("1 removal loop - popping here")
+          rebuildarrary.pop()//remove oldest entry
+        }//end for number to remove
+      }//end if rebuildarrary is longer than max length
+
+      ourcollections[k][1] = rebuildarrary//overwrite main listings arrary with the temp rebuild one
+
+    })//end then after getting 
+
+  }, thisinterval, value)//end recheck listing loop
+  })
+)
+}//end startsniper
 
 //=========================
 //==== Other Functions  ===
