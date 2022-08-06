@@ -57,10 +57,7 @@ const ourcollections = [
   ]
 
 var sequences = []
-for (var i = 0;i < ourcollections.length;i++) {
-  sequences.push(i)
-  console.log(sequences)
-}
+for (var i = 0;i < ourcollections.length;i++) {sequences.push(i)}
 
 var initialget = 20//how many will we get initially (max 20)
   var refreshget = 10//how many will we get on each check (max 20) - should be less then initial get or extras will count as new
@@ -101,8 +98,8 @@ async function clearcommands() {
 //check ME API for new listings test
 client.on('ready', async () => {
 
+/*
   //get some listings on startup
-  
   for (var i = 0;i < ourcollections.length;i++){
   await getnewremotelistings(ourcollections[i][0], initialget).then(async thislistings => {
     ourcollections[i][1] = thislistings//fill tracked listings with the listings we just got
@@ -110,8 +107,9 @@ client.on('ready', async () => {
     //console.log(listings[0])
   })//end then
   }//end for 
+*/
 
-
+initalisecollections() 
 
 startsniper()
 
@@ -360,6 +358,20 @@ async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisemoji
     })//end message send
   }) //end promise
 }//end sendsnipes function
+
+
+async function initalisecollections() {
+  await Promise.all(sequences.map(async value => {
+    var thisinterval = 1100
+    await setInterval(async function (i) {
+    await getnewremotelistings(ourcollections[i][0], initialget).then(async thislistings => {
+    ourcollections[i][1] = thislistings//fill tracked listings with the listings we just got
+    console.log('added initial ' + initialget + ' Listings for ' + ourcollections[i][0])
+    //console.log(listings[0])
+  })//end then
+    }, thisinterval, value)
+  }))
+} 
 
 //main sniper function
 async function startsniper() {
