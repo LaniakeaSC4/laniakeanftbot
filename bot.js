@@ -61,6 +61,11 @@ for (var i = 0;i < ourcollections.length;i++) {
   console.log(sequences)
 }
 
+var initialget = 20//how many will we get initially (max 20)
+  var refreshget = 10//how many will we get on each check (max 20) - should be less then initial get or extras will count as new
+  var maxlength = 50//how many records will we keep
+  var minutes = 1, the_interval = minutes * 60 * 1000//refresh interval 
+
 //set rarity threshold percentages
 const pmythic = 0.01
 const plegendary = 0.05
@@ -94,11 +99,6 @@ async function clearcommands() {
 
 //check ME API for new listings test
 client.on('ready', async () => {
-
-  var initialget = 20//how many will we get initially (max 20)
-  var refreshget = 10//how many will we get on each check (max 20) - should be less then initial get or extras will count as new
-  var maxlength = 50//how many records will we keep
-  var minutes = 1, the_interval = minutes * 60 * 1000//refresh interval
 
   //get some listings on startup
   
