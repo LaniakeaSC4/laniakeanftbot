@@ -107,7 +107,7 @@ client.on('ready', async () => {
 for (var k = 0;k < ourcollections.length;k++) {
   
 
-  setInterval(async function (k) {//do this every X minutes
+  setInterval(async function () {//do this every X minutes
     console.log("I am doing my " + minutes + " minute check for " + ourcollections[k][0])
 
     await getnewremotelistings(ourcollections[k][0], refreshget).then(async thislistings => {//get latest X listings from Magic Eden
@@ -263,7 +263,7 @@ console.log('epicstart is:' + epicstart)
 
     })//end then after getting 
 
-  }, the_interval)//end recheck listing loop
+  }, the_interval, k)//end recheck listing loop
   
 }//end for collections
 })//end client.on Ready
