@@ -98,7 +98,7 @@ async function clearcommands() {
 //check ME API for new listings test
 client.on('ready', async () => {
 
-/*
+
   //get some listings on startup
   for (var i = 0;i < ourcollections.length;i++){
   await getnewremotelistings(ourcollections[i][0], initialget).then(async thislistings => {
@@ -107,9 +107,9 @@ client.on('ready', async () => {
     //console.log(listings[0])
   })//end then
   }//end for 
-*/
 
-initalisecollections() 
+
+//initalisecollections() 
 
 startsniper()
 
