@@ -104,6 +104,18 @@ client.on('ready', async () => {
   })//end then
   }//end for 
 
+var sequences = []
+for (var i = 0;i < ourcollections.length;i++) {
+  sequences.push(i)
+  console.log(sequences)
+}
+
+async function runloops() {
+  for (value of sequences) {
+    console.log('executing a function. Value is: ' + value)
+  }
+}
+
 for (var k = 0;k < ourcollections.length;k++) {
   
 
