@@ -331,11 +331,6 @@ async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisemoji
               "inline": true
             },
             {
-              "name": "Snipe Price",
-              "value": 'For ' + raritydescription + ' NFTs, any price less than ' + thislimit + 'x the floor price of ' + pround(floorprice,3) + 'SOL is a snipe (i.e. less than ' + thissnipeprice + 'SOL)',
-              "inline": true
-            },
-            {
               "name": "List Price",
               "value": pround(thisprice, 3) + ' SOL',
               "inline": true
@@ -344,7 +339,12 @@ async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisemoji
               "name": "Floor Price",
               "value": pround(floorprice, 3) + ' SOL',
               "inline": true
-            }
+            }, 
+            {
+              "name": "Snipe Price",
+              "value": 'For ' + raritydescription + ' NFTs, any price less than ' + thislimit + 'x the floor price of ' + pround(floorprice,3) + ' SOL is a snipe (i.e. less than ' + thissnipeprice + ' SOL)',
+              "inline": true
+            } 
           ],
           "image": {
             "url": thisimage,
