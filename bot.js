@@ -565,13 +565,14 @@ function getRemoteHowRareData(collection) {
 }//end getremoteHowRareData function
 
 const initaliseRarityCollections = async () => {
+  await wait(10000)
   for (const seq of raritySequencer) { //for each collection
     //get initial set of listings and store them in the local history arrary for that collection
     await getRemoteHowRareData(rarityCollections[seq][0]).then(async thisdata => {
       rarityCollections[seq][1] = thisdata //fill tracked listings with the listings we just got
-      console.log('loaded Howrare.is data for ' + sniperCollections[seq][0])
+      console.log('loaded Howrare.is data for ' + rarityCollections[seq][0])
     })
-    await wait(3000)//add delay between API requests
+    await wait(4000)//add delay between API requests
   }//end for each seq of raritySequencer
 }//end initaliseRarityCollections
 
