@@ -318,7 +318,6 @@ async function getembedcolour(raritydescription) {
 async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisemoji, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage,listinglink) {
   return new Promise((resolve, reject) => {
     client.guilds.cache.get(server).channels.cache.get(snipeschannel).send({
-      "content": "@everyone",
       embeds: [
         {
           "title": 'Snipe Opportunity: ' + nftname,
@@ -376,14 +375,13 @@ async function startsniper() {
   
   await Promise.all(sequences.map(async value => {
     var thisinterval = the_interval + (value*1100)//interval for each collection is 1.1 seconds longer to avoid more than 2 ME API requests per second
-    console.log('executing a function. Value is: ' + value + '. Setting interval to: ' + thisinterval)
+    console.log('Initialising loop for collection: ' + value + '. Setting interval to: ' + thisinterval)
 
   await setInterval(async function (k) {//do this every X minutes
-    console.log("I am doing my " + minutes + " minute check for " + ourcollections[k][0])
 
     await getnewremotelistings(ourcollections[k][0], refreshget).then(async thislistings => {//get latest X listings from Magic Eden
 
-      console.log(ourcollections[k][0] + 'listings arrary length at start: ' + ourcollections[k][1].length)
+      console.log("I am doing my " + minutes + " minute check for " + ourcollections[k][0] + '. I have this many in my history at start: ' + ourcollections[k][1].length)
 
       var rebuildarrary = ourcollections[k][1]//save all the acquired listings in a temporary arrary
 
@@ -397,6 +395,8 @@ async function startsniper() {
           //actions if token address or price does not match one we have seen before
           console.log('New/updated ' + ourcollections[k][0] + ' entry ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
           rebuildarrary.unshift(thislistings[i])//add the new entry to the start of the rebuild arrary so we can remember this one if we see it later
+          
+          console.log(thislistings[i])
 
           //set price of this lisitng
           var thistoken = {}
@@ -414,7 +414,6 @@ async function startsniper() {
           var thisimage = ''
           var thislistinglink = ''
 
-          console.log('getting ' +  ourcollections[k][0] + ' token details from magic eden')
           getremotetokendetails(thislistings[i].tokenMint)
             .then((recievedtoken) => {
               
@@ -422,7 +421,7 @@ async function startsniper() {
               thisname = thistoken.name
               thisimage = thistoken.image
               thislistinglink = 'https://magiceden.io/item-details/' + thistoken.mintAddress
-console.log(thislistinglink)
+              
               //get nft ID
               let namearr = thistoken.name.split(' ')
               for (var i = 0; i < namearr.length; i++) {
@@ -457,7 +456,7 @@ console.log(thislistinglink)
               var commonstart = ranges[10]; var commonend = ranges[11]
 
               thisranges = ranges//store outside subsection so we can access it
-console.log('epicstart is:' + epicstart)
+              
               return getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity)
             })//end .then
             .then((raritydescription) => {
@@ -469,7 +468,6 @@ console.log('epicstart is:' + epicstart)
             .then((floorprice) => {
 
               thisfloorprice = pround(floorprice, 6)//store outside subsection so we can access it
-              console.log('Floor price is: ' + thisfloorprice)
 
               return testifsnipe(thisraritydescription, thisprice, thisfloorprice)
             })//end .then
@@ -517,8 +515,6 @@ console.log('epicstart is:' + epicstart)
         }//end else for a token we havnt seen before
 
       }//end for loop of each listing recieved
-
-      console.log(ourcollections[k][0] + ' listings arrary length at end: ' + ourcollections[k][1].length)
 
       //for each collection we store a max history. Clear the oldest ones if it's longer than that. 
       if (rebuildarrary.length > maxlength) {
