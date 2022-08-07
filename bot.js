@@ -71,6 +71,13 @@ const pepic = 0.15
 const prare = 0.35
 const puncommon = 0.6
 
+      //set multipliers above floor price at which listings become snipes
+      var mythiclimit = 100
+      var legendarylimit = 50
+      var epiclimit = 10
+      var rarelimit = 5
+
+
 //=================
 //====  Statup  ===
 //=================
@@ -270,12 +277,6 @@ async function testifsnipe(raritydescription, thisprice, floorprice) {
 
     if (hotrarities.includes(raritydescription)) {
 
-      //set multipliers above floor price at which listings become snipes
-      var mythiclimit = 100
-      var legendarylimit = 50
-      var epiclimit = 10
-      var rarelimit = 5
-
       //calculate snipe limits of x*fp
       var mythicsnipe = mythiclimit * floorprice
       var legendarysnipe = legendarylimit * floorprice
@@ -331,7 +332,7 @@ async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisemoji
             },
             {
               "name": "Snipe Price",
-              "value": 'For ' + raritydescription + ': ' + pround(thislimit, 3) + 'x floor price of ' + pround(floorprice,3) + 'SOL (' + pround(thissnipeprice,3) + 'SOL)',
+              "value": 'For ' + raritydescription + ': ' + thislimit + 'x floor price of ' + pround(floorprice,3) + 'SOL (' + pround(thissnipeprice, 3) + 'SOL)',
               "inline": true
             },
             {
