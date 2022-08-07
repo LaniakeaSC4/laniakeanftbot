@@ -117,7 +117,7 @@ async function clearcommands() {
   var serverkeys = Object.keys(servers)
   serverkeys.forEach((key, index) => {
     console.log(servers[key].id)
-  const guild = await client.guilds.fetch(servers[key].id)
+  const guild = client.guilds.fetch(servers[key].id)
   guild.commands.set([])
   })
 }//end function to reset commands
