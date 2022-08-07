@@ -360,6 +360,20 @@ async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisemoji
 }//end sendsnipes function
 
 
+const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+
+const initalisecollections = async () => {
+  for (const seq of sequences) {
+    console.log('seq ' + seq)
+    await getnewremotelistings(ourcollections[seq][0], initialget).then(async thislistings => {
+    ourcollections[seq][1] = thislistings//fill tracked listings with the listings we just got
+    console.log('added initial ' + initialget + ' Listings for ' + ourcollections[seq][0])
+    }) 
+    await wait(2000)
+  }
+}
+
+/*
 async function initalisecollections() {
   for (const seq of sequences) {
     
@@ -374,6 +388,7 @@ async function initalisecollections() {
     
   }
 } 
+*/
 
 //main sniper function
 async function startsniper() {
