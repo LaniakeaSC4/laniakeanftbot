@@ -53,7 +53,8 @@ const servers = {
 const ourcollections = [
   ['monkeypox_nft',[],2400],
   ['crypto_coral_tribe',[],6565],
-  ['okay_bears',[],10000]
+  ['okay_bears',[],10000],
+  ['sphynx_underground_society',[],7777] 
   ]
 
 var sequences = []
