@@ -332,7 +332,7 @@ async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisemoji
             },
             {
               "name": "Snipe Price",
-              "value": 'For ' + raritydescription + ': ' + thislimit + 'x floor price of ' + pround(floorprice,3) + 'SOL (' + pround(thissnipeprice, 3) + 'SOL)',
+              "value": 'For ' + raritydescription + ' NFTs, any price less than ' + thislimit + 'x the floor price of ' + pround(floorprice,3) + 'SOL is a snipe (i.e. less than ' + thissnipeprice + 'SOL)',
               "inline": true
             },
             {
