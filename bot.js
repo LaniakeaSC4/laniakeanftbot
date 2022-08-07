@@ -72,10 +72,10 @@ const prare = 0.35
 const puncommon = 0.6
 
       //set multipliers above floor price at which listings become snipes
-      var mythiclimit = 100
-      var legendarylimit = 50
-      var epiclimit = 10
-      var rarelimit = 5
+      var mythiclimit = 50
+      var legendarylimit = 25
+      var epiclimit = 5
+      var rarelimit = 2.5
 
 
 //=================
@@ -342,7 +342,7 @@ async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisemoji
             }, 
             {
               "name": "Snipe Price",
-              "value": 'For ' + raritydescription + ' NFTs, any price less than ' + thislimit + 'x the floor price of ' + pround(floorprice,3) + ' SOL is a snipe (i.e. less than ' + thissnipeprice + ' SOL)',
+              "value": 'For ' + raritydescription + ' NFTs, any price less than ' + thislimit + 'x the floor price of ' + pround(floorprice,3) + ' SOL is a snipe (i.e. less than ' + pround(thissnipeprice, 3) + ' SOL)',
               "inline": true
             } 
           ],
