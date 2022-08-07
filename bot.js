@@ -362,15 +362,20 @@ async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisemoji
 
 async function initalisecollections() {
   await Promise.all(sequences.map(async value => {
-    var thisinterval = 1100
-    await setTimeout(async function (i) {
+    await preloadlisting(value)
+  }))
+} 
+
+async function preloadlisting(value){
+  var thisinterval = 1100
+  await setTimeout(async function (i) {
     await getnewremotelistings(ourcollections[i][0], initialget).then(async thislistings => {
     ourcollections[i][1] = thislistings//fill tracked listings with the listings we just got
     console.log('added initial ' + initialget + ' Listings for ' + ourcollections[i][0])
+    resolve()
     //console.log(listings[0])
   })//end then
     }, thisinterval, value)
-  }))
 } 
 
 //main sniper function
