@@ -4,26 +4,37 @@ const https = require('https')
 
 client.login(process.env.BOTTOKEN)
 
+//==============================
+//==== Rarity checker Setup  ===
+//==============================
+
+const rarityCollections = [
+  ['monkeypox_nft',[],2400],
+  ['pixel_guild_loot_legends',[],8888]
+  ]
+
+var raritySequencer = []
+for (var i = 0;i < rarityCollections.length;i++) {raritySequencer.push(i)}
+
+//old vars
+
 //main collections array
 const collections = []
 
 //import collections
 const mpoxdata = require('./monkeypox_nft.json')
 const pixelguilddata = require('./pixel_guild_loot_legends.json')
-const wanderingnahavidata = require('./wandering_nahavi.json')
+
 
 //add collections to arrary
 collections['monkeypox_nft'] = mpoxdata
 collections['pixel_guild_loot_legends'] = pixelguilddata
-collections['wandering_nahavi'] = wanderingnahavidata
 
-//================
-//====  Setup  ===
-//================
+//======================
+//==== Sniper Setup  ===
+//======================
 
 //channels and servers
-const monkeyserver = '978975057739124767'
-
 const servers = {
   "monkeypox":
   {
@@ -49,21 +60,22 @@ const servers = {
   }
 }
 
-//what are the requirements? Moonrank data on ME? Anything else? 
-const ourcollections = [
+//Collections the sniper bot will watch. Must be on moonrank.app
+const sniperCollections = [
   ['monkeypox_nft',[],2400],
   ['crypto_coral_tribe',[],6565],
   ['yeah_tigers',[],10000],
   ['sphynx_underground_society',[],7777] 
   ]
 
-var sequences = []
-for (var i = 0;i < ourcollections.length;i++) {sequences.push(i)}
+//build array of [0,1,2,etc] for each collection we have. These integers can be used to key access to sniperCollections arrary to loop other functions through all supported collections
+var sniperSequencer = []
+for (var i = 0;i < sniperCollections.length;i++) {sniperSequencer.push(i)}
 
-var initialget = 20//how many will we get initially (max 20)
-  var refreshget = 10//how many will we get on each check (max 20) - should be less then initial get or extras will count as new
-  var maxlength = 50//how many records will we keep
-  var minutes = 1, the_interval = minutes * 60 * 1000//refresh interval 
+var initialget = 20//how many listings will sniper get initially (max 20)
+var refreshget = 10//how many will sniper get on each check (max 20) - should be less then initial get or extras will count as new
+var maxlength = 50//how many records history will we keep for each collection
+var minutes = 1, the_interval = minutes * 60 * 1000//refresh interval for sniper bot
 
 //set rarity threshold percentages
 const pmythic = 0.01
@@ -72,12 +84,17 @@ const pepic = 0.15
 const prare = 0.35
 const puncommon = 0.6
 
-      //set multipliers above floor price at which listings become snipes
-      var mythiclimit = 50
-      var legendarylimit = 25
-      var epiclimit = 5
-      var rarelimit = 2.5
-
+//set multipliers above floor price at which listings become snipes
+var mythiclimit = 50
+var legendarylimit = 25
+var epiclimit = 5
+var rarelimit = 2.5
+ 
+//start sniper bot
+client.on('ready', async () => {
+initaliseSniperCollections() 
+startsniper()
+})//end client.on Ready
 
 //=================
 //====  Statup  ===
@@ -88,47 +105,27 @@ client.on('ready', () => {
 
   console.log('I am ready!')
 
-  //endable to reset commands
+  //enable to reset commands
   //clearcommands()
 
 });//end client.on Readys
 
 //function to reset slash commands
 async function clearcommands() {
-  const guild = await client.guilds.fetch(monkeyserver)
-  guild.commands.set([]);
+  var serverkeys = Object.keys(servers)
+  serverkeys.forEach((key, index) => {
+    console.log(servers[key].id)
+  const guild = await client.guilds.fetch(servers[key].id)
+  guild.commands.set([])
+  })
 }//end function to reset commands
-
-//==========================
-//====  ME new listings  ===
-//==========================
-
-//check ME API for new listings test
-client.on('ready', async () => {
-
-/*
-  //get some listings on startup
-  for (var i = 0;i < ourcollections.length;i++){
-  await getnewremotelistings(ourcollections[i][0], initialget).then(async thislistings => {
-    ourcollections[i][1] = thislistings//fill tracked listings with the listings we just got
-    console.log('added initial ' + initialget + ' Listings for ' + ourcollections[i][0])
-    //console.log(listings[0])
-  })//end then
-  }//end for 
-*/
-
-initalisecollections() 
-
-startsniper()
-
-})//end client.on Ready
 
 //===================================
 //====  Functions for sniper bot  ===
 //===================================
 
 //returns x number of recent listings from Magic Eden
-function getnewremotelistings(collection, number) {
+function getnewremoteMElistings(collection, number) {
   return new Promise((resolve, reject) => {
     var thiscollection = 'https://api-mainnet.magiceden.dev/v2/collections/' + collection + '/listings?offset=0&limit=' + number//build collection URL
 
@@ -146,7 +143,7 @@ function getnewremotelistings(collection, number) {
       })
     }).on("error", (err) => { console.log("Error: " + err.message) })
   }) //end promise
-}//end getnewremotelistings function
+}//end getnewremoteMElistings function
 
 //returns token details from Magic Eden
 async function getremotetokendetails(mintaddress) {
@@ -360,41 +357,41 @@ async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisemoji
   }) //end promise
 }//end sendsnipes function
 
-const initalisecollections = async () => {
-  for (const seq of sequences) {//for each collection
+const initaliseSniperCollections = async () => {
+  for (const seq of sniperSequencer) {//for each collection
   //get initial set of listings and store them in the local history arrary for that collection
-    await getnewremotelistings(ourcollections[seq][0], initialget).then(async thislistings => {
-    ourcollections[seq][1] = thislistings//fill tracked listings with the listings we just got
-    console.log('added initial ' + initialget + ' Listings for ' + ourcollections[seq][0])
+    await getnewremoteMElistings(sniperCollections[seq][0], initialget).then(async thislistings => {
+    sniperCollections[seq][1] = thislistings//fill tracked listings with the listings we just got
+    console.log('added initial ' + initialget + ' Listings for ' + sniperCollections[seq][0])
     }) 
-    await wait(2000)
-  }
-}
+    await wait(2000)//add delay between API requests
+  }//for seq of sniperSequencer
+}//end initaliseSniperCollections
 
 //main sniper function
 async function startsniper() {
   
-  await Promise.all(sequences.map(async value => {
+  await Promise.all(sniperSequencer.map(async value => {
     var thisinterval = the_interval + (value*1100)//interval for each collection is 1.1 seconds longer to avoid more than 2 ME API requests per second
     console.log('Initialising loop for collection: ' + value + '. Setting interval to: ' + thisinterval)
 
   await setInterval(async function (k) {//do this every X minutes
 
-    await getnewremotelistings(ourcollections[k][0], refreshget).then(async thislistings => {//get latest X listings from Magic Eden
+    await getnewremoteMElistings(sniperCollections[k][0], refreshget).then(async thislistings => {//get latest X listings from Magic Eden
 
-      console.log("I am doing my " + minutes + " minute check for " + ourcollections[k][0] + '. I have this many in my history at start: ' + ourcollections[k][1].length)
+      console.log("I am doing my " + minutes + " minute check for " + sniperCollections[k][0] + '. I have this many in my history at start: ' + sniperCollections[k][1].length)
 
-      var rebuildarrary = ourcollections[k][1]//save all the acquired listings in a temporary arrary
+      var rebuildarrary = sniperCollections[k][1]//save all the acquired listings in a temporary arrary
 
-      for (var i = 0; i < thislistings.length; i++) {//for all listings recieved from getnewremotelistingsfunction
+      for (var i = 0; i < thislistings.length; i++) {//for all listings recieved from getnewremoteMElistingsfunction
 
-        if (ourcollections[k][1].some(e => (e.tokenAddress === thislistings[i].tokenAddress && e.price === thislistings[i].price))) {
+        if (sniperCollections[k][1].some(e => (e.tokenAddress === thislistings[i].tokenAddress && e.price === thislistings[i].price))) {
           //actions if token address and price match (i.e. we've seen this one before)
           //console.log('matched ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
 
         } else {
           //actions if token address or price does not match one we have seen before
-          console.log('New/updated ' + ourcollections[k][0] + ' entry ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
+          console.log('New/updated ' + sniperCollections[k][0] + ' entry ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
           rebuildarrary.unshift(thislistings[i])//add the new entry to the start of the rebuild arrary so we can remember this one if we see it later
           
           console.log(thislistings[i])
@@ -436,15 +433,15 @@ async function startsniper() {
               }//end for
 
               //get rarity
-              for (var i = 0; i < ourcollections[k][1].length; i++) {
+              for (var i = 0; i < sniperCollections[k][1].length; i++) {
 
-                if (thistoken.mintAddress == ourcollections[k][1][i].tokenMint) {
-                  thisrarity = ourcollections[k][1][i].rarity.moonrank.rank//end moonrank data from ME
+                if (thistoken.mintAddress == sniperCollections[k][1][i].tokenMint) {
+                  thisrarity = sniperCollections[k][1][i].rarity.moonrank.rank//end moonrank data from ME
                   break
                 }
               }
 
-              return calculateranges(ourcollections[k][2])
+              return calculateranges(sniperCollections[k][2])
 
             })//end .then
             .then((ranges) => {
@@ -464,7 +461,7 @@ async function startsniper() {
 
               thisraritydescription = raritydescription//store outside subsection so we can access it
 
-              return getremotefloorprice(ourcollections[k][0])
+              return getremotefloorprice(sniperCollections[k][0])
             })//end .then
             .then((floorprice) => {
 
@@ -480,7 +477,7 @@ async function startsniper() {
               thislimit = snipe[2]
 
               if (thissnipe != "false") {
-                console.log('we have a ' + ourcollections[k][0] + ' snipe!')
+                console.log('we have a ' + sniperCollections[k][0] + ' snipe!')
                 return getembedcolour(thisraritydescription)
               }
             })//end .then
@@ -527,7 +524,7 @@ async function startsniper() {
         }//end for number to remove
       }//end if rebuildarrary is longer than max length
 
-      ourcollections[k][1] = rebuildarrary//overwrite main listings arrary with the temp rebuild one
+      sniperCollections[k][1] = rebuildarrary//overwrite main listings arrary with the temp rebuild one
 
     })//end then after getting 
 
@@ -543,6 +540,40 @@ async function startsniper() {
 const pround = (number, decimalPlaces) => Number(Math.round(Number(number + "e" + decimalPlaces)) + "e" + decimalPlaces * -1)
 
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+
+//get complete howrare.is dataset
+function getRemoteHowRareData(collection) {
+  return new Promise((resolve, reject) => {
+    var thiscollection = 'https://api.howrare.is/v0.1/collections/' + collection//build collection URL
+
+    https.get(thiscollection, (resp) => {
+      let data = ''
+      // A chunk of data has been received.
+      resp.on('data', (chunk) => {
+        data += chunk
+      })
+
+      // The whole response has been received.
+      resp.on('end', () => {
+        var thiscollection = JSON.parse(data)
+        resolve(thiscollection)//return the recieved X listings
+      })
+    }).on("error", (err) => { console.log("Error: " + err.message) })
+  }) //end promise
+}//end getremoteHowRareData function
+
+const initaliseRarityCollections = async () => {
+  for (const seq of raritySequencer) { //for each collection
+    //get initial set of listings and store them in the local history arrary for that collection
+    await getRemoteHowRareData(rarityCollections[seq][0]).then(async thisdata => {
+      rarityCollections[seq][1] = thisdata //fill tracked listings with the listings we just got
+      console.log('loaded Howrare.is data for ' + sniperCollections[seq][0])
+    })
+    await wait(3000)//add delay between API requests
+  }//end for each seq of raritySequencer
+}//end initaliseRarityCollections
+
+//older functions
 
 //get ranges for this collection (from local data)
 function getlocalranges(collection) {
@@ -770,7 +801,6 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 client.on('ready', () => {
   var serverkeys = Object.keys(servers)
   serverkeys.forEach((key, index) => {
-    console.log(servers[key].id);
     client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
       data: {
         "name": "checkrarity",
