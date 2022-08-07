@@ -104,6 +104,8 @@ startsniper()
 client.on('ready', () => {
 
   console.log('I am ready!')
+  
+  initaliseRarityCollections()
 
   //enable to reset commands
   //clearcommands()
