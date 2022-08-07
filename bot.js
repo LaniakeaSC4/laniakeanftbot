@@ -372,7 +372,6 @@ async function preloadlisting(value){
     await getnewremotelistings(ourcollections[i][0], initialget).then(async thislistings => {
     ourcollections[i][1] = thislistings//fill tracked listings with the listings we just got
     console.log('added initial ' + initialget + ' Listings for ' + ourcollections[i][0])
-    resolve()
     //console.log(listings[0])
   })//end then
     }, thisinterval, value)
