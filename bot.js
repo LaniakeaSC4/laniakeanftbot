@@ -263,7 +263,7 @@ async function getremotefloorprice(collection) {
 //returns rarity description (i.e. "Mythic" if its a snipe, else returns 'false') also returns 
 async function testifsnipe(raritydescription, thisprice, floorprice) {
   return new Promise((resolve, reject) => {
-    console.log('testing for snipe with ' + raritydescription + thisprice + floorprice)
+    console.log('testing for snipe with an ' + raritydescription + ' at a list price of ' + thisprice + ' and the floor price is' + floorprice)
 
     //make calculation of if this is a snipe using rarity, floor price and nft price
     var hotrarities = ['Mythic', 'Legendary', 'Epic', 'Rare']
@@ -331,17 +331,17 @@ async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisemoji
             },
             {
               "name": "Snipe Price",
-              "value": 'For ' + raritydescription + ': ' + thislimit + 'x floor price of ' + floorprice + 'SOL (' + thissnipeprice + 'SOL)',
+              "value": 'For ' + raritydescription + ': ' + pround(thislimit, 3) + 'x floor price of ' + pround(floorprice,3) + 'SOL (' + pround(thissnipeprice,3) + 'SOL)',
               "inline": true
             },
             {
               "name": "List Price",
-              "value": thisprice + ' SOL',
+              "value": pround(thisprice, 3) + ' SOL',
               "inline": true
             },
             {
               "name": "Floor Price",
-              "value": floorprice + ' SOL',
+              "value": pround(floorprice, 3) + ' SOL',
               "inline": true
             }
           ],
@@ -359,12 +359,9 @@ async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisemoji
   }) //end promise
 }//end sendsnipes function
 
-
-const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
-
 const initalisecollections = async () => {
-  for (const seq of sequences) {
-    console.log('seq ' + seq)
+  for (const seq of sequences) {//for each collection
+  //get initial set of listings and store them in the local history arrary for that collection
     await getnewremotelistings(ourcollections[seq][0], initialget).then(async thislistings => {
     ourcollections[seq][1] = thislistings//fill tracked listings with the listings we just got
     console.log('added initial ' + initialget + ' Listings for ' + ourcollections[seq][0])
@@ -372,23 +369,6 @@ const initalisecollections = async () => {
     await wait(2000)
   }
 }
-
-/*
-async function initalisecollections() {
-  for (const seq of sequences) {
-    
-    var thisinterval = 1100
-  await setTimeout(async function (i) {
-    await getnewremotelistings(ourcollections[i][0], initialget).then(async thislistings => {
-    ourcollections[i][1] = thislistings//fill tracked listings with the listings we just got
-    console.log('added initial ' + initialget + ' Listings for ' + ourcollections[i][0])
-    //console.log(listings[0])
-  })//end then
-    }, thisinterval, seq)
-    
-  }
-} 
-*/
 
 //main sniper function
 async function startsniper() {
@@ -419,7 +399,7 @@ async function startsniper() {
 
           //set price of this lisitng
           var thistoken = {}
-          var thisprice = thislistings[i].price
+          var thisprice = pround(thislistings[i].price, 6)
           var thisname = ''
           var thisnftid = ''
           var thisrarity = ''
@@ -487,7 +467,7 @@ console.log('epicstart is:' + epicstart)
             })//end .then
             .then((floorprice) => {
 
-              thisfloorprice = floorprice//store outside subsection so we can access it
+              thisfloorprice = pround(floorprice, 6)//store outside subsection so we can access it
               console.log('Floor price is: ' + thisfloorprice)
 
               return testifsnipe(thisraritydescription, thisprice, thisfloorprice)
@@ -561,6 +541,10 @@ console.log('epicstart is:' + epicstart)
 //=========================
 //==== Other Functions  ===
 //=========================
+
+const pround = (number, decimalPlaces) => Number(Math.round(Number(number + "e" + decimalPlaces)) + "e" + decimalPlaces * -1)
+
+const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
 //get ranges for this collection (from local data)
 function getlocalranges(collection) {
