@@ -1,3 +1,7 @@
+const { Client, Intents } = require('discord.js')
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES] })
+const https = require('https') 
+
 //postgres test
 //import pg from 'pg'
 var pg = require('pg')
@@ -27,9 +31,6 @@ pgclient.query('SELECT table_schema,table_name FROM information_schema.tables;',
 
 //end postgres test
 
-const { Client, Intents } = require('discord.js')
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES] })
-const https = require('https')
 
 client.login(process.env.BOTTOKEN)
 
