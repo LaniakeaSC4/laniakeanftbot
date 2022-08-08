@@ -780,7 +780,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     //new
     for (var i = 0; i < rarityCollections.length; i++) {//loop through collections to find the one this rarity check is for
       if (rarityCollections[i][0] === thiscollection) {
-        await getlocalNFTpoperties(thiscollection, thisnftnumber).then((returnedrarity) => {
+        await getlocalNFTpoperties(thiscollection, thisnftnumber).then(async (returnedrarity) => {
 
           thisrarity = returnedrarity[0]
           thisname = returnedrarity[1]
@@ -788,7 +788,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
           return await calculateranges(rarityCollections[i][2])
         })
-          .then((ranges) => {
+          .then(async (ranges) => {
 
             console.log('ranges is')
             console.log(ranges)
@@ -806,14 +806,14 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
             return await getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity)
           })//end .then
-          .then((raritydescription) => {
+          .then(async (raritydescription) => {
 
             thisraritydescription = raritydescription//store outside subsection so we can access it
             console.log('thisrarity description is; ' + thisraritydescription)
 
             return await getembedcolour(thisraritydescription)
           })
-          .then((embedcolour) => {
+          .then(async (embedcolour) => {
 
             thisembedcolour = parseInt(embedcolour, 16)
 
