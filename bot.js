@@ -805,7 +805,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
             thisembedcolour = embedcolour
 
-            if (raritydescription != 'Not found') {//if NFT number was not found in DB, 'Not found' would be returned. If it was found, proceed
+            if (thisraritydescription != 'Not found') {//if NFT number was not found in DB, 'Not found' would be returned. If it was found, proceed
               client.api.interactions(interaction.id, interaction.token).callback.post({
                 data: {
                   type: 4,
