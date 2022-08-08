@@ -1,7 +1,7 @@
 //postgres test
 const { pgClient } = require('pg');
 
-const pgclient = new pgClient({
+const pgclient = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false
