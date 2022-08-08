@@ -15,7 +15,7 @@ await pgclient.connect()
 await pgclient.query('CREATE TABLE [IF NOT EXISTS] howraredata ( collection_ID TEXT PRIMARY KEY, data JSONB, created_on TIMESTAMP NOT NULL, last_updated TIMESTAMP)', (err, res) => {
   if (err) throw err
   
-  await pgclient.end();
+  pgclient.end();
 });
 })
 
