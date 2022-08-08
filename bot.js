@@ -584,9 +584,9 @@ const initaliseRarityCollections = async () => {
 
 async function getlocalNFTpoperties(thiscollection, nftid) {
   return new Promise((resolve, reject) => {
-    let thisrarity = ''
-    let thisname = ''
-    let thisimage = ''
+    var thisnftrarity = ''
+    var thisnftname = ''
+    var thisnftimage = ''
 
     console.log('testing a getlocalNFTpoperties')
 
@@ -599,12 +599,12 @@ async function getlocalNFTpoperties(thiscollection, nftid) {
 
           if (rarityCollections[i][1].result.data.items[j].id == nftid) {
             console.log('found ' + rarityCollections[i][1].result.data.items[j].name)
-            thisrarity = rarityCollections[i][1].result.data.items[j].all_ranks.statistical_rarity
-            thisname = rarityCollections[i][1].result.data.items[j].name
-            thisimage = rarityCollections[i][1].result.data.items[j].image
+            thisnftrarity = rarityCollections[i][1].result.data.items[j].all_ranks.statistical_rarity
+            thisnftname = rarityCollections[i][1].result.data.items[j].name
+            thisnftimage = rarityCollections[i][1].result.data.items[j].image
             console.log('this rarity is: ' + thisrarity)
+            resolve([thisnftrarity, thisnftname, thisnftimage])
           }//end if
-          resolve([thisrarity, thisname, thisimage])
         }//end for
 
       }
