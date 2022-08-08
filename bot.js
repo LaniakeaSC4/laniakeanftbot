@@ -406,7 +406,7 @@ async function startsniper() {
             var thisraritydescription = ''
             var thisfloorprice = 0
             var thissnipe = ''
-            var thisembedcolour = ''
+            var thisembedcolour = 0
             var thissnipeprice = 0
             var thislimit = 0
             var thisimage = ''
@@ -483,7 +483,7 @@ async function startsniper() {
               })//end .then
               .then((embedcolour) => {
 
-                thisembedcolour = embedcolour//store outside subsection so we can access it
+                thisembedcolour = thisembedcolour = parseInt(embedcolour, 16)//store outside subsection so we can access it
                 var thisserver = ''
                 var thisserverid = ''
                 var thissnipechannel = ''
@@ -798,6 +798,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
           .then((raritydescription) => {
 
             thisraritydescription = raritydescription//store outside subsection so we can access it
+            console.log('thisrarity description is; ' + thisraritydescription)
 
             return getembedcolour(thisraritydescription)
           })
