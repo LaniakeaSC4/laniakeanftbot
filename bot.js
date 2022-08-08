@@ -13,7 +13,7 @@ const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
 const rarityCollections = [
   ['monkeypox_nft', [], 2400],
-  ['pixel_guild_loot_legends', [], 8888]
+  ['pixel_guild_loot_legends', [], 8888],
   ['pokerfaces',[],377]
 ]
 
