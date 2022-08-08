@@ -2,34 +2,24 @@ const { Client, Intents } = require('discord.js')
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES] })
 const https = require('https') 
 
-//postgres test
-//import pg from 'pg'
-var pg = require('pg')
-let pgclient = new pg.Client({
+const pg = require('pg')
+const pgclient = new pg.Client({
   connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
+  ssl: {rejectUnauthorized: false}
 })
 
-/*
-const { Client } = require('pg');
-const pgclient = new Client();
-*/
-
 client.on('ready', async () => {
-pgclient.connect();
 
-pgclient.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
-  if (err) throw err;
-  for (let row of res.rows) {
-    console.log(JSON.stringify(row));
-  }
-  pgclient.end();
+await pgclient.connect()
+
+await pgclient.query('CREATE TABLE [IF NOT EXISTS] howraredata ( collection_ID TEXT PRIMARY KEY, data JSONB, created_on TIMESTAMP NOT NULL, last_updated TIMESTAMP)', (err, res) => {
+  if (err) throw err
+  
+  await pgclient.end();
 });
 })
 
-//end postgres test
+
 
 
 client.login(process.env.BOTTOKEN)
