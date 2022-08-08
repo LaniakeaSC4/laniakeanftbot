@@ -8,6 +8,7 @@ const pgclient = new Client({
   }
 });
 
+client.on('ready', async () => {
 pgclient.connect();
 
 pgclient.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
@@ -17,6 +18,7 @@ pgclient.query('SELECT table_schema,table_name FROM information_schema.tables;',
   }
   pgclient.end();
 });
+})
 
 //end postgres test
 
