@@ -602,7 +602,7 @@ async function getlocalNFTpoperties(thiscollection, nftid) {
             thisnftrarity = rarityCollections[i][1].result.data.items[j].all_ranks.statistical_rarity
             thisnftname = rarityCollections[i][1].result.data.items[j].name
             thisnftimage = rarityCollections[i][1].result.data.items[j].image
-            console.log('this rarity is: ' + thisrarity)
+            console.log('this rarity is: ' + thisnftrarity)
             resolve([thisnftrarity, thisnftname, thisnftimage])
           }//end if
         }//end for
