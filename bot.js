@@ -843,7 +843,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                     embeds: [
                       {
                         "title": 'Token not found in database',
-                        "color": embedcolor,
+                        "color": thisembedcolour,
                         "fields": [
                           {
                             "name": "Rarity",
@@ -878,7 +878,7 @@ client.on('ready', () => {
   var choices = []
   for (var i = 0; i < rarityCollections.length; i++) {
     choices.push({ "name": rarityCollections[i][0], "value": rarityCollections[i][0] })
-  }
+  }//end for
 
   var serverkeys = Object.keys(servers)
   serverkeys.forEach((key, index) => {
