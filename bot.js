@@ -4,6 +4,9 @@ const https = require('https')
 
 client.login(process.env.BOTTOKEN)
 
+const pround = (number, decimalPlaces) => Number(Math.round(Number(number + "e" + decimalPlaces)) + "e" + decimalPlaces * -1)
+const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+
 //==============================
 //==== Rarity checker Setup  ===
 //==============================
@@ -15,20 +18,6 @@ const rarityCollections = [
 
 var raritySequencer = []
 for (var i = 0; i < rarityCollections.length; i++) { raritySequencer.push(i) }
-
-//old vars
-
-//main collections array
-const collections = []
-
-//import collections
-const mpoxdata = require('./monkeypox_nft.json')
-const pixelguilddata = require('./pixel_guild_loot_legends.json')
-
-
-//add collections to arrary
-collections['monkeypox_nft'] = mpoxdata
-collections['pixel_guild_loot_legends'] = pixelguilddata
 
 //======================
 //==== Sniper Setup  ===
@@ -90,29 +79,25 @@ var legendarylimit = 25
 var epiclimit = 5
 var rarelimit = 2.5
 
-//start sniper bot
-client.on('ready', async () => {
-  initaliseSniperCollections()
-  startsniper()
-})//end client.on Ready
-
 //=================
 //====  Statup  ===
 //=================
 
+//start services
+client.on('ready', async () => {
+  initaliseSniperCollections()
+  startsniper()
+  initaliseRarityCollections()
+})//end client.on Ready
+
 //test area
 client.on('ready', () => {
-
   console.log('I am ready!')
-
-  initaliseRarityCollections()
-
   //enable to reset commands
   //clearcommands()
+})//end client.on Readys
 
-});//end client.on Readys
-
-//function to reset slash commands
+//function to reset slash commands (enable if needed)
 async function clearcommands() {
   var serverkeys = Object.keys(servers)
   serverkeys.forEach((key, index) => {
@@ -148,7 +133,7 @@ function getnewremoteMElistings(collection, number) {
 }//end getnewremoteMElistings function
 
 //returns token details from Magic Eden
-async function getremotetokendetails(mintaddress) {
+async function getremoteMEtokendetails(mintaddress) {
   return new Promise((resolve, reject) => {
     var thisurl = 'https://api-mainnet.magiceden.dev/v2/tokens/' + mintaddress//build token URL
 
@@ -166,18 +151,18 @@ async function getremotetokendetails(mintaddress) {
       })
     }).on("error", (err) => { console.log("Error: " + err.message) })
   }) //end promise
-}//end getremotetokendetails function
+}//end getremoteMEtokendetails function
 
 async function calculateranges(collectionsize) {
   return new Promise((resolve, reject) => {
 
     //initialise threshold variables
-    var mythicstart = 0; var mythicend = 0
-    var legendarystart = 0; var legendaryend = 0
-    var epicstart = 0; var epicend = 0
-    var rarestart = 0; var rareend = 0
-    var uncommonstart = 0; var uncommonend = 0
-    var commonend = 0; var commonend = 0
+    let mythicstart = 0; let mythicend = 0
+    let legendarystart = 0; let legendaryend = 0
+    let epicstart = 0; let epicend = 0
+    let rarestart = 0; let rareend = 0
+    let uncommonstart = 0; let uncommonend = 0
+    let commonend = 0; let commonend = 0
 
     //mythic range (start of range is 1)
     mythicstart = 1;
@@ -214,10 +199,6 @@ async function calculateranges(collectionsize) {
 
 //takes the ranges for this collection and returns string of its rarity description
 async function getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity) {
-
-  console.log('mythicstart: ') + mythicstart
-  console.log('epic end: ' + epicend)
-  console.log('this rarity: ' + thisrarity)
 
   //if mythic
   if (thisrarity >= mythicstart && thisrarity <= mythicend) {
@@ -280,7 +261,6 @@ async function testifsnipe(raritydescription, thisprice, floorprice) {
     var hotrarities = ['Mythic', 'Legendary', 'Epic', 'Rare']
 
     if (hotrarities.includes(raritydescription)) {
-
       //calculate snipe limits of x*fp
       var mythicsnipe = mythiclimit * floorprice
       var legendarysnipe = legendarylimit * floorprice
@@ -289,16 +269,12 @@ async function testifsnipe(raritydescription, thisprice, floorprice) {
 
       if ((raritydescription === 'Mythic') && (thisprice <= mythicsnipe)) {
         resolve([raritydescription, mythicsnipe, mythiclimit])
-
       } else if ((raritydescription === 'Legendary') && (thisprice <= legendarysnipe)) {
         resolve([raritydescription, legendarysnipe, legendarylimit])
-
       } else if ((raritydescription === 'Epic') && (thisprice <= epicsnipe)) {
         resolve([raritydescription, epicsnipe, epiclimit])
-
       } else if ((raritydescription === 'Rare') && (thisprice <= raresnipe)) {
         resolve([raritydescription, raresnipe, rarelimit])
-
       } else {
         resolve('false')
       }
@@ -370,22 +346,19 @@ const initaliseSniperCollections = async () => {
     await getnewremoteMElistings(sniperCollections[seq][0], initialget).then(async thislistings => {
       sniperCollections[seq][1] = thislistings//fill tracked listings with the listings we just got
       console.log('added initial ' + initialget + ' Listings for ' + sniperCollections[seq][0])
-    })
+    })//end then
     await wait(2000)//add delay between API requests
   }//for seq of sniperSequencer
 }//end initaliseSniperCollections
 
 //main sniper function
 async function startsniper() {
-
-  await Promise.all(sniperSequencer.map(async value => {
+  await Promise.all(sniperSequencer.map(async value => {//this was added to make sure to sequentially initiate the sniper loops. Not sure its working as intended, but loops are spread out
     var thisinterval = the_interval + (value * 1100)//interval for each collection is 1.1 seconds longer to avoid more than 2 ME API requests per second
     console.log('Initialising recheckloop for collection: ' + value + '. Setting interval for this collection to: ' + thisinterval)
 
     await setInterval(async function (k) {//do this every X minutes
-
       await getnewremoteMElistings(sniperCollections[k][0], refreshget).then(async thislistings => {//get latest X listings from Magic Eden
-
         console.log("I am doing my " + minutes + " minute check for " + sniperCollections[k][0] + '. I have this many in my history at start: ' + sniperCollections[k][1].length)
 
         var rebuildarrary = sniperCollections[k][1]//save all the acquired listings in a temporary arrary
@@ -394,7 +367,6 @@ async function startsniper() {
 
           if (sniperCollections[k][1].some(e => (e.tokenAddress === thislistings[i].tokenAddress && e.price === thislistings[i].price))) {
             //actions if token address and price match (i.e. we've seen this one before)
-
           } else {
             //actions if token address or price does not match one we have seen before
             console.log('New/updated ' + sniperCollections[k][0] + ' entry ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
@@ -416,7 +388,7 @@ async function startsniper() {
             var thisimage = ''
             var thislistinglink = ''
 
-            getremotetokendetails(thislistings[i].tokenMint)
+            getremoteMEtokendetails(thislistings[i].tokenMint)
               .then((recievedtoken) => {
 
                 thistoken = recievedtoken
@@ -429,24 +401,20 @@ async function startsniper() {
                 for (var i = 0; i < namearr.length; i++) {
                   let checkthis = namearr[i]
                   if (checkthis.includes('#')) {
-
                     var nlength = checkthis.length
                     thisnftid = checkthis.substring(1, nlength)
-
                   }//end if
                 }//end for
 
                 //get rarity
                 for (var i = 0; i < sniperCollections[k][1].length; i++) {
-
                   if (thistoken.mintAddress == sniperCollections[k][1][i].tokenMint) {
                     thisrarity = sniperCollections[k][1][i].rarity.moonrank.rank//end moonrank data from ME
                     break
-                  }
-                }
+                  }//end if
+                }//end for
 
                 return calculateranges(sniperCollections[k][2])
-
               })//end .then
               .then((ranges) => {
 
@@ -462,19 +430,14 @@ async function startsniper() {
                 return getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity)
               })//end .then
               .then((raritydescription) => {
-
                 thisraritydescription = raritydescription//store outside subsection so we can access it
-
                 return getremotefloorprice(sniperCollections[k][0])
               })//end .then
               .then((floorprice) => {
-
                 thisfloorprice = pround(floorprice, 6)//store outside subsection so we can access it
-
                 return testifsnipe(thisraritydescription, thisprice, thisfloorprice)
               })//end .then
               .then((snipe) => {
-
                 //store outside subsection so we can access it
                 thissnipe = snipe[0]
                 thissnipeprice = snipe[1]
@@ -483,7 +446,7 @@ async function startsniper() {
                 if (thissnipe != "false") {
                   console.log('we have a ' + sniperCollections[k][0] + ' snipe!')
                   return getembedcolour(thisraritydescription)
-                }
+                }//end if not false
               })//end .then
               .then((embedcolour) => {
 
@@ -513,9 +476,7 @@ async function startsniper() {
                   })//end for each server
                 }//end if this is a snipe
               })//end .then
-
           }//end else for a token we havnt seen before
-
         }//end for loop of each listing recieved
 
         //for each collection we store a max history. Clear the oldest ones if it's longer than that. 
@@ -531,19 +492,15 @@ async function startsniper() {
         sniperCollections[k][1] = rebuildarrary//overwrite main listings arrary with the temp rebuild one
 
       })//end then after getting 
-
     }, thisinterval, value)//end recheck listing loop
-  })
-  )
+  })//end snipersequencer values
+  )//end promise.all
 }//end startsniper
 
 //=========================
-//==== Other Functions  ===
+//====  Rarity checker  ===
+//====    Functions     ===
 //=========================
-
-const pround = (number, decimalPlaces) => Number(Math.round(Number(number + "e" + decimalPlaces)) + "e" + decimalPlaces * -1)
-
-const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
 //get complete howrare.is dataset
 function getRemoteHowRareData(collection) {
@@ -556,7 +513,6 @@ function getRemoteHowRareData(collection) {
       resp.on('data', (chunk) => {
         data += chunk
       })
-
       // The whole response has been received.
       resp.on('end', () => {
         var thiscollection = JSON.parse(data)
@@ -573,47 +529,70 @@ const initaliseRarityCollections = async () => {
     await getRemoteHowRareData(rarityCollections[seq][0]).then(async thisdata => {
       rarityCollections[seq][1] = thisdata //fill tracked listings with the listings we just got
       console.log('loaded Howrare.is data for ' + rarityCollections[seq][0])
-    })
+    })//end then
     await wait(4000)//add delay between API requests
   }//end for each seq of raritySequencer
 }//end initaliseRarityCollections
-
-//=========================
-//====  Rarity checker  ===
-//=========================
 
 async function getlocalNFTpoperties(thiscollection, nftid) {
   return new Promise((resolve, reject) => {
     var thisnftrarity = ''
     var thisnftname = ''
     var thisnftimage = ''
-
-    console.log('testing a getlocalNFTpoperties')
-
     for (var i = 0; i < rarityCollections.length; i++) {//loop through collections to find the one this rarity check is for
       if (rarityCollections[i][0] === thiscollection) {
-
-        console.log('this collections lenght is: ' + rarityCollections[i][1].result.data.items.length)
-
         for (var j = 0; j < rarityCollections[i][1].result.data.items.length; j++) {
-
           if (rarityCollections[i][1].result.data.items[j].id == nftid) {
-            console.log('found ' + rarityCollections[i][1].result.data.items[j].name)
             thisnftrarity = rarityCollections[i][1].result.data.items[j].all_ranks.statistical_rarity
             thisnftname = rarityCollections[i][1].result.data.items[j].name
             thisnftimage = rarityCollections[i][1].result.data.items[j].image
-            console.log('this rarity is: ' + thisnftrarity)
             resolve([thisnftrarity, thisnftname, thisnftimage])
           }//end if
         }//end for
-
-      }
-    }
-
-    //loop through NFTs in collection looking for NFT ID. If found set thisrarity to statistical rarity
-
+      }//end if we found the right collection
+    }//end for loop of collections
   })//end promise
 }//end function
+
+//=========================
+//====  Rarity checker  ===
+//====  Slash commands  ===
+//=========================
+
+//setup discord slash command
+client.on('ready', () => {
+
+  //add supported collections from rarityCollections to the slash command
+  var choices = []
+  for (var i = 0; i < rarityCollections.length; i++) {
+    choices.push({ "name": rarityCollections[i][0], "value": rarityCollections[i][0] })
+  }//end for
+
+  var serverkeys = Object.keys(servers)
+  serverkeys.forEach((key, index) => {
+    client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
+      data: {
+        "name": "checkrarity",
+        "description": "Check the rarity of an NFT in a collection we support",
+        "options": [
+          {
+            "type": 3,
+            "name": "collection",
+            "description": "Please select a collection",
+            "choices": choices,
+            "required": true
+          },
+          {
+            "type": 3,
+            "name": "nftnumber",
+            "description": "Enter the # of the NFT to check in selected collection",
+            "required": true
+          }
+        ]
+      }//end data
+    });//end post
+  })//end for each server loop
+});//end client on ready
 
 //respond to slash command
 client.ws.on('INTERACTION_CREATE', async interaction => {
@@ -624,23 +603,15 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
     var thiscollection = args[0].value
     var thisnftnumber = args[1].value
-
     var thisrarity = ""
     var thisraritydescription = ""
     var thisembedcolour = 0
     var thisname = ""
     var thisimage = ""
 
-    //new
     for (var i = 0; i < rarityCollections.length; i++) {//loop through collections to find the one this rarity check is for
       if (rarityCollections[i][0] === thiscollection) {
         await getlocalNFTpoperties(thiscollection, thisnftnumber).then((returnedrarity) => {
-
-          console.log('returned rarity is')
-          console.log(returnedrarity)
-          console.log(returnedrarity[0])
-          console.log(returnedrarity[1])
-          console.log(returnedrarity[2])
 
           thisrarity = returnedrarity[0]
           thisname = returnedrarity[1]
@@ -650,9 +621,6 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         })
           .then((ranges) => {
 
-            console.log('ranges is')
-            console.log(ranges)
-
             let mythicstart = ranges[0]; let mythicend = ranges[1]
             let legendarystart = ranges[2]; let legendaryend = ranges[3]
             let epicstart = ranges[4]; let epicend = ranges[5]
@@ -660,17 +628,10 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             let uncommonstart = ranges[8]; let uncommonend = ranges[9]
             let commonstart = ranges[10]; let commonend = ranges[11]
 
-            console.log('pre check mythic start: ' + mythicstart)
-            console.log('precheck epic end: ' + epicend)
-            console.log('precheck thisrarity: ' + thisrarity)
-
             return getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity)
           })//end .then
           .then((raritydescription) => {
-
             thisraritydescription = raritydescription//store outside subsection so we can access it
-            console.log('thisrarity description is; ' + thisraritydescription)
-
             return getembedcolour(thisraritydescription)
           })
           .then((embedcolour) => {
@@ -735,45 +696,5 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
           })//end .then embedcolour
       }//end if matched collection
     }//end loop through rarityCollections.length
-
   }//end if command = rarity
 })//end response to slash command
-
-//==============================
-//====  Setup slash command  ===
-//==============================
-
-//setup discord slash command
-client.on('ready', () => {
-
-  //add supported collections from rarityCollections to the slash command
-  var choices = []
-  for (var i = 0; i < rarityCollections.length; i++) {
-    choices.push({ "name": rarityCollections[i][0], "value": rarityCollections[i][0] })
-  }//end for
-
-  var serverkeys = Object.keys(servers)
-  serverkeys.forEach((key, index) => {
-    client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
-      data: {
-        "name": "checkrarity",
-        "description": "Check the rarity of an NFT in a collection we support",
-        "options": [
-          {
-            "type": 3,
-            "name": "collection",
-            "description": "Please select a collection",
-            "choices": choices,
-            "required": true
-          },
-          {
-            "type": 3,
-            "name": "nftnumber",
-            "description": "Enter the # of the NFT to check in selected collection",
-            "required": true
-          }
-        ]
-      }//end data
-    });//end post
-  })//end for each server loop
-});//end client on ready
