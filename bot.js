@@ -769,7 +769,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
     var thisrarity = ""
     var thisraritydescription = ""
-    var thisembedcolour = ""
+    var thisembedcolour = 0
     var thisname = ""
     var thisimage = ""
 
