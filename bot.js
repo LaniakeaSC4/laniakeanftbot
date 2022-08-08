@@ -108,7 +108,7 @@ client.on('ready', () => {
   initaliseRarityCollections()
 
   //enable to reset commands
-  clearcommands()
+  //clearcommands()
 
 });//end client.on Readys
 
@@ -724,20 +724,36 @@ function checklocalrarity(nftnumber, collection) {
 //====  Rarity checker  ===
 //=========================
 
-async function getlocalNFTpoperties(collection, nftid) {
+async function getlocalNFTpoperties(thiscollection, nftid) {
   return new Promise((resolve, reject) => {
-    //loop through NFTs in collection looking for NFT ID. If found set thisrarity to statistical rarity
-    for (var i = 0; i < collections[collection].result.data.items.length; i++) {
+    var thisrarity = ''
+    var thisname = ''
+    var thisimage = ''
 
-      if (collections[collection].result.data.items[i].id == nftnumber) {
-        //console.log('found ' + collections[collection].result.data.items[i].name)
-        thisrarity = collections[collection].result.data.items[i].all_ranks.statistical_rarity
-        thisname = collections[collection].result.data.items[i].name
-        thisimage = collections[collection].result.data.items[i].image
-        //console.log('this rarity is: ' + thisrarity)
-      }//end if
-      resolve([thisrarity, thisname, thisimage])
-    }//end for
+    console.log('testing a getlocalNFTpoperties')
+
+    for (var i = 0; i < rarityCollections.length; i++) {//loop through collections to find the one this rarity check is for
+      if (rarityCollections[i][0] === thiscollection) {
+
+        console.log('this collections lenght is: ' + rarityCollections[i][1].result.data.items.length)
+
+        for (var j = 0; j < rarityCollections[i][1].result.data.items.length; j++) {
+
+          if (rarityCollections[i][1].result.data.items[j].id == nftid) {
+            console.log('found ' + rarityCollections[i][1].result.data.items[j].name)
+            thisrarity = rarityCollections[i][1].result.data.items[j].all_ranks.statistical_rarity
+            thisname = rarityCollections[i][1].result.data.items[j].name
+            thisimage = rarityCollections[i][1].result.data.items[j].image
+            console.log('this rarity is: ' + thisrarity)
+          }//end if
+          resolve([thisrarity, thisname, thisimage])
+        }//end for
+
+      }
+    }
+
+    //loop through NFTs in collection looking for NFT ID. If found set thisrarity to statistical rarity
+
   })//end promise
 }//end function
 
@@ -858,11 +874,11 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 //setup discord slash command
 client.on('ready', () => {
 
+  //add supported collections from rarityCollections to the slash command
   var choices = []
   for (var i = 0; i < rarityCollections.length; i++) {
-    choices.push({"name" : rarityCollections[i][0], "value" : rarityCollections[i][0]})
+    choices.push({ "name": rarityCollections[i][0], "value": rarityCollections[i][0] })
   }
-
 
   var serverkeys = Object.keys(servers)
   serverkeys.forEach((key, index) => {
