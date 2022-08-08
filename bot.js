@@ -1,5 +1,5 @@
 //postgres test
-import pg from 'pg'
+//import pg from 'pg'
 let pgclient = new pg.Client({
   connectionString: process.env.DATABASE_URL,
   ssl: {
