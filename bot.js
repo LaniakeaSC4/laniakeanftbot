@@ -786,7 +786,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
           thisname = returnedrarity[1]
           thisimage = returnedrarity[2]
 
-          return calculateranges(rarityCollections[i][2])
+          return await calculateranges(rarityCollections[i][2])
         })
           .then((ranges) => {
 
@@ -804,14 +804,14 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             console.log('precheck epic end: ' + epicend)
             console.log('precheck thisrarity: ' + thisrarity)
 
-            return getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity)
+            return await getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity)
           })//end .then
           .then((raritydescription) => {
 
             thisraritydescription = raritydescription//store outside subsection so we can access it
             console.log('thisrarity description is; ' + thisraritydescription)
 
-            return getembedcolour(thisraritydescription)
+            return await getembedcolour(thisraritydescription)
           })
           .then((embedcolour) => {
 
