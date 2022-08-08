@@ -449,9 +449,6 @@ async function startsniper() {
 
               })//end .then
               .then((ranges) => {
-
-                console.log('ranges is')
-                console.log(ranges)
                 
                 var mythicstart = ranges[0]; var mythicend = ranges[1]
                 var legendarystart = ranges[2]; var legendaryend = ranges[3]
@@ -792,6 +789,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
           return calculateranges(rarityCollections[i][2])
         })
           .then((ranges) => {
+
+            console.log('ranges is')
+            console.log(ranges)
 
             var mythicstart = ranges[0]; var mythicend = ranges[1]
             var legendarystart = ranges[2]; var legendaryend = ranges[3]
