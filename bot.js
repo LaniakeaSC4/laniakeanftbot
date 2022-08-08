@@ -1,12 +1,16 @@
 //postgres test
-const { pgClient } = require('pg');
-
-const pgclient = new Client({
+import pg from 'pg'
+let pgclient = new pg.Client({
   connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false
   }
-});
+})
+
+/*
+const { Client } = require('pg');
+const pgclient = new Client();
+*/
 
 client.on('ready', async () => {
 pgclient.connect();
