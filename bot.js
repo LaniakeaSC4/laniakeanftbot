@@ -1,5 +1,6 @@
 //postgres test
 //import pg from 'pg'
+var pg = require('pg')
 let pgclient = new pg.Client({
   connectionString: process.env.DATABASE_URL,
   ssl: {
