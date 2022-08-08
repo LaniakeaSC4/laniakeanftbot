@@ -60,17 +60,6 @@ const servers = {
   }
 }
 
-var coolness = { "Philip": { "iscool": false, "allowedbeer": false }, "Andrew": { "iscool": true, "allowedbeer": false } }
-
-var people = Object.keys(coolness)
-people.forEach((key, index) => {
-
-  if (coolness[key] === true) {
-    coolness[key].allowedbeer = true
-  }
-
-})
-
 //Collections the sniper bot will watch. Must be on moonrank.app
 const sniperCollections = [
   ['monkeypox_nft', [], 2400],
@@ -128,7 +117,7 @@ async function clearcommands() {
   var serverkeys = Object.keys(servers)
   serverkeys.forEach((key, index) => {
     console.log(servers[key].id)
-    const guild = client.guilds.fetch(servers[key].id)
+    const guild = client.guilds.cache.get(servers[key].id)
     guild.commands.set([])
   })
 }//end function to reset commands
