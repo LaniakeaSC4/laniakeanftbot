@@ -450,12 +450,12 @@ async function startsniper() {
               })//end .then
               .then((ranges) => {
                 
-                var mythicstart = ranges[0]; var mythicend = ranges[1]
-                var legendarystart = ranges[2]; var legendaryend = ranges[3]
-                var epicstart = ranges[4]; var epicend = ranges[5]
-                var rarestart = ranges[6]; var rareend = ranges[7]
-                var uncommonstart = ranges[8]; var uncommonend = ranges[9]
-                var commonstart = ranges[10]; var commonend = ranges[11]
+                let mythicstart = ranges[0]; let mythicend = ranges[1]
+                let legendarystart = ranges[2]; let legendaryend = ranges[3]
+                let epicstart = ranges[4]; let epicend = ranges[5]
+                let rarestart = ranges[6]; let rareend = ranges[7]
+                let uncommonstart = ranges[8]; let uncommonend = ranges[9]
+                vletar commonstart = ranges[10]; let commonend = ranges[11]
 
                 thisranges = ranges//store outside subsection so we can access it
 
@@ -578,152 +578,6 @@ const initaliseRarityCollections = async () => {
   }//end for each seq of raritySequencer
 }//end initaliseRarityCollections
 
-//older functions
-
-//get ranges for this collection (from local data)
-function getlocalranges(collection) {
-
-  //initialise threshold variables
-  var mythicstart = 0; var mythicend = 0
-  var legendarystart = 0; var legendaryend = 0
-  var epicstart = 0; var epicend = 0
-  var rarestart = 0; var rareend = 0
-  var uncommonstart = 0; var uncommonend = 0
-  var commonend = 0; var commonend = 0
-
-  //mythic range (start of range is 1)
-  mythicstart = 1;
-  mythicend = Math.floor(collections[collection].result.data.items.length * pmythic)
-
-  //legendary range
-  legendarystart = Math.ceil(collections[collection].result.data.items.length * pmythic)
-  if (legendarystart === mythicend) { legendarystart = legendarystart + 1 }
-  legendaryend = Math.floor(collections[collection].result.data.items.length * plegendary)
-
-  //epic range
-  epicstart = Math.ceil(collections[collection].result.data.items.length * plegendary)
-  if (epicstart === legendaryend) { epicstart = epicstart + 1 }
-  epicend = Math.floor(collections[collection].result.data.items.length * pepic)
-
-  //rare range
-  rarestart = Math.ceil(collections[collection].result.data.items.length * pepic)
-  if (rarestart === epicend) { rarestart = rarestart + 1 }
-  rareend = Math.floor(collections[collection].result.data.items.length * prare)
-
-  //uncommon range
-  uncommonstart = Math.ceil(collections[collection].result.data.items.length * prare)
-  if (uncommonstart === rareend) { Uncommonstart = uncommonstart + 1 }
-  uncommonend = Math.floor(collections[collection].result.data.items.length * puncommon)
-
-  //common range (end of range is same as NFT count)
-  commonstart = Math.ceil(collections[collection].result.data.items.length * puncommon)
-  if (commonstart === uncommonend) { commonstart = commonstart + 1 }
-  commonend = collections[collection].result.data.items.length
-
-  console.log('Mythic: ' + mythicstart + ' - ' + mythicend + '. Legendary: ' + legendarystart + ' - ' + legendaryend + '. Epic: ' + epicstart + ' - ' + epicend + '. Rare: ' + rarestart + ' - ' + rareend + '. Uncommon: ' + uncommonstart + ' - ' + uncommonend + '. Common: ' + commonstart + ' - ' + commonend + '.')
-
-  var returnranges = [collection, mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend]
-
-  return (returnranges)//return arrary
-
-}//end getlocalranges function
-
-//get rarity rank by nft# from local data
-function checklocalrarity(nftnumber, collection) {
-
-  //initalise some variables as strings
-  var raritydescription = ""; var emoji = ""; var embedcolor = ""; var thisrarity = ""; var thisname = ""; var thisimage = ""
-
-  //calculate the ranges for this checklocalrarity test
-  var thisranges = getlocalranges(collection)
-
-  //seperate out ranges returned from function
-  var mythicstart = thisranges[1]; var mythicend = thisranges[2]
-  var legendarystart = thisranges[3]; var legendaryend = thisranges[4]
-  var epicstart = thisranges[5]; var epicend = thisranges[6]
-  var rarestart = thisranges[7]; var rareend = thisranges[8]
-  var uncommonstart = thisranges[9]; var uncommonend = thisranges[10]
-  var commonend = thisranges[11]; var commonend = thisranges[12]
-
-  //loop through NFTs in collection looking for NFT ID. If found set thisrarity to statistical rarity
-  for (var i = 0; i < collections[collection].result.data.items.length; i++) {
-
-    if (collections[collection].result.data.items[i].id == nftnumber) {
-      //console.log('found ' + collections[collection].result.data.items[i].name)
-      thisrarity = collections[collection].result.data.items[i].all_ranks.statistical_rarity
-      thisname = collections[collection].result.data.items[i].name
-      thisimage = collections[collection].result.data.items[i].image
-      //console.log('this rarity is: ' + thisrarity)
-    }//end if
-
-  }//end for
-
-  if (thisrarity != null) {
-
-    //console.log('NFT rarity found in the databse')
-
-    //if mythic
-    if (thisrarity >= mythicstart && thisrarity <= mythicend) {
-      //console.log('mythic!')
-      raritydescription = 'Mythic'
-      emoji = '<:mythic:997639717665386586>'
-      embedcolor = 0xed2839
-    }
-
-    //if Legendary
-    else if (thisrarity >= legendarystart && thisrarity <= legendaryend) {
-      //console.log('legendary!')
-      raritydescription = 'Legendary'
-      emoji = '<:legendary:997639764943585421>'
-      embedcolor = 0xfe8100
-    }
-
-    //if epic
-    else if (thisrarity >= epicstart && thisrarity <= epicend) {
-      //console.log('epic!')
-      raritydescription = 'Epic'
-      emoji = '<:epic:997639797558497421>'
-      embedcolor = 0x9901f6
-    }
-
-    //if rare
-    else if (thisrarity >= rarestart && thisrarity <= rareend) {
-      //console.log('Rare!')
-      raritydescription = 'Rare'
-      emoji = '<:rare:997639830844477471>'
-      embedcolor = 0x19aaeb
-    }
-
-    //if uncommon
-    else if (thisrarity >= uncommonstart && thisrarity <= uncommonend) {
-      //console.log('uncommmon!')
-      raritydescription = 'Uncommon'
-      emoji = '<:uncommon:997639865065799770>'
-      embedcolor = 0x20d48a
-    }
-
-    //if common
-    else if (thisrarity >= commonstart && thisrarity <= commonend) {
-      //console.log('Common')
-      raritydescription = 'Common'
-      emoji = '<:common:997639893306064997>'
-      embedcolor = 0x939394
-    }
-
-    else {//this shouldnt trigger if the key is found and the data is complete
-      console.log('Not found'); raritydescription = 'Not found'; emoji = '<:common:997639893306064997>'; embedcolor = 0x939394
-    }
-
-    //set up array to return
-    var nftproperties = [nftnumber, raritydescription, emoji, embedcolor, thisrarity, thisname, thisimage]
-    return (nftproperties)//return arrary
-
-  } else {//if nftkey was not found in DB
-    var nftproperties = [nftnumber, 'Not found', '<:common:997639893306064997>', 0x3b0202, 'Not Found', 'No Name', '']
-    return (nftproperties)
-  }//end if nft is in object
-}//end checklocalrarity function
-
 //=========================
 //====  Rarity checker  ===
 //=========================
@@ -780,40 +634,40 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     //new
     for (var i = 0; i < rarityCollections.length; i++) {//loop through collections to find the one this rarity check is for
       if (rarityCollections[i][0] === thiscollection) {
-        await getlocalNFTpoperties(thiscollection, thisnftnumber).then(async (returnedrarity) => {
+        await getlocalNFTpoperties(thiscollection, thisnftnumber).then((returnedrarity) => {
 
           thisrarity = returnedrarity[0]
           thisname = returnedrarity[1]
           thisimage = returnedrarity[2]
 
-          return await calculateranges(rarityCollections[i][2])
+          return calculateranges(rarityCollections[i][2])
         })
-          .then(async (ranges) => {
+          .then((ranges) => {
 
             console.log('ranges is')
             console.log(ranges)
 
-            var mythicstart = ranges[0]; var mythicend = ranges[1]
-            var legendarystart = ranges[2]; var legendaryend = ranges[3]
-            var epicstart = ranges[4]; var epicend = ranges[5]
-            var rarestart = ranges[6]; var rareend = ranges[7]
-            var uncommonstart = ranges[8]; var uncommonend = ranges[9]
-            var commonstart = ranges[10]; var commonend = ranges[11]
+            let mythicstart = ranges[0]; let mythicend = ranges[1]
+            let legendarystart = ranges[2]; let legendaryend = ranges[3]
+            let epicstart = ranges[4]; let epicend = ranges[5]
+            let rarestart = ranges[6]; let rareend = ranges[7]
+            let uncommonstart = ranges[8]; let uncommonend = ranges[9]
+            let commonstart = ranges[10]; let commonend = ranges[11]
 
             console.log('pre check mythic start: ' + mythicstart)
             console.log('precheck epic end: ' + epicend)
             console.log('precheck thisrarity: ' + thisrarity)
 
-            return await getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity)
+            return getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity)
           })//end .then
-          .then(async (raritydescription) => {
+          .then((raritydescription) => {
 
             thisraritydescription = raritydescription//store outside subsection so we can access it
             console.log('thisrarity description is; ' + thisraritydescription)
 
-            return await getembedcolour(thisraritydescription)
+            return getembedcolour(thisraritydescription)
           })
-          .then(async (embedcolour) => {
+          .then((embedcolour) => {
 
             thisembedcolour = parseInt(embedcolour, 16)
 
