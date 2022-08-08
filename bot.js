@@ -60,6 +60,17 @@ const servers = {
   }
 }
 
+var coolness = { "Philip": { "iscool": false, "allowedbeer": false }, "Andrew": { "iscool": true, "allowedbeer": false } }
+
+var people = Object.keys(coolness)
+people.forEach((key, index) => {
+
+  if (coolness[key] === true) {
+    coolness[key].allowedbeer = true
+  }
+
+})
+
 //Collections the sniper bot will watch. Must be on moonrank.app
 const sniperCollections = [
   ['monkeypox_nft', [], 2400],
@@ -108,7 +119,7 @@ client.on('ready', () => {
   initaliseRarityCollections()
 
   //enable to reset commands
-  //clearcommands()
+  clearcommands()
 
 });//end client.on Readys
 
@@ -240,7 +251,7 @@ async function getraritydescription(mythicstart, mythicend, legendarystart, lege
     return ('Common')
   }
   else {//this shouldnt trigger if the key is found and the data is complete
-    return ('not ranked')
+    return ('Not found')
   }//end else
 }//end getraritydescription function
 
@@ -707,7 +718,7 @@ function checklocalrarity(nftnumber, collection) {
     }
 
     else {//this shouldnt trigger if the key is found and the data is complete
-      console.log('not ranked'); raritydescription = 'not ranked'; emoji = '<:common:997639893306064997>'; embedcolor = 0x939394
+      console.log('Not found'); raritydescription = 'Not found'; emoji = '<:common:997639893306064997>'; embedcolor = 0x939394
     }
 
     //set up array to return
@@ -724,6 +735,23 @@ function checklocalrarity(nftnumber, collection) {
 //====  Rarity checker  ===
 //=========================
 
+async function getlocalNFTpoperties(collection, nftid) {
+  return new Promise((resolve, reject) => {
+    //loop through NFTs in collection looking for NFT ID. If found set thisrarity to statistical rarity
+    for (var i = 0; i < collections[collection].result.data.items.length; i++) {
+
+      if (collections[collection].result.data.items[i].id == nftnumber) {
+        //console.log('found ' + collections[collection].result.data.items[i].name)
+        thisrarity = collections[collection].result.data.items[i].all_ranks.statistical_rarity
+        thisname = collections[collection].result.data.items[i].name
+        thisimage = collections[collection].result.data.items[i].image
+        //console.log('this rarity is: ' + thisrarity)
+      }//end if
+      resolve([thisrarity, thisname, thisimage])
+    }//end for
+  })//end promise
+}//end function
+
 //respond to slash command
 client.ws.on('INTERACTION_CREATE', async interaction => {
   const command = interaction.data.name.toLowerCase()
@@ -731,66 +759,106 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
   if (command === 'checkrarity') {
 
-    var nftproperties = checklocalrarity(args[1].value, args[0].value)//first argument should be the nft #. Send it to checklocalrarity function. Returns array.
+    var thiscollection = args[0].value
+    var thisnftnumber = args[1].value
 
-    //split up returned array
-    var nftnumber = nftproperties[0]; var raritydescription = nftproperties[1]; var emoji = nftproperties[2]; var embedcolor = nftproperties[3]; var thisrarity = nftproperties[4]; var nftname = nftproperties[5]; var thisimage = nftproperties[6];
+    var thisrarity = ""
+    var thisraritydescription = ""
+    var thisembedcolour = ""
+    var thisname = ""
+    var thisimage = ""
 
-    if (raritydescription != 'Not found') {//if NFT number was not found in DB, 'Not found' would be returned. If it was found, proceed
-      client.api.interactions(interaction.id, interaction.token).callback.post({
-        data: {
-          type: 4,
-          data: {
-            embeds: [
-              {
-                "title": nftname,
-                "color": embedcolor,
-                "fields": [
-                  {
-                    "name": "Rarity",
-                    "value": emoji + emoji + '|  ' + thisrarity + ' - ' + raritydescription + '  |' + emoji + emoji,
-                    "inline": true
-                  }
-                ],
-                "image": {
-                  "url": thisimage,
-                  "height": 75,
-                  "width": 75
-                },
-                "footer": {
-                  "text": "Rarity data provided by howrare.is"
-                }
-              }
-            ]//end embed
-          }//end message data
-        }//end post data
-      })//end post()
+    //new
+    for (var i = 0; i < rarityCollections.length; i++) {//loop through collections to find the one this rarity check is for
+      if (rarityCollections[i][0] === thiscollection) {
+        await getlocalNFTpoperties(thiscollection, thisnftnumber).then((returnedrarity) => {
 
-    } else {//end if rarity description != not found
-      client.api.interactions(interaction.id, interaction.token).callback.post({
-        data: {
-          type: 4,
-          data: {
-            embeds: [
-              {
-                "title": 'Token not found in database',
-                "color": embedcolor,
-                "fields": [
-                  {
-                    "name": "Rarity",
-                    "value": emoji + emoji + '|  ' + ' - ' + raritydescription + '  |' + emoji + emoji,
-                    "inline": true
-                  }
-                ],
-                "footer": {
-                  "text": "Rarity data provided by howrare.is"
-                }
-              }
-            ]//end embed
-          }//end message data
-        }//end post data
-      })//end post()
-    }//end else (if rarity description = 'Not found')
+          thisrarity = returnedrarity[0]
+          thisname = returnedrarity[1]
+          thisimage = returnedrarity[2]
+
+          return calculateranges(rarityCollections[i][2])
+        })
+          .then((ranges) => {
+
+            var mythicstart = ranges[0]; var mythicend = ranges[1]
+            var legendarystart = ranges[2]; var legendaryend = ranges[3]
+            var epicstart = ranges[4]; var epicend = ranges[5]
+            var rarestart = ranges[6]; var rareend = ranges[7]
+            var uncommonstart = ranges[8]; var uncommonend = ranges[9]
+            var commonstart = ranges[10]; var commonend = ranges[11]
+
+            return getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity)
+          })//end .then
+          .then((raritydescription) => {
+
+            thisraritydescription = raritydescription//store outside subsection so we can access it
+
+            return getembedcolour(thisraritydescription)
+          })
+          .then((embedcolour) => {
+
+            thisembedcolour = embedcolour
+
+            if (raritydescription != 'Not found') {//if NFT number was not found in DB, 'Not found' would be returned. If it was found, proceed
+              client.api.interactions(interaction.id, interaction.token).callback.post({
+                data: {
+                  type: 4,
+                  data: {
+                    embeds: [
+                      {
+                        "title": thisname,
+                        "color": thisembedcolour,
+                        "fields": [
+                          {
+                            "name": "Rarity",
+                            "value": thisrarity + ' - ' + thisraritydescription,
+                            "inline": true
+                          }
+                        ],
+                        "image": {
+                          "url": thisimage,
+                          "height": 75,
+                          "width": 75
+                        },
+                        "footer": {
+                          "text": "Bot by Laniakea#3683"
+                        }
+                      }
+                    ]//end embed
+                  }//end message data
+                }//end post data
+              })//end post()
+
+            } else {//end if rarity description != not found
+              client.api.interactions(interaction.id, interaction.token).callback.post({
+                data: {
+                  type: 4,
+                  data: {
+                    embeds: [
+                      {
+                        "title": 'Token not found in database',
+                        "color": embedcolor,
+                        "fields": [
+                          {
+                            "name": "Rarity",
+                            "value": thisrarity + ' - ' + thisraritydescription,
+                            "inline": true
+                          }
+                        ],
+                        "footer": {
+                          "text": "Bot by Laniakea#3683"
+                        }
+                      }
+                    ]//end embed
+                  }//end message data
+                }//end post data
+              })//end post()
+            }//end else (if rarity description = 'Not found')
+          })//end .then embedcolour
+      }//end if matched collection
+    }//end loop through rarityCollections.length
+
   }//end if command = rarity
 })//end response to slash command
 
@@ -800,6 +868,13 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
 //setup discord slash command
 client.on('ready', () => {
+
+  var choices = []
+  for (var i = 0; i < rarityCollections.length; i++) {
+    choices.push({"name" : rarityCollections[i][0], "value" : rarityCollections[i][0]})
+  }
+
+
   var serverkeys = Object.keys(servers)
   serverkeys.forEach((key, index) => {
     client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
@@ -811,16 +886,7 @@ client.on('ready', () => {
             "type": 3,
             "name": "collection",
             "description": "Please select a collection",
-            "choices": [
-              {
-                "name": "MonkeyPox NFT",
-                "value": "monkeypox_nft"
-              },
-              {
-                "name": "Pixel Guild",
-                "value": "pixel_guild_loot_legends"
-              }
-            ],
+            "choices": choices,
             "required": true
           },
           {
