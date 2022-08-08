@@ -455,7 +455,7 @@ async function startsniper() {
                 let epicstart = ranges[4]; let epicend = ranges[5]
                 let rarestart = ranges[6]; let rareend = ranges[7]
                 let uncommonstart = ranges[8]; let uncommonend = ranges[9]
-                vletar commonstart = ranges[10]; let commonend = ranges[11]
+                let commonstart = ranges[10]; let commonend = ranges[11]
 
                 thisranges = ranges//store outside subsection so we can access it
 
