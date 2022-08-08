@@ -803,7 +803,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
           })
           .then((embedcolour) => {
 
-            thisembedcolour = embedcolour
+            thisembedcolour = int(embedcolour, 16)
 
             if (thisraritydescription != 'Not found') {//if NFT number was not found in DB, 'Not found' would be returned. If it was found, proceed
               client.api.interactions(interaction.id, interaction.token).callback.post({
