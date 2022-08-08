@@ -450,6 +450,9 @@ async function startsniper() {
               })//end .then
               .then((ranges) => {
 
+                console.log('ranges is')
+                console.log(ranges)
+                
                 var mythicstart = ranges[0]; var mythicend = ranges[1]
                 var legendarystart = ranges[2]; var legendaryend = ranges[3]
                 var epicstart = ranges[4]; var epicend = ranges[5]
