@@ -157,12 +157,12 @@ async function calculateranges(collectionsize) {
   return new Promise((resolve, reject) => {
 
     //initialise threshold variables
-    let mythicstart = 0; let mythicend = 0
-    let legendarystart = 0; let legendaryend = 0
-    let epicstart = 0; let epicend = 0
-    let rarestart = 0; let rareend = 0
-    let uncommonstart = 0; let uncommonend = 0
-    let commonend = 0; let commonend = 0
+    var mythicstart = 0; var mythicend = 0
+    var legendarystart = 0; var legendaryend = 0
+    var epicstart = 0; var epicend = 0
+    var rarestart = 0; var rareend = 0
+    var uncommonstart = 0; var uncommonend = 0
+    var commonend = 0; var commonend = 0
 
     //mythic range (start of range is 1)
     mythicstart = 1;
@@ -418,12 +418,12 @@ async function startsniper() {
               })//end .then
               .then((ranges) => {
 
-                let mythicstart = ranges[0]; let mythicend = ranges[1]
-                let legendarystart = ranges[2]; let legendaryend = ranges[3]
-                let epicstart = ranges[4]; let epicend = ranges[5]
-                let rarestart = ranges[6]; let rareend = ranges[7]
-                let uncommonstart = ranges[8]; let uncommonend = ranges[9]
-                let commonstart = ranges[10]; let commonend = ranges[11]
+                var mythicstart = ranges[0]; var mythicend = ranges[1]
+                var legendarystart = ranges[2]; var legendaryend = ranges[3]
+                var epicstart = ranges[4]; var epicend = ranges[5]
+                var rarestart = ranges[6]; var rareend = ranges[7]
+                var uncommonstart = ranges[8]; var uncommonend = ranges[9]
+                var commonstart = ranges[10]; var commonend = ranges[11]
 
                 thisranges = ranges//store outside subsection so we can access it
 
@@ -621,12 +621,12 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         })
           .then((ranges) => {
 
-            let mythicstart = ranges[0]; let mythicend = ranges[1]
-            let legendarystart = ranges[2]; let legendaryend = ranges[3]
-            let epicstart = ranges[4]; let epicend = ranges[5]
-            let rarestart = ranges[6]; let rareend = ranges[7]
-            let uncommonstart = ranges[8]; let uncommonend = ranges[9]
-            let commonstart = ranges[10]; let commonend = ranges[11]
+            var mythicstart = ranges[0]; var mythicend = ranges[1]
+            var legendarystart = ranges[2]; var legendaryend = ranges[3]
+            var epicstart = ranges[4]; var epicend = ranges[5]
+            var rarestart = ranges[6]; var rareend = ranges[7]
+            var uncommonstart = ranges[8]; var uncommonend = ranges[9]
+            var commonstart = ranges[10]; var commonend = ranges[11]
 
             return getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity)
           })//end .then
