@@ -793,12 +793,16 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             console.log('ranges is')
             console.log(ranges)
 
-            var mythicstart = parseFloat(ranges[0]); var mythicend = parseFloat(ranges[1])
-            var legendarystart = parseFloat(ranges[2]); var legendaryend = parseFloat(ranges[3])
-            var epicstart = parseFloat(ranges[4]); var epicend = parseFloat(ranges[5])
-            var rarestart = parseFloat(ranges[6]); var rareend = parseFloat(ranges[7])
-            var uncommonstart = parseFloat(ranges[8]); var uncommonend = parseFloat(ranges[9])
-            var commonstart = parseFloat(ranges[10]); var commonend = parseFloat(ranges[11])
+            var mythicstart = ranges[0]; var mythicend = ranges[1]
+            var legendarystart = ranges[2]; var legendaryend = ranges[3]
+            var epicstart = ranges[4]; var epicend = ranges[5]
+            var rarestart = ranges[6]; var rareend = ranges[7]
+            var uncommonstart = ranges[8]; var uncommonend = ranges[9]
+            var commonstart = ranges[10]; var commonend = ranges[11]
+
+            console.log('pre check mythic start: ' + mythicstart)
+            console.log('precheck epic end: ' + epicend)
+            console.log('precheck thisrarity: ' + thisrarity)
 
             return getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity)
           })//end .then
