@@ -270,7 +270,7 @@ async function getremotefloorprice(collection) {
 //returns rarity description (i.e. "Mythic" if its a snipe, else returns 'false') also returns 
 async function testifsnipe(raritydescription, thisprice, floorprice) {
   return new Promise((resolve, reject) => {
-    console.log('testing for snipe with an ' + raritydescription + ' at a list price of ' + thisprice + ' and the floor price is' + floorprice)
+    console.log('testing for snipe with an ' + raritydescription + ' at a list price of ' + thisprice + ' and the floor price is ' + floorprice)
 
     //make calculation of if this is a snipe using rarity, floor price and nft price
     var hotrarities = ['Mythic', 'Legendary', 'Epic', 'Rare']
@@ -317,6 +317,7 @@ async function getembedcolour(raritydescription) {
 
 async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisemoji, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage, listinglink) {
   return new Promise((resolve, reject) => {
+    console.log('thissnipeprice (' + thissnipeprice + ') type is this type:' + typeof thissnipeprice)
     client.guilds.cache.get(server).channels.cache.get(snipeschannel).send({
       embeds: [
         {
