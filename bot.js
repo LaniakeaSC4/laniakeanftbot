@@ -215,6 +215,10 @@ async function calculateranges(collectionsize) {
 //takes the ranges for this collection and returns string of its rarity description
 async function getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity) {
 
+  console.log('mythicstart: ') + mythicstart
+  console.log('epic end: ' + epicend)
+  console.log('this rarity: ' + thisrarity)
+
   //if mythic
   if (thisrarity >= mythicstart && thisrarity <= mythicend) {
     return ('Mythic')
@@ -806,7 +810,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
             thisembedcolour = parseInt(embedcolour, 16)
 
-            if (thisraritydescription != 'Not found') {//if NFT number was not found in DB, 'Not found' would be returned. If it was found, proceed
+            if (thisraritydescription !== 'Not found') {//if NFT number was not found in DB, 'Not found' would be returned. If it was found, proceed
               client.api.interactions(interaction.id, interaction.token).callback.post({
                 data: {
                   type: 4,
