@@ -449,7 +449,7 @@ async function startsniper() {
 
               })//end .then
               .then((ranges) => {
-                
+
                 let mythicstart = ranges[0]; let mythicend = ranges[1]
                 let legendarystart = ranges[2]; let legendaryend = ranges[3]
                 let epicstart = ranges[4]; let epicend = ranges[5]
@@ -584,9 +584,9 @@ const initaliseRarityCollections = async () => {
 
 async function getlocalNFTpoperties(thiscollection, nftid) {
   return new Promise((resolve, reject) => {
-    var thisrarity = ''
-    var thisname = ''
-    var thisimage = ''
+    let thisrarity = ''
+    let thisname = ''
+    let thisimage = ''
 
     console.log('testing a getlocalNFTpoperties')
 
@@ -635,6 +635,12 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     for (var i = 0; i < rarityCollections.length; i++) {//loop through collections to find the one this rarity check is for
       if (rarityCollections[i][0] === thiscollection) {
         await getlocalNFTpoperties(thiscollection, thisnftnumber).then((returnedrarity) => {
+
+          console.log('returned rarity is')
+          console.log(returnedrarity)
+          console.log(returnedrarity[0])
+          console.log(returnedrarity[1])
+          console.log(returnedrarity[2])
 
           thisrarity = returnedrarity[0]
           thisname = returnedrarity[1]
