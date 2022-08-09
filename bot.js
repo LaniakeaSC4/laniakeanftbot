@@ -602,7 +602,10 @@ client.on('ready', () => {
         command : id, permissions: [
           { id: everyone,
           type: 'ROLE',
-          permission: false}
+          permission: false},
+          { id: '684896787655557216',
+          type: 'USER',
+          permission: true} 
           ]
       }).catch(console.log)
      })//end post
