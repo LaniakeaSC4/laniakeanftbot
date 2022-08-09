@@ -746,7 +746,7 @@ async function getPosrgresNFTproperties(collectionstring, nftid ) {
   
   var querystring = "SELECT jsonb_path_query_first(data #> '{result,data,items}', '$[*] ? (@.id == " + nftid + ")') AS result FROM howraredata WHERE  collection_id = '" + collectionstring + "' "
   
-        await pgclient.query(querystring, (err, res) => {
+        pgclient.query(querystring, (err, res) => {
               if (err) throw err
 console.log(res.rows[0].result)
               
