@@ -693,7 +693,7 @@ return new Promise((resolve, reject) => {
   
   //add supported collections from rarityCollections to the slash command
   var choices = []
-  await pgclient.query('SELECT collection_id FROM howraredata', (err, res) => {
+  pgclient.query('SELECT collection_id FROM howraredata', (err, res) => {
               if (err) throw err
               console.log(res.rows)
               for (var i = 0;i < res.rows.length;i++) {
