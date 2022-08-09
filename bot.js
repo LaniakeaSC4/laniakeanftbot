@@ -697,7 +697,7 @@ client.on('ready', async () => {
   var choices = []
   await pgclient.query('SELECT collection_id FROM howraredata', (err, res) => {
               if (err) throw err
-              console.log(res.rows[0].result)
+              console.log(res.rows)
             }) 
   
   
