@@ -620,7 +620,10 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     if (interaction.member.user.id === "684896787655557216") {
       if (action === 'add') {
         await getRemoteHowRareData(collectionstring).then(async thisdata => {
-          //put in SQL
+          if (thisdata.result.api_code === 200) {
+            console.log('Recieved collection: ' + thisdata.result.data.collection + 'from howrare.is with status code:' + thisdata.result.api_code + '. Ready to add to SQL')
+            //put in SQL
+          } else { console.log('Collection: ' + thisdata.result.data.collection + ' returned status code ' + thisdata.result.api_code + ' from howrare.is.') }
         })//end then
       }
 
@@ -655,10 +658,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             ]//end embed
           }
         }
-      })
-    }
-  }
-
+      })//end post callback
+    }//end else
+  }//end if database
 })
 
 //setup discord checkrarity slash command
