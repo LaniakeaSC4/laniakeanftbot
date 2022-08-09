@@ -524,7 +524,7 @@ async function startsniper() {
 //=========================
 
 //get complete howrare.is dataset
-function getRemoteHowRareData(collection) {
+async function getRemoteHowRareData(collection) {
   return new Promise((resolve, reject) => {
     var thiscollection = 'https://api.howrare.is/v0.1/collections/' + collection//build collection URL
 
