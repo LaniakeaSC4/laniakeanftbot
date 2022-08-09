@@ -105,18 +105,14 @@ var rarelimit = 2.5
 
 //start services
 client.on('ready', async () => {
+  console.log('I am ready!')
   initaliseSniperCollections()
   startsniper()
   initaliseRarityCollections()
   pgclient.connect()//connect to DB
-})//end client.on Ready
-
-//test area
-client.on('ready', () => {
-  console.log('I am ready!')
-  //enable to reset commands
   clearcommands()
-})//end client.on Readys
+  rebuildRarityCommand()
+})//end client.on Ready
 
 //function to reset slash commands (enable if needed)
 async function clearcommands() {
@@ -631,7 +627,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
             await pgclient.query(querystring, querydata, (err, res) => {
               if (err) throw err
-
+clearcommands()
+  rebuildRarityCommand()
               //do I need to close connection? 
               //pgclient.end()
             })
@@ -691,8 +688,9 @@ console.log(res.rows[0].result)
 })
 
 //setup discord checkrarity slash command
-client.on('ready', async () => {
-
+async function rebuildRarityCommand() {
+return new Promise((resolve, reject) => {
+  
   //add supported collections from rarityCollections to the slash command
   var choices = []
   await pgclient.query('SELECT collection_id FROM howraredata', (err, res) => {
@@ -730,7 +728,7 @@ client.on('ready', async () => {
     });//end post
   })//end for each server loop 
               
-            
+resolve()         
   
   /*
   for (var i = 0; i < rarityCollections.length; i++) {
@@ -739,7 +737,8 @@ client.on('ready', async () => {
   */
 
   
-});//end client on ready
+});//end promise
+}
 
 async function getPosrgresNFTproperties(collectionstring, nftid ) {
   return new Promise((resolve, reject) => {
