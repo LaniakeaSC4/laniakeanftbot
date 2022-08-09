@@ -597,7 +597,7 @@ client.on('ready', async () => {
             "type": 3,
             "name": "action",
             "description": "Action type",
-            "choices": [{ "name": "Add", "value": "add" }, { "name": "Update", "value": "update" }],
+            "choices": [{ "name": "Add", "value": "add" }, { "name": "Update", "value": "update" }, { "name": "Test", "value": "test" } ],
             "required": true
           },
           {
@@ -655,7 +655,21 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
               }
             })//end callback post
           })//end then
-      }//end if user is Laniakea
+      }//end if action is add
+      
+      if (action === 'test'){
+        console.log('action is test')
+        var querystring = "SELECT jsonb_path_query_first(data, '$.result.data.items[*] ? (@.id == $2)') FROM   howraredata WHERE  collection_id = '$1'"
+        var querydata = [collectionstring, '50']
+        
+        await pgclient.query(querystring, querydata, (err, res) => {
+              if (err) throw err
+console.log(res)
+              //do I need to close connection? 
+              //pgclient.end()
+            })
+        
+      } 
     } else {
       client.api.interactions(interaction.id, interaction.token).callback.post({
         data: {
