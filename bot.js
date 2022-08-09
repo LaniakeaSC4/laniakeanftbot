@@ -701,7 +701,7 @@ client.on('ready', async () => {
               for (var i = 0;i < res.rows.length;i++) {
                 
                 choices.push({ "name": res.rows[i] .collection_id, "value" : res.rows[i].collection_id})
-                
+                return res.rows
               } 
             }).then((result) => {
              
