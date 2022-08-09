@@ -1,22 +1,22 @@
 const { Client, Intents } = require('discord.js')
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES] })
-const https = require('https') 
+const https = require('https')
 
 const pg = require('pg')
 const pgclient = new pg.Client({
   connectionString: process.env.DATABASE_URL,
-  ssl: {rejectUnauthorized: false}
+  ssl: { rejectUnauthorized: false }
 })
 
 client.on('ready', async () => {
 
-await pgclient.connect()
+  await pgclient.connect()
 
-await pgclient.query('CREATE TABLE IF NOT EXISTS howraredata ( collection_ID TEXT PRIMARY KEY, data JSONB, created_on TIMESTAMP NOT NULL, last_updated TIMESTAMP)', (err, res) => {
-  if (err) throw err
-  
-  pgclient.end();
-});
+  await pgclient.query('CREATE TABLE IF NOT EXISTS howraredata ( collection_ID TEXT PRIMARY KEY, data JSONB, created_on TIMESTAMP NOT NULL, last_updated TIMESTAMP)', (err, res) => {
+    if (err) throw err
+
+    pgclient.end();
+  });
 })
 
 client.login(process.env.BOTTOKEN)
@@ -31,7 +31,7 @@ const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 const rarityCollections = [
   ['monkeypox_nft', [], 2400],
   ['pixel_guild_loot_legends', [], 8888],
-  ['pokerfaces',[],377]
+  ['pokerfaces', [], 377]
 ]
 
 var raritySequencer = []
@@ -600,182 +600,202 @@ client.on('ready', () => {
     }).then(cmd => {
       console.log('command id is: ')
       console.log(cmd.id)
-      client.api.applications(client.user.id).guilds(servers[key].id).commands.set({
-        command : cmd.id, permissions: [
-          { id: everyone,
-          type: 'ROLE',
-          permission: false},
-          { id: '684896787655557216',
-          type: 'USER',
-          permission: true} 
-          ]
-      }).catch(console.log)
-     })//end post
-  })//end for each server loop
-});//end client on ready
 
-//respond to slash command
-client.ws.on('INTERACTION_CREATE', async interaction => {
-  const command = interaction.data.name.toLowerCase()
-  const args = interaction.data.options//array of the provided data after the slash
-
-  if (command === 'database') {
-    client.api.interactions(interaction.id, interaction.token).callback.post({
-      
-      data: {
-                  type: 4,
-                  data: {
-                    embeds: [
-                      {
-                        "title": 'database command registered',
-                        "footer": {
-                          "text": "Bot by Laniakea#3683"
-                        }
-                      }
-                    ]//end embed
-                  }
-      } 
-    })
-  }
-  
-}) 
-
-//setup discord checkrarity slash command
-client.on('ready', () => {
-
-  //add supported collections from rarityCollections to the slash command
-  var choices = []
-  for (var i = 0; i < rarityCollections.length; i++) {
-    choices.push({ "name": rarityCollections[i][0], "value": rarityCollections[i][0] })
-  }//end for
-
-  var serverkeys = Object.keys(servers)
-  serverkeys.forEach((key, index) => {
-    client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
-      data: {
-        "name": "checkrarity",
-        "description": "Check the rarity of an NFT in a collection we support",
-        "options": [
+      client.application.commands.permissions.set({
+        guild: servers[key].id,
+        command: cmd.id,
+        permissions: permissions: [
           {
-            "type": 3,
-            "name": "collection",
-            "description": "Please select a collection",
-            "choices": choices,
-            "required": true
+            id: everyone,
+            type: 'ROLE',
+            permission: false
           },
           {
-            "type": 3,
-            "name": "nftnumber",
-            "description": "Enter the # of the NFT to check in selected collection",
-            "required": true
+            id: '684896787655557216',
+            type: 'USER',
+            permission: true
           }
         ]
-      }//end data
-    });//end post
-  })//end for each server loop
-});//end client on ready
+    })
 
-//respond to slash command
-client.ws.on('INTERACTION_CREATE', async interaction => {
-  const command = interaction.data.name.toLowerCase()
-  const args = interaction.data.options//array of the provided data after the slash
+      /*
+        client.api.applications(client.user.id).guilds(servers[key].id).commands.permissions.set({
+          command : cmd.id, permissions: [
+            { id: everyone,
+            type: 'ROLE',
+            permission: false},
+            { id: '684896787655557216',
+            type: 'USER',
+            permission: true} 
+            ]
+        }).catch(console.log)
+       })//end post
+       */
+    })//end for each server loop
+  });//end client on ready
 
-  if (command === 'checkrarity') {
+  //respond to slash command
+  client.ws.on('INTERACTION_CREATE', async interaction => {
+    const command = interaction.data.name.toLowerCase()
+    const args = interaction.data.options//array of the provided data after the slash
 
-    var thiscollection = args[0].value
-    var thisnftnumber = args[1].value
-    var thisrarity = ""
-    var thisraritydescription = ""
-    var thisembedcolour = 0
-    var thisname = ""
-    var thisimage = ""
+    if (command === 'database') {
+      client.api.interactions(interaction.id, interaction.token).callback.post({
 
-    for (var i = 0; i < rarityCollections.length; i++) {//loop through collections to find the one this rarity check is for
-      if (rarityCollections[i][0] === thiscollection) {
-        await getlocalNFTpoperties(thiscollection, thisnftnumber).then((returnedrarity) => {
+        data: {
+          type: 4,
+          data: {
+            embeds: [
+              {
+                "title": 'database command registered',
+                "footer": {
+                  "text": "Bot by Laniakea#3683"
+                }
+              }
+            ]//end embed
+          }
+        }
+      })
+    }
 
-          thisrarity = returnedrarity[0]
-          thisname = returnedrarity[1]
-          thisimage = returnedrarity[2]
+  })
 
-          return calculateranges(rarityCollections[i][2])
-        })
-          .then((ranges) => {
+  //setup discord checkrarity slash command
+  client.on('ready', () => {
 
-            var mythicstart = ranges[0]; var mythicend = ranges[1]
-            var legendarystart = ranges[2]; var legendaryend = ranges[3]
-            var epicstart = ranges[4]; var epicend = ranges[5]
-            var rarestart = ranges[6]; var rareend = ranges[7]
-            var uncommonstart = ranges[8]; var uncommonend = ranges[9]
-            var commonstart = ranges[10]; var commonend = ranges[11]
+    //add supported collections from rarityCollections to the slash command
+    var choices = []
+    for (var i = 0; i < rarityCollections.length; i++) {
+      choices.push({ "name": rarityCollections[i][0], "value": rarityCollections[i][0] })
+    }//end for
 
-            return getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity)
-          })//end .then
-          .then((raritydescription) => {
-            thisraritydescription = raritydescription//store outside subsection so we can access it
-            return getembedcolour(thisraritydescription)
+    var serverkeys = Object.keys(servers)
+    serverkeys.forEach((key, index) => {
+      client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
+        data: {
+          "name": "checkrarity",
+          "description": "Check the rarity of an NFT in a collection we support",
+          "options": [
+            {
+              "type": 3,
+              "name": "collection",
+              "description": "Please select a collection",
+              "choices": choices,
+              "required": true
+            },
+            {
+              "type": 3,
+              "name": "nftnumber",
+              "description": "Enter the # of the NFT to check in selected collection",
+              "required": true
+            }
+          ]
+        }//end data
+      });//end post
+    })//end for each server loop
+  });//end client on ready
+
+  //respond to slash command
+  client.ws.on('INTERACTION_CREATE', async interaction => {
+    const command = interaction.data.name.toLowerCase()
+    const args = interaction.data.options//array of the provided data after the slash
+
+    if (command === 'checkrarity') {
+
+      var thiscollection = args[0].value
+      var thisnftnumber = args[1].value
+      var thisrarity = ""
+      var thisraritydescription = ""
+      var thisembedcolour = 0
+      var thisname = ""
+      var thisimage = ""
+
+      for (var i = 0; i < rarityCollections.length; i++) {//loop through collections to find the one this rarity check is for
+        if (rarityCollections[i][0] === thiscollection) {
+          await getlocalNFTpoperties(thiscollection, thisnftnumber).then((returnedrarity) => {
+
+            thisrarity = returnedrarity[0]
+            thisname = returnedrarity[1]
+            thisimage = returnedrarity[2]
+
+            return calculateranges(rarityCollections[i][2])
           })
-          .then((embedcolour) => {
+            .then((ranges) => {
 
-            thisembedcolour = parseInt(embedcolour, 16)
+              var mythicstart = ranges[0]; var mythicend = ranges[1]
+              var legendarystart = ranges[2]; var legendaryend = ranges[3]
+              var epicstart = ranges[4]; var epicend = ranges[5]
+              var rarestart = ranges[6]; var rareend = ranges[7]
+              var uncommonstart = ranges[8]; var uncommonend = ranges[9]
+              var commonstart = ranges[10]; var commonend = ranges[11]
 
-            if (thisraritydescription !== 'Not found') {//if NFT number was not found in DB, 'Not found' would be returned. If it was found, proceed
-              client.api.interactions(interaction.id, interaction.token).callback.post({
-                data: {
-                  type: 4,
+              return getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity)
+            })//end .then
+            .then((raritydescription) => {
+              thisraritydescription = raritydescription//store outside subsection so we can access it
+              return getembedcolour(thisraritydescription)
+            })
+            .then((embedcolour) => {
+
+              thisembedcolour = parseInt(embedcolour, 16)
+
+              if (thisraritydescription !== 'Not found') {//if NFT number was not found in DB, 'Not found' would be returned. If it was found, proceed
+                client.api.interactions(interaction.id, interaction.token).callback.post({
                   data: {
-                    embeds: [
-                      {
-                        "title": thisname,
-                        "color": thisembedcolour,
-                        "fields": [
-                          {
-                            "name": "Rarity",
-                            "value": thisrarity + ' - ' + thisraritydescription,
-                            "inline": true
+                    type: 4,
+                    data: {
+                      embeds: [
+                        {
+                          "title": thisname,
+                          "color": thisembedcolour,
+                          "fields": [
+                            {
+                              "name": "Rarity",
+                              "value": thisrarity + ' - ' + thisraritydescription,
+                              "inline": true
+                            }
+                          ],
+                          "image": {
+                            "url": thisimage,
+                            "height": 75,
+                            "width": 75
+                          },
+                          "footer": {
+                            "text": "Bot by Laniakea#3683"
                           }
-                        ],
-                        "image": {
-                          "url": thisimage,
-                          "height": 75,
-                          "width": 75
-                        },
-                        "footer": {
-                          "text": "Bot by Laniakea#3683"
                         }
-                      }
-                    ]//end embed
-                  }//end message data
-                }//end post data
-              })//end post()
+                      ]//end embed
+                    }//end message data
+                  }//end post data
+                })//end post()
 
-            } else {//end if rarity description != not found
-              client.api.interactions(interaction.id, interaction.token).callback.post({
-                data: {
-                  type: 4,
+              } else {//end if rarity description != not found
+                client.api.interactions(interaction.id, interaction.token).callback.post({
                   data: {
-                    embeds: [
-                      {
-                        "title": 'Token not found in database',
-                        "color": thisembedcolour,
-                        "fields": [
-                          {
-                            "name": "Rarity",
-                            "value": thisrarity + ' - ' + thisraritydescription,
-                            "inline": true
+                    type: 4,
+                    data: {
+                      embeds: [
+                        {
+                          "title": 'Token not found in database',
+                          "color": thisembedcolour,
+                          "fields": [
+                            {
+                              "name": "Rarity",
+                              "value": thisrarity + ' - ' + thisraritydescription,
+                              "inline": true
+                            }
+                          ],
+                          "footer": {
+                            "text": "Bot by Laniakea#3683"
                           }
-                        ],
-                        "footer": {
-                          "text": "Bot by Laniakea#3683"
                         }
-                      }
-                    ]//end embed
-                  }//end message data
-                }//end post data
-              })//end post()
-            }//end else (if rarity description = 'Not found')
-          })//end .then embedcolour
-      }//end if matched collection
-    }//end loop through rarityCollections.length
-  }//end if command = rarity
-})//end response to slash command
+                      ]//end embed
+                    }//end message data
+                  }//end post data
+                })//end post()
+              }//end else (if rarity description = 'Not found')
+            })//end .then embedcolour
+        }//end if matched collection
+      }//end loop through rarityCollections.length
+    }//end if command = rarity
+  })//end response to slash command
