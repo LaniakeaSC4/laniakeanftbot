@@ -741,6 +741,27 @@ client.on('ready', async () => {
   
 });//end client on ready
 
+async function getPosrgresNFTproperties(collectionstring, nftid ) {
+  return new Promise((resolve, reject) => {
+  
+  var querystring = "SELECT jsonb_path_query_first(data #> '{result,data,items}', '$[*] ? (@.id == " + nftid + ")') AS result FROM howraredata WHERE  collection_id = '" + collectionstring + "' "
+  
+        await pgclient.query(querystring, (err, res) => {
+              if (err) throw err
+console.log(res.rows[0].result)
+              
+              
+             var thisnftrarity = res.rows[0].result.all_ranks.statistical_rarity
+            var thisnftname = res.rows[0].result.name
+           var thisnftimage = res.rows[0].result.image
+            resolve([thisnftrarity, thisnftname, thisnftimage]) 
+              
+            })
+        
+  
+  })//end promise
+} 
+
 //respond to slash command
 client.ws.on('INTERACTION_CREATE', async interaction => {
   const command = interaction.data.name.toLowerCase()
@@ -758,7 +779,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
     for (var i = 0; i < rarityCollections.length; i++) {//loop through collections to find the one this rarity check is for
       if (rarityCollections[i][0] === thiscollection) {
-        await getlocalNFTpoperties(thiscollection, thisnftnumber).then((returnedrarity) => {
+        await getPosrgresNFTproperties(thiscollection, thisnftnumber).then((returnedrarity) => {
 
           thisrarity = returnedrarity[0]
           thisname = returnedrarity[1]
