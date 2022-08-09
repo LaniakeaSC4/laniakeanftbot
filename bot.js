@@ -632,7 +632,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             await pgclient.query(querystring, querydata, (err, res) => {
               if (err) throw err
 
-              pgclient.end();
+              //do I need to close connection? 
+              //pgclient.end()
             })
           } else { console.log('Error: collection ' + collectionstring + ' returned status code ' + thisdata.result.api_code + ' from howrare.is.') }
         })//end then
