@@ -660,8 +660,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
       if (action === 'test'){
         console.log('action is test')
         var testid = 50
-        var querystring = "SELECT jsonb_path_query_first(data #> '{result,data,items}', '$[*] ? (@.id == " + testid + ")') AS result FROM howraredata WHERE  collection_id = " + collectionstring 
-        
+        var querystring = "SELECT jsonb_path_query_first(data #> '{result,data,items}', '$[*] ? (@.id == " + testid + ")') AS result FROM howraredata WHERE  collection_id = '" + collectionstring + "' "
+        console.log(collectionstring)
         await pgclient.query(querystring, (err, res) => {
               if (err) throw err
 console.log(res)
