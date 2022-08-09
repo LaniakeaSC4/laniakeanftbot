@@ -609,6 +609,32 @@ client.on('ready', () => {
   })//end for each server loop
 });//end client on ready
 
+//respond to slash command
+client.ws.on('INTERACTION_CREATE', async interaction => {
+  const command = interaction.data.name.toLowerCase()
+  const args = interaction.data.options//array of the provided data after the slash
+
+  if (command === 'database') {
+    client.api.interactions(interaction.id, interaction.token).callback.post({
+      
+      data: {
+                  type: 4,
+                  data: {
+                    embeds: [
+                      {
+                        "title": 'database command registered',
+                        "footer": {
+                          "text": "Bot by Laniakea#3683"
+                        }
+                      }
+                    ]//end embed
+                  }
+      } 
+    })
+  }
+  
+}) 
+
 //setup discord checkrarity slash command
 client.on('ready', () => {
 
