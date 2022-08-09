@@ -615,8 +615,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
   const args = interaction.data.options//array of the provided data after the slash
 
   if (command === 'database') {
-    var action = args[0];console.log('action is: ' + action)
-    var collectionstring = args[1];console.log('collectionstring is: ' + collectionstring)
+    var action = args[0];console.log(action)
+    var collectionstring = args[1];console.log(collectionstring)
     if (interaction.member.user.id === "684896787655557216") {
       if (action === 'add') {
         await getRemoteHowRareData(collectionstring).then(async thisdata => {
