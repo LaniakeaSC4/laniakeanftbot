@@ -615,14 +615,21 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
   const args = interaction.data.options//array of the provided data after the slash
 
   if (command === 'database') {
-    var action = args[0].value;console.log(action)
-    var collectionstring = args[1].value;console.log(collectionstring)
+    var action = args[0].value; console.log(action)
+    var collectionstring = args[1].value; console.log(collectionstring)
     if (interaction.member.user.id === "684896787655557216") {
       if (action === 'add') {
         await getRemoteHowRareData(collectionstring).then(async thisdata => {
           if (thisdata.result.api_code === 200) {
             console.log('Recieved collection: ' + thisdata.result.data.collection + 'from howrare.is with status code:' + thisdata.result.api_code + '. Ready to add to SQL')
-            //put in SQL
+
+            await pgclient.connect()//connect to DB
+            
+            await pgclient.query("INSERT INTO howraredata(collection_ID, data, created_on, last_updated) VALUES (${thisdata.result.data.collection}, ${thisdata}, to_timestamp(${Date.now()} / 1000.0), to_timestamp(${Date.now()} / 1000.0))", (err, res) => {
+              if (err) throw err
+
+              pgclient.end();
+            })
           } else { console.log('Error: collection ' + collectionstring + ' returned status code ' + thisdata.result.api_code + ' from howrare.is.') }
         })//end then
       }
