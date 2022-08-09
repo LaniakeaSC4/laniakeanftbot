@@ -636,7 +636,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             })
           } else { console.log('Error: collection ' + collectionstring + ' returned status code ' + thisdata.result.api_code + ' from howrare.is.') }
         })//end then
-          .then({
+          .then(() => {
             //reply to interaction with acknowledgement
             client.api.interactions(interaction.id, interaction.token).callback.post({
               data: {
