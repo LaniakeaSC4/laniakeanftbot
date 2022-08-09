@@ -636,24 +636,25 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             })
           } else { console.log('Error: collection ' + collectionstring + ' returned status code ' + thisdata.result.api_code + ' from howrare.is.') }
         })//end then
-      }
-
-      //reply to interaction with acknowledgement
-      client.api.interactions(interaction.id, interaction.token).callback.post({
-        data: {
-          type: 4,
-          data: {
-            embeds: [
-              {
-                "title": 'database command registered',
-                "footer": {
-                  "text": "Bot by Laniakea#3683"
+          .then({
+            //reply to interaction with acknowledgement
+            client.api.interactions(interaction.id, interaction.token).callback.post({
+              data: {
+                type: 4,
+                data: {
+                  embeds: [
+                    {
+                      "title": 'database command registered',
+                      "footer": {
+                        "text": "Bot by Laniakea#3683"
+                      }
+                    }
+                  ]//end embed
                 }
               }
-            ]//end embed
-          }
-        }
-      })
+            })//end callback post
+          })//end then
+      }//end if user is Laniakea
     } else {
       client.api.interactions(interaction.id, interaction.token).callback.post({
         data: {
