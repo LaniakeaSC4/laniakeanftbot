@@ -698,14 +698,14 @@ client.on('ready', async () => {
   await pgclient.query('SELECT collection_id FROM howraredata', (err, res) => {
               if (err) throw err
               console.log(res.rows)
-            }) 
-  
-  
-  for (var i = 0; i < rarityCollections.length; i++) {
-    choices.push({ "name": rarityCollections[i][0], "value": rarityCollections[i][0] })
-  }//end for
-
-  var serverkeys = Object.keys(servers)
+              for (var i = 0;i < res.rows.length;i++) {
+                
+                choices.push({ "name": res.rows[i] .collection_id, "value" : res.rows[i].collection_id})
+                
+              } 
+            }).then((result) => {
+             
+             var serverkeys = Object.keys(servers)
   serverkeys.forEach((key, index) => {
     client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
       data: {
@@ -728,7 +728,17 @@ client.on('ready', async () => {
         ]
       }//end data
     });//end post
-  })//end for each server loop
+  })//end for each server loop 
+              
+            })
+  
+  /*
+  for (var i = 0; i < rarityCollections.length; i++) {
+    choices.push({ "name": rarityCollections[i][0], "value": rarityCollections[i][0] })
+  }//end fo
+  */
+
+  
 });//end client on ready
 
 //respond to slash command
