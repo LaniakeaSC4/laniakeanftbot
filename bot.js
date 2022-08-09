@@ -623,7 +623,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
           if (thisdata.result.api_code === 200) {
             console.log('Recieved collection: ' + thisdata.result.data.collection + 'from howrare.is with status code:' + thisdata.result.api_code + '. Ready to add to SQL')
             //put in SQL
-          } else { console.log('Collection: ' + thisdata.result.data.collection + ' returned status code ' + thisdata.result.api_code + ' from howrare.is.') }
+          } else { console.log('Error: collection ' + collectionstring + ' returned status code ' + thisdata.result.api_code + ' from howrare.is.') }
         })//end then
       }
 
