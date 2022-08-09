@@ -604,7 +604,7 @@ client.on('ready', () => {
       client.application.commands.permissions.set({
         guild: servers[key].id,
         command: cmd.id,
-        permissions: permissions: [
+        permissions: [
           {
             id: everyone,
             type: 'ROLE',
