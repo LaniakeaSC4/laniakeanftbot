@@ -598,7 +598,7 @@ client.on('ready', () => {
         ]
       }//end data
     }).then(id => {
-      client.application.commands.set({
+      client.api.applications(client.user.id).guilds(servers[key].id).commands.set({
         command : id, permissions: [
           { id: everyone,
           type: 'ROLE',
