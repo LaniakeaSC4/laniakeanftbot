@@ -597,42 +597,8 @@ client.on('ready', () => {
           }
         ]
       }//end data
-    }).then(cmd => {
-      console.log('command id is: ')
-      console.log(cmd.id)
-
-      client.application.commands.permissions.set({
-        guild: servers[key].id,
-        command: cmd.id,
-        permissions: [
-          {
-            id: everyone,
-            type: 'ROLE',
-            permission: false
-          },
-          {
-            id: '684896787655557216',
-            type: 'USER',
-            permission: true
-          }
-        ]
-      })
-
-      /*
-        client.api.applications(client.user.id).guilds(servers[key].id).commands.permissions.set({
-          command : cmd.id, permissions: [
-            { id: everyone,
-            type: 'ROLE',
-            permission: false},
-            { id: '684896787655557216',
-            type: 'USER',
-            permission: true} 
-            ]
-        }).catch(console.log)
-       })//end post
-       */
-    })//end for each server loop
-  })
+    })//end post command
+  })//end for each server loop
 });//end client on ready
 
 //respond to slash command
@@ -641,22 +607,39 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
   const args = interaction.data.options//array of the provided data after the slash
 
   if (command === 'database') {
-    client.api.interactions(interaction.id, interaction.token).callback.post({
-
-      data: {
-        type: 4,
+    if (interaction.user.id === "684896787655557216") {
+      client.api.interactions(interaction.id, interaction.token).callback.post({
         data: {
-          embeds: [
-            {
-              "title": 'database command registered',
-              "footer": {
-                "text": "Bot by Laniakea#3683"
+          type: 4,
+          data: {
+            embeds: [
+              {
+                "title": 'database command registered',
+                "footer": {
+                  "text": "Bot by Laniakea#3683"
+                }
               }
-            }
-          ]//end embed
+            ]//end embed
+          }
         }
-      }
-    })
+      })
+    } else {
+      client.api.interactions(interaction.id, interaction.token).callback.post({
+        data: {
+          type: 4,
+          data: {
+            embeds: [
+              {
+                "title": 'You do not have permission for this action',
+                "footer": {
+                  "text": "Bot by Laniakea#3683"
+                }
+              }
+            ]//end embed
+          }
+        }
+      })
+    }
   }
 
 })
