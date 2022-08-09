@@ -664,7 +664,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         console.log(collectionstring)
         await pgclient.query(querystring, (err, res) => {
               if (err) throw err
-console.log(res)
+console.log(res.rows[0].result)
               //do I need to close connection? 
               //pgclient.end()
             })
