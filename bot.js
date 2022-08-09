@@ -582,7 +582,7 @@ client.on('ready', () => {
 
   var serverkeys = Object.keys(servers)
   serverkeys.forEach((key, index) => {
-    var everyone = client.guilds.cache.get(servers[key].id).roles.cache.find(role => role.name === "everyone")
+    var everyone = client.guilds.cache.get(servers[key].id).roles.everyone.id
     console.log(everyone)
     client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
       data: {
@@ -600,7 +600,7 @@ client.on('ready', () => {
     }).then(id => {
       client.application.commands.set({
         command : id, permissions: [
-          { id: everyone.id,
+          { id: everyone,
           type: 'ROLE',
           permission: false}
           ]
