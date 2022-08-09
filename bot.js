@@ -605,9 +605,9 @@ client.on('ready', () => {
 client.ws.on('INTERACTION_CREATE', async interaction => {
   const command = interaction.data.name.toLowerCase()
   const args = interaction.data.options//array of the provided data after the slash
-console.log(interaction)
+
   if (command === 'database') {
-    if (interaction.user.id === "684896787655557216") {
+    if (interaction.member.user.id === "684896787655557216") {
       client.api.interactions(interaction.id, interaction.token).callback.post({
         data: {
           type: 4,
