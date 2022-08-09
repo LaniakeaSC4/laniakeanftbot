@@ -627,7 +627,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
             await pgclient.connect()//connect to DB
             
-            var querystring = '"INSERT INTO howraredata(collection_ID, data, created_on, last_updated) VALUES (' + thisdata.result.data.collection + ', ' + thisdata + ', ' + Date.now() / 1000.0 + ', ' + Date.now() / 1000 + '"'
+            var querystring = '"INSERT INTO howraredata(collection_ID, data, created_on, last_updated) VALUES ("' + thisdata.result.data.collection + '", ' + thisdata + ', ' + Date.now() / 1000.0 + ', ' + Date.now() / 1000 + '"'
 
             await pgclient.query(querystring, (err, res) => {
               if (err) throw err
