@@ -19,9 +19,6 @@ await pgclient.query('CREATE TABLE IF NOT EXISTS howraredata ( collection_ID TEX
 });
 })
 
-
-
-
 client.login(process.env.BOTTOKEN)
 
 const pround = (number, decimalPlaces) => Number(Math.round(Number(number + "e" + decimalPlaces)) + "e" + decimalPlaces * -1)
@@ -580,7 +577,39 @@ async function getlocalNFTpoperties(thiscollection, nftid) {
 //====  Slash commands  ===
 //=========================
 
-//setup discord slash command
+//setup discord add database slash command
+client.on('ready', () => {
+
+  var serverkeys = Object.keys(servers)
+  serverkeys.forEach((key, index) => {
+    var everyone = client.guilds.cache.get(servers[key].id).roles.cache.find(role => role.name === "everyone")
+    console.log(everyone)
+    client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
+      data: {
+        "name": "database",
+        "description": "Admin command to add a new rarity checker database",
+        "options": [
+          {
+            "type": 3,
+            "name": "collectionstring",
+            "description": "URL identifier of collection",
+            "required": true
+          }
+        ]
+      }//end data
+    }).then(id => {
+      client.application.commands.set({
+        command : id, permissions: [
+          { id: everyone.id,
+          type: 'ROLE',
+          permission: false}
+          ]
+      }).catch(console.log)
+     })//end post
+  })//end for each server loop
+});//end client on ready
+
+//setup discord checkrarity slash command
 client.on('ready', () => {
 
   //add supported collections from rarityCollections to the slash command
