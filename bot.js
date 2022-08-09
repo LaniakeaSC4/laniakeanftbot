@@ -112,7 +112,7 @@ client.on('ready', async () => {
 client.on('ready', () => {
   console.log('I am ready!')
   //enable to reset commands
-  //clearcommands()
+  clearcommands()
 })//end client.on Readys
 
 //function to reset slash commands (enable if needed)
