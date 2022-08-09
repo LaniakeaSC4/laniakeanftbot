@@ -534,6 +534,7 @@ function getRemoteHowRareData(collection) {
       // The whole response has been received.
       resp.on('end', () => {
         var thiscollection = JSON.parse(data)
+        console.log('howrare API code is; ' + thiscollection.result.api_code)
         resolve(thiscollection)//return the recieved X listings
       })
     }).on("error", (err) => { console.log("Error: " + err.message) })
@@ -578,7 +579,7 @@ async function getlocalNFTpoperties(thiscollection, nftid) {
 //=========================
 
 //setup discord add database slash command
-client.on('ready', () => {
+client.on('ready', async () => {
 
   var serverkeys = Object.keys(servers)
   serverkeys.forEach((key, index) => {
@@ -589,6 +590,13 @@ client.on('ready', () => {
         "name": "database",
         "description": "Admin command to add a new rarity checker database",
         "options": [
+          {
+            "type": 3,
+            "name": "action",
+            "description": "Action type",
+            "choices": [{ "name": "Add", "value": "add" }, { "name": "Update", "value": "update" }],
+            "required": true
+          },
           {
             "type": 3,
             "name": "collectionstring",
@@ -607,7 +615,16 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
   const args = interaction.data.options//array of the provided data after the slash
 
   if (command === 'database') {
+    var action = args[0]
+    var collectionstring = args[1]
     if (interaction.member.user.id === "684896787655557216") {
+      if (action === 'add') {
+        await getRemoteHowRareData(collectionstring).then(async thisdata => {
+          //put in SQL
+        })//end then
+      }
+
+      //reply to interaction with acknowledgement
       client.api.interactions(interaction.id, interaction.token).callback.post({
         data: {
           type: 4,
