@@ -8,6 +8,7 @@ const pgclient = new pg.Client({
   ssl: { rejectUnauthorized: false }
 })
 
+/*
 client.on('ready', async () => {
 
   await pgclient.connect()
@@ -18,6 +19,7 @@ client.on('ready', async () => {
     pgclient.end();
   });
 })
+*/
 
 client.login(process.env.BOTTOKEN)
 
