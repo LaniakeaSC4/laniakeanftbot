@@ -695,6 +695,12 @@ client.on('ready', () => {
 
   //add supported collections from rarityCollections to the slash command
   var choices = []
+  await pgclient.query('SELECT collection_id FROM howraredata', (err, res) => {
+              if (err) throw err
+              console.log(res.rows[0].result)
+            }) 
+  
+  
   for (var i = 0; i < rarityCollections.length; i++) {
     choices.push({ "name": rarityCollections[i][0], "value": rarityCollections[i][0] })
   }//end for
