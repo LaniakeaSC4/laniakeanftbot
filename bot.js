@@ -659,10 +659,10 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
       
       if (action === 'test'){
         console.log('action is test')
-        var querystring = 'SELECT jsonb_path_query_first(data, "$.result.data.items[*] ? (@.id == $2)") FROM   howraredata WHERE collection_id = $1'
-        var querydata = [collectionstring, '50']
+        var testid = 50
+        var querystring = "SELECT jsonb_path_query_first(data #> '{result,data,items}', '$[*] ? (@.id == " + testid + ")') AS result FROM howraredata WHERE  collection_id = " + collectionstring 
         
-        await pgclient.query(querystring, querydata, (err, res) => {
+        await pgclient.query(querystring, (err, res) => {
               if (err) throw err
 console.log(res)
               //do I need to close connection? 
