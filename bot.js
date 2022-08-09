@@ -691,7 +691,7 @@ console.log(res.rows[0].result)
 })
 
 //setup discord checkrarity slash command
-client.on('ready', () => {
+client.on('ready', async () => {
 
   //add supported collections from rarityCollections to the slash command
   var choices = []
