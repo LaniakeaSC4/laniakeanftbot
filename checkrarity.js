@@ -1,3 +1,9 @@
+const pg = require('pg')
+const pgclient = new pg.Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
+})
+
 async function getPostgresCollectionSize(collectionID) {
   return new Promise((resolve, reject) => {
     var querystring = "SELECT COUNT(*) FROM (SELECT jsonb_path_query(data, '$.result.data.items[*]') FROM howraredata WHERE collection_id = '" + collectionID + "') AS nftcount"
