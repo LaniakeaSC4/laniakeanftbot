@@ -541,7 +541,7 @@ async function rebuildRarityCommand() {
 async function getPosrgresNFTproperties(collectionstring, nftid) {
   return new Promise((resolve, reject) => {
 
-    var querystring = "SELECT jsonb_path_query_first(data #> '{result,data,items}', '$[*] ? (@.id == " + nftid + ")') AS result FROM howraredata WHERE  collection_id = '" + collectionstring + "' "
+    var querystring = "SELECT jsonb_path_query_first(data #> '{result,data,items}', '$[*] ? (@.id == " + nftid + " || @.id == \"" + nftid + "\")') AS result FROM howraredata WHERE  collection_id = '" + collectionstring + "' "
 
     pgclient.query(querystring, (err, res) => {
       if (err) throw err
