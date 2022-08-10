@@ -113,7 +113,7 @@ client.on('ready', async () => {
   clearcommands()
   rebuildRarityCommand()
   console.log('testing get collection size')
-  var counttest = getPosrgresCollectionSize('monkeypox_nft')
+  var counttest = await getPosrgresCollectionSize('monkeypox_nft')
   console.log('counttest is: ' + counttest)
 })//end client.on Ready
 
