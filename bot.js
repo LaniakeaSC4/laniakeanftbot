@@ -525,14 +525,82 @@ async function getRemoteHowRareData(collection) {
   }) //end promise
 }//end getremoteHowRareData function
 
+//setup/rebuild discord checkrarity slash command
+async function rebuildRarityCommand() {
+  return new Promise((resolve, reject) => {
+    //add supported collections from postgressDB to the slash command
+    var choices = []
+    pgclient.query('SELECT collection_id FROM howraredata', (err, res) => {
+      if (err) throw err
+      //console.log(res.rows)
+      for (var i = 0; i < res.rows.length; i++) {
+        choices.push({ "name": res.rows[i].collection_id, "value": res.rows[i].collection_id })
+      }//end for each row
+    })//end query
+
+    var serverkeys = Object.keys(servers)
+    serverkeys.forEach((key, index) => {
+      client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
+        data: {
+          "name": "checkrarity",
+          "description": "Check the rarity of an NFT in a collection we support",
+          "options": [
+            {
+              "type": 3,
+              "name": "collection",
+              "description": "Please select a collection",
+              "choices": choices,
+              "required": true
+            },
+            {
+              "type": 3,
+              "name": "nftnumber",
+              "description": "Enter the # of the NFT to check in selected collection",
+              "required": true
+            }
+          ]
+        }//end data
+      })//end post
+    })//end for each server loop 
+  })//end promise
+}//end rebuildRarityCommand
+
+async function getPosrgresNFTproperties(collectionstring, nftid) {
+  return new Promise((resolve, reject) => {
+
+    var querystring = "SELECT jsonb_path_query_first(data #> '{result,data,items}', '$[*] ? (@.id == " + nftid + ")') AS result FROM howraredata WHERE  collection_id = '" + collectionstring + "' "
+
+    pgclient.query(querystring, (err, res) => {
+      if (err) throw err
+      if (res.rows[0].result != null) {
+        var thisnftrarity = res.rows[0].result.all_ranks.statistical_rarity
+        var thisnftname = res.rows[0].result.name
+        var thisnftimage = res.rows[0].result.image
+        resolve([thisnftrarity, thisnftname, thisnftimage])
+      } else {
+        resolve('NFT not in collection')
+      }//end else
+    })//end query
+  })//end promise
+}//end getPosrgresNFTproperties
+
+async function getPosrgresCollectionSize(collectionID) {
+  return new Promise((resolve, reject) => {
+    var querystring = "SELECT COUNT(*) FROM (SELECT jsonb_path_query(data, '$.result.data.items[*]') FROM howraredata WHERE collection_id = '" + collectionID + "') AS nftcount"
+    pgclient.query(querystring, (err, res) => {
+      if (err) throw err
+      resolve(res.rows[0].count)
+    })//end query
+  })//end promise
+}//end getPosrgresCollectionSize
+
 //=========================
 //====  Rarity checker  ===
 //====  Slash commands  ===
 //=========================
 
-//setup discord add database slash command
+//setup discord add database slash command on bot ready
 client.on('ready', async () => {
-
   var serverkeys = Object.keys(servers)
   serverkeys.forEach((key, index) => {
     client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
@@ -557,9 +625,9 @@ client.on('ready', async () => {
       }//end data
     })//end post command
   })//end for each server loop
-});//end client on ready
+})//end client on ready
 
-//respond to slash command
+//respond to databse slash command
 client.ws.on('INTERACTION_CREATE', async interaction => {
   const command = interaction.data.name.toLowerCase()
   const args = interaction.data.options//array of the provided data after the slash
@@ -638,97 +706,14 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
   }//end if database
 })
 
-//setup discord checkrarity slash command
-async function rebuildRarityCommand() {
-  return new Promise((resolve, reject) => {
-
-    //add supported collections from postgressDB to the slash command
-    var choices = []
-    pgclient.query('SELECT collection_id FROM howraredata', (err, res) => {
-      if (err) throw err
-      //console.log(res.rows)
-      for (var i = 0; i < res.rows.length; i++) {
-
-        choices.push({ "name": res.rows[i].collection_id, "value": res.rows[i].collection_id })
-
-      }
-    })
-
-    var serverkeys = Object.keys(servers)
-    serverkeys.forEach((key, index) => {
-      client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
-        data: {
-          "name": "checkrarity",
-          "description": "Check the rarity of an NFT in a collection we support",
-          "options": [
-            {
-              "type": 3,
-              "name": "collection",
-              "description": "Please select a collection",
-              "choices": choices,
-              "required": true
-            },
-            {
-              "type": 3,
-              "name": "nftnumber",
-              "description": "Enter the # of the NFT to check in selected collection",
-              "required": true
-            }
-          ]
-        }//end data
-      })//end post
-    })//end for each server loop 
-  })//end promise
-}
-
-async function getPosrgresNFTproperties(collectionstring, nftid) {
-  return new Promise((resolve, reject) => {
-
-    var querystring = "SELECT jsonb_path_query_first(data #> '{result,data,items}', '$[*] ? (@.id == " + nftid + ")') AS result FROM howraredata WHERE  collection_id = '" + collectionstring + "' "
-
-    pgclient.query(querystring, (err, res) => {
-      if (err) throw err
-      if (res.rows[0].result != null) {
-        console.log(res.rows[0])
-        var thisnftrarity = res.rows[0].result.all_ranks.statistical_rarity
-        var thisnftname = res.rows[0].result.name
-        var thisnftimage = res.rows[0].result.image
-        resolve([thisnftrarity, thisnftname, thisnftimage])
-      } else {
-        resolve('NFT not in collection')
-      }
-
-
-
-    })
-
-
-  })//end promise
-}
-
-async function getPosrgresCollectionSize(collectionID) {
-  return new Promise((resolve, reject) => {
-    var querystring = "SELECT COUNT(*) FROM (SELECT jsonb_path_query(data, '$.result.data.items[*]') FROM howraredata WHERE collection_id = '" + collectionID + "') AS nftcount"
-    pgclient.query(querystring, (err, res) => {
-      if (err) throw err
-      console.log(res.rows)
-      resolve(res.rows[0].count)
-      //resolve([thisnftrarity, thisnftname, thisnftimage])
-    })
-  })//end promise
-}
-
-//respond to slash command
+//respond to checkrarity slash command
 client.ws.on('INTERACTION_CREATE', async interaction => {
   const command = interaction.data.name.toLowerCase()
   const args = interaction.data.options//array of the provided data after the slash
 
   if (command === 'checkrarity') {
-
-    var thiscollection = args[0].value
-    var thisnftnumber = args[1].value
-
     //we dont have to check if collection is in database as list of collections was established from database
+    var thiscollection = args[0].value; var thisnftnumber = args[1].value
     var returnedrarity = await getPosrgresNFTproperties(thiscollection, thisnftnumber)
 
     if (returnedrarity != 'NFT not in collection') {//is this check enough? if this is found, will everything else pass?
@@ -750,11 +735,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
       var raritydescription = await getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity)
 
       var embedcolour = await getembedcolour(raritydescription)
-
       var thisembedcolour = parseInt(embedcolour, 16)
-
-      //send the post
-      client.api.interactions(interaction.id, interaction.token).callback.post({
+      
+      client.api.interactions(interaction.id, interaction.token).callback.post({//send the post
         data: {
           type: 4,
           data: {
@@ -789,7 +772,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
           data: {
             embeds: [
               {
-                "title": 'Token not found in database',
+                "title": 'Token not found in database. Are you sure this token # exists in the collection?',
                 "color": 15158332,
                 "footer": {
                   "text": "Bot by Laniakea#3683"
