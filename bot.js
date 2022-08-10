@@ -790,14 +790,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             embeds: [
               {
                 "title": 'Token not found in database',
-                "color": thisembedcolour,
-                "fields": [
-                  {
-                    "name": "Rarity",
-                    "value": thisrarity + ' - ' + raritydescription,
-                    "inline": true
-                  }
-                ],
+                "color": 15158332,
                 "footer": {
                   "text": "Bot by Laniakea#3683"
                 }
