@@ -785,7 +785,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     //we dont have to check if collection is in database as list of collections was established from database
     var returnedrarity = await getPosrgresNFTproperties(thiscollection, thisnftnumber)
 
-    if (returnedrarity != 'NFT not in collection') {
+    if (returnedrarity != 'NFT not in collection') {//is this check enough? if this is found, will everything else pass?
 
       var thisrarity = returnedrarity[0]
       var thisname = returnedrarity[1]
@@ -807,61 +807,59 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
       var thisembedcolour = parseInt(embedcolour, 16)
 
-      if (raritydescription !== 'Not found') {//if NFT number was not found in DB, 'Not found' would be returned. If it was found, proceed
-        client.api.interactions(interaction.id, interaction.token).callback.post({
+      //send the post
+      client.api.interactions(interaction.id, interaction.token).callback.post({
+        data: {
+          type: 4,
           data: {
-            type: 4,
-            data: {
-              embeds: [
-                {
-                  "title": thisname,
-                  "color": thisembedcolour,
-                  "fields": [
-                    {
-                      "name": "Rarity",
-                      "value": thisrarity + ' - ' + raritydescription,
-                      "inline": true
-                    }
-                  ],
-                  "image": {
-                    "url": thisimage,
-                    "height": 75,
-                    "width": 75
-                  },
-                  "footer": {
-                    "text": "Bot by Laniakea#3683"
+            embeds: [
+              {
+                "title": thisname,
+                "color": thisembedcolour,
+                "fields": [
+                  {
+                    "name": "Rarity",
+                    "value": thisrarity + ' - ' + raritydescription,
+                    "inline": true
                   }
+                ],
+                "image": {
+                  "url": thisimage,
+                  "height": 75,
+                  "width": 75
+                },
+                "footer": {
+                  "text": "Bot by Laniakea#3683"
                 }
-              ]//end embed
-            }//end message data
-          }//end post data
-        })//end post()
-
-      } else {//end if rarity description != not found
-        client.api.interactions(interaction.id, interaction.token).callback.post({
+              }
+            ]//end embed
+          }//end message data
+        }//end post data
+      })//end post()
+    } else {//if (returnedrarity != 'NFT not in collection')
+      client.api.interactions(interaction.id, interaction.token).callback.post({
+        data: {
+          type: 4,
           data: {
-            type: 4,
-            data: {
-              embeds: [
-                {
-                  "title": 'Token not found in database',
-                  "color": thisembedcolour,
-                  "fields": [
-                    {
-                      "name": "Rarity",
-                      "value": thisrarity + ' - ' + raritydescription,
-                      "inline": true
-                    }
-                  ],
-                  "footer": {
-                    "text": "Bot by Laniakea#3683"
+            embeds: [
+              {
+                "title": 'Token not found in database',
+                "color": thisembedcolour,
+                "fields": [
+                  {
+                    "name": "Rarity",
+                    "value": thisrarity + ' - ' + raritydescription,
+                    "inline": true
                   }
+                ],
+                "footer": {
+                  "text": "Bot by Laniakea#3683"
                 }
-              ]//end embed
-            }//end message data
-          }//end post data
-        })//end post()
-      }//end else
-    }//end else (if rarity description = 'Not found')
+              }
+            ]//end embed
+          }//end message data
+        }//end post data
+      })//end post()
+    }//end else//end else (if rarity description = 'Not found')
   }//end if command = rarity
 })//end response to slash command
