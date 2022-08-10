@@ -112,9 +112,6 @@ client.on('ready', async () => {
   pgclient.connect()//connect to DB
   clearcommands()
   rebuildRarityCommand()
-  console.log('testing get collection size')
-  var counttest = await getPosrgresCollectionSize('monkeypox_nft')
-  console.log('counttest is: ' + counttest)
 })//end client.on Ready
 
 //function to reset slash commands (enable if needed)
@@ -791,7 +788,9 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
         thisname = returnedrarity[1]
         thisimage = returnedrarity[2]
 
-        return calculateranges(rarityCollections[i][2])
+        var collectionsize = await getPosrgresCollectionSize(thiscollection)
+
+        return calculateranges(collectionsize)
       })
       .then((ranges) => {
 
