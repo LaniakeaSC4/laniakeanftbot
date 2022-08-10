@@ -742,6 +742,7 @@ async function getPosrgresNFTproperties(collectionstring, nftid) {
 
     pgclient.query(querystring, (err, res) => {
       if (err) throw err
+      console.log(res.rows[0])
       var thisnftrarity = res.rows[0].result.all_ranks.statistical_rarity
       var thisnftname = res.rows[0].result.name
       var thisnftimage = res.rows[0].result.image
