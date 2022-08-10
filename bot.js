@@ -26,19 +26,6 @@ client.login(process.env.BOTTOKEN)
 const pround = (number, decimalPlaces) => Number(Math.round(Number(number + "e" + decimalPlaces)) + "e" + decimalPlaces * -1)
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
-//==============================
-//==== Rarity checker Setup  ===
-//==============================
-
-const rarityCollections = [
-  ['monkeypox_nft', [], 2400],
-  ['pixel_guild_loot_legends', [], 8888],
-  ['pokerfaces', [], 377]
-]
-
-var raritySequencer = []
-for (var i = 0; i < rarityCollections.length; i++) { raritySequencer.push(i) }
-
 //======================
 //==== Sniper Setup  ===
 //======================
@@ -108,7 +95,6 @@ client.on('ready', async () => {
   console.log('I am ready!')
   initaliseSniperCollections()
   startsniper()
-  initaliseRarityCollections()
   pgclient.connect()//connect to DB
   clearcommands()
   rebuildRarityCommand()
@@ -539,38 +525,6 @@ async function getRemoteHowRareData(collection) {
   }) //end promise
 }//end getremoteHowRareData function
 
-const initaliseRarityCollections = async () => {
-  await wait(10000)
-  for (const seq of raritySequencer) { //for each collection
-    //get initial set of listings and store them in the local history arrary for that collection
-    await getRemoteHowRareData(rarityCollections[seq][0]).then(async thisdata => {
-      rarityCollections[seq][1] = thisdata //fill tracked listings with the listings we just got
-      //console.log('loaded Howrare.is data for ' + rarityCollections[seq][0])
-    })//end then
-    await wait(4000)//add delay between API requests
-  }//end for each seq of raritySequencer
-}//end initaliseRarityCollections
-
-async function getlocalNFTpoperties(thiscollection, nftid) {
-  return new Promise((resolve, reject) => {
-    var thisnftrarity = ''
-    var thisnftname = ''
-    var thisnftimage = ''
-    for (var i = 0; i < rarityCollections.length; i++) {//loop through collections to find the one this rarity check is for
-      if (rarityCollections[i][0] === thiscollection) {
-        for (var j = 0; j < rarityCollections[i][1].result.data.items.length; j++) {
-          if (rarityCollections[i][1].result.data.items[j].id == nftid) {
-            thisnftrarity = rarityCollections[i][1].result.data.items[j].all_ranks.statistical_rarity
-            thisnftname = rarityCollections[i][1].result.data.items[j].name
-            thisnftimage = rarityCollections[i][1].result.data.items[j].image
-            resolve([thisnftrarity, thisnftname, thisnftimage])
-          }//end if
-        }//end for
-      }//end if we found the right collection
-    }//end for loop of collections
-  })//end promise
-}//end function
-
 //=========================
 //====  Rarity checker  ===
 //====  Slash commands  ===
@@ -688,7 +642,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 async function rebuildRarityCommand() {
   return new Promise((resolve, reject) => {
 
-    //add supported collections from rarityCollections to the slash command
+    //add supported collections from postgressDB to the slash command
     var choices = []
     pgclient.query('SELECT collection_id FROM howraredata', (err, res) => {
       if (err) throw err
@@ -722,17 +676,9 @@ async function rebuildRarityCommand() {
             }
           ]
         }//end data
-      });//end post
+      })//end post
     })//end for each server loop 
-
-    /*
-    for (var i = 0; i < rarityCollections.length; i++) {
-      choices.push({ "name": rarityCollections[i][0], "value": rarityCollections[i][0] })
-    }//end fo
-    */
-
-
-  });//end promise
+  })//end promise
 }
 
 async function getPosrgresNFTproperties(collectionstring, nftid) {
