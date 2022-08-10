@@ -727,8 +727,6 @@ return new Promise((resolve, reject) => {
       }//end data
     });//end post
   })//end for each server loop 
-              
-resolve()         
   
   /*
   for (var i = 0; i < rarityCollections.length; i++) {
