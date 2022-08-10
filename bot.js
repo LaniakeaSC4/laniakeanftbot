@@ -693,7 +693,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
       var thisrarity = returnedrarity[0]
       var thisname = returnedrarity[1]
-      var thisimage = returnedrarity[2]
+      var thisimage = returnedrarity[2];console.log('this image is: ' + thisimage)
 
       var collectionsize = await getPosrgresCollectionSize(thiscollection)
       var ranges = await calculateranges(collectionsize)
