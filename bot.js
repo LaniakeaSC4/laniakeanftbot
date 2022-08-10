@@ -762,7 +762,7 @@ var querystring = "SELECT COUNT(*) FROM (SELECT jsonb_path_query(data, '$.result
 pgclient.query(querystring, (err, res) => {
   if (err) throw err
   console.log(res.rows)
-  return res.rows[0].count
+  resolve(res.rows[0].count)
   //resolve([thisnftrarity, thisnftname, thisnftimage])
 })
 
