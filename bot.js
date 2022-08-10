@@ -1,6 +1,7 @@
 const { Client, Intents } = require('discord.js')
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES] })
 const https = require('https')
+const checkrarity = require('./checkrarity.js')
 
 const pg = require('pg')
 const pgclient = new pg.Client({
@@ -8,18 +9,6 @@ const pgclient = new pg.Client({
   ssl: { rejectUnauthorized: false }
 })
 
-/*
-client.on('ready', async () => {
-
-  await pgclient.connect()
-
-  await pgclient.query('CREATE TABLE IF NOT EXISTS howraredata ( collection_ID TEXT PRIMARY KEY, data JSONB, created_on TIMESTAMP NOT NULL, last_updated TIMESTAMP)', (err, res) => {
-    if (err) throw err
-
-    pgclient.end();
-  });
-})
-*/
 
 client.login(process.env.BOTTOKEN)
 
@@ -99,6 +88,11 @@ client.on('ready', async () => {
   clearcommands()
   rebuildRarityCommand()
 })//end client.on Ready
+
+client.on('ready', async () => {
+var size = await checkrarity.getPostgresCollectionSize('monkeypox_nft')
+console.log(size)
+})
 
 //function to reset slash commands (enable if needed)
 async function clearcommands() {
