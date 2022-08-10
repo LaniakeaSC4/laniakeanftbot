@@ -113,7 +113,8 @@ client.on('ready', async () => {
   clearcommands()
   rebuildRarityCommand()
   console.log('testing get collection size')
-  getPosrgresCollectionSize('monkeypox_nft')
+  var counttest = getPosrgresCollectionSize('monkeypox_nft')
+  console.log('counttest is: ' + counttest)
 })//end client.on Ready
 
 //function to reset slash commands (enable if needed)
@@ -761,6 +762,7 @@ var querystring = "SELECT COUNT(*) FROM (SELECT jsonb_path_query(data, '$.result
 pgclient.query(querystring, (err, res) => {
   if (err) throw err
   console.log(res.rows)
+  return res.rows[0].count
   //resolve([thisnftrarity, thisnftname, thisnftimage])
 })
 
