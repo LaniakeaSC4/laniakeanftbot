@@ -112,6 +112,8 @@ client.on('ready', async () => {
   pgclient.connect()//connect to DB
   clearcommands()
   rebuildRarityCommand()
+  console.log('testing get collection size')
+  getPosrgresCollectionSize('monkeypox_nft')
 })//end client.on Ready
 
 //function to reset slash commands (enable if needed)
@@ -757,6 +759,17 @@ async function getPosrgresNFTproperties(collectionstring, nftid) {
 
 
   })//end promise
+}
+
+async function getPosrgresCollectionSize(collectionID) {
+
+var querystring = "SELECT COUNT(*) FROM (SELECT jsonb_path_query(data, '$.result.data.items[*]') FROM howraredata WHERE collection_id = " + collectionID + ") AS nftcount"
+pgclient.query(querystring, (err, res) => {
+  if (err) throw err
+  console.log(res.rows)
+  //resolve([thisnftrarity, thisnftname, thisnftimage])
+})
+
 }
 
 //respond to slash command
