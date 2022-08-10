@@ -782,7 +782,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
     //we dont have to check if collection is in database as list of collections was established from database
     await getPosrgresNFTproperties(thiscollection, thisnftnumber)
-      .then((returnedrarity) => {
+      .then(async (returnedrarity) => {
 
         thisrarity = returnedrarity[0]
         thisname = returnedrarity[1]
