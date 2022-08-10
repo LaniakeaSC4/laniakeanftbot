@@ -120,7 +120,6 @@ client.on('ready', async () => {
 async function clearcommands() {
   var serverkeys = Object.keys(servers)
   serverkeys.forEach((key, index) => {
-    console.log(servers[key].id)
     const guild = client.guilds.cache.get(servers[key].id)
     guild.commands.set([])
   })
@@ -535,7 +534,7 @@ async function getRemoteHowRareData(collection) {
       // The whole response has been received.
       resp.on('end', () => {
         var thiscollection = JSON.parse(data)
-        console.log('howrare API code is; ' + thiscollection.result.api_code)
+        //console.log('howrare API code is; ' + thiscollection.result.api_code)
         resolve(thiscollection)//return the recieved X listings
       })
     }).on("error", (err) => { console.log("Error: " + err.message) })
@@ -548,7 +547,7 @@ const initaliseRarityCollections = async () => {
     //get initial set of listings and store them in the local history arrary for that collection
     await getRemoteHowRareData(rarityCollections[seq][0]).then(async thisdata => {
       rarityCollections[seq][1] = thisdata //fill tracked listings with the listings we just got
-      console.log('loaded Howrare.is data for ' + rarityCollections[seq][0])
+      //console.log('loaded Howrare.is data for ' + rarityCollections[seq][0])
     })//end then
     await wait(4000)//add delay between API requests
   }//end for each seq of raritySequencer
@@ -584,8 +583,6 @@ client.on('ready', async () => {
 
   var serverkeys = Object.keys(servers)
   serverkeys.forEach((key, index) => {
-    var everyone = client.guilds.cache.get(servers[key].id).roles.everyone.id
-    console.log(everyone)
     client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
       data: {
         "name": "database",
@@ -616,8 +613,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
   const args = interaction.data.options//array of the provided data after the slash
 
   if (command === 'database') {
-    var action = args[0].value; console.log(action)
-    var collectionstring = args[1].value; console.log(collectionstring)
+    var action = args[0].value
+    var collectionstring = args[1].value
     if (interaction.member.user.id === "684896787655557216") {
       if (action === 'add') {
         await getRemoteHowRareData(collectionstring).then(async thisdata => {
@@ -697,7 +694,7 @@ async function rebuildRarityCommand() {
     var choices = []
     pgclient.query('SELECT collection_id FROM howraredata', (err, res) => {
       if (err) throw err
-      console.log(res.rows)
+      //console.log(res.rows)
       for (var i = 0; i < res.rows.length; i++) {
 
         choices.push({ "name": res.rows[i].collection_id, "value": res.rows[i].collection_id })
@@ -747,9 +744,6 @@ async function getPosrgresNFTproperties(collectionstring, nftid) {
 
     pgclient.query(querystring, (err, res) => {
       if (err) throw err
-      console.log(res.rows[0].result)
-
-
       var thisnftrarity = res.rows[0].result.all_ranks.statistical_rarity
       var thisnftname = res.rows[0].result.name
       var thisnftimage = res.rows[0].result.image
@@ -763,7 +757,7 @@ async function getPosrgresNFTproperties(collectionstring, nftid) {
 
 async function getPosrgresCollectionSize(collectionID) {
 
-var querystring = "SELECT COUNT(*) FROM (SELECT jsonb_path_query(data, '$.result.data.items[*]') FROM howraredata WHERE collection_id = " + collectionID + ") AS nftcount"
+var querystring = "SELECT COUNT(*) FROM (SELECT jsonb_path_query(data, '$.result.data.items[*]') FROM howraredata WHERE collection_id = '" + collectionID + "') AS nftcount"
 pgclient.query(querystring, (err, res) => {
   if (err) throw err
   console.log(res.rows)
