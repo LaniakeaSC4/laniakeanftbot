@@ -374,110 +374,83 @@ async function startsniper() {
             console.log('New/updated ' + sniperCollections[k][0] + ' entry ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
             rebuildarrary.unshift(thislistings[i])//add the new entry to the start of the rebuild arrary so we can remember this one if we see it later
 
-            //set price of this lisitng
-            var thistoken = {}
-            var thisprice = pround(thislistings[i].price, 6)
-            var thisname = ''
+            var thisprice = pround(thislistings[i].price, 6)//set price of this lisitng
+            var recievedtoken = await getremoteMEtokendetails(thislistings[i].tokenMint)
+
+            var thistoken = recievedtoken
+            var thisname = thistoken.name
+            var thisimage = thistoken.image
+            var thislistinglink = 'https://magiceden.io/item-details/' + thistoken.mintAddress
+
+            //get nft ID
             var thisnftid = ''
             var thisrarity = ''
-            var thisranges = []
-            var thisraritydescription = ''
-            var thisfloorprice = 0
-            var thissnipe = ''
-            var thisembedcolour = 0
-            var thissnipeprice = 0
-            var thislimit = 0
-            var thisimage = ''
-            var thislistinglink = ''
+            let namearr = thistoken.name.split(' ')
+            for (var i = 0; i < namearr.length; i++) {
+              let checkthis = namearr[i]
+              if (checkthis.includes('#')) {
+                var nlength = checkthis.length
+                thisnftid = checkthis.substring(1, nlength)
+              }//end if
+            }//end for
 
-            getremoteMEtokendetails(thislistings[i].tokenMint)
-              .then((recievedtoken) => {
+            //get rarity
+            for (var i = 0; i < sniperCollections[k][1].length; i++) {
+              if (thistoken.mintAddress == sniperCollections[k][1][i].tokenMint) {
+                thisrarity = sniperCollections[k][1][i].rarity.moonrank.rank//end moonrank data from ME
+                break
+              }//end if
+            }//end for
 
-                thistoken = recievedtoken
-                thisname = thistoken.name
-                thisimage = thistoken.image
-                thislistinglink = 'https://magiceden.io/item-details/' + thistoken.mintAddress
+            var ranges = await calculateranges(sniperCollections[k][2])
 
-                //get nft ID
-                let namearr = thistoken.name.split(' ')
-                for (var i = 0; i < namearr.length; i++) {
-                  let checkthis = namearr[i]
-                  if (checkthis.includes('#')) {
-                    var nlength = checkthis.length
-                    thisnftid = checkthis.substring(1, nlength)
-                  }//end if
-                }//end for
+            var mythicstart = ranges[0]; var mythicend = ranges[1]
+            var legendarystart = ranges[2]; var legendaryend = ranges[3]
+            var epicstart = ranges[4]; var epicend = ranges[5]
+            var rarestart = ranges[6]; var rareend = ranges[7]
+            var uncommonstart = ranges[8]; var uncommonend = ranges[9]
+            var commonstart = ranges[10]; var commonend = ranges[11]
 
-                //get rarity
-                for (var i = 0; i < sniperCollections[k][1].length; i++) {
-                  if (thistoken.mintAddress == sniperCollections[k][1][i].tokenMint) {
-                    thisrarity = sniperCollections[k][1][i].rarity.moonrank.rank//end moonrank data from ME
-                    break
-                  }//end if
-                }//end for
+            var raritydescription = await getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity)
+            var floorprice = await getremotefloorprice(sniperCollections[k][0])
+            var thisfloorprice = pround(floorprice, 6)
+            var snipe = await testifsnipe(raritydescription, thisprice, thisfloorprice)
 
-                return calculateranges(sniperCollections[k][2])
-              })//end .then
-              .then((ranges) => {
+            var thissnipe = snipe[0]
+            var thissnipeprice = snipe[1]
+            var thislimit = snipe[2]
 
-                var mythicstart = ranges[0]; var mythicend = ranges[1]
-                var legendarystart = ranges[2]; var legendaryend = ranges[3]
-                var epicstart = ranges[4]; var epicend = ranges[5]
-                var rarestart = ranges[6]; var rareend = ranges[7]
-                var uncommonstart = ranges[8]; var uncommonend = ranges[9]
-                var commonstart = ranges[10]; var commonend = ranges[11]
+            if (thissnipe != "false") {
+              console.log('we have a ' + sniperCollections[k][0] + ' snipe!')
 
-                thisranges = ranges//store outside subsection so we can access it
+              var embedcolour = await getembedcolour(raritydescription)
+              var thisembedcolour = parseInt(embedcolour, 16)//store outside subsection so we can access it
 
-                return getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity)
-              })//end .then
-              .then((raritydescription) => {
-                thisraritydescription = raritydescription//store outside subsection so we can access it
-                return getremotefloorprice(sniperCollections[k][0])
-              })//end .then
-              .then((floorprice) => {
-                thisfloorprice = pround(floorprice, 6)//store outside subsection so we can access it
-                return testifsnipe(thisraritydescription, thisprice, thisfloorprice)
-              })//end .then
-              .then((snipe) => {
-                //store outside subsection so we can access it
-                thissnipe = snipe[0]
-                thissnipeprice = snipe[1]
-                thislimit = snipe[2]
+              var thisserver = ''
+              var thisserverid = ''
+              var thissnipechannel = ''
+              var thisemoji = ''
 
-                if (thissnipe != "false") {
-                  console.log('we have a ' + sniperCollections[k][0] + ' snipe!')
-                  return getembedcolour(thisraritydescription)
-                }//end if not false
-              })//end .then
-              .then((embedcolour) => {
+              if (thissnipe != "false") {//if this is a snipe get emoji and send messages out to each server
+                var serverkeys = Object.keys(servers)
+                serverkeys.forEach((key, index) => {//for each server
 
-                thisembedcolour = thisembedcolour = parseInt(embedcolour, 16)//store outside subsection so we can access it
-                var thisserver = ''
-                var thisserverid = ''
-                var thissnipechannel = ''
-                var thisemoji = ''
+                  //get the snipes channel id from the servers config object
+                  var emojis = Object.keys(servers[key].emoji)
+                  thisserver = servers[key]
+                  thisserverid = servers[key].id
+                  thissnipechannel = servers[key].snipeschannel
 
-                if (thissnipe != "false") {//if this is a snipe get emoji and send messages out to each server
-                  var serverkeys = Object.keys(servers)
-                  serverkeys.forEach((key, index) => {//for each server
+                  emojis.forEach((key, index) => {//loop through each potential emoji
+                    if (key === raritydescription) { thisemoji = thisserver.emoji[key] }//end if key matches emoji we are looking for
+                  })//end for each potential emoji loop
 
-                    //get the snipes channel id from the servers config object
-                    var emojis = Object.keys(servers[key].emoji)
-                    thisserver = servers[key]
-                    thisserverid = servers[key].id
-                    thissnipechannel = servers[key].snipeschannel
+                  //send snipes
+                  sendsnipes(thisserverid, thissnipechannel, thisname, thisembedcolour, thisemoji, thisrarity, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink)
 
-                    emojis.forEach((key, index) => {//loop through each potential emoji
-                      if (key === thisraritydescription) { thisemoji = thisserver.emoji[key] }//end if key matches emoji we are looking for
-                    })//end for each potential emoji loop
-
-                    //send snipes
-                    sendsnipes(thisserverid, thissnipechannel, thisname, thisembedcolour, thisemoji, thisrarity, thisraritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink)
-
-                  })//end for each server
-                }//end if this is a snipe
-              })//end .then
+                })//end for each server
+              }//end if this is a snipe
+            }//end if not false
           }//end else for a token we havnt seen before
         }//end for loop of each listing recieved
 
@@ -736,7 +709,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
       var embedcolour = await getembedcolour(raritydescription)
       var thisembedcolour = parseInt(embedcolour, 16)
-      
+
       client.api.interactions(interaction.id, interaction.token).callback.post({//send the post
         data: {
           type: 4,
