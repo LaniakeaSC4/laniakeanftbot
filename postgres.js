@@ -1,4 +1,15 @@
-var db = require('./pgclient.js');
+/*
+This file is for functions which connect to the postgress database
+
+Postgress client established and connected in pgclint.js
+
+If postgress client is already established and connected, it's returned.
+Otherwise, a new clinet is established and connected, then returned.
+
+Get the connected client in each function with - var pgclient = db.getClient()
+Then query databse with - pgclient.query()
+*/
+var db = require('./pgclient.js')
 
 async function getPostgresCollectionSize(collectionID) {
   var pgclient = db.getClient()
@@ -33,5 +44,22 @@ async function getPosrgresNFTproperties(collectionstring, nftid) {
   })//end promise
 }//end getPosrgresNFTproperties
 
+async function getColletionList() {
+  var pgclient = db.getClient()
+  return new Promise((resolve, reject) => {
+    //add supported collections from postgressDB to the slash command
+    var collectionlist = []
+    pgclient.query('SELECT collection_id FROM howraredata', (err, res) => {
+      if (err) throw err
+      //console.log(res.rows)
+      for (var i = 0; i < res.rows.length; i++) {
+        collectionlist.push(res.rows[i].collection_id)
+      }//end for each row
+      resolve(collectionlist)
+    })//end query
+  })
+}
+
 module.exports.getCollectionSize = getPostgresCollectionSize
 module.exports.getNFTproperties = getPosrgresNFTproperties
+module.exports.getColletionList = getColletionList

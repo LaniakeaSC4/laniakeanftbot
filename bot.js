@@ -1,14 +1,9 @@
 const { Client, Intents } = require('discord.js')
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES] })
 const https = require('https')
-const postgress = require('./postgres.js')
 
-const pg = require('pg')
-const pgclient = new pg.Client({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
-})
-
+const postgress = require('./postgres.js')//postgress related commands are in here
+var db = require('./pgclient.js')//if we need to interact with the client directly in here. Rember to use var pgclient = db.getClient() to get/establish client
 
 client.login(process.env.BOTTOKEN)
 
@@ -84,7 +79,6 @@ client.on('ready', async () => {
   console.log('I am ready!')
   initaliseSniperCollections()
   startsniper()
-  pgclient.connect()//connect to DB
   clearcommands()
   rebuildRarityCommand()
 })//end client.on Ready
@@ -494,14 +488,8 @@ async function getRemoteHowRareData(collection) {
 async function rebuildRarityCommand() {
   return new Promise((resolve, reject) => {
     //add supported collections from postgressDB to the slash command
-    var choices = []
-    pgclient.query('SELECT collection_id FROM howraredata', (err, res) => {
-      if (err) throw err
-      //console.log(res.rows)
-      for (var i = 0; i < res.rows.length; i++) {
-        choices.push({ "name": res.rows[i].collection_id, "value": res.rows[i].collection_id })
-      }//end for each row
-    })//end query
+    var collections = await postgress.getColletionList()
+    var choices = [];for (var i = 0; i < collections.length; i++) {choices.push({ "name": collections[i], "value": collections[i] })}
 
     var serverkeys = Object.keys(servers)
     serverkeys.forEach((key, index) => {
@@ -565,6 +553,8 @@ client.on('ready', async () => {
 
 //respond to databse slash command
 client.ws.on('INTERACTION_CREATE', async interaction => {
+  var pgclient = db.getClient()
+
   const command = interaction.data.name.toLowerCase()
   const args = interaction.data.options//array of the provided data after the slash
 
