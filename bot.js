@@ -486,10 +486,13 @@ async function getRemoteHowRareData(collection) {
 
 //setup/rebuild discord checkrarity slash command
 async function rebuildRarityCommand() {
+
+  var collections = await postgress.getColletionList()
+  
   return new Promise((resolve, reject) => {
     //add supported collections from postgressDB to the slash command
-    var collections = await postgress.getColletionList()
-    var choices = [];for (var i = 0; i < collections.length; i++) {choices.push({ "name": collections[i], "value": collections[i] })}
+
+    var choices = []; for (var i = 0; i < collections.length; i++) { choices.push({ "name": collections[i], "value": collections[i] }) }
 
     var serverkeys = Object.keys(servers)
     serverkeys.forEach((key, index) => {
