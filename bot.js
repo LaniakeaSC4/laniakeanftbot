@@ -87,12 +87,14 @@ client.on('ready', async () => {
   pgclient.connect()//connect to DB
   clearcommands()
   rebuildRarityCommand()
+  
+  var size = await checkrarity.getPostgresCollectionSize('monkeypox_nft')
+console.log('size from other module is:' + size)
+
 })//end client.on Ready
 
 client.on('ready', async () => {
-var size = await checkrarity.getPostgresCollectionSize('monkeypox_nft')
-console.log('size from other module is:' + size)
-})
+}) 
 
 //function to reset slash commands (enable if needed)
 async function clearcommands() {
