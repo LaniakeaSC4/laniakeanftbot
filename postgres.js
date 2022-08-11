@@ -14,4 +14,4 @@ async function getPostgresCollectionSize(collectionID) {
   })//end promise
 }//end getPostgresCollectionSize
 
-module.exports.getPostgresCollectionSize = getPostgresCollectionSize
+module.exports.getCollectionSize = getPostgresCollectionSize
