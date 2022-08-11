@@ -1,7 +1,7 @@
 const { Client, Intents } = require('discord.js')
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES] })
 const https = require('https')
-const checkrarity = require('./checkrarity.js')
+const postgress = require('./postgres.js')
 
 const pg = require('pg')
 const pgclient = new pg.Client({
@@ -88,7 +88,7 @@ client.on('ready', async () => {
   clearcommands()
   rebuildRarityCommand()
   
-  var size = await checkrarity.getPostgresCollectionSize('monkeypox_nft')
+  var size = await postgress.getCollectionSize('monkeypox_nft')
 console.log('size from other module is:' + size)
 
 })//end client.on Ready
