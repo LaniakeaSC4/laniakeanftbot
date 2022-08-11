@@ -5,6 +5,9 @@ const https = require('https')
 const postgress = require('./postgres.js')//postgress related commands are in here
 var db = require('./pgclient.js')//if we need to interact with the client directly in here. Rember to use var pgclient = db.getClient() to get/establish client
 
+const magiceden = require('./magiceden.js')//Magic Eden related commands are in here
+const howrare = require('./howrare.js')//Magic Eden related commands are in here
+
 client.login(process.env.BOTTOKEN)
 
 const pround = (number, decimalPlaces) => Number(Math.round(Number(number + "e" + decimalPlaces)) + "e" + decimalPlaces * -1)
@@ -18,25 +21,11 @@ const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 const servers = {
   "monkeypox":
   {
-    'id': '978975057739124767', 'snipeschannel': '996130357260845156', 'emoji': {
-      "Mythic": '<:mythic:997639717665386586>',
-      "Legendary": '<:legendary:997639764943585421>',
-      "Epic": '<:epic:997639797558497421>',
-      "Rare": '<:rare:997639830844477471>',
-      "Uncommon": '<:uncommon:997639865065799770>',
-      "Common": '<:common:997639893306064997>'
-    }
+    'id': '978975057739124767', 'snipeschannel': '996130357260845156'
   },
   "secretsnake":
   {
-    'id': '901885313608200302', 'snipeschannel': '1004682983036428308', 'emoji': {
-      "Mythic": '<:mythic:1005118725189546164>',
-      "Legendary": '<:legendary:1005118646038822962>',
-      "Epic": '<:epic:1005118595765907466>',
-      "Rare": '<:rare:1005118544377290762>',
-      "Uncommon": '<:uncommon:1005118460596060242>',
-      "Common": '<:common:1005118380988178542>'
-    }
+    'id': '901885313608200302', 'snipeschannel': '1004682983036428308'
   }
 }
 
@@ -98,48 +87,6 @@ async function clearcommands() {
 //===================================
 //====  Functions for sniper bot  ===
 //===================================
-
-//returns x number of recent listings from Magic Eden
-function getnewremoteMElistings(collection, number) {
-  return new Promise((resolve, reject) => {
-    var thiscollection = 'https://api-mainnet.magiceden.dev/v2/collections/' + collection + '/listings?offset=0&limit=' + number//build collection URL
-
-    https.get(thiscollection, (resp) => {
-      let data = ''
-      // A chunk of data has been received.
-      resp.on('data', (chunk) => {
-        data += chunk
-      })
-
-      // The whole response has been received.
-      resp.on('end', () => {
-        var thislistings = JSON.parse(data)
-        resolve(thislistings)//return the recieved X listings
-      })
-    }).on("error", (err) => { console.log("Error: " + err.message) })
-  }) //end promise
-}//end getnewremoteMElistings function
-
-//returns token details from Magic Eden
-async function getremoteMEtokendetails(mintaddress) {
-  return new Promise((resolve, reject) => {
-    var thisurl = 'https://api-mainnet.magiceden.dev/v2/tokens/' + mintaddress//build token URL
-
-    https.get(thisurl, (resp) => {
-      let data = ''
-      // A chunk of data has been received.
-      resp.on('data', (chunk) => {
-        data += chunk
-      })
-
-      // The whole response has been received.
-      resp.on('end', () => {
-        var thistoken = JSON.parse(data)
-        resolve(thistoken)//return the recieved tokendetails
-      })
-    }).on("error", (err) => { console.log("Error: " + err.message) })
-  }) //end promise
-}//end getremoteMEtokendetails function
 
 async function calculateranges(collectionsize) {
   return new Promise((resolve, reject) => {
@@ -217,29 +164,6 @@ async function getraritydescription(mythicstart, mythicend, legendarystart, lege
   }//end else
 }//end getraritydescription function
 
-//returns floor price from Magic Eden API
-async function getremotefloorprice(collection) {
-  return new Promise((resolve, reject) => {
-
-    //build collection URL
-    var thiscollection = 'https://api-mainnet.magiceden.dev/v2/collections/' + collection + '/stats'
-
-    https.get(thiscollection, (resp) => {
-      let data = ''
-      // A chunk of data has been received.
-      resp.on('data', (chunk) => {
-        data += chunk
-      });
-      // The whole response has been received. Print out the result.
-      resp.on('end', () => {
-        var rawFP = parseFloat(JSON.parse(data).floorPrice)//get FP in Sol
-        var thisFP = rawFP / 1000000000
-        resolve(thisFP)
-      })
-    }).on("error", (err) => { console.log("Error: " + err.message) })
-  }) //end promise
-}//end getremotefloorprice function
-
 //returns rarity description (i.e. "Mythic" if its a snipe, else returns 'false') also returns 
 async function testifsnipe(raritydescription, thisprice, floorprice) {
   return new Promise((resolve, reject) => {
@@ -283,7 +207,7 @@ async function getembedcolour(raritydescription) {
   }) //end promise
 }//end testifsnipe function
 
-async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisemoji, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage, listinglink) {
+async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage, listinglink) {
   return new Promise((resolve, reject) => {
     console.log('thissnipeprice (' + thissnipeprice + ') type is this type:' + typeof thissnipeprice)
     client.guilds.cache.get(server).channels.cache.get(snipeschannel).send({
@@ -331,7 +255,7 @@ async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisemoji
 const initaliseSniperCollections = async () => {
   for (const seq of sniperSequencer) {//for each collection
     //get initial set of listings and store them in the local history arrary for that collection
-    await getnewremoteMElistings(sniperCollections[seq][0], initialget).then(async thislistings => {
+    await magiceden.getNewListings(sniperCollections[seq][0], initialget).then(async thislistings => {
       sniperCollections[seq][1] = thislistings//fill tracked listings with the listings we just got
       console.log('added initial ' + initialget + ' Listings for ' + sniperCollections[seq][0])
     })//end then
@@ -346,12 +270,12 @@ async function startsniper() {
     console.log('Initialising recheckloop for collection: ' + value + '. Setting interval for this collection to: ' + thisinterval)
 
     await setInterval(async function (k) {//do this every X minutes
-      await getnewremoteMElistings(sniperCollections[k][0], refreshget).then(async thislistings => {//get latest X listings from Magic Eden
+      await magiceden.getNewListings(sniperCollections[k][0], refreshget).then(async thislistings => {//get latest X listings from Magic Eden
         console.log("I am doing my " + minutes + " minute check for " + sniperCollections[k][0] + '. I have this many in my history at start: ' + sniperCollections[k][1].length)
 
         var rebuildarrary = sniperCollections[k][1]//save all the acquired listings in a temporary arrary
 
-        for (var i = 0; i < thislistings.length; i++) {//for all listings recieved from getnewremoteMElistingsfunction
+        for (var i = 0; i < thislistings.length; i++) {//for all listings recieved from magiceden.getNewListings function
 
           if (sniperCollections[k][1].some(e => (e.tokenAddress === thislistings[i].tokenAddress && e.price === thislistings[i].price))) {
             //actions if token address and price match (i.e. we've seen this one before)
@@ -361,7 +285,7 @@ async function startsniper() {
             rebuildarrary.unshift(thislistings[i])//add the new entry to the start of the rebuild arrary so we can remember this one if we see it later
 
             var thisprice = pround(thislistings[i].price, 6)//set price of this lisitng
-            var recievedtoken = await getremoteMEtokendetails(thislistings[i].tokenMint)
+            var recievedtoken = await magiceden.getTokenDetails(thislistings[i].tokenMint)
 
             var thistoken = recievedtoken
             var thisname = thistoken.name
@@ -398,7 +322,7 @@ async function startsniper() {
             var commonstart = ranges[10]; var commonend = ranges[11]
 
             var raritydescription = await getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity)
-            var floorprice = await getremotefloorprice(sniperCollections[k][0])
+            var floorprice = await magiceden.getFloorPrice(sniperCollections[k][0])
             var thisfloorprice = pround(floorprice, 6)
             var snipe = await testifsnipe(raritydescription, thisprice, thisfloorprice)
 
@@ -415,24 +339,18 @@ async function startsniper() {
               var thisserver = ''
               var thisserverid = ''
               var thissnipechannel = ''
-              var thisemoji = ''
 
-              if (thissnipe != "false") {//if this is a snipe get emoji and send messages out to each server
+              if (thissnipe != "false") {//if this is a snipe send messages out to each server
                 var serverkeys = Object.keys(servers)
                 serverkeys.forEach((key, index) => {//for each server
 
                   //get the snipes channel id from the servers config object
-                  var emojis = Object.keys(servers[key].emoji)
                   thisserver = servers[key]
                   thisserverid = servers[key].id
                   thissnipechannel = servers[key].snipeschannel
 
-                  emojis.forEach((key, index) => {//loop through each potential emoji
-                    if (key === raritydescription) { thisemoji = thisserver.emoji[key] }//end if key matches emoji we are looking for
-                  })//end for each potential emoji loop
-
                   //send snipes
-                  sendsnipes(thisserverid, thissnipechannel, thisname, thisembedcolour, thisemoji, thisrarity, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink)
+                  sendsnipes(thisserverid, thissnipechannel, thisname, thisembedcolour, thisrarity, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink)
 
                 })//end for each server
               }//end if this is a snipe
@@ -463,30 +381,9 @@ async function startsniper() {
 //====    Functions     ===
 //=========================
 
-//get complete howrare.is dataset
-async function getRemoteHowRareData(collection) {
-  return new Promise((resolve, reject) => {
-    var thiscollection = 'https://api.howrare.is/v0.1/collections/' + collection//build collection URL
-
-    https.get(thiscollection, (resp) => {
-      let data = ''
-      // A chunk of data has been received.
-      resp.on('data', (chunk) => {
-        data += chunk
-      })
-      // The whole response has been received.
-      resp.on('end', () => {
-        var thiscollection = JSON.parse(data)
-        //console.log('howrare API code is; ' + thiscollection.result.api_code)
-        resolve(thiscollection)//return the recieved X listings
-      })
-    }).on("error", (err) => { console.log("Error: " + err.message) })
-  }) //end promise
-}//end getremoteHowRareData function
-
 //setup/rebuild discord checkrarity slash command
 async function rebuildRarityCommand() {
- 
+
   //add supported collections from postgressDB to the slash command
   var collections = await postgress.getColletionList()
   var choices = []; for (var i = 0; i < collections.length; i++) { choices.push({ "name": collections[i], "value": collections[i] }) }
@@ -515,7 +412,6 @@ async function rebuildRarityCommand() {
       }//end data
     })//end post
   })//end for each server loop 
-
 }//end rebuildRarityCommand
 
 //=========================
@@ -563,7 +459,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     var collectionstring = args[1].value
     if (interaction.member.user.id === "684896787655557216") {
       if (action === 'add') {
-        await getRemoteHowRareData(collectionstring).then(async thisdata => {
+        await howrare.getCollection(collectionstring).then(async thisdata => {
           if (thisdata.result.api_code === 200) {
             console.log('Recieved collection: ' + thisdata.result.data.collection + 'from howrare.is with status code:' + thisdata.result.api_code + '. Ready to add to SQL')
 
