@@ -90,7 +90,7 @@ client.on('ready', async () => {
 })//end client.on Ready
 
 client.on('ready', async () => {
-var size = checkrarity.getPostgresCollectionSize('monkeypox_nft')
+var size = await checkrarity.getPostgresCollectionSize('monkeypox_nft')
 console.log('size from other module is:' + size)
 })
 
