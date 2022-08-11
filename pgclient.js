@@ -10,6 +10,8 @@ module.exports = {
       connectionString: process.env.DATABASE_URL,
       ssl: { rejectUnauthorized: false }
     })
+    console.log('connecting client')
+    client.connect()
     console.log('returning clinet')
     return client;
   }
