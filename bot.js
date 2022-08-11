@@ -80,7 +80,7 @@ client.on('ready', async () => {
   initaliseSniperCollections()
   startsniper()
   clearcommands()
-  rebuildRarityCommand()
+  await rebuildRarityCommand()
 })//end client.on Ready
 
 client.on('ready', async () => {
@@ -486,39 +486,36 @@ async function getRemoteHowRareData(collection) {
 
 //setup/rebuild discord checkrarity slash command
 async function rebuildRarityCommand() {
-
+ 
+  //add supported collections from postgressDB to the slash command
   var collections = await postgress.getColletionList()
-  
-  return new Promise((resolve, reject) => {
-    //add supported collections from postgressDB to the slash command
+  var choices = []; for (var i = 0; i < collections.length; i++) { choices.push({ "name": collections[i], "value": collections[i] }) }
 
-    var choices = []; for (var i = 0; i < collections.length; i++) { choices.push({ "name": collections[i], "value": collections[i] }) }
+  var serverkeys = Object.keys(servers)
+  serverkeys.forEach((key, index) => {
+    client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
+      data: {
+        "name": "checkrarity",
+        "description": "Check the rarity of an NFT in a collection we support",
+        "options": [
+          {
+            "type": 3,
+            "name": "collection",
+            "description": "Please select a collection",
+            "choices": choices,
+            "required": true
+          },
+          {
+            "type": 3,
+            "name": "nftnumber",
+            "description": "Enter the # of the NFT to check in selected collection",
+            "required": true
+          }
+        ]
+      }//end data
+    })//end post
+  })//end for each server loop 
 
-    var serverkeys = Object.keys(servers)
-    serverkeys.forEach((key, index) => {
-      client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
-        data: {
-          "name": "checkrarity",
-          "description": "Check the rarity of an NFT in a collection we support",
-          "options": [
-            {
-              "type": 3,
-              "name": "collection",
-              "description": "Please select a collection",
-              "choices": choices,
-              "required": true
-            },
-            {
-              "type": 3,
-              "name": "nftnumber",
-              "description": "Enter the # of the NFT to check in selected collection",
-              "required": true
-            }
-          ]
-        }//end data
-      })//end post
-    })//end for each server loop 
-  })//end promise
 }//end rebuildRarityCommand
 
 //=========================
@@ -576,7 +573,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             await pgclient.query(querystring, querydata, (err, res) => {
               if (err) throw err
               clearcommands()
-              rebuildRarityCommand()
+              await rebuildRarityCommand()
               //do I need to close connection? 
               //pgclient.end()
             })
