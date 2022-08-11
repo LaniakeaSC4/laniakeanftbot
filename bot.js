@@ -573,7 +573,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
             await pgclient.query(querystring, querydata, (err, res) => {
               if (err) throw err
               clearcommands()
-              await rebuildRarityCommand()
+              rebuildRarityCommand()
               //do I need to close connection? 
               //pgclient.end()
             })
