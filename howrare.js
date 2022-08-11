@@ -1,3 +1,5 @@
+const https = require('https')
+
 //get complete howrare.is dataset
 async function getRemoteHowRareData(collection) {
 	return new Promise((resolve, reject) => {

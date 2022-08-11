@@ -1,3 +1,5 @@
+const https = require('https')
+
 //returns x number of recent listings from Magic Eden
 function getnewremoteMElistings(collection, number) {
 	return new Promise((resolve, reject) => {
