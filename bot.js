@@ -87,14 +87,10 @@ client.on('ready', async () => {
   pgclient.connect()//connect to DB
   clearcommands()
   rebuildRarityCommand()
-  
-  var size = await postgress.getCollectionSize('monkeypox_nft')
-console.log('size from other module is:' + size)
-
 })//end client.on Ready
 
 client.on('ready', async () => {
-}) 
+})
 
 //function to reset slash commands (enable if needed)
 async function clearcommands() {
@@ -534,35 +530,6 @@ async function rebuildRarityCommand() {
   })//end promise
 }//end rebuildRarityCommand
 
-async function getPosrgresNFTproperties(collectionstring, nftid) {
-  return new Promise((resolve, reject) => {
-
-    var querystring = "SELECT jsonb_path_query_first(data #> '{result,data,items}', '$[*] ? (@.id == " + nftid + " || @.id == \"" + nftid + "\")') AS result FROM howraredata WHERE  collection_id = '" + collectionstring + "' "
-
-    pgclient.query(querystring, (err, res) => {
-      if (err) throw err
-      if (res.rows[0].result != null) {
-        var thisnftrarity = res.rows[0].result.all_ranks.statistical_rarity
-        var thisnftname = res.rows[0].result.name
-        var thisnftimage = res.rows[0].result.image
-        resolve([thisnftrarity, thisnftname, thisnftimage])
-      } else {
-        resolve('NFT not in collection')
-      }//end else
-    })//end query
-  })//end promise
-}//end getPosrgresNFTproperties
-
-async function getPosrgresCollectionSize(collectionID) {
-  return new Promise((resolve, reject) => {
-    var querystring = "SELECT COUNT(*) FROM (SELECT jsonb_path_query(data, '$.result.data.items[*]') FROM howraredata WHERE collection_id = '" + collectionID + "') AS nftcount"
-    pgclient.query(querystring, (err, res) => {
-      if (err) throw err
-      resolve(res.rows[0].count)
-    })//end query
-  })//end promise
-}//end getPosrgresCollectionSize
-
 //=========================
 //====  Rarity checker  ===
 //====  Slash commands  ===
@@ -683,15 +650,15 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
   if (command === 'checkrarity') {
     //we dont have to check if collection is in database as list of collections was established from database
     var thiscollection = args[0].value; var thisnftnumber = args[1].value
-    var returnedrarity = await getPosrgresNFTproperties(thiscollection, thisnftnumber)
+    var returnedrarity = await postgress.getNFTproperties(thiscollection, thisnftnumber)
 
     if (returnedrarity != 'NFT not in collection') {//is this check enough? if this is found, will everything else pass?
 
       var thisrarity = returnedrarity[0]
       var thisname = returnedrarity[1]
-      var thisimage = returnedrarity[2];console.log('this image is: ' + thisimage)
+      var thisimage = returnedrarity[2]; console.log('this image is: ' + thisimage)
 
-      var collectionsize = await getPosrgresCollectionSize(thiscollection)
+      var collectionsize = await postgress.getCollectionSize(thiscollection)
       var ranges = await calculateranges(collectionsize)
 
       var mythicstart = ranges[0]; var mythicend = ranges[1]
