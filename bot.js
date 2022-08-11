@@ -1,11 +1,11 @@
 const { Client, Intents } = require('discord.js')
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES] })
 
-const postgress = require('./postgres.js')//postgress related commands are in here
-const db = require('./pgclient.js')//if we need to interact with the client directly in here. Rember to use var pgclient = db.getClient() to get/establish client
+const postgress = require('./functions/postgres.js')//postgress related commands are in here
+const db = require('./functions/pgclient.js')//if we need to interact with the client directly in here. Rember to use var pgclient = db.getClient() to get/establish client
 
-const magiceden = require('./magiceden.js')//Magic Eden related commands are in here
-const howrare = require('./howrare.js')//Magic Eden related commands are in here
+const magiceden = require('./functions/magiceden.js')//Magic Eden related commands are in here
+const howrare = require('./functions/howrare.js')//Magic Eden related commands are in here
 
 client.login(process.env.BOTTOKEN)
 
