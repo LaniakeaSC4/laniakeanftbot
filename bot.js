@@ -459,7 +459,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     if (interaction.member.user.id === "684896787655557216") {
       if (action === 'add') {
         await howrare.getCollection(collectionstring).then(async thisdata => {
-         var result = await posgress.addCollection(thisdata)
+         var result = await postgress.addCollection(thisdata)
          if (result === 'success') {
               clearcommands()
               rebuildRarityCommand()
