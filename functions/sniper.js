@@ -91,7 +91,7 @@ async function startsniper() {
             var raritydescription = await main.getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity)
             var floorprice = await magiceden.getFloorPrice(sniperCollections[k][0])
             var thisfloorprice = main.pround(floorprice, 6)
-            var snipe = await main.testifsnipe(raritydescription, thisprice, thisfloorprice)
+            var snipe = await testifsnipe(raritydescription, thisprice, thisfloorprice)
 
             var thissnipe = snipe[0]
             var thissnipeprice = snipe[1]
@@ -188,3 +188,33 @@ async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisrarit
     })//end message send
   }) //end promise
 }//end sendsnipes function
+
+//returns rarity description (i.e. "Mythic" if its a snipe, else returns 'false') also returns 
+async function testifsnipe(raritydescription, thisprice, floorprice) {
+  return new Promise((resolve, reject) => {
+    console.log('testing for snipe with an ' + raritydescription + ' at a list price of ' + thisprice + ' and the floor price is ' + floorprice)
+
+    //make calculation of if this is a snipe using rarity, floor price and nft price
+    var hotrarities = ['Mythic', 'Legendary', 'Epic', 'Rare']
+
+    if (hotrarities.includes(raritydescription)) {
+      //calculate snipe limits of x*fp
+      var mythicsnipe = mythiclimit * floorprice
+      var legendarysnipe = legendarylimit * floorprice
+      var epicsnipe = epiclimit * floorprice
+      var raresnipe = rarelimit * floorprice
+
+      if ((raritydescription === 'Mythic') && (thisprice <= mythicsnipe)) {
+        resolve([raritydescription, mythicsnipe, mythiclimit])
+      } else if ((raritydescription === 'Legendary') && (thisprice <= legendarysnipe)) {
+        resolve([raritydescription, legendarysnipe, legendarylimit])
+      } else if ((raritydescription === 'Epic') && (thisprice <= epicsnipe)) {
+        resolve([raritydescription, epicsnipe, epiclimit])
+      } else if ((raritydescription === 'Rare') && (thisprice <= raresnipe)) {
+        resolve([raritydescription, raresnipe, rarelimit])
+      } else {
+        resolve('false')
+      }
+    }//end if hotrarities
+  }) //end promise
+}//end testifsnipe function
