@@ -41,6 +41,7 @@ async function getPosrgresNFTproperties(collectionstring, nftid) {
     })//end query
 }//end getPosrgresNFTproperties
 
+
 async function getColletionList() {
   var pgclient = db.getClient()
     //add supported collections from postgressDB to the slash command
