@@ -459,20 +459,11 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     if (interaction.member.user.id === "684896787655557216") {
       if (action === 'add') {
         await howrare.getCollection(collectionstring).then(async thisdata => {
-          if (thisdata.result.api_code === 200) {
-            console.log('Recieved collection: ' + thisdata.result.data.collection + 'from howrare.is with status code:' + thisdata.result.api_code + '. Ready to add to SQL')
-
-            var querystring = 'INSERT INTO howraredata( collection_ID, data, created_on, last_updated ) VALUES ( $1,$2,to_timestamp($3 / 1000.0),to_timestamp($4 / 1000.0) ) ON CONFLICT (collection_ID) DO NOTHING'
-            var querydata = [collectionstring, thisdata, Date.now(), Date.now()]
-
-            await pgclient.query(querystring, querydata, (err, res) => {
-              if (err) throw err
+         var result = await posgress.addCollection(thisdata)
+         if (result === 'success') {
               clearcommands()
               rebuildRarityCommand()
-              //do I need to close connection? 
-              //pgclient.end()
-            })
-          } else { console.log('Error: collection ' + collectionstring + ' returned status code ' + thisdata.result.api_code + ' from howrare.is.') }
+} 
         })//end then
           .then(() => {
             //reply to interaction with acknowledgement
