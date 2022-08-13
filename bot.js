@@ -519,6 +519,8 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     //we dont have to check if collection is in database as list of collections was established from database
     var thiscollection = args[0].value; var thisnftnumber = args[1].value
     var returnedrarity = await postgress.getNFTproperties(thiscollection, thisnftnumber)
+    console.log('returned rarity is')
+    console.log(returnedrarity)
 
     if (returnedrarity != 'NFT not in collection') {//is this check enough? if this is found, will everything else pass?
 
