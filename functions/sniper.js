@@ -18,6 +18,18 @@ var refreshget = 10//how many will sniper get on each check (max 20) - should be
 var maxlength = 50//how many records history will we keep for each collection
 var minutes = 1, the_interval = minutes * 60 * 1000//refresh interval for sniper bot
 
+const initaliseSniperCollections = async () => {
+  for (const seq of sniperSequencer) {//for each collection
+    //get initial set of listings and store them in the local history arrary for that collection
+    await magiceden.getNewListings(sniperCollections[seq][0], initialget).then(async thislistings => {
+      sniperCollections[seq][1] = thislistings//fill tracked listings with the listings we just got
+      console.log('added initial ' + initialget + ' Listings for ' + sniperCollections[seq][0])
+    })//end then
+    await main.wait(2000)//add delay between API requests
+  }//for seq of sniperSequencer
+}//end initaliseSniperCollections
+module.exports.initialise = initaliseSniperCollections
+
 //main sniper function
 async function startsniper() {
   await Promise.all(sniperSequencer.map(async value => {//this was added to make sure to sequentially initiate the sniper loops. Not sure its working as intended, but loops are spread out

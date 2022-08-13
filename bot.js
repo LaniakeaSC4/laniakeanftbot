@@ -71,8 +71,9 @@ var rarelimit = 2.5
 //start services
 client.on('ready', async () => {
   console.log('I am ready!')
-  initaliseSniperCollections()
+  //initaliseSniperCollections()
   //startsniper()
+  sniper.initialise()
   sniper.start()
   clearcommands()
   await rebuildRarityCommand()
