@@ -88,6 +88,7 @@ async function clearcommands() {
 //===================================
 
 async function calculateranges(collectionsize) {
+  return new Promise((resolve, reject) => {
 
     //initialise threshold variables
     var mythicstart = 0; var mythicend = 0
@@ -126,7 +127,8 @@ async function calculateranges(collectionsize) {
     if (commonstart === uncommonend) { commonstart = commonstart + 1 }
     commonend = collectionsize
 
-    return [mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend]
+    resolve([mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend])
+  }) //end promise
 }//end calculate ranges
 
 //takes the ranges for this collection and returns string of its rarity description
@@ -163,6 +165,7 @@ async function getraritydescription(mythicstart, mythicend, legendarystart, lege
 
 //returns rarity description (i.e. "Mythic" if its a snipe, else returns 'false') also returns 
 async function testifsnipe(raritydescription, thisprice, floorprice) {
+  return new Promise((resolve, reject) => {
     console.log('testing for snipe with an ' + raritydescription + ' at a list price of ' + thisprice + ' and the floor price is ' + floorprice)
 
     //make calculation of if this is a snipe using rarity, floor price and nft price
@@ -176,33 +179,37 @@ async function testifsnipe(raritydescription, thisprice, floorprice) {
       var raresnipe = rarelimit * floorprice
 
       if ((raritydescription === 'Mythic') && (thisprice <= mythicsnipe)) {
-        return [raritydescription, mythicsnipe, mythiclimit]
+        resolve([raritydescription, mythicsnipe, mythiclimit])
       } else if ((raritydescription === 'Legendary') && (thisprice <= legendarysnipe)) {
-        return [raritydescription, legendarysnipe, legendarylimit]
+        resolve([raritydescription, legendarysnipe, legendarylimit])
       } else if ((raritydescription === 'Epic') && (thisprice <= epicsnipe)) {
-        return [raritydescription, epicsnipe, epiclimit]
+        resolve([raritydescription, epicsnipe, epiclimit])
       } else if ((raritydescription === 'Rare') && (thisprice <= raresnipe)) {
-        return [raritydescription, raresnipe, rarelimit]
+        resolve([raritydescription, raresnipe, rarelimit])
       } else {
-        return 'false'
+        resolve('false')
       }
     }//end if hotrarities
+  }) //end promise
 }//end testifsnipe function
 
 //function to get embed color
 async function getembedcolour(raritydescription) {
-    if (raritydescription === 'Mythic') { return '0xed2839' }
-    else if (raritydescription === 'Legendary') { return '0xfe8100' }
-    else if (raritydescription === 'Epic') { return '0x9901f6' }
-    else if (raritydescription === 'Rare') { return '0x19aaeb' }
-    else if (raritydescription === 'Uncommon') { return '0x20d48a' }
-    else if (raritydescription === 'Common') { return '0x939394' }
-    else { return '0x939394' }//this shouldnt trigger but if it does, return common grey
+  return new Promise((resolve, reject) => {
+    if (raritydescription === 'Mythic') { resolve('0xed2839') }
+    else if (raritydescription === 'Legendary') { resolve('0xfe8100') }
+    else if (raritydescription === 'Epic') { resolve('0x9901f6') }
+    else if (raritydescription === 'Rare') { resolve('0x19aaeb') }
+    else if (raritydescription === 'Uncommon') { resolve('0x20d48a') }
+    else if (raritydescription === 'Common') { resolve('0x939394') }
+    else { resolve('0x939394') }//this shouldnt trigger but if it does, return common grey
+  }) //end promise
 }//end testifsnipe function
 
 async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage, listinglink) {
+  return new Promise((resolve, reject) => {
     console.log('thissnipeprice (' + thissnipeprice + ') type is this type:' + typeof thissnipeprice)
-    await client.guilds.cache.get(server).channels.cache.get(snipeschannel).send({
+    client.guilds.cache.get(server).channels.cache.get(snipeschannel).send({
       embeds: [
         {
           "title": 'Snipe Opportunity: ' + nftname,
@@ -241,6 +248,7 @@ async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisrarit
         }
       ]//end embed
     })//end message send
+  }) //end promise
 }//end sendsnipes function
 
 const initaliseSniperCollections = async () => {
@@ -451,7 +459,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     if (interaction.member.user.id === "684896787655557216") {
       if (action === 'add') {
         await howrare.getCollection(collectionstring).then(async thisdata => {
-         var result = await postgress.addCollection(thisdata, collectionstring);console.log('result is: ' + result)
+         var result = await postgress.addCollection(thisdata, collectionstring)
          if (result === 'success') {
               clearcommands()
               rebuildRarityCommand()
@@ -519,8 +527,6 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     //we dont have to check if collection is in database as list of collections was established from database
     var thiscollection = args[0].value; var thisnftnumber = args[1].value
     var returnedrarity = await postgress.getNFTproperties(thiscollection, thisnftnumber)
-    console.log('returned rarity is')
-    console.log(returnedrarity)
 
     if (returnedrarity != 'NFT not in collection') {//is this check enough? if this is found, will everything else pass?
 
