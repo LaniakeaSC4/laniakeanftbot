@@ -135,7 +135,7 @@ module.exports.start = startsniper
 async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage, listinglink) {
   return new Promise((resolve, reject) => {
     console.log('thissnipeprice (' + thissnipeprice + ') type is this type:' + typeof thissnipeprice)
-    client.guilds.cache.get(server).channels.cache.get(snipeschannel).send({
+    main.client.guilds.cache.get(server).channels.cache.get(snipeschannel).send({
       embeds: [
         {
           "title": 'Snipe Opportunity: ' + nftname,
