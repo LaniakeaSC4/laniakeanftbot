@@ -15,7 +15,7 @@ async function getPostgresCollectionSize(collectionID) {
   var pgclient = db.getClient()
     var querystring = "SELECT COUNT(*) FROM (SELECT jsonb_path_query(data, '$.result.data.items[*]') FROM howraredata WHERE collection_id = '" + collectionID + "') AS nftcount"
     console.log(querystring)
-    pgclient.query(querystring, (err, res) => {
+   await pgclient.query(querystring, (err, res) => {
       if (err) throw err
       console.log('I am in another file')
       return res.rows[0].count
@@ -27,7 +27,7 @@ async function getPosrgresNFTproperties(collectionstring, nftid) {
 
     var querystring = "SELECT jsonb_path_query_first(data #> '{result,data,items}', '$[*] ? (@.id == " + nftid + " || @.id == \"" + nftid + "\")') AS result FROM howraredata WHERE  collection_id = '" + collectionstring + "' "
 
-    pgclient.query(querystring, (err, res) => {
+   await pgclient.query(querystring, (err, res) => {
       if (err) throw err
       if (res.rows[0].result != null) {
         var thisnftrarity = res.rows[0].result.all_ranks.statistical_rarity
@@ -44,7 +44,7 @@ async function getColletionList() {
   var pgclient = db.getClient()
     //add supported collections from postgressDB to the slash command
     var collectionlist = []
-    pgclient.query('SELECT collection_id FROM howraredata', (err, res) => {
+    await pgclient.query('SELECT collection_id FROM howraredata', (err, res) => {
       if (err) throw err
       //console.log(res.rows)
       for (var i = 0; i < res.rows.length; i++) {
