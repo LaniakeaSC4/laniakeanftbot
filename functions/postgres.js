@@ -60,7 +60,7 @@ async function getColletionList() {
   })
 }
 
-async function addCollection(thisdata) {
+async function addCollection(thisdata, collectionstring) {
   if (thisdata.result.api_code === 200) {
             console.log('Recieved collection: ' + thisdata.result.data.collection + 'from howrare.is with status code:' + thisdata.result.api_code + '. Ready to add to SQL')
 
