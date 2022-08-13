@@ -33,7 +33,7 @@ async function getPosrgresNFTproperties(collectionstring, nftid) {
         var thisnftrarity = res.rows[0].result.all_ranks.statistical_rarity
         var thisnftname = res.rows[0].result.name
         var thisnftimage = res.rows[0].result.image
-        return [thisnftrarity, thisnftname, thisnftimage]
+        return([thisnftrarity, thisnftname, thisnftimage])
       } else {
         return 'NFT not in collection'
       }//end else
