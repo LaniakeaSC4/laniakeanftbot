@@ -50,8 +50,8 @@ async function getColletionList() {
       for (var i = 0; i < res.rows.length; i++) {
         collectionlist.push(res.rows[i].collection_id)
       }//end for each row
-      return collectionlist
     })//end query
+    return collectionlist
 }
 
 async function addCollection(thisdata, collectionstring) {
