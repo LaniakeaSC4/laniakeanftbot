@@ -195,21 +195,18 @@ async function testifsnipe(raritydescription, thisprice, floorprice) {
 
 //function to get embed color
 async function getembedcolour(raritydescription) {
-  return new Promise((resolve, reject) => {
-    if (raritydescription === 'Mythic') { resolve('0xed2839') }
-    else if (raritydescription === 'Legendary') { resolve('0xfe8100') }
-    else if (raritydescription === 'Epic') { resolve('0x9901f6') }
-    else if (raritydescription === 'Rare') { resolve('0x19aaeb') }
-    else if (raritydescription === 'Uncommon') { resolve('0x20d48a') }
+    if (raritydescription === 'Mythic') { return '0xed2839' }
+    else if (raritydescription === 'Legendary') { return '0xfe8100' }
+    else if (raritydescription === 'Epic') { return '0x9901f6' }
+    else if (raritydescription === 'Rare') { return '0x19aaeb' }
+    else if (raritydescription === 'Uncommon') { return '0x20d48a' }
     else if (raritydescription === 'Common') { resolve('0x939394') }
-    else { resolve('0x939394') }//this shouldnt trigger but if it does, return common grey
-  }) //end promise
+    else { return '0x939394' }//this shouldnt trigger but if it does, return common grey
 }//end testifsnipe function
 
 async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage, listinglink) {
-  return new Promise((resolve, reject) => {
     console.log('thissnipeprice (' + thissnipeprice + ') type is this type:' + typeof thissnipeprice)
-    client.guilds.cache.get(server).channels.cache.get(snipeschannel).send({
+    await client.guilds.cache.get(server).channels.cache.get(snipeschannel).send({
       embeds: [
         {
           "title": 'Snipe Opportunity: ' + nftname,
@@ -248,7 +245,6 @@ async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisrarit
         }
       ]//end embed
     })//end message send
-  }) //end promise
 }//end sendsnipes function
 
 const initaliseSniperCollections = async () => {
@@ -459,7 +455,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     if (interaction.member.user.id === "684896787655557216") {
       if (action === 'add') {
         await howrare.getCollection(collectionstring).then(async thisdata => {
-         var result = await postgress.addCollection(thisdata, collectionstring)
+         var result = await postgress.addCollection(thisdata, collectionstring);console.log('result is: ' + result)
          if (result === 'success') {
               clearcommands()
               rebuildRarityCommand()
