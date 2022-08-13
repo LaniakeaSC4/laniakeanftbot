@@ -149,17 +149,17 @@ async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisrarit
             },
             {
               "name": "List Price",
-              "value": pround(thisprice, 3) + ' SOL',
+              "value": main.pround(thisprice, 3) + ' SOL',
               "inline": true
             },
             {
               "name": "Floor Price",
-              "value": pround(floorprice, 3) + ' SOL',
+              "value": main.pround(floorprice, 3) + ' SOL',
               "inline": true
             },
             {
               "name": "Snipe Price",
-              "value": 'For ' + raritydescription + ' NFTs, any price less than ' + thislimit + 'x the floor price of ' + pround(floorprice, 3) + ' SOL is a snipe (i.e. less than ' + pround(thissnipeprice, 3) + ' SOL)',
+              "value": 'For ' + raritydescription + ' NFTs, any price less than ' + thislimit + 'x the floor price of ' + main.pround(floorprice, 3) + ' SOL is a snipe (i.e. less than ' + main.pround(thissnipeprice, 3) + ' SOL)',
               "inline": true
             }
           ],
