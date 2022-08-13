@@ -61,6 +61,7 @@ async function getColletionList() {
 }
 
 async function addCollection(thisdata, collectionstring) {
+  return new Promise((resolve, reject) => {
   var pgclient = db.getClient()
   if (thisdata.result.api_code === 200) {
             console.log('Recieved collection: ' + thisdata.result.data.collection + 'from howrare.is with status code:' + thisdata.result.api_code + '. Ready to add to SQL')
@@ -70,9 +71,10 @@ async function addCollection(thisdata, collectionstring) {
 
            await pgclient.query(querystring, querydata, (err, res) => {
               if (err) throw err
-              return 'success'
+              resolve(success) 
             })
-          } else { console.log('Error: collection ' + collectionstring + ' returned status code ' + thisdata.result.api_code + ' from howrare.is.'); return 'fail' }
+          } else { console.log('Error: collection ' + collectionstring + ' returned status code ' + thisdata.result.api_code + ' from howrare.is.'); resolve('fail') }
+  }) 
 } 
 
 module.exports.getCollectionSize = getPostgresCollectionSize
