@@ -61,13 +61,14 @@ async function getColletionList() {
 }
 
 async function addCollection(thisdata, collectionstring) {
+  var pgclient = db.getClient()
   if (thisdata.result.api_code === 200) {
             console.log('Recieved collection: ' + thisdata.result.data.collection + 'from howrare.is with status code:' + thisdata.result.api_code + '. Ready to add to SQL')
 
             var querystring = 'INSERT INTO howraredata( collection_ID, data, created_on, last_updated ) VALUES ( $1,$2,to_timestamp($3 / 1000.0),to_timestamp($4 / 1000.0) ) ON CONFLICT (collection_ID) DO NOTHING'
             var querydata = [collectionstring, thisdata, Date.now(), Date.now()]
 
-            pgclient.query(querystring, querydata, (err, res) => {
+           await pgclient.query(querystring, querydata, (err, res) => {
               if (err) throw err
               return 'success'
             })
