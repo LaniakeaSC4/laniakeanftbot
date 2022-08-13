@@ -7,10 +7,14 @@ const db = require('./functions/pgclient.js')//if we need to interact with the c
 const magiceden = require('./functions/magiceden.js')//Magic Eden related commands are in here
 const howrare = require('./functions/howrare.js')//Magic Eden related commands are in here
 
+const sniper = require('./functions/sniper.js')
+
 client.login(process.env.BOTTOKEN)
 
 const pround = (number, decimalPlaces) => Number(Math.round(Number(number + "e" + decimalPlaces)) + "e" + decimalPlaces * -1)
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+module.exports.pround = pround
+module.exports.wait = wait
 
 //======================
 //==== Sniper Setup  ===
@@ -27,6 +31,7 @@ const servers = {
     'id': '901885313608200302', 'snipeschannel': '1004682983036428308'
   }
 }
+module.exports.servers = servers
 
 //Collections the sniper bot will watch. Must be on moonrank.app
 const sniperCollections = [
@@ -66,7 +71,8 @@ var rarelimit = 2.5
 client.on('ready', async () => {
   console.log('I am ready!')
   initaliseSniperCollections()
-  startsniper()
+  //startsniper()
+  sniper.start()
   clearcommands()
   await rebuildRarityCommand()
 })//end client.on Ready
@@ -130,6 +136,7 @@ async function calculateranges(collectionsize) {
     resolve([mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend])
   }) //end promise
 }//end calculate ranges
+module.exports.calculateranges = calculateranges
 
 //takes the ranges for this collection and returns string of its rarity description
 async function getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity) {
@@ -162,6 +169,7 @@ async function getraritydescription(mythicstart, mythicend, legendarystart, lege
     return ('Not found')
   }//end else
 }//end getraritydescription function
+module.exports.getraritydescription = getraritydescription
 
 //returns rarity description (i.e. "Mythic" if its a snipe, else returns 'false') also returns 
 async function testifsnipe(raritydescription, thisprice, floorprice) {
@@ -192,6 +200,7 @@ async function testifsnipe(raritydescription, thisprice, floorprice) {
     }//end if hotrarities
   }) //end promise
 }//end testifsnipe function
+module.exports.testifsnipe = testifsnipe
 
 
 //function to get embed color
@@ -206,6 +215,7 @@ async function getembedcolour(raritydescription) {
     else { resolve('0x939394') }//this shouldnt trigger but if it does, return common grey
   }) //end promise
 }//end testifsnipe function
+module.exports.getembedcolour = getembedcolour
 
 async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage, listinglink) {
   return new Promise((resolve, reject) => {
