@@ -281,6 +281,8 @@ client.on('interactionCreate', async interaction => {
   if (command === 'database') {
     var option1 = interaction.options.getString('test')
  var option2 = interaction.options.getString('collectionstring')
+ console.log('option 1 is '+ option1)
+ console.log('option 2 is' + option2)
     
     if (option1 === 'test') {
         console.log('action is test')
