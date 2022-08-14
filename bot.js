@@ -41,12 +41,6 @@ const pepic = 0.15
 const prare = 0.35
 const puncommon = 0.6
 
-/*//set multipliers above floor price at which listings become snipes
-var mythiclimit = 50
-var legendarylimit = 25
-var epiclimit = 5
-var rarelimit = 2.5*/
-
 //=================
 //====  Statup  ===
 //=================
@@ -57,7 +51,7 @@ client.on('ready', async () => {
   sniper.initialise()
   sniper.start()
   clearcommands()
-  await rebuildRarityCommand()
+  await rebuildCommands()
 })//end client.on Ready
 
 client.on('ready', async () => {
@@ -154,37 +148,6 @@ async function getraritydescription(mythicstart, mythicend, legendarystart, lege
 }//end getraritydescription function
 module.exports.getraritydescription = getraritydescription
 
-/*
-//returns rarity description (i.e. "Mythic" if its a snipe, else returns 'false') also returns 
-async function testifsnipe(raritydescription, thisprice, floorprice) {
-  return new Promise((resolve, reject) => {
-    console.log('testing for snipe with an ' + raritydescription + ' at a list price of ' + thisprice + ' and the floor price is ' + floorprice)
-
-    //make calculation of if this is a snipe using rarity, floor price and nft price
-    var hotrarities = ['Mythic', 'Legendary', 'Epic', 'Rare']
-
-    if (hotrarities.includes(raritydescription)) {
-      //calculate snipe limits of x*fp
-      var mythicsnipe = mythiclimit * floorprice
-      var legendarysnipe = legendarylimit * floorprice
-      var epicsnipe = epiclimit * floorprice
-      var raresnipe = rarelimit * floorprice
-
-      if ((raritydescription === 'Mythic') && (thisprice <= mythicsnipe)) {
-        resolve([raritydescription, mythicsnipe, mythiclimit])
-      } else if ((raritydescription === 'Legendary') && (thisprice <= legendarysnipe)) {
-        resolve([raritydescription, legendarysnipe, legendarylimit])
-      } else if ((raritydescription === 'Epic') && (thisprice <= epicsnipe)) {
-        resolve([raritydescription, epicsnipe, epiclimit])
-      } else if ((raritydescription === 'Rare') && (thisprice <= raresnipe)) {
-        resolve([raritydescription, raresnipe, rarelimit])
-      } else {
-        resolve('false')
-      }
-    }//end if hotrarities
-  }) //end promise
-}//end testifsnipe function
-module.exports.testifsnipe = testifsnipe*/
 
 
 //function to get embed color
@@ -207,7 +170,7 @@ module.exports.getembedcolour = getembedcolour
 //=========================
 
 //setup/rebuild discord checkrarity slash command
-async function rebuildRarityCommand() {
+async function rebuildCommands() {
 
   //add supported collections from postgressDB to the slash command
   var collections = await postgress.getColletionList()
@@ -215,6 +178,7 @@ async function rebuildRarityCommand() {
 
   var serverkeys = Object.keys(servers)
   serverkeys.forEach((key, index) => {
+    //build rarity command
     client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
       data: {
         "name": "checkrarity",
@@ -236,14 +200,44 @@ async function rebuildRarityCommand() {
         ]
       }//end data
     })//end post
+    
+    //build database command
+    client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
+      data: {
+        "name": "database",
+        "description": "Admin command to add a new rarity checker database",
+        "options": [
+          {
+            "type": 3,
+            "name": "action",
+            "description": "Action type",
+            "choices": [{ "name": "Add", "value": "add" }, { "name": "Update", "value": "update" }, { "name": "Test", "value": "test" },{"name" : "remove"}],
+            "required": true
+          },
+          {
+            "type": 3,
+            "name": "collectionstring",
+            "description": "howrare.is URL identifier of collection to add?"
+          }, 
+          {
+            "type": 3,
+            "name": "collection",
+            "choices" : choices, 
+            "description": "Which existing collection  to remove/update?"
+          } 
+        ]
+      }//end data
+    })//end post command
+    
   })//end for each server loop 
-}//end rebuildRarityCommand
+}//end rebuildCommands
 
 //=========================
 //====  Rarity checker  ===
 //====  Slash commands  ===
 //=========================
 
+/*
 //setup discord add database slash command on bot ready
 client.on('ready', async () => {
   var serverkeys = Object.keys(servers)
@@ -270,7 +264,7 @@ client.on('ready', async () => {
       }//end data
     })//end post command
   })//end for each server loop
-})//end client on ready
+})//end client on ready*/
 
 client.on('interactionCreate', async interaction => {
   //console.log(interaction)
@@ -286,14 +280,15 @@ client.on('interactionCreate', async interaction => {
  
      if (interaction.member.user.id === "684896787655557216") {
       if (action === 'add') {
+        if (collectionstring != null) {
         await howrare.getCollection(collectionstring).then(async thisdata => {
           //if there is a statistical rarity
           if ('statistical_rarity' in thisdata.result.data.items[0].all_ranks) {
             var result = await postgress.addCollection(thisdata, collectionstring)
          if (result === 'success') {
-           replytext = 'Success. Database has been added'
+           replytext = 'Success. Database has been added. Please now restart your discord client to see updated commands.'
               clearcommands()
-              rebuildRarityCommand()
+              rebuildCommands()
 } else {replytext = 'There was an error adding to database'}//if not success on collection add 
           } else {replytext = 'This collection does not have a statistical rarity on howrare.is. Can\'t add it to database' }//if no statistical rarity
           
@@ -303,6 +298,7 @@ client.on('interactionCreate', async interaction => {
             //reply to interaction with acknowledgement
             await interaction.editReply({ content: replytext, ephemeral: true })
           })//end then
+        } else {await interaction.editReply({ content: 'please try again and provide a collection string', ephemeral: true })}
       }//end if action is add
 
 
@@ -407,7 +403,7 @@ var replytext = ''
          if (result === 'success') {
            replytext = 'Success. Database has been added'
               clearcommands()
-              rebuildRarityCommand()
+              rebuildCommands()
 } else {replytext = 'There was an error adding to database'}//if not success on collection add 
           } else {replytext = 'This collection does not have a statistical rarity on howrare.is. Can\'t add it to database' }//if no statistical rarity
           
