@@ -273,13 +273,14 @@ client.on('ready', async () => {
 })//end client on ready
 
 client.on('interactionCreate', async interaction => {
-  console.log(interaction)
+  //console.log(interaction)
  
  const command = interaction.commandName.toLowerCase()
- var option1 = interaction.options.getString('test')
- var option2 = interaction.options.getString('collectionstring')
+ 
   
   if (command === 'database') {
+    var option1 = interaction.options.getString('test')
+ var option2 = interaction.options.getString('collectionstring')
     
     if (option1 === 'test') {
         console.log('action is test')
