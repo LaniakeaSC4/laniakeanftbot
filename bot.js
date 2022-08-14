@@ -274,7 +274,6 @@ client.on('ready', async () => {
 
 client.on('interactionCreate', async interaction => {
   const command = interaction.data.name.toLowerCase()
-  const args = interaction.data.options//array of the provided data after the slash
   
   if (command === 'database') {
     
