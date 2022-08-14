@@ -71,7 +71,7 @@ async function addCollection(thisdata, collectionstring) {
 
            pgclient.query(querystring, querydata, (err, res) => {
               if (err) throw err
-              resolve(success) 
+              resolve('success') 
             })
           } else { console.log('Error: collection ' + collectionstring + ' returned status code ' + thisdata.result.api_code + ' from howrare.is.'); resolve('fail') }
   }) 
