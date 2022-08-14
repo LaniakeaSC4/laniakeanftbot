@@ -211,7 +211,7 @@ async function rebuildCommands() {
             "type": 3,
             "name": "action",
             "description": "Action type",
-            "choices": [{ "name": "Add", "value": "add" }, { "name": "Update", "value": "update" }, { "name": "Test", "value": "test" },{"name" : "remove"}],
+            "choices": [{ "name": "Add", "value": "add" }, { "name": "Update", "value": "update" }, { "name": "Test", "value": "test" },{"name" : "Remove", "value" : "remove"}],
             "required": true
           },
           {
