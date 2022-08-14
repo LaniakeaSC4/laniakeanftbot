@@ -277,7 +277,7 @@ client.on('interactionCreate', async interaction => {
  
  const command = interaction.commandName.toLowerCase()
  
-  
+  console.log('Command is:: ' + command)
   if (command === 'database') {
     var option1 = interaction.options.getString('test')
  var option2 = interaction.options.getString('collectionstring')
