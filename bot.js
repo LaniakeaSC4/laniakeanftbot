@@ -273,7 +273,9 @@ client.on('ready', async () => {
 })//end client on ready
 
 client.on('interactionCreate', async interaction => {
-  const command = interaction.data.name.toLowerCase()
+  console.log(interaction)
+ 
+ /* const command = interaction.data.name.toLowerCase()
   
   if (command === 'database') {
     
@@ -284,7 +286,7 @@ client.on('interactionCreate', async interaction => {
       }
     
     
-  } 
+  } */
 })
 
 //respond to databse slash command
