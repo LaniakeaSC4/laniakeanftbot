@@ -276,24 +276,118 @@ client.on('interactionCreate', async interaction => {
   //console.log(interaction)
  
  const command = interaction.commandName.toLowerCase()
+ var replytext = ''
  
-  console.log('Command is:: ' + command)
   if (command === 'database') {
-    var option1 = interaction.options.getString('action')
- var option2 = interaction.options.getString('collectionstring')
- console.log('option 1 is '+ option1)
- console.log('option 2 is' + option2)
     
-    if (option1 === 'test') {
+    await interaction.deferReply({ ephemeral: true })//send placeholder response
+    var action = interaction.options.getString('action')
+ var collectionstring = interaction.options.getString('collectionstring')
+ 
+     if (interaction.member.user.id === "684896787655557216") {
+      if (action === 'add') {
+        await howrare.getCollection(collectionstring).then(async thisdata => {
+          //if there is a statistical rarity
+          if ('statistical_rarity' in thisdata.result.data.items[0].all_ranks) {
+            var result = await postgress.addCollection(thisdata, collectionstring)
+         if (result === 'success') {
+           replytext = 'Success. Database has been added'
+              clearcommands()
+              rebuildRarityCommand()
+} else {replytext = 'There was an error adding to database'}//if not success on collection add 
+          } else {replytext = 'This collection does not have a statistical rarity on howrare.is. Can\'t add it to database' }//if no statistical rarity
+          
+         
+        })//end then
+          .then(() => {
+            //reply to interaction with acknowledgement
+            await interaction.editReply({ content: replytext, ephemeral: true })
+          })//end then
+      }//end if action is add
+
+
+      if (action === 'test') {
+            var pgclient = db.getClient()
         console.log('action is test')
-        interaction.reply('test success. Collection string is: ' + option2)
+        var testid = 50
+        var querystring = "SELECT jsonb_path_query_first(data #> '{result,data,items}', '$[*] ? (@.id == " + testid + ")') AS result FROM howraredata WHERE  collection_id = '" + collectionstring + "' "
+        console.log(collectionstring)
+        await pgclient.query(querystring, (err, res) => {
+          if (err) throw err
+          console.log(res.rows[0].result)
+        }).then(() => {
+          replytext = 'This was a test, and you passed.'
+            //reply to interaction with acknowledgement
+            await interaction.editReply({ content: replytext, ephemeral: true })
+          })
 
       }
-    
-    
-  }
+    } else { await interaction.editReply({content:'You do not have permission to use this command!', ephemeral:true})
+    }//end else
+}//end if database
+ 
+ if (command === 'checkrarity') {
+   
+   await interaction.deferReply()//send placeholder response
+    //we dont have to check if collection is in database as list of collections was established from database
+    var thiscollection = interaction.options.getString('collection')
+    var thisnftnumber = interaction.options.getString('nftnumber')
+    var returnedrarity = await postgress.getNFTproperties(thiscollection, thisnftnumber)
+
+    if (returnedrarity != 'NFT not in collection') {//is this check enough? if this is found, will everything else pass?
+
+      var thisrarity = returnedrarity[0]
+      var thisname = returnedrarity[1]
+      var thisimage = returnedrarity[2]
+
+      var collectionsize = await postgress.getCollectionSize(thiscollection)
+      var ranges = await calculateranges(collectionsize)
+
+      var mythicstart = ranges[0]; var mythicend = ranges[1]
+      var legendarystart = ranges[2]; var legendaryend = ranges[3]
+      var epicstart = ranges[4]; var epicend = ranges[5]
+      var rarestart = ranges[6]; var rareend = ranges[7]
+      var uncommonstart = ranges[8]; var uncommonend = ranges[9]
+      var commonstart = ranges[10]; var commonend = ranges[11]
+
+      var raritydescription = await getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity)
+
+      var embedcolour = await getembedcolour(raritydescription)
+      var thisembedcolour = parseInt(embedcolour, 16)
+
+
+var rarityembed = [
+              {
+                "title": thisname,
+                "color": thisembedcolour,
+                "fields": [
+                  {
+                    "name": "Rarity",
+                    "value": thisrarity + ' - ' + raritydescription,
+                    "inline": true
+                  }
+                ],
+                "image": {
+                  "url": thisimage,
+                  "height": 75,
+                  "width": 75
+                },
+                "footer": {
+                  "text": "Bot by Laniakea#3683"
+                }
+              }
+            ]//end embed 
+await interaction.editReply({embeds : rarityembed})
+
+    } else {//if (returnedrarity != 'NFT not in collection')
+ await interaction.editReply({content:'NFT not found in collection!'})
+    }//end else//end else (if rarity description = 'Not found')
+  }//end if command = rarity
+ 
+
 })
 
+/*
 //respond to databse slash command
 client.ws.on('INTERACTION_CREATE', async interaction => {
   var pgclient = db.getClient()
@@ -339,7 +433,7 @@ var replytext = ''
           })//end then
       }//end if action is add
 
-/*
+
       if (action === 'test') {
         console.log('action is test')
         var testid = 50
@@ -352,7 +446,7 @@ var replytext = ''
           //pgclient.end()
         })
 
-      }*/
+      }
     } else {
       client.api.interactions(interaction.id, interaction.token).callback.post({
         data: {
@@ -372,6 +466,7 @@ var replytext = ''
     }//end else
   }//end if database
 })
+
 
 //respond to checkrarity slash command
 client.ws.on('INTERACTION_CREATE', async interaction => {
@@ -452,3 +547,4 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
     }//end else//end else (if rarity description = 'Not found')
   }//end if command = rarity
 })//end response to slash command
+*/
