@@ -299,7 +299,7 @@ client.on('interactionCreate', async interaction => {
           
          
         })//end then
-          .then(() => {
+          .then(async () => {
             //reply to interaction with acknowledgement
             await interaction.editReply({ content: replytext, ephemeral: true })
           })//end then
@@ -315,7 +315,7 @@ client.on('interactionCreate', async interaction => {
         await pgclient.query(querystring, (err, res) => {
           if (err) throw err
           console.log(res.rows[0].result)
-        }).then(() => {
+        }).then(async () => {
           replytext = 'This was a test, and you passed.'
             //reply to interaction with acknowledgement
             await interaction.editReply({ content: replytext, ephemeral: true })
