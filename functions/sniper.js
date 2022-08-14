@@ -18,6 +18,12 @@ var refreshget = 10//how many will sniper get on each check (max 20) - should be
 var maxlength = 50//how many records history will we keep for each collection
 var minutes = 1, the_interval = minutes * 60 * 1000//refresh interval for sniper bot
 
+//set multipliers above floor price at which listings become snipes
+var mythiclimit = 50
+var legendarylimit = 25
+var epiclimit = 5
+var rarelimit = 2.5
+
 const initaliseSniperCollections = async () => {
   for (const seq of sniperSequencer) {//for each collection
     //get initial set of listings and store them in the local history arrary for that collection

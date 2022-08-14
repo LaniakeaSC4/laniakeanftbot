@@ -41,11 +41,11 @@ const pepic = 0.15
 const prare = 0.35
 const puncommon = 0.6
 
-//set multipliers above floor price at which listings become snipes
+/*//set multipliers above floor price at which listings become snipes
 var mythiclimit = 50
 var legendarylimit = 25
 var epiclimit = 5
-var rarelimit = 2.5
+var rarelimit = 2.5*/
 
 //=================
 //====  Statup  ===
@@ -198,7 +198,7 @@ async function getembedcolour(raritydescription) {
     else if (raritydescription === 'Common') { resolve('0x939394') }
     else { resolve('0x939394') }//this shouldnt trigger but if it does, return common grey
   }) //end promise
-}//end testifsnipe function
+}//end getembedcolour
 module.exports.getembedcolour = getembedcolour
 
 //=========================
