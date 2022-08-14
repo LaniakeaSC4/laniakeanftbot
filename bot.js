@@ -217,14 +217,9 @@ async function rebuildCommands() {
           {
             "type": 3,
             "name": "collectionstring",
-            "description": "howrare.is URL identifier of collection to add?"
-          }, 
-          {
-            "type": 3,
-            "name": "collection",
-            "choices" : choices, 
-            "description": "Which existing collection  to remove/update?"
-          } 
+            "description": "howrare.is URL identifier of collection to add?",
+            "required" : true
+          }
         ]
       }//end data
     })//end post command
@@ -280,7 +275,6 @@ client.on('interactionCreate', async interaction => {
  
      if (interaction.member.user.id === "684896787655557216") {
       if (action === 'add') {
-        if (collectionstring != null) {
         await howrare.getCollection(collectionstring).then(async thisdata => {
           //if there is a statistical rarity
           if ('statistical_rarity' in thisdata.result.data.items[0].all_ranks) {
@@ -298,7 +292,6 @@ client.on('interactionCreate', async interaction => {
             //reply to interaction with acknowledgement
             await interaction.editReply({ content: replytext, ephemeral: true })
           })//end then
-        } else {await interaction.editReply({ content: 'please try again and provide a collection string', ephemeral: true })}
       }//end if action is add
 
 
