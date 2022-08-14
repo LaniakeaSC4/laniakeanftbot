@@ -278,18 +278,24 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
 
   const command = interaction.data.name.toLowerCase()
   const args = interaction.data.options//array of the provided data after the slash
-
+var replytext = ''
   if (command === 'database') {
     var action = args[0].value
     var collectionstring = args[1].value
     if (interaction.member.user.id === "684896787655557216") {
       if (action === 'add') {
         await howrare.getCollection(collectionstring).then(async thisdata => {
-         var result = await postgress.addCollection(thisdata, collectionstring)
+          //if there is a statistical rarity
+          if ('statistical_rarity' in thisdata.result.data.items[0].all_ranks) {
+            var result = await postgress.addCollection(thisdata, collectionstring)
          if (result === 'success') {
+           replytext = 'Success. Database has been added'
               clearcommands()
               rebuildRarityCommand()
-} 
+} else {replytext = 'There was an error adding to database'}//if not success on collection add 
+          } else {replytext = 'This collection does not have a statistical rarity on howrare.is. Can\'t add it to database' }//if no statistical rarity
+          
+         
         })//end then
           .then(() => {
             //reply to interaction with acknowledgement
@@ -299,7 +305,7 @@ client.ws.on('INTERACTION_CREATE', async interaction => {
                 data: {
                   embeds: [
                     {
-                      "title": 'database command registered',
+                      "title": replytext,
                       "footer": {
                         "text": "Bot by Laniakea#3683"
                       }
