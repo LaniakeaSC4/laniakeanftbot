@@ -272,6 +272,22 @@ client.on('ready', async () => {
   })//end for each server loop
 })//end client on ready
 
+client.on('interactionCreate', async interaction => {
+  const command = interaction.data.name.toLowerCase()
+  const args = interaction.data.options//array of the provided data after the slash
+  
+  if (command === 'database') {
+    
+    if (action === 'test') {
+        console.log('action is test')
+        interaction.reply('test success')
+
+      }
+    
+    
+  } 
+})
+
 //respond to databse slash command
 client.ws.on('INTERACTION_CREATE', async interaction => {
   var pgclient = db.getClient()
@@ -317,6 +333,7 @@ var replytext = ''
           })//end then
       }//end if action is add
 
+/*
       if (action === 'test') {
         console.log('action is test')
         var testid = 50
@@ -329,7 +346,7 @@ var replytext = ''
           //pgclient.end()
         })
 
-      }
+      }*/
     } else {
       client.api.interactions(interaction.id, interaction.token).callback.post({
         data: {
