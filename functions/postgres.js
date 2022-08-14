@@ -77,7 +77,26 @@ async function addCollection(thisdata, collectionstring) {
   }) 
 } 
 
+async function removeCollection(collectionstring) {
+  return new Promise((resolve, reject) => {
+  var pgclient = db.getClient()
+ 
+
+            var querystring = 'DELETE FROM howraredata WHERE collection_id = $1'
+            var querydata = [collectionstring]
+
+           pgclient.query(querystring, querydata, (err, res) => {
+              if (err) throw err
+              console.log('logging result')
+              console.log(res)
+              resolve('success') 
+            })
+          
+  }) 
+} 
+
 module.exports.getCollectionSize = getPostgresCollectionSize
 module.exports.getNFTproperties = getPosrgresNFTproperties
 module.exports.getColletionList = getColletionList
 module.exports.addCollection = addCollection
+module.exports.removeCollection = removeCollection

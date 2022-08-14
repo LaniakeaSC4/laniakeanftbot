@@ -293,6 +293,37 @@ client.on('interactionCreate', async interaction => {
             await interaction.editReply({ content: replytext, ephemeral: true })
           })//end then
       }//end if action is add
+      
+      
+      
+      
+      
+      if (interaction.member.user.id === "684896787655557216") {
+      if (action === 'remove') {
+            await postgress.removeCollection(collectionstring).then(async result => {
+               if (result === 'success') {
+           replytext = 'Success. Database has been removed. Please now restart your discord client to see updated commands.'
+              clearcommands()
+              rebuildCommands()
+} else {replytext = 'There was an error removing the database'}//if not success on collection add
+              
+
+         
+          
+         
+        })//end then
+          .then(async () => {
+            //reply to interaction with acknowledgement
+            await interaction.editReply({ content: replytext, ephemeral: true })
+          })//end then
+      }//end if action is remove
+      } 
+     
+      
+      
+      
+      
+      
 
 
       if (action === 'test') {
