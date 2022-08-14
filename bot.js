@@ -275,18 +275,20 @@ client.on('ready', async () => {
 client.on('interactionCreate', async interaction => {
   console.log(interaction)
  
- /* const command = interaction.data.name.toLowerCase()
+ const command = interaction.commandName.toLowerCase()
+ var option1 = interaction.options.getString('test')
+ var option2 = interaction.options.getString('collectionstring')
   
   if (command === 'database') {
     
-    if (action === 'test') {
+    if (option1 === 'test') {
         console.log('action is test')
-        interaction.reply('test success')
+        interaction.reply('test success. Collection string is: ' + option2)
 
       }
     
     
-  } */
+  }
 })
 
 //respond to databse slash command
