@@ -16,13 +16,13 @@
 
   "dependencies": {
 
-    "discord.js": "13.8.1",
+    "discord.js": "13.10.2",
 
-    "request": "*", 
+    "request": "2.81.0", 
     
-    "pg" : "*",
+    "pg" : "8.7.3",
     
-    "axios" : "*"
+    "axios" : "0.27.2"
 
   }
 
