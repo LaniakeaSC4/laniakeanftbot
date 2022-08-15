@@ -9,6 +9,8 @@ const magiceden = require('./functions/magiceden.js')//Magic Eden related comman
 const howrare = require('./functions/howrare.js')//Magic Eden related commands are in here
 
 const sniper = require('./functions/sniper.js')
+const nfttools = require('./functions/nfttools.js')//generic nft tools like get rarity description from rank in here
+
 
 client.login(process.env.BOTTOKEN)
 
@@ -34,12 +36,13 @@ const servers = {
 }
 module.exports.servers = servers
 
+/*
 //set rarity threshold percentages
 const pmythic = 0.01
 const plegendary = 0.05
 const pepic = 0.15
 const prare = 0.35
-const puncommon = 0.6
+const puncommon = 0.6*/
 
 //=================
 //====  Statup  ===
@@ -70,6 +73,7 @@ async function clearcommands() {
 //====  Functions for sniper bot  ===
 //===================================
 
+/*
 async function calculateranges(collectionsize) {
   return new Promise((resolve, reject) => {
 
@@ -164,6 +168,7 @@ async function getembedcolour(raritydescription) {
 }//end getembedcolour
 module.exports.getembedcolour = getembedcolour
 
+*/
 //=========================
 //====  Rarity checker  ===
 //====    Functions     ===
@@ -361,7 +366,7 @@ client.on('interactionCreate', async interaction => {
       var thisimage = returnedrarity[2]
 
       var collectionsize = await postgress.getCollectionSize(thiscollection)
-      var ranges = await calculateranges(collectionsize)
+      var ranges = await nfttools.calculateranges(collectionsize)
 
       var mythicstart = ranges[0]; var mythicend = ranges[1]
       var legendarystart = ranges[2]; var legendaryend = ranges[3]
@@ -370,9 +375,9 @@ client.on('interactionCreate', async interaction => {
       var uncommonstart = ranges[8]; var uncommonend = ranges[9]
       var commonstart = ranges[10]; var commonend = ranges[11]
 
-      var raritydescription = await getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity)
+      var raritydescription = await nfttools.getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity)
 
-      var embedcolour = await getembedcolour(raritydescription)
+      var embedcolour = await nfttools.getembedcolour(raritydescription)
       var thisembedcolour = parseInt(embedcolour, 16)
 
 

@@ -1,5 +1,6 @@
 const main = require('../bot.js')
 const magiceden = require('./magiceden.js')//Magic Eden related commands are in here
+const nfttools = require('./nfttools.js')//generic nft tools like get rarity description from rank in here
 
 //Collections the sniper bot will watch. Must be on moonrank.app
 const sniperCollections = [
@@ -85,7 +86,7 @@ async function startsniper() {
               }//end if
             }//end for
 
-            var ranges = await main.calculateranges(sniperCollections[k][2])
+            var ranges = await nfttools.calculateranges(sniperCollections[k][2])
 
             var mythicstart = ranges[0]; var mythicend = ranges[1]
             var legendarystart = ranges[2]; var legendaryend = ranges[3]
@@ -94,7 +95,7 @@ async function startsniper() {
             var uncommonstart = ranges[8]; var uncommonend = ranges[9]
             var commonstart = ranges[10]; var commonend = ranges[11]
 
-            var raritydescription = await main.getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity)
+            var raritydescription = await nfttools.getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity)
             var floorprice = await magiceden.getFloorPrice(sniperCollections[k][0])
             var thisfloorprice = main.pround(floorprice, 6)
             var snipe = await testifsnipe(raritydescription, thisprice, thisfloorprice)
@@ -106,7 +107,7 @@ async function startsniper() {
             if (thissnipe != "false") {
               console.log('we have a ' + sniperCollections[k][0] + ' snipe!')
 
-              var embedcolour = await main.getembedcolour(raritydescription)
+              var embedcolour = await nfttools.getembedcolour(raritydescription)
               var thisembedcolour = parseInt(embedcolour, 16)//store outside subsection so we can access it
 
               var thisserver = ''

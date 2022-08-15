@@ -65,6 +65,25 @@ async function getremotefloorprice(collection) {
 	}) //end promise
 }//end getremotefloorprice function
 
+async function getNFTtraitCounts(collectionstring){
+  return new Promise((resolve, reject) => {
+  var thiscollection = 'https://api-mainnet.magiceden.io/rpc/getCollectionEscrowStats/' + collectionstring
+  
+  https.get(thiscollection, (resp) => {
+			let data = ''
+			// A chunk of data has been received.
+			resp.on('data', (chunk) => {
+				data += chunk
+			});
+			// The whole response has been received. Print out the result.
+			resp.on('end', () => {
+				resolve(data)
+			})
+		}).on("error", (err) => { console.log("Error: " + err.message) })
+	}) //end promise
+}
+
 module.exports.getNewListings = getnewremoteMElistings
 module.exports.getTokenDetails = getremoteMEtokendetails
 module.exports.getFloorPrice = getremotefloorprice
+module.exports.getNFTtraitCounts = getNFTtraitCounts
