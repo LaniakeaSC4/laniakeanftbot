@@ -1,4 +1,5 @@
 const https = require('https')
+const axios = require('axios')
 
 //returns x number of recent listings from Magic Eden
 function getnewremoteMElistings(collection, number) {
@@ -67,7 +68,7 @@ async function getremotefloorprice(collection) {
 
 async function getNFTtraitCounts(collectionstring){
   return new Promise((resolve, reject) => {
-  var thiscollection = 'https://api-mainnet.magiceden.io/rpc/getCollectionEscrowStats/' + collectionstring
+  var thiscollection = 'https://api-mainnet.magiceden.dev/rpc/getCollectionEscrowStats/' + collectionstring
   
   https.get(thiscollection, (resp) => {
 			let data = ''
