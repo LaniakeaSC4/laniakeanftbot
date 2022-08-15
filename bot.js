@@ -155,11 +155,14 @@ client.on('interactionCreate', async interaction => {
        var traitPercentages = {}
        
        for (var i = 0;i < baseTraitData.results.availableAttributes.length;i++){
+         
          var thispercentage = parseFloat(baseTraitData.results.availableAttributes[i].count) / totalcount 
+       var maintype = traitPercentages[baseTraitData.results.availableAttributes[i].attribute.trait_type]
+       var subtype = baseTraitData.results.availableAttributes[i].attribute.value
          
-         traitPercentages[baseTraitData.results.availableAttributes[i].attribute.trait_type] = baseTraitData.results.availableAttributes[i].attribute.value
+         traitPercentages[maintype] = { subtype : thispercentage }
          
-         traitPercentages[baseTraitData.results.availableAttributes[i].attribute.trait_type][baseTraitData.results.availableAttributes[i].attribute.value] = {"percentage" : thispercentage }
+         //traitPercentages[baseTraitData.results.availableAttributes[i].attribute.trait_type][baseTraitData.results.availableAttributes[i].attribute.value] = {"percentage" : thispercentage }
          
        }
        
