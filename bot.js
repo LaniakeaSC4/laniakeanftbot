@@ -160,7 +160,7 @@ client.on('interactionCreate', async interaction => {
          var subtype = baseTraitData.results.availableAttributes[i].attribute.value
          
          if (maintype in traitPercentages) {
-           traitPercentages[maintype].push({subtype :thispercentage})
+           traitPercentages[maintype][subtype] = thispercentage
          } else {
            traitPercentages[maintype] = {subtype : thispercentage}
            
