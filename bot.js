@@ -144,10 +144,10 @@ client.on('interactionCreate', async interaction => {
      if (interaction.member.user.id === "684896787655557216") {
        
        baseTraitData = await magiceden.getNFTtraitCounts(collectionstring)
-       console.log('logging trait results')
-       console.log(baseTraitData.results)
-       console.log('base trait data is')
-       console.log(baseTraitData)
+       console.log('logging 0')
+       console.log(baseTraitData.results.availableAttributes[0])
+       //console.log('base trait data is')
+       //console.log(baseTraitData)
        var totalcount = 0
        for (var i = 0;i < baseTraitData.results.availableAttributes.length;i++){
          totalcount = totalcount + parseFloat(baseTraitData.results.availableAttributes[i].count)

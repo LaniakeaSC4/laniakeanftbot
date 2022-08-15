@@ -78,7 +78,8 @@ async function getNFTtraitCounts(collectionstring){
 			});
 			// The whole response has been received. Print out the result.
 			resp.on('end', () => {
-				resolve(data)
+			 JSON.parse(data)
+				resolve(JSON.parse(data))
 			})
 		}).on("error", (err) => { console.log("Error: " + err.message) })
 	}) //end promise
