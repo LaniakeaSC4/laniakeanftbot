@@ -163,7 +163,7 @@ client.on('interactionCreate', async interaction => {
            traitPercentages[maintype][subtype] = thispercentage
          } else {
            traitPercentages[maintype] = {}
-           traitPercentages[maintype] = {subtype : thispercentage}
+           traitPercentages[maintype][subtype] = thispercentage
            
          } 
          
