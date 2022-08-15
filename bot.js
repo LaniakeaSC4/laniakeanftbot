@@ -144,16 +144,26 @@ client.on('interactionCreate', async interaction => {
      if (interaction.member.user.id === "684896787655557216") {
        
        baseTraitData = await magiceden.getNFTtraitCounts(collectionstring)
-       console.log('logging 0')
-       console.log(baseTraitData.results.availableAttributes[0])
-       //console.log('base trait data is')
-       //console.log(baseTraitData)
+       
        var totalcount = 0
        for (var i = 0;i < baseTraitData.results.availableAttributes.length;i++){
          totalcount = totalcount + parseFloat(baseTraitData.results.availableAttributes[i].count)
-         console.log(totalcount)
+         
        } 
        console.log('the final count is: ' + totalcount)
+       
+       var traitPercentages = {}
+       
+       for (var i = 0;i < baseTraitData.results.availableAttributes.length;i++){
+         var thispercentage = parseFloat(baseTraitData.results.availableAttributes[i].count) / totalcount 
+         
+         traitPercentages[baseTraitData.results.availableAttributes[i].attribute.trait_type] = { "name" : baseTraitData.results.availableAttributes[i].attribute.value, "percentage" : thispercentage }
+         
+       }
+       
+       console.log('traitPercentages')
+       console.log(traitPercentages)
+       
      } 
  } 
  
