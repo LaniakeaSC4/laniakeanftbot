@@ -97,3 +97,35 @@ async function getembedcolour(raritydescription) {
   }) //end promise
 }//end getembedcolour
 module.exports.getembedcolour = getembedcolour
+
+async function restructureTraitData(baseTraitData) {
+  return new Promise((resolve, reject) => {
+var totalcount = 0
+var traitPercentages = {}
+
+       for (var i = 0;i < baseTraitData.results.availableAttributes.length;i++){
+         totalcount = totalcount + parseFloat(baseTraitData.results.availableAttributes[i].count)
+         
+       } 
+       console.log('the final count is: ' + totalcount)
+       
+       
+       
+       for (var i = 0;i < baseTraitData.results.availableAttributes.length;i++){
+         var thispercentage = parseFloat(baseTraitData.results.availableAttributes[i].count) / totalcount 
+         var maintype = baseTraitData.results.availableAttributes[i].attribute.trait_type
+         var subtype = baseTraitData.results.availableAttributes[i].attribute.value
+         
+         if (maintype in traitPercentages) {
+           traitPercentages[maintype][subtype] = thispercentage
+         } else {
+           traitPercentages[maintype] = {}
+           traitPercentages[maintype][subtype] = thispercentage
+           
+         } 
+         
+       }
+       resolve(traitPercentages)
+  }) //end promise
+}//end restructureTraitData 
+module.exports.restructureTraitData = restructureTraitData
