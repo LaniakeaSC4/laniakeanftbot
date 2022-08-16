@@ -1,3 +1,6 @@
+import { Metaplex, keypairIdentity, bundlrStorage } from "@metaplex-foundation/js";
+import { Connection, clusterApiUrl, Keypair } from "@solana/web3.js";
+
 //set rarity threshold percentages
 const pmythic = 0.01
 const plegendary = 0.05
@@ -125,9 +128,6 @@ async function restructureTraitData(baseTraitData) {
   }) //end promise
 }//end restructureTraitData 
 module.exports.restructureTraitData = restructureTraitData
-
-import { Metaplex, keypairIdentity, bundlrStorage } from "@metaplex-foundation/js";
-import { Connection, clusterApiUrl, Keypair } from "@solana/web3.js";
 
 async function getMetaplexData(creatorKey) {
   return new Promise((resolve, reject) => {
