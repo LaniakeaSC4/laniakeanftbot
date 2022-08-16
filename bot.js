@@ -158,7 +158,7 @@ client.on('interactionCreate', async interaction => {
 
       } else { console.log('getholders returned null') }*/
 
-      var collectionNFTs = await nfttools.getMetaplexData('2UWNPgEto1x2TnBisJ814xdXKUQE5KFzypBNKPPjXz9b')
+      var collectionNFTs = await nfttools.getMetaplexData('69WhaAAr9kvMywkBKzWUDn5AnoX9gSJ2S8MPQHjTB9yL')
       console.log(collectionNFTs)
 
     }

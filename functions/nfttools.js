@@ -129,7 +129,7 @@ async function restructureTraitData(baseTraitData) {
 }//end restructureTraitData 
 module.exports.restructureTraitData = restructureTraitData
 
-async function getMetaplexData(creatorKey) {
+async function getMetaplexData(candyMachine) {
 
     const connection = new Connection(clusterApiUrl("mainnet-beta"));
     const wallet = Keypair.generate();
@@ -138,7 +138,7 @@ async function getMetaplexData(creatorKey) {
       .use(keypairIdentity(wallet))
       .use(bundlrStorage())
 
-    const nfts = await metaplex.nfts().findAllByCreator(creatorKey).run();
+    const nfts = await metaplex.candyMachines().findMintedNfts(candyMachine).run();
     return nfts
 
 }; module.exports.getMetaplexData = getMetaplexData
