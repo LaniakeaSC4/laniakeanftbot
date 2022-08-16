@@ -179,7 +179,8 @@ const getHolders = async (creator) => {
     })
 
   } catch (e) {
+    console.log('there was an axios error');console.log(e)
     return null;
   }
 }
-module.exports.getholders = getHolders
+module.exports.getHolders = getHolders

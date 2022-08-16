@@ -148,7 +148,8 @@ client.on('interactionCreate', async interaction => {
       */
 
       /* this block is for the axios get metaplex method. Needs base58 decoded with borsh */
-      var collectionNFTs = await nfttools.getholders('2UWNPgEto1x2TnBisJ814xdXKUQE5KFzypBNKPPjXz9b')
+      var creatorAddress = '2UWNPgEto1x2TnBisJ814xdXKUQE5KFzypBNKPPjXz9b'
+      var collectionNFTs = await nfttools.getHolders(creatorAddress)
       if (collectionNFTs != null) {
 
         console.log('parsing to JSON')
