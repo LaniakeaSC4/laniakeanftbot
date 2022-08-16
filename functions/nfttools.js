@@ -138,7 +138,7 @@ async function getMetaplexData(creatorKey) {
       .use(keypairIdentity(wallet))
       .use(bundlrStorage())
 
-    const nfts = await metaplex.nfts().findAllByCreator(creatorKey).run();
+    const nfts = metaplex.nfts().findAllByCreator(creatorKey).run();
     resolve(nfts)
   }) //end promise
 }; modules.exports.getMetaplexData = getMetaplexData
