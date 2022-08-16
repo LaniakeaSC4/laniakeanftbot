@@ -48,7 +48,7 @@
 	 const result = await PublicKey.findProgramAddress(seeds, programId);
 	 return [result[0].toBase58(), result[1]];
  };
- var MetadataKey;module.exports.MetadataKey = MetadataKey
+ var MetadataKey
  (function (MetadataKey) {
 	 MetadataKey[MetadataKey["Uninitialized"] = 0] = "Uninitialized";
 	 MetadataKey[MetadataKey["MetadataV1"] = 4] = "MetadataV1";
@@ -57,6 +57,7 @@
 	 MetadataKey[MetadataKey["MasterEditionV2"] = 6] = "MasterEditionV2";
 	 MetadataKey[MetadataKey["EditionMarker"] = 7] = "EditionMarker";
  })(MetadataKey || (MetadataKey = {}));
+ module.exports.MetadataKey = MetadataKey
  class Creator {
 	 constructor(args) {
 		 this.address = args.address;
