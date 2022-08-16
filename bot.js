@@ -39,6 +39,7 @@ client.on('ready', async () => {
   sniper.start()
   clearcommands()
   await rebuildCommands()
+  postgress.createTable()
 })//end client.on Ready
 
 client.on('ready', async () => {

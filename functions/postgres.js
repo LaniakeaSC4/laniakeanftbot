@@ -11,6 +11,17 @@ Then query databse with - pgclient.query()
 */
 var db = require('./pgclient.js')
 
+async function createTable() {
+  var pgclient = db.getClient()
+  return new Promise((resolve, reject) => {
+    //add supported collections from postgressDB to the slash command
+    pgclient.query('CREATE TABLE solanametaplex(collection_id TEXT PRIMARY KEY, data JSONB', (err, res) => {
+      if (err) throw err
+      resolve()
+    })//end query
+  })
+};module.exports.createTable = createTable
+
 async function getPostgresCollectionSize(collectionID) {
   var pgclient = db.getClient()
   return new Promise((resolve, reject) => {
@@ -62,38 +73,38 @@ async function getColletionList() {
 
 async function addCollection(thisdata, collectionstring) {
   return new Promise((resolve, reject) => {
-  var pgclient = db.getClient()
-  if (thisdata.result.api_code === 200) {
-            console.log('Recieved collection: ' + thisdata.result.data.collection + 'from howrare.is with status code:' + thisdata.result.api_code + '. Ready to add to SQL')
+    var pgclient = db.getClient()
+    if (thisdata.result.api_code === 200) {
+      console.log('Recieved collection: ' + thisdata.result.data.collection + 'from howrare.is with status code:' + thisdata.result.api_code + '. Ready to add to SQL')
 
-            var querystring = 'INSERT INTO howraredata( collection_ID, data, created_on, last_updated ) VALUES ( $1,$2,to_timestamp($3 / 1000.0),to_timestamp($4 / 1000.0) ) ON CONFLICT (collection_ID) DO NOTHING'
-            var querydata = [collectionstring, thisdata, Date.now(), Date.now()]
+      var querystring = 'INSERT INTO howraredata( collection_ID, data, created_on, last_updated ) VALUES ( $1,$2,to_timestamp($3 / 1000.0),to_timestamp($4 / 1000.0) ) ON CONFLICT (collection_ID) DO NOTHING'
+      var querydata = [collectionstring, thisdata, Date.now(), Date.now()]
 
-           pgclient.query(querystring, querydata, (err, res) => {
-              if (err) throw err
-              resolve('success') 
-            })
-          } else { console.log('Error: collection ' + collectionstring + ' returned status code ' + thisdata.result.api_code + ' from howrare.is.'); resolve('fail') }
-  }) 
-} 
+      pgclient.query(querystring, querydata, (err, res) => {
+        if (err) throw err
+        resolve('success')
+      })
+    } else { console.log('Error: collection ' + collectionstring + ' returned status code ' + thisdata.result.api_code + ' from howrare.is.'); resolve('fail') }
+  })
+}
 
 async function removeCollection(collectionstring) {
   return new Promise((resolve, reject) => {
-  var pgclient = db.getClient()
- 
+    var pgclient = db.getClient()
 
-            var querystring = 'DELETE FROM howraredata WHERE collection_id = $1'
-            var querydata = [collectionstring]
 
-           pgclient.query(querystring, querydata, (err, res) => {
-              if (err) throw err
-              console.log('logging result')
-              console.log(res)
-              resolve('success') 
-            })
-          
-  }) 
-} 
+    var querystring = 'DELETE FROM howraredata WHERE collection_id = $1'
+    var querydata = [collectionstring]
+
+    pgclient.query(querystring, querydata, (err, res) => {
+      if (err) throw err
+      console.log('logging result')
+      console.log(res)
+      resolve('success')
+    })
+
+  })
+}
 
 module.exports.getCollectionSize = getPostgresCollectionSize
 module.exports.getNFTproperties = getPosrgresNFTproperties
