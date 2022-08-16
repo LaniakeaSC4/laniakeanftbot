@@ -45,7 +45,8 @@ async function startsniper() {
 
     await setInterval(async function (k) {//do this every X minutes
       await magiceden.getNewListings(sniperCollections[k][0], refreshget).then(async thislistings => {//get latest X listings from Magic Eden
-        console.log("I am doing my " + minutes + " minute check for " + sniperCollections[k][0] + '. I have this many in my history at start: ' + sniperCollections[k][1].length)
+        /* heartbeat logging - enable if you want update each minute for each collection */
+        //console.log("I am doing my " + minutes + " minute check for " + sniperCollections[k][0] + '. I have this many in my history at start: ' + sniperCollections[k][1].length)
 
         var rebuildarrary = sniperCollections[k][1]//save all the acquired listings in a temporary arrary
 
@@ -153,7 +154,6 @@ module.exports.start = startsniper
 
 async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage, listinglink) {
   return new Promise((resolve, reject) => {
-    console.log('thissnipeprice (' + thissnipeprice + ') type is this type:' + typeof thissnipeprice)
     main.client.guilds.cache.get(server).channels.cache.get(snipeschannel).send({
       embeds: [
         {

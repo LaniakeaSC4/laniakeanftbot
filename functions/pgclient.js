@@ -12,7 +12,7 @@ module.exports = {
     })
     console.log('connecting client')
     client.connect()
-    console.log('returning clinet')
+    console.log('returning client')
     return client;
   }
 } 
