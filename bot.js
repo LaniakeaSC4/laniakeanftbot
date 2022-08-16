@@ -149,8 +149,8 @@ client.on('interactionCreate', async interaction => {
       //console.log('traitPercentages')
       //console.log(traitPercentages)
 
-      collectionNFTs = await nfttools.getholders('2UWNPgEto1x2TnBisJ814xdXKUQE5KFzypBNKPPjXz9b')
-      if (collectionnfts != null) {
+      var collectionNFTs = await nfttools.getholders('2UWNPgEto1x2TnBisJ814xdXKUQE5KFzypBNKPPjXz9b')
+      if (collectionNFTs != null) {
 
         console.log('parsing to JSON')
         var JSONcollection = JSON.parse(collectionNFTs)
