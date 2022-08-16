@@ -15,7 +15,7 @@ async function createTable() {
   var pgclient = db.getClient()
   return new Promise((resolve, reject) => {
     //add supported collections from postgressDB to the slash command
-    pgclient.query('CREATE TABLE solanametaplex(collection_id TEXT PRIMARY KEY, data JSONB', (err, res) => {
+    pgclient.query('CREATE TABLE solanametaplex(collection_id TEXT PRIMARY KEY, data JSONB)', (err, res) => {
       if (err) throw err
       resolve()
     })//end query
