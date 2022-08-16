@@ -142,10 +142,12 @@ client.on('interactionCreate', async interaction => {
 
     if (interaction.member.user.id === "684896787655557216") {
 
-      baseTraitData = await magiceden.getNFTtraitCounts(collectionstring)
+      /* commenting out for now - this works fine
+      baseTraitData = await magiceden.getNFTtraitCounts(collectionstring)//get trait counts from ME
+      traitPercentages = await nfttools.restructureTraitData(baseTraitData)//restructure into our format
+      */
 
-      traitPercentages = await nfttools.restructureTraitData(baseTraitData)
-
+      /*
       var collectionNFTs = await nfttools.getholders('2UWNPgEto1x2TnBisJ814xdXKUQE5KFzypBNKPPjXz9b')
       if (collectionNFTs != null) {
 
@@ -154,8 +156,10 @@ client.on('interactionCreate', async interaction => {
         console.log('collection nfts is')
         console.log(JSONcollection)
 
-      } else { console.log('getholders returned null') }
+      } else { console.log('getholders returned null') }*/
 
+      var collectionNFTs = await nfttools.getMetaplexData('2UWNPgEto1x2TnBisJ814xdXKUQE5KFzypBNKPPjXz9b')
+      console.log(collectionNFTs)
 
     }
   }//end if test 

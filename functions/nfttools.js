@@ -126,7 +126,24 @@ async function restructureTraitData(baseTraitData) {
 }//end restructureTraitData 
 module.exports.restructureTraitData = restructureTraitData
 
-const axios = require('axios')
+import { Metaplex, keypairIdentity, bundlrStorage } from "@metaplex-foundation/js";
+import { Connection, clusterApiUrl, Keypair } from "@solana/web3.js";
+
+async function getMetaplexData(creatorKey) {
+  return new Promise((resolve, reject) => {
+    const connection = new Connection(clusterApiUrl("mainnet-beta"));
+    const wallet = Keypair.generate();
+
+    const metaplex = Metaplex.make(connection)
+      .use(keypairIdentity(wallet))
+      .use(bundlrStorage())
+
+    const nfts = await metaplex.nfts().findAllByCreator(creatorKey).run();
+    resolve(nfts)
+  }) //end promise
+}; modules.exports.getMetaplexData = getMetaplexData
+
+/*const axios = require('axios')
 const getHolders = async (creator) => {
   try {
     //let response = await axios.get(` https://public-api.solscan.io/account/${creator}`);
@@ -154,4 +171,4 @@ const getHolders = async (creator) => {
     return null;
   }
 }
-module.exports.getholders = getHolders
+module.exports.getholders = getHolders*/
