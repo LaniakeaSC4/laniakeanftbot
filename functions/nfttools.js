@@ -135,6 +135,7 @@ const getHolders = async (creator) => {
     try {
         //let response = await axios.get(` https://public-api.solscan.io/account/${creator}`);
         //if (!response.data?.lamports) return null;
+        console.log('getting nft holders')
         let response1 = await axios({
             method: 'post',
             url: 'https://api.metaplex.solana.com/',
