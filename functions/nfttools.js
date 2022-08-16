@@ -1,5 +1,5 @@
-import { Metaplex, keypairIdentity, bundlrStorage } from "@metaplex-foundation/js";
-import { Connection, clusterApiUrl, Keypair } from "@solana/web3.js";
+const { Metaplex, keypairIdentity, bundlrStorage } = require("@metaplex-foundation/js")
+const { Connection, clusterApiUrl, Keypair } = requrie("@solana/web3.js")
 
 //set rarity threshold percentages
 const pmythic = 0.01

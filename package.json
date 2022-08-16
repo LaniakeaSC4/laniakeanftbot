@@ -8,8 +8,6 @@
 
   "main": "bot.js",
 
-  "type": "module",
-
   "scripts": {
 
     "start": "node bot.js"

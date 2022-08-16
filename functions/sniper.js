@@ -1,4 +1,4 @@
-const main = require('../bot.cjs')
+const main = require('../bot.js')
 const magiceden = require('./magiceden.js')//Magic Eden related commands are in here
 const nfttools = require('./nfttools.js')//generic nft tools like get rarity description from rank in here
 
