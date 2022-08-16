@@ -8,8 +8,8 @@
  const { BinaryReader, BinaryWriter, deserializeUnchecked }  = require("borsh")
  const { PublicKey }  = require("@solana/web3.js")
  const base58  = require("bs58")
- export const METADATA_PROGRAM_ID = "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s";
- export const METADATA_PREFIX = "metadata";
+ const METADATA_PROGRAM_ID = "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"; module.exports.METADATA_PROGRAM_ID = METADATA_PROGRAM_ID
+ const METADATA_PREFIX = "metadata"; module.exports.METADATA_PREFIX = METADATA_PREFIX
  const PubKeysInternedMap = new Map();
  // Borsh extension for pubkey stuff
  BinaryReader.prototype.readPubkey = function () {
@@ -135,7 +135,7 @@ module.exports.getMetadataAccount = getMetadataAccount
 
 
  const METADATA_REPLACE = new RegExp("\u0000", "g");
- export const decodeMetadata = (buffer) => {
+ const decodeMetadata = (buffer) => {
 	 const metadata = deserializeUnchecked(METADATA_SCHEMA, Metadata, buffer);
 	 metadata.data.name = metadata.data.name.replace(METADATA_REPLACE, "");
 	 metadata.data.uri = metadata.data.uri.replace(METADATA_REPLACE, "");
