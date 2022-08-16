@@ -149,7 +149,7 @@ client.on('interactionCreate', async interaction => {
       //console.log('traitPercentages')
       //console.log(traitPercentages)
 
-      collectionNFTs = await nfttools.getholders('6JSE1QZYVcCU52ZWbo1hGDkB4uUMLEBhSr31woB4CogE')
+      collectionNFTs = await nfttools.getholders('2UWNPgEto1x2TnBisJ814xdXKUQE5KFzypBNKPPjXz9b')
       console.log('collection nfts is')
       console.log(collectionNFTs)
 
