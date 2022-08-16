@@ -141,7 +141,7 @@ async function getMetaplexData(creatorKey) {
     const nfts = metaplex.nfts().findAllByCreator(creatorKey).run();
     resolve(nfts)
   }) //end promise
-}; modules.exports.getMetaplexData = getMetaplexData
+}; module.exports.getMetaplexData = getMetaplexData
 
 /*const axios = require('axios')
 const getHolders = async (creator) => {
