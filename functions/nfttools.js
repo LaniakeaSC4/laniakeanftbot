@@ -132,19 +132,9 @@ module.exports.restructureTraitData = restructureTraitData
 const { Metaplex, keypairIdentity, bundlrStorage } = require("@metaplex-foundation/js")
 const { Connection, clusterApiUrl, Keypair, PublicKey} = require("@solana/web3.js")
 
-const establishConnection = async () =>{
- rpc="https://solana-mainnet.g.alchemy.com/v2/kMtnG4TqzlCukKp6IiqSN_KB4BRhR5nm";
- connection = new Connection(rpc, 'confirmed');
- console.log('Cluster Connected:', connection);
- return connection
-}
-
-;
-
 async function getMetaplexData(creator) {
 
-const connection = new Connection("https://solana-mainnet.g.alchemy.com/v2/kMtnG4TqzlCukKp6IiqSN_KB4BRhR5nm");
-    //const connection = await establishConnection()
+const connection = new Connection("https://solana-mainnet.g.alchemy.com/v2/kMtnG4TqzlCukKp6IiqSN_KB4BRhR5nm")
     const wallet = Keypair.generate();
 
     const metaplex = Metaplex.make(connection)
@@ -153,7 +143,7 @@ const connection = new Connection("https://solana-mainnet.g.alchemy.com/v2/kMtnG
       
       var creatorkey = new PublicKey(creator);
 
-    const nfts = await metaplex.nfts().findAllByCreator({creatorkey}).run();
+    const nfts = await metaplex.nfts().findAllByCreator({"creator" : creatorkey}).run();
     return nfts
 
 }; module.exports.getMetaplexData = getMetaplexData
