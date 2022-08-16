@@ -130,7 +130,7 @@ module.exports.restructureTraitData = restructureTraitData
 /* this block is for https://github.com/metaplex-foundation/js/ @metaplex-foundation/js */
 
 const { Metaplex, keypairIdentity, bundlrStorage } = require("@metaplex-foundation/js")
-const { Connection, clusterApiUrl, Keypair } = require("@solana/web3.js")
+const { Connection, clusterApiUrl, Keypair, PublicKey} = require("@solana/web3.js")
 
 const establishConnection = async () =>{
  rpc="https://solana-mainnet.g.alchemy.com/v2/kMtnG4TqzlCukKp6IiqSN_KB4BRhR5nm";
@@ -143,8 +143,8 @@ const establishConnection = async () =>{
 
 async function getMetaplexData(creator) {
 
-    //const connection = new Connection(clusterApiUrl("mainnet-beta"));
-    const connection = await establishConnection()
+const connection = new Connection("https://solana-mainnet.g.alchemy.com/v2/kMtnG4TqzlCukKp6IiqSN_KB4BRhR5nm");
+    //const connection = await establishConnection()
     const wallet = Keypair.generate();
 
     const metaplex = Metaplex.make(connection)
