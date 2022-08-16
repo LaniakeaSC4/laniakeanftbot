@@ -127,27 +127,39 @@ async function restructureTraitData(baseTraitData) {
 module.exports.restructureTraitData = restructureTraitData
 
 
-/* this block is for https://github.com/metaplex-foundation/js/ @metaplex-foundation/js
+/* this block is for https://github.com/metaplex-foundation/js/ @metaplex-foundation/js */
 
 const { Metaplex, keypairIdentity, bundlrStorage } = require("@metaplex-foundation/js")
 const { Connection, clusterApiUrl, Keypair } = require("@solana/web3.js")
 
+const establishConnection = async () =>{
+ rpc="https://solana-mainnet.g.alchemy.com/v2/kMtnG4TqzlCukKp6IiqSN_KB4BRhR5nm";
+ connection = new Connection(rpc, 'confirmed');
+ console.log('Cluster Connected:', connection);
+ return connection
+}
+
+;
+
 async function getMetaplexData(creator) {
 
-    const connection = new Connection(clusterApiUrl("mainnet-beta"));
+    //const connection = new Connection(clusterApiUrl("mainnet-beta"));
+    const connection = establishConnection()
     const wallet = Keypair.generate();
 
     const metaplex = Metaplex.make(connection)
       .use(keypairIdentity(wallet))
       .use(bundlrStorage())
+      
+      var creatorkey = new PublicKey(creator);
 
-    const nfts = await metaplex.nfts().findAllByCreator({creator}).run();
+    const nfts = await metaplex.nfts().findAllByCreator({creatorkey}).run();
     return nfts
 
 }; module.exports.getMetaplexData = getMetaplexData
-*/
 
-/* this block is for the axios get metaplex method. Needs base58 decoded with borsh */
+
+/* this block is for the axios get metaplex method. Needs base58 decoded with borsh
 
 const axios = require('axios')
 const decode58 = require("./base58metadata.js")
@@ -184,3 +196,4 @@ const getHolders = async (creator) => {
   }
 }
 module.exports.getHolders = getHolders
+*/
