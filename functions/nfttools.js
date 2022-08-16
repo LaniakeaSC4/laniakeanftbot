@@ -126,12 +126,13 @@ async function restructureTraitData(baseTraitData) {
 }//end restructureTraitData 
 module.exports.restructureTraitData = restructureTraitData
 
+
 /* this block is for https://github.com/metaplex-foundation/js/ @metaplex-foundation/js
 
 const { Metaplex, keypairIdentity, bundlrStorage } = require("@metaplex-foundation/js")
 const { Connection, clusterApiUrl, Keypair } = require("@solana/web3.js")
 
-async function getMetaplexData(candyMachine) {
+async function getMetaplexData(creator) {
 
     const connection = new Connection(clusterApiUrl("mainnet-beta"));
     const wallet = Keypair.generate();
@@ -140,7 +141,7 @@ async function getMetaplexData(candyMachine) {
       .use(keypairIdentity(wallet))
       .use(bundlrStorage())
 
-    const nfts = await metaplex.candyMachines().findMintedNfts(candyMachine).run();
+    const nfts = await metaplex.nfts().findAllByCreator({creator}).run();
     return nfts
 
 }; module.exports.getMetaplexData = getMetaplexData
