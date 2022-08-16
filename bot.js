@@ -147,7 +147,7 @@ client.on('interactionCreate', async interaction => {
       traitPercentages = await nfttools.restructureTraitData(baseTraitData)//restructure into our format
       */
 
-      /*
+      /* this block is for the axios get metaplex method. Needs base58 decoded with borsh */
       var collectionNFTs = await nfttools.getholders('2UWNPgEto1x2TnBisJ814xdXKUQE5KFzypBNKPPjXz9b')
       if (collectionNFTs != null) {
 
@@ -156,10 +156,13 @@ client.on('interactionCreate', async interaction => {
         console.log('collection nfts is')
         console.log(JSONcollection)
 
-      } else { console.log('getholders returned null') }*/
+      } else { console.log('getholders returned null') }
+      
 
+      /* this block is for https://github.com/metaplex-foundation/js/ @metaplex-foundation/js
       var collectionNFTs = await nfttools.getMetaplexData('69WhaAAr9kvMywkBKzWUDn5AnoX9gSJ2S8MPQHjTB9yL')
       console.log(collectionNFTs)
+      */
 
     }
   }//end if test 
