@@ -130,7 +130,7 @@ async function restructureTraitData(baseTraitData) {
 module.exports.restructureTraitData = restructureTraitData
 
 async function getMetaplexData(creatorKey) {
-  return new Promise((resolve, reject) => {
+
     const connection = new Connection(clusterApiUrl("mainnet-beta"));
     const wallet = Keypair.generate();
 
@@ -138,9 +138,9 @@ async function getMetaplexData(creatorKey) {
       .use(keypairIdentity(wallet))
       .use(bundlrStorage())
 
-    const nfts = metaplex.nfts().findAllByCreator(creatorKey).run();
-    resolve(nfts)
-  }) //end promise
+    const nfts = await metaplex.nfts().findAllByCreator(creatorKey).run();
+    return nfts
+
 }; module.exports.getMetaplexData = getMetaplexData
 
 /*const axios = require('axios')
