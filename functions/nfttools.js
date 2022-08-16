@@ -100,56 +100,52 @@ module.exports.getembedcolour = getembedcolour
 
 async function restructureTraitData(baseTraitData) {
   return new Promise((resolve, reject) => {
-var totalcount = 0
-var traitPercentages = {}
+    var totalcount = 0
+    var traitPercentages = {}
+    //first get total count of all traits seen
+    for (var i = 0; i < baseTraitData.results.availableAttributes.length; i++) {
+      totalcount = totalcount + parseFloat(baseTraitData.results.availableAttributes[i].count)
+    }//end for loop of all traits
+    
+    console.log('the final count is: ' + totalcount)
 
-       for (var i = 0;i < baseTraitData.results.availableAttributes.length;i++){
-         totalcount = totalcount + parseFloat(baseTraitData.results.availableAttributes[i].count)
-         
-       } 
-       console.log('the final count is: ' + totalcount)
-       
-       
-       
-       for (var i = 0;i < baseTraitData.results.availableAttributes.length;i++){
-         var thispercentage = parseFloat(baseTraitData.results.availableAttributes[i].count) / totalcount 
-         var maintype = baseTraitData.results.availableAttributes[i].attribute.trait_type
-         var subtype = baseTraitData.results.availableAttributes[i].attribute.value
-         
-         if (maintype in traitPercentages) {
-           traitPercentages[maintype][subtype] = thispercentage
-         } else {
-           traitPercentages[maintype] = {}
-           traitPercentages[maintype][subtype] = thispercentage
-           
-         } 
-         
-       }
-       resolve(traitPercentages)
+    for (var i = 0; i < baseTraitData.results.availableAttributes.length; i++) {//then loop through all traits again
+      var thispercentage = parseFloat(baseTraitData.results.availableAttributes[i].count) / totalcount//the percantage of this trait
+      var maintype = baseTraitData.results.availableAttributes[i].attribute.trait_type//main trait type (e.g. "background")
+      var subtype = baseTraitData.results.availableAttributes[i].attribute.value//trait subtype (e.g. "purple")
+
+      if (maintype in traitPercentages) {//if maintype is already a key in the object add the subtype:percentage object
+        traitPercentages[maintype][subtype] = thispercentage
+      } else {//if maintype isnt already a key, first create the object, then add to it
+        traitPercentages[maintype] = {}
+        traitPercentages[maintype][subtype] = thispercentage
+      }//end else
+    }//end for loop of all traits
+    resolve(traitPercentages)
   }) //end promise
 }//end restructureTraitData 
 module.exports.restructureTraitData = restructureTraitData
 
 const axios = require('axios')
 const getHolders = async (creator) => {
-    try {
-        //let response = await axios.get(` https://public-api.solscan.io/account/${creator}`);
-        //if (!response.data?.lamports) return null;
-        console.log('getting nft holders')
-        let response1 = await axios({
-            method: 'post',
-            url: 'https://api.metaplex.solana.com/',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            data: { "method": "getProgramAccounts", "jsonrpc": "2.0", "params": ["metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s", { "encoding": "base64", "filters": [{ "memcmp": { "offset": 326, "bytes": creator } }, { "memcmp": { "offset": 358, "bytes": "2" } }] }], "id": "94f5e150-ab04-4f88-a344-d93a57b5df6f" }
-        });
-        if (!response1?.data?.result?.length) return null;
-        return response1?.data?.result;
+  try {
+    //let response = await axios.get(` https://public-api.solscan.io/account/${creator}`);
+    //if (!response.data?.lamports) return null;
+    console.log('getting nft holders')
+    let response1 = await axios({
+      method: 'post',
+      url: 'https://api.metaplex.solana.com/',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      data: { "method": "getProgramAccounts", "jsonrpc": "2.0", "params": ["metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s", { "encoding": "base64", "filters": [{ "memcmp": { "offset": 326, "bytes": creator } }, { "memcmp": { "offset": 358, "bytes": "2" } }] }], "id": "94f5e150-ab04-4f88-a344-d93a57b5df6f" }
+    });
+    if (!response1?.data?.result?.length) return null;
+    return response1?.data?.result;
 
 
-    } catch (e) {
-        return null;
-    }
+  } catch (e) {
+    return null;
+  }
 }
 module.exports.getholders = getHolders
