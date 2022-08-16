@@ -144,7 +144,7 @@ const establishConnection = async () =>{
 async function getMetaplexData(creator) {
 
     //const connection = new Connection(clusterApiUrl("mainnet-beta"));
-    const connection = establishConnection()
+    const connection = await establishConnection()
     const wallet = Keypair.generate();
 
     const metaplex = Metaplex.make(connection)
