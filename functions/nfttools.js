@@ -143,7 +143,7 @@ const getHolders = async (creator) => {
 
       console.log('logging status code')
       console.log(response1.status)
-      if (response1.status === 200) {
+      if (response1.status == 200) {
         console.log('logging first result')
         console.log(response1.data.result[0])
       } else { return null }
