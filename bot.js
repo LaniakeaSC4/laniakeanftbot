@@ -9,7 +9,6 @@ const howrare = require('./functions/howrare.js')//Magic Eden related commands a
 const sniper = require('./functions/sniper.js')
 const nfttools = require('./functions/nfttools.js')//generic nft tools like get rarity description from rank in here
 
-
 client.login(process.env.BOTTOKEN)
 
 //======================
@@ -63,23 +62,23 @@ async function rebuildCommands() {
 
   var serverkeys = Object.keys(servers)
   serverkeys.forEach((key, index) => {
-    
-        //build test command
+
+    //build test command
     client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
       data: {
         "name": "test",
-        "description": "ADMIN - Test command", 
-               "options": [
-                 {
-                   "type": 3,
-                   "name": "collection",
-                   "description": "Enter the collection URL string",
-                   "required": true
-                  }
-                ]
+        "description": "ADMIN - Test command",
+        "options": [
+          {
+            "type": 3,
+            "name": "collection",
+            "description": "Enter the collection URL string",
+            "required": true
+          }
+        ]
       }//end data
     })//end post
-    
+
     //build rarity command
     client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
       data: {
@@ -102,7 +101,7 @@ async function rebuildCommands() {
         ]
       }//end data
     })//end post
-    
+
     //build database command
     client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
       data: {
@@ -113,110 +112,102 @@ async function rebuildCommands() {
             "type": 3,
             "name": "action",
             "description": "Action type",
-            "choices": [{ "name": "Add", "value": "add" }, { "name": "Update", "value": "update" },{"name" : "Remove", "value" : "remove"}],
+            "choices": [{ "name": "Add", "value": "add" }, { "name": "Update", "value": "update" }, { "name": "Remove", "value": "remove" }],
             "required": true
           },
           {
             "type": 3,
             "name": "collectionstring",
             "description": "howrare.is URL identifier of collection to add?",
-            "required" : true
+            "required": true
           }
         ]
       }//end data
     })//end post command
-    
+
   })//end for each server loop 
 }//end rebuildCommands
 
 client.on('interactionCreate', async interaction => {
   //console.log(interaction)
- 
- const command = interaction.commandName.toLowerCase()
- var replytext = ''
- 
- 
- if (command === 'test') {
-    
+
+  const command = interaction.commandName.toLowerCase()
+  var replytext = ''
+
+
+  if (command === 'test') {
+
     await interaction.deferReply({ ephemeral: true })//send placeholder response
- var collectionstring = interaction.options.getString('collection')
- 
-     if (interaction.member.user.id === "684896787655557216") {
-       
-       baseTraitData = await magiceden.getNFTtraitCounts(collectionstring)
-       
-       traitPercentages = await nfttools.restructureTraitData(baseTraitData)
-       
-       //console.log('traitPercentages')
-       //console.log(traitPercentages)
-       
-       collectionNFTs = await nfttools.getholders('2UWNPgEto1x2TnBisJ814xdXKUQE5KFzypBNKPPjXz9b')
-       console.log('collection nfts is')
-       console.log(collectionNFTs)
-       
-     } 
- }//end if test 
- 
- 
+    var collectionstring = interaction.options.getString('collection')
+
+    if (interaction.member.user.id === "684896787655557216") {
+
+      baseTraitData = await magiceden.getNFTtraitCounts(collectionstring)
+
+      traitPercentages = await nfttools.restructureTraitData(baseTraitData)
+
+      //console.log('traitPercentages')
+      //console.log(traitPercentages)
+
+      collectionNFTs = await nfttools.getholders('69WhaAAr9kvMywkBKzWUDn5AnoX9gSJ2S8MPQHjTB9yL')
+      console.log('collection nfts is')
+      console.log(collectionNFTs)
+
+    }
+  }//end if test 
+
+
   if (command === 'database') {
-    
+
     await interaction.deferReply({ ephemeral: true })//send placeholder response
     var action = interaction.options.getString('action')
- var collectionstring = interaction.options.getString('collectionstring')
- 
-     if (interaction.member.user.id === "684896787655557216") {
+    var collectionstring = interaction.options.getString('collectionstring')
+
+    if (interaction.member.user.id === "684896787655557216") {
       if (action === 'add') {
         await howrare.getCollection(collectionstring).then(async thisdata => {
           //if there is a statistical rarity
           if ('statistical_rarity' in thisdata.result.data.items[0].all_ranks) {
             var result = await postgress.addCollection(thisdata, collectionstring)
-         if (result === 'success') {
-           replytext = 'Success. Database has been added. Please now restart your discord client to see updated commands.'
+            if (result === 'success') {
+              replytext = 'Success. Database has been added. Please now restart your discord client to see updated commands.'
               clearcommands()
               rebuildCommands()
-} else {replytext = 'There was an error adding to database'}//if not success on collection add 
-          } else {replytext = 'This collection does not have a statistical rarity on howrare.is. Can\'t add it to database' }//if no statistical rarity
-          
-         
+            } else { replytext = 'There was an error adding to database' }//if not success on collection add 
+          } else { replytext = 'This collection does not have a statistical rarity on howrare.is. Can\'t add it to database' }//if no statistical rarity
+
         })//end then
           .then(async () => {
             //reply to interaction with acknowledgement
             await interaction.editReply({ content: replytext, ephemeral: true })
           })//end then
       }//end if action is add
-      
-      
-      
-      
-      
+
       if (interaction.member.user.id === "684896787655557216") {
-      if (action === 'remove') {
-            await postgress.removeCollection(collectionstring).then(async result => {
-               if (result === 'success') {
-           replytext = 'Success. Database has been removed. Please now restart your discord client to see updated commands.'
+        if (action === 'remove') {
+          await postgress.removeCollection(collectionstring).then(async result => {
+            if (result === 'success') {
+              replytext = 'Success. Database has been removed. Please now restart your discord client to see updated commands.'
               clearcommands()
               rebuildCommands()
-} else {replytext = 'There was an error removing the database'}//if not success on collection add
-              
+            } else { replytext = 'There was an error removing the database' }//if not success on collection add
 
-         
-          
-         
-        })//end then
-          .then(async () => {
-            //reply to interaction with acknowledgement
-            await interaction.editReply({ content: replytext, ephemeral: true })
           })//end then
-      }//end if action is remove
-      } 
+            .then(async () => {
+              //reply to interaction with acknowledgement
+              await interaction.editReply({ content: replytext, ephemeral: true })
+            })//end then
+        }//end if action is remove
+      }
 
-    } else { await interaction.editReply({content:'You do not have permission to use this command!', ephemeral:true})
+    } else {
+      await interaction.editReply({ content: 'You do not have permission to use this command!', ephemeral: true })
     }//end else
-}//end if database
- 
- if (command === 'checkrarity') {
-   
-   await interaction.deferReply()//send placeholder response
+  }//end if database
+
+  if (command === 'checkrarity') {
+
+    await interaction.deferReply()//send placeholder response
     //we dont have to check if collection is in database as list of collections was established from database
     var thiscollection = interaction.options.getString('collection')
     var thisnftnumber = interaction.options.getString('nftnumber')
@@ -243,36 +234,33 @@ client.on('interactionCreate', async interaction => {
       var embedcolour = await nfttools.getembedcolour(raritydescription)
       var thisembedcolour = parseInt(embedcolour, 16)
 
-
-var rarityembed = [
-              {
-                "title": thisname,
-                "color": thisembedcolour,
-                "fields": [
-                  {
-                    "name": "Rarity",
-                    "value": thisrarity + ' - ' + raritydescription,
-                    "inline": true
-                  }
-                ],
-                "image": {
-                  "url": thisimage,
-                  "height": 75,
-                  "width": 75
-                },
-                "footer": {
-                  "text": "Bot by Laniakea#3683"
-                }
-              }
-            ]//end embed 
-await interaction.editReply({embeds : rarityembed})
+      var rarityembed = [
+        {
+          "title": thisname,
+          "color": thisembedcolour,
+          "fields": [
+            {
+              "name": "Rarity",
+              "value": thisrarity + ' - ' + raritydescription,
+              "inline": true
+            }
+          ],
+          "image": {
+            "url": thisimage,
+            "height": 75,
+            "width": 75
+          },
+          "footer": {
+            "text": "Bot by Laniakea#3683"
+          }
+        }
+      ]//end embed 
+      await interaction.editReply({ embeds: rarityembed })
 
     } else {//if (returnedrarity != 'NFT not in collection')
- await interaction.editReply({content:'NFT not found in collection!'})
+      await interaction.editReply({ content: 'NFT not found in collection!' })
     }//end else//end else (if rarity description = 'Not found')
   }//end if command = rarity
- 
-
 })
 
 const pround = (number, decimalPlaces) => Number(Math.round(Number(number + "e" + decimalPlaces)) + "e" + decimalPlaces * -1)
