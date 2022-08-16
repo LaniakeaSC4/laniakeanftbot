@@ -146,9 +146,6 @@ client.on('interactionCreate', async interaction => {
 
       traitPercentages = await nfttools.restructureTraitData(baseTraitData)
 
-      //console.log('traitPercentages')
-      //console.log(traitPercentages)
-
       var collectionNFTs = await nfttools.getholders('2UWNPgEto1x2TnBisJ814xdXKUQE5KFzypBNKPPjXz9b')
       if (collectionNFTs != null) {
 
