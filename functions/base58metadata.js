@@ -48,7 +48,7 @@
 	 const result = await PublicKey.findProgramAddress(seeds, programId);
 	 return [result[0].toBase58(), result[1]];
  };
- export var MetadataKey;
+ var MetadataKey;module.exports.MetadataKey = MetadataKey
  (function (MetadataKey) {
 	 MetadataKey[MetadataKey["Uninitialized"] = 0] = "Uninitialized";
 	 MetadataKey[MetadataKey["MetadataV1"] = 4] = "MetadataV1";
