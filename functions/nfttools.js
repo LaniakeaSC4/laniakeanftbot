@@ -143,7 +143,7 @@ const connection = new Connection("https://solana-mainnet.g.alchemy.com/v2/kMtnG
       
       var creatorkey = new PublicKey(creator);
 
-    const nfts = await metaplex.nfts().findAllByCreator({creator : creatorkey}).run();
+    const nfts = await metaplex.nfts().findAllByCreator({"creator" : creatorkey}).run();
     return nfts
 
 }; module.exports.getMetaplexData = getMetaplexData
