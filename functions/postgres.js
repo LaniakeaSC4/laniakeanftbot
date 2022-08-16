@@ -11,6 +11,7 @@ Then query databse with - pgclient.query()
 */
 var db = require('./pgclient.js')
 
+/* enable if needed and edit query
 async function createTable() {
   var pgclient = db.getClient()
   return new Promise((resolve, reject) => {
@@ -20,7 +21,7 @@ async function createTable() {
       resolve()
     })//end query
   })
-};module.exports.createTable = createTable
+};module.exports.createTable = createTable*/
 
 async function getPostgresCollectionSize(collectionID) {
   var pgclient = db.getClient()

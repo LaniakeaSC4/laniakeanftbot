@@ -39,7 +39,6 @@ client.on('ready', async () => {
   sniper.start()
   clearcommands()
   await rebuildCommands()
-  postgress.createTable()
 })//end client.on Ready
 
 client.on('ready', async () => {
@@ -151,9 +150,15 @@ client.on('interactionCreate', async interaction => {
       //console.log(traitPercentages)
 
       collectionNFTs = await nfttools.getholders('2UWNPgEto1x2TnBisJ814xdXKUQE5KFzypBNKPPjXz9b')
-      var JSONcollection = JSON.parse(collectionNFTs)
-      console.log('collection nfts is')
-      console.log(JSONcollection)
+      if (collectionnfts != null) {
+
+        console.log('parsing to JSON')
+        var JSONcollection = JSON.parse(collectionNFTs)
+        console.log('collection nfts is')
+        console.log(JSONcollection)
+
+      } else { console.log('getholders returned null') }
+
 
     }
   }//end if test 
