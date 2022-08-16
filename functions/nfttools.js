@@ -169,8 +169,11 @@ const getHolders = async (creator) => {
       console.log('logging status code')
       console.log(response1.status)
       if (response1.status == 200) {
-        console.log('logging first result')
-        console.log(response1.data.result[0])
+        console.log('logging first result (data')
+        console.log(response1.data.result.account.data[0])
+        var decoded = decode58.decodeMetadata(response1.data.result.account.data[0])
+        console.log('decoded is')
+        console.log(decoded)
       } else { return null }
 
     })
