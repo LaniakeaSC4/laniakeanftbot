@@ -138,6 +138,21 @@ async function updateTableColumn(table, tableprimarykey, thisprimarykey, column,
   })
 };module.exports.updateTableColumn = updateTableColumn
 
+//generic get data from table
+async function getData(table, tableprimarykey, thisprimarykey, column) {
+  return new Promise((resolve, reject) => {
+    var pgclient = db.getClient()
+
+    var querystring = 'SELECT ' + column + ' FROM ' + table + ' WHERE '+ tableprimarykey + ' = '+ thisprimarykey
+
+    pgclient.query(querystring, (err, res) => {
+      if (err) throw err
+      console.log(res.rows[0][column])
+      resolve(res.rows[0][column])
+    })
+  })
+};module.exports.getData = getData
+
 module.exports.getCollectionSize = getPostgresCollectionSize
 module.exports.getNFTproperties = getPosrgresNFTproperties
 module.exports.getColletionList = getColletionList

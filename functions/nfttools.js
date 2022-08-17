@@ -158,3 +158,9 @@ async function saveMetaplexData(creator) {
   return nfts*/
 
 }; module.exports.saveMetaplexData = saveMetaplexData
+
+async function getNFTjson(creator) {
+  
+  const unprocessed = await postgress.getData('solanametaplex', 'creatoraddress', creator,'rawapi')
+  console.log('unprocessed is: ' + unprocessed.length)
+}; module.exports.getNFTjson = getNFTjson

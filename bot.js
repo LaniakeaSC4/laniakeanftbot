@@ -141,16 +141,19 @@ client.on('interactionCreate', async interaction => {
     var collectionstring = interaction.options.getString('collection')
 
     if (interaction.member.user.id === "684896787655557216") {
+      
+      const creator = '2UWNPgEto1x2TnBisJ814xdXKUQE5KFzypBNKPPjXz9b'
 
       /* commenting out for now - this works fine
       baseTraitData = await magiceden.getNFTtraitCounts(collectionstring)//get trait counts from ME
       traitPercentages = await nfttools.restructureTraitData(baseTraitData)//restructure into our format
       */
       
-      /* this block is for https://github.com/metaplex-foundation/js/ @metaplex-foundation/js*/
+      /* get collection metadata from rpc and store in postgres
       var collectionNFTs = await nfttools.saveMetaplexData('2UWNPgEto1x2TnBisJ814xdXKUQE5KFzypBNKPPjXz9b')
-      //console.log(collectionNFTs)
+      */
       
+      nfttools.getNFTjson(creator)
 
     }
   }//end if test 
