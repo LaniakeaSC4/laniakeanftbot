@@ -153,6 +153,17 @@ async function saveMetaplexData(creator) {
   console.log('typeof metadata is')
   console.log(typeof(metadata[0]))
   
+  var withjson = {"data":[]}
+
+for (var i = 0;i < 10;i++){
+  var thisnft = await metaplex.nfts().load({ "metadata" : metadata[i]}).run()
+  withjson.data.push(thisnft)
+  console.log('got 1 nft')
+  await wait(1000)
+}
+console.log('withjson is')
+console.log(withjson)
+  
   postgress.createTableRow("solanametaplex","creatoraddress",creator,"rawapi",JSON.stringify(metadata))
   
   
