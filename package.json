@@ -26,11 +26,7 @@
 
     "@metaplex-foundation/js" : "0.15.0",
 
-    "@solana/web3.js" :"*",
-
-    "borsh" : "*",
-
-    "bs58" : "*"
+    "@solana/web3.js" :"*"
 
   }
 

@@ -162,9 +162,29 @@ async function saveMetaplexData(creator) {
 
 }; module.exports.saveMetaplexData = saveMetaplexData
 
+const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+
 async function getNFTjson(creator) {
   
   const unprocessed = await postgress.getData('solanametaplex', 'creatoraddress', creator,'rawapi')
   console.log('unprocessed length is: ' + unprocessed.length)
-  console.log(JSON.parse(unprocessed[0]))
+  
+  const connection = new Connection("https://lingering-multi-layer.solana-mainnet.discover.quiknode.pro/0ca724d92232c90b971ee453e71fcfb84ce1f8d9/")
+  const wallet = Keypair.generate();
+
+  const metaplex = Metaplex.make(connection)
+    .use(keypairIdentity(wallet))
+    .use(bundlrStorage())
+    
+var withjson = {"data":[]}
+
+for (var i = 0;i < 10;i++){
+  var thisnft = await metaplex.nfts().load({ "metadata" :unprocessed[i] }).run()
+  withjson.data.push(thisnft)
+  console.log('got 1 nft')
+  await wait(1000)
+}
+console.log('withjson is')
+console.log(withjson)
+  
 }; module.exports.getNFTjson = getNFTjson
