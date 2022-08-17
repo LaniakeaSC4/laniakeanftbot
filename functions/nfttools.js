@@ -147,6 +147,9 @@ async function saveMetaplexData(creator) {
 
   console.log('getting metadata')
   const metadata = await metaplex.nfts().findAllByCreator({ "creator": creatorkey }).run()
+  console.log(metadata)
+  console.log('metadata0')
+  console.log(metadata[0])
   postgress.createTableRow("solanametaplex","creatoraddress",creator,"rawapi",metadata)
   
   
