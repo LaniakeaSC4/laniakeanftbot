@@ -1,3 +1,5 @@
+const postgress = require('./functions/postgres.js')//postgress related commands are in here
+
 //set rarity threshold percentages
 const pmythic = 0.01
 const plegendary = 0.05
@@ -132,7 +134,7 @@ module.exports.restructureTraitData = restructureTraitData
 const { Metaplex, keypairIdentity, bundlrStorage } = require("@metaplex-foundation/js")
 const { Connection, clusterApiUrl, Keypair, PublicKey } = require("@solana/web3.js")
 
-async function getMetaplexData(creator) {
+async function saveMetaplexData(creator) {
 
   const connection = new Connection("https://lingering-multi-layer.solana-mainnet.discover.quiknode.pro/0ca724d92232c90b971ee453e71fcfb84ce1f8d9/")
   const wallet = Keypair.generate();
@@ -155,4 +157,4 @@ async function getMetaplexData(creator) {
   console.log(nfts[0].attributes)
   return nfts*/
 
-}; module.exports.getMetaplexData = getMetaplexData
+}; module.exports.saveMetaplexData = saveMetaplexData
