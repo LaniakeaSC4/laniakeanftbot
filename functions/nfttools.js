@@ -134,7 +134,7 @@ const { Connection, clusterApiUrl, Keypair, PublicKey} = require("@solana/web3.j
 
 async function getMetaplexData(creator) {
 
-const connection = new Connection("https://solana-mainnet.g.alchemy.com/v2/kMtnG4TqzlCukKp6IiqSN_KB4BRhR5nm")
+const connection = new Connection("https://lingering-multi-layer.solana-mainnet.discover.quiknode.pro/0ca724d92232c90b971ee453e71fcfb84ce1f8d9/")
     const wallet = Keypair.generate();
 
     const metaplex = Metaplex.make(connection)
