@@ -147,9 +147,9 @@ console.log('getting metadata')
     const metadata = await metaplex.nfts().findAllByCreator({"creator" : creatorkey}).run();
     console.log('got metadata, first is')
     console.log(metadata[0])
-    const nft = await metaplex.nfts().load({ "metadata" : metadata[0] }).run();
-    console.log('complete nft is')
-    console.log(nft)
+    const nfts = await metaplex.nfts().load({ "metadata" : metadata }).run();
+    console.log('got all metadata first attributes for: ' + nfts[0].name + ' id: ' + nfts[0].edition)
+    console.log(nfts[0].attributes)
     return nfts
 
 }; module.exports.getMetaplexData = getMetaplexData
