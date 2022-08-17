@@ -150,7 +150,7 @@ async function saveMetaplexData(creator) {
   console.log(metadata)
   console.log('metadata0')
   console.log(metadata[0])
-  postgress.createTableRow("solanametaplex","creatoraddress",creator,"rawapi",metadata)
+  postgress.createTableRow("solanametaplex","creatoraddress",creator,"rawapi",JSON.parse(metadata))
   
   
   /*
