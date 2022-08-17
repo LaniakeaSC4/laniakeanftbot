@@ -107,12 +107,12 @@ async function removeHowRareCollection(collectionstring) {
   })
 }
 
-//inserts data into column by primary key. If clonflict, do nothing.
-async function addTableData(table, primarykey, column, data) {
+//creates a table row and adds data to one column
+async function createTableRow(table, primarykey, column, data) {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
 
-    var querystring = 'INSERT INTO $1( $2, $3, created_on, last_updated ) VALUES ( $2, $4 ) ) ON CONFLICT ($2) DO NOTHING'
+    var querystring = 'INSERT INTO $1( $2, $3 ) VALUES ( $2, $4 ) ON CONFLICT ($2) DO NOTHING'
     var querydata = [table, primarykey, column, data]
 
     pgclient.query(querystring, querydata, (err, res) => {
@@ -120,7 +120,23 @@ async function addTableData(table, primarykey, column, data) {
       resolve('success')
     })
   })
-};module.exports.addTableData = addTableData
+};module.exports.createTableRow = createTableRow
+
+//adds data to a column
+async function updateTableColumn(table, tableprimarykey, thisprimarykey, column, data) {
+  return new Promise((resolve, reject) => {
+    var pgclient = db.getClient()
+
+    //update this table to add this data to this column where this key matches the table's primary key
+    var querystring = 'UPDATE $1 SET $4 = $5 WHERE $2 = $3'
+    var querydata = [table, tableprimarykey, thisprimarykey, column, data]
+
+    pgclient.query(querystring, querydata, (err, res) => {
+      if (err) throw err
+      resolve('success')
+    })
+  })
+};module.exports.updateTableColumn = updateTableColumn
 
 module.exports.getCollectionSize = getPostgresCollectionSize
 module.exports.getNFTproperties = getPosrgresNFTproperties
