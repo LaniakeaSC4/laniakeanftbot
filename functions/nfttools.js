@@ -166,5 +166,5 @@ async function getNFTjson(creator) {
   
   const unprocessed = await postgress.getData('solanametaplex', 'creatoraddress', creator,'rawapi')
   console.log('unprocessed length is: ' + unprocessed.length)
-  console.log(json.parse(unprocessed[0]))
+  console.log(JSON.parse(unprocessed[0]))
 }; module.exports.getNFTjson = getNFTjson
