@@ -1,4 +1,4 @@
-const postgress = require('./functions/postgres.js')//postgress related commands are in here
+const postgress = require('./postgres.js')//postgress related commands are in here
 
 //set rarity threshold percentages
 const pmythic = 0.01
