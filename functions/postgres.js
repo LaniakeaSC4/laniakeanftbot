@@ -11,7 +11,7 @@ Then query databse with - pgclient.query()
 */
 var db = require('./pgclient.js')
 
-/* enable if needed and edit query
+/*enable if needed and edit query
 async function createTable() {
   var pgclient = db.getClient()
   return new Promise((resolve, reject) => {
@@ -72,7 +72,7 @@ async function getColletionList() {
   })
 }
 
-async function addCollection(thisdata, collectionstring) {
+async function addHowRareCollection(thisdata, collectionstring) {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
     if (thisdata.result.api_code === 200) {
@@ -89,7 +89,7 @@ async function addCollection(thisdata, collectionstring) {
   })
 }
 
-async function removeCollection(collectionstring) {
+async function removeHowRareCollection(collectionstring) {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
 
@@ -107,8 +107,23 @@ async function removeCollection(collectionstring) {
   })
 }
 
+//inserts data into column by primary key. If clonflict, do nothing.
+async function addTableData(table, primarykey, column, data) {
+  return new Promise((resolve, reject) => {
+    var pgclient = db.getClient()
+
+    var querystring = 'INSERT INTO $1( $2, $3, created_on, last_updated ) VALUES ( $2, $4 ) ) ON CONFLICT ($2) DO NOTHING'
+    var querydata = [table, primarykey, column, data]
+
+    pgclient.query(querystring, querydata, (err, res) => {
+      if (err) throw err
+      resolve('success')
+    })
+  })
+};module.exports.addTableData = addTableData
+
 module.exports.getCollectionSize = getPostgresCollectionSize
 module.exports.getNFTproperties = getPosrgresNFTproperties
 module.exports.getColletionList = getColletionList
-module.exports.addCollection = addCollection
-module.exports.removeCollection = removeCollection
+module.exports.addHowRarecollection = addHowRareCollection
+module.exports.removeHowRareCollection = removeHowRareCollection

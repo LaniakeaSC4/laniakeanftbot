@@ -130,66 +130,29 @@ module.exports.restructureTraitData = restructureTraitData
 /* this block is for https://github.com/metaplex-foundation/js/ @metaplex-foundation/js */
 
 const { Metaplex, keypairIdentity, bundlrStorage } = require("@metaplex-foundation/js")
-const { Connection, clusterApiUrl, Keypair, PublicKey} = require("@solana/web3.js")
+const { Connection, clusterApiUrl, Keypair, PublicKey } = require("@solana/web3.js")
 
 async function getMetaplexData(creator) {
 
-const connection = new Connection("https://lingering-multi-layer.solana-mainnet.discover.quiknode.pro/0ca724d92232c90b971ee453e71fcfb84ce1f8d9/")
-    const wallet = Keypair.generate();
+  const connection = new Connection("https://lingering-multi-layer.solana-mainnet.discover.quiknode.pro/0ca724d92232c90b971ee453e71fcfb84ce1f8d9/")
+  const wallet = Keypair.generate();
 
-    const metaplex = Metaplex.make(connection)
-      .use(keypairIdentity(wallet))
-      .use(bundlrStorage())
-      
-      var creatorkey = new PublicKey(creator);
+  const metaplex = Metaplex.make(connection)
+    .use(keypairIdentity(wallet))
+    .use(bundlrStorage())
 
-console.log('getting metadata')
-    const metadata = await metaplex.nfts().findAllByCreator({"creator" : creatorkey}).run();
-    console.log('got metadata, first is')
-    console.log(metadata[0])
-    const nfts = await metaplex.nfts().load({ "metadata" : metadata }).run();
-    console.log('got all metadata first attributes for: ' + nfts[0].name + ' id: ' + nfts[0].edition)
-    console.log(nfts[0].attributes)
-    return nfts
+  var creatorkey = new PublicKey(creator);
+
+  console.log('getting metadata')
+  const metadata = await metaplex.nfts().findAllByCreator({ "creator": creatorkey }).run();
+  postgress.addTableData("solanametaplex",creator,"rawapi",metadata)
+  
+  
+  /*
+  console.log('got metadata, first is'); console.log(metadata[0])
+  const nfts = await metaplex.nfts().load({ "metadata": metadata }).run();
+  console.log('got all metadata first attributes for: ' + nfts[0].name + ' id: ' + nfts[0].edition)
+  console.log(nfts[0].attributes)
+  return nfts*/
 
 }; module.exports.getMetaplexData = getMetaplexData
-
-
-/* this block is for the axios get metaplex method. Needs base58 decoded with borsh
-
-const axios = require('axios')
-const decode58 = require("./base58metadata.js")
-
-const getHolders = async (creator) => {
-  try {
-    //let response = await axios.get(` https://public-api.solscan.io/account/${creator}`);
-    //if (!response.data?.lamports) return null;
-    console.log('getting nft holders')
-    await axios({
-      method: 'post',
-      url: 'https://api.metaplex.solana.com/',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      data: { "method": "getProgramAccounts", "jsonrpc": "2.0", "params": ["metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s", { "encoding": "base64", "filters": [{ "memcmp": { "offset": 326, "bytes": creator } }, { "memcmp": { "offset": 358, "bytes": "2" } }] }], "id": "94f5e150-ab04-4f88-a344-d93a57b5df6f" }
-    }).then(response1 => {
-
-      console.log('logging status code')
-      console.log(response1.status)
-      if (response1.status == 200) {
-        console.log('logging first result (data')
-        console.log(response1.data.result.account.data[0])
-        var decoded = decode58.decodeMetadata(response1.data.result.account.data[0])
-        console.log('decoded is')
-        console.log(decoded)
-      } else { return null }
-
-    })
-
-  } catch (e) {
-    console.log('there was an axios error');console.log(e)
-    return null;
-  }
-}
-module.exports.getHolders = getHolders
-*/

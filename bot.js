@@ -179,7 +179,7 @@ client.on('interactionCreate', async interaction => {
         await howrare.getCollection(collectionstring).then(async thisdata => {
           //if there is a statistical rarity
           if ('statistical_rarity' in thisdata.result.data.items[0].all_ranks) {
-            var result = await postgress.addCollection(thisdata, collectionstring)
+            var result = await postgress.addHowRareCollection(thisdata, collectionstring)
             if (result === 'success') {
               replytext = 'Success. Database has been added. Please now restart your discord client to see updated commands.'
               clearcommands()
@@ -196,7 +196,7 @@ client.on('interactionCreate', async interaction => {
 
       if (interaction.member.user.id === "684896787655557216") {
         if (action === 'remove') {
-          await postgress.removeCollection(collectionstring).then(async result => {
+          await postgress.removeHowRareCollection(collectionstring).then(async result => {
             if (result === 'success') {
               replytext = 'Success. Database has been removed. Please now restart your discord client to see updated commands.'
               clearcommands()
