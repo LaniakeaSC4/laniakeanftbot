@@ -179,7 +179,7 @@ async function getNFTjson(creator) {
 var withjson = {"data":[]}
 
 for (var i = 0;i < 10;i++){
-  var thisnft = await metaplex.nfts().load({ "metadata" :unprocessed[i] }).run()
+  var thisnft = await metaplex.nfts().load({ "metadata" : JSON.stringify(unprocessed[i])}).run()
   withjson.data.push(thisnft)
   console.log('got 1 nft')
   await wait(1000)
