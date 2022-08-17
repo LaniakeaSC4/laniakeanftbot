@@ -128,8 +128,8 @@ async function updateTableColumn(table, tableprimarykey, thisprimarykey, column,
     var pgclient = db.getClient()
 
     //update this table to add this data to this column where this key matches the table's primary key
-    var querystring = 'UPDATE $1 SET $4 = $5 WHERE $2 = $3'
-    var querydata = [table, tableprimarykey, thisprimarykey, column, data]
+    var querystring = 'UPDATE ' + table + ' SET '+ column + ' = $1 WHERE '+ tableprimarykey + ' = '+ thisprimarykey
+    var querydata = [data]
 
     pgclient.query(querystring, querydata, (err, res) => {
       if (err) throw err
