@@ -146,21 +146,9 @@ client.on('interactionCreate', async interaction => {
       baseTraitData = await magiceden.getNFTtraitCounts(collectionstring)//get trait counts from ME
       traitPercentages = await nfttools.restructureTraitData(baseTraitData)//restructure into our format
       */
-
-      /* this block is for the axios get metaplex method. Needs base58 decoded with borsh
-      var creatorAddress = '2UWNPgEto1x2TnBisJ814xdXKUQE5KFzypBNKPPjXz9b'
-      var collectionNFTs = await nfttools.getHolders(creatorAddress)
-      if (collectionNFTs != null) {
-
-        console.log('parsing to JSON')
-        var JSONcollection = JSON.parse(collectionNFTs)
-        console.log('collection nfts is')
-        console.log(JSONcollection)
-
-      } else { console.log('getholders returned null') }*/
       
       /* this block is for https://github.com/metaplex-foundation/js/ @metaplex-foundation/js*/
-      var collectionNFTs = await nfttools.getMetaplexData('2UWNPgEto1x2TnBisJ814xdXKUQE5KFzypBNKPPjXz9b')
+      var collectionNFTs = await nfttools.saveMetaplexData('2UWNPgEto1x2TnBisJ814xdXKUQE5KFzypBNKPPjXz9b')
       //console.log(collectionNFTs)
       
 
