@@ -108,12 +108,12 @@ async function removeHowRareCollection(collectionstring) {
 }
 
 //creates a table row and adds data to one column
-async function createTableRow(table, primarykey, column, data) {
+async function createTableRow(table, tableprimarykey, thisprimarykey, column, data) {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
 
-    var querystring = 'INSERT INTO $1( $2, $3 ) VALUES ( $2, $4 ) ON CONFLICT ($2) DO NOTHING'
-    var querydata = [table, primarykey, column, data]
+    var querystring = 'INSERT INTO' + table + '( ' + tableprimarykey + ', '+ column + ' ) VALUES ( $1, $2 ) ON CONFLICT ('+ tableprimarykey + ') DO NOTHING'
+    var querydata = [thisprimarykey, data]
 
     pgclient.query(querystring, querydata, (err, res) => {
       if (err) throw err
