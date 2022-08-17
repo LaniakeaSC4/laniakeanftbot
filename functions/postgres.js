@@ -149,8 +149,8 @@ async function getData(table, tableprimarykey, thisprimarykey, column) {
 
     pgclient.query(querystring, (err, res) => {
       if (err) throw err
-      console.log(res.rows[0][column])
-      resolve(res.rows[0][column])
+      console.log(res.rows[0][column][0])
+      resolve(res.rows[0][column][0])
     })
   })
 };module.exports.getData = getData
