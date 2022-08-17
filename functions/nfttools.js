@@ -172,6 +172,12 @@ async function getNFTjson(creator) {
   const unprocessed = await postgress.getData('solanametaplex', 'creatoraddress', creator,'rawapi')
   console.log('unprocessed length is: ' + unprocessed.length)
   
+ var unprocessedobject = JSON.parse(unprocessed)
+ 
+ console.log('type of unprocessed is ' + typeof(unprocessed))
+ console.log('type of unprocessedobject is ' + typeof(unprocessedobject))
+ console.log('type of unprocessedobject[0] is ' + typeof(unprocessedobject[0]))
+  
   const connection = new Connection("https://lingering-multi-layer.solana-mainnet.discover.quiknode.pro/0ca724d92232c90b971ee453e71fcfb84ce1f8d9/")
   const wallet = Keypair.generate();
 
@@ -182,7 +188,7 @@ async function getNFTjson(creator) {
 var withjson = {"data":[]}
 
 for (var i = 0;i < 10;i++){
-  var thisnft = await metaplex.nfts().load({ "metadata" : JSON.stringify(unprocessed[i])}).run()
+  var thisnft = await metaplex.nfts().load({ "metadata" : unprocessedobject[i]}).run()
   withjson.data.push(thisnft)
   console.log('got 1 nft')
   await wait(1000)
