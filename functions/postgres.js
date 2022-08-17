@@ -112,7 +112,7 @@ async function createTableRow(table, tableprimarykey, thisprimarykey, column, da
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
 
-    var querystring = 'INSERT INTO' + table + '( ' + tableprimarykey + ', '+ column + ' ) VALUES ( $1, $2 ) ON CONFLICT ('+ tableprimarykey + ') DO NOTHING'
+    var querystring = 'INSERT INTO ' + table + '( ' + tableprimarykey + ', '+ column + ' ) VALUES ( $1, $2 ) ON CONFLICT ('+ tableprimarykey + ') DO NOTHING'
     var querydata = [thisprimarykey, data]
 
     pgclient.query(querystring, querydata, (err, res) => {
