@@ -143,7 +143,7 @@ async function getData(table, tableprimarykey, thisprimarykey, column) {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
 
-    var querystring = '"SELECT ' + column + ' FROM ' + table + ' WHERE '+ tableprimarykey + ' = '+ thisprimarykey + '"'
+    var querystring = "SELECT "+ column + " FROM " + table + " WHERE " + tableprimarykey + " = '" + thisprimarykey + "'"
     
 console.log(querystring)
 
