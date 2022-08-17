@@ -161,7 +161,7 @@ client.on('interactionCreate', async interaction => {
       
       /* this block is for https://github.com/metaplex-foundation/js/ @metaplex-foundation/js*/
       var collectionNFTs = await nfttools.getMetaplexData('2UWNPgEto1x2TnBisJ814xdXKUQE5KFzypBNKPPjXz9b')
-      console.log(collectionNFTs)
+      //console.log(collectionNFTs)
       
 
     }

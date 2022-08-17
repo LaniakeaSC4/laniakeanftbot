@@ -143,7 +143,13 @@ const connection = new Connection("https://lingering-multi-layer.solana-mainnet.
       
       var creatorkey = new PublicKey(creator);
 
-    const nfts = await metaplex.nfts().findAllByCreator({"creator" : creatorkey}).run();
+console.log('getting metadata')
+    const metadata = await metaplex.nfts().findAllByCreator({"creator" : creatorkey}).run();
+    console.log('got metadata, first is')
+    console.log(metadata[0])
+    const nft = await metaplex.nfts().load({ "metadata" : metadata[0] }).run();
+    console.log('complete nft is')
+    console.log(nft)
     return nfts
 
 }; module.exports.getMetaplexData = getMetaplexData
