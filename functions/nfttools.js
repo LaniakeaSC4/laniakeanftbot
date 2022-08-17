@@ -147,9 +147,9 @@ async function saveMetaplexData(creator) {
 
   console.log('getting metadata')
   const metadata = await metaplex.nfts().findAllByCreator({ "creator": creatorkey }).run()
-  console.log(metadata)
+  /*console.log(metadata)
   console.log('metadata0')
-  console.log(metadata[0])
+  console.log(metadata[0])*/
   postgress.createTableRow("solanametaplex","creatoraddress",creator,"rawapi",JSON.stringify(metadata))
   
   
@@ -165,5 +165,6 @@ async function saveMetaplexData(creator) {
 async function getNFTjson(creator) {
   
   const unprocessed = await postgress.getData('solanametaplex', 'creatoraddress', creator,'rawapi')
-  console.log('unprocessed is: ' + unprocessed.length)
+  console.log('unprocessed length is: ' + unprocessed.length)
+  console.log(json.parse(unprocessed[0]))
 }; module.exports.getNFTjson = getNFTjson

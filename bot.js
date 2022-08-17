@@ -150,10 +150,10 @@ client.on('interactionCreate', async interaction => {
       */
       
        //get collection metadata from rpc and store in postgres
-      var collectionNFTs = await nfttools.saveMetaplexData(creator)
+      //var collectionNFTs = await nfttools.saveMetaplexData(creator)
       
       
-     // nfttools.getNFTjson(creator)
+     nfttools.getNFTjson(creator)
 
     }
   }//end if test 
