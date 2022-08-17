@@ -172,9 +172,10 @@ async function getNFTjson(creator) {
   const unprocessed = await postgress.getData('solanametaplex', 'creatoraddress', creator,'rawapi')
   console.log('unprocessed length is: ' + unprocessed.length)
   
- var unprocessedobject = JSON.parse(unprocessed)
+ var unprocessedobject = JSON.stringify(unprocessed)
  
  console.log('type of unprocessed is ' + typeof(unprocessed))
+ console.log('type of unprocessed[0] is ' + typeof(unprocessed[0]))
  console.log('type of unprocessedobject is ' + typeof(unprocessedobject))
  console.log('type of unprocessedobject[0] is ' + typeof(unprocessedobject[0]))
   
