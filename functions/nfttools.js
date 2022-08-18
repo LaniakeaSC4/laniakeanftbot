@@ -170,8 +170,8 @@ async function combineTraitRarity(creatoraddress) {
     nftdata = thisdata[1]
   } catch (error) { console.log('Error getting data') }
 
-  console.log(traitdata)
-  console.log(nftdata.data[0].json.attributes)
+  console.log(nftdata.data[0])
+  console.log(nftdata.data[0].json)
 
   //for each nft, find its traits, check thier rarity and multiply rarities together and save overall percentage in new nft arrary
 
@@ -188,12 +188,13 @@ async function combineTraitRarity(creatoraddress) {
       console.log(thesepercentages)
     }//end for each attribute
 
-    var thisrarity = thesepercentages[0]; console.log('first rarity is: ' + thisrarity)
+    var thisrarity = parseFloat(thesepercentages[0]); console.log('first rarity is: ' + thisrarity)
     for (var k = 1; k < thesepercentages.length; k++) {
-      thisrarity = thisrarity * thesepercentages[k]
+      thisrarity = thisrarity * parseFloat(thesepercentages[k])
       console.log('thisrarity is now: ' + thisrarity + '. Multiplied by: ' + thesepercentages[k])
     }
     console.log('final rarity is: ' + thisrarity)
+    //now store the NFT with this info
   }
 
   //store new nft arrary in postgres
