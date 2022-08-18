@@ -184,7 +184,7 @@ async function combineTraitRarity(creatoraddress) {
 
       var thispercentage = traitdata[maintype][subtype]
       console.log('this percentage is: ' + thispercentage)
-      thesepercentages.push[thispercentage]
+      thesepercentages.push(thispercentage)
       console.log(thesepercentages)
     }//end for each attribute
 
