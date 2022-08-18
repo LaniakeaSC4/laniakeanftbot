@@ -223,20 +223,20 @@ async function calculateTraitPercentages(creatoraddress){
       if (maintype in traitPercentages) {//if maintype is already a key in the object
       if (subtype in traitPercentages[maintype]){//if maintype and subtype already exist, +1 to timesSeen
         traitPercentages[maintype][subtype]['timesSeen'] = traitPercentages[maintype][subtype]['timesSeen'] + 1
-        traitPercentages['totalcount'] = traitPercentages['totalcount'] + 1
-        traitPercentages[maintype][subtype]['percentage'] = traitPercentages[maintype][subtype]['timesSeen'] / traitPercentages['totalcount']
+        traitPercentages[maintype]['totalcount'] = traitPercentages[maintype]['totalcount'] + 1
+        traitPercentages[maintype][subtype]['percentage'] = traitPercentages[maintype][subtype]['timesSeen'] / traitPercentages[maintype]['totalcount']
       } else {//maintype exists, but subtype does not. Create new subtype object and start at 1 tikeSeen
       traitPercentages[maintype][subtype] = {}
         traitPercentages[maintype][subtype]['timesSeen'] = 1
-        traitPercentages['totalcount'] = traitPercentages['totalcount'] + 1
-        traitPercentages[maintype][subtype]['percentage'] = traitPercentages[maintype][subtype]['timesSeen'] / traitPercentages['totalcount']
+        traitPercentages[maintype]['totalcount'] = traitPercentages[maintype]['totalcount'] + 1
+        traitPercentages[maintype][subtype]['percentage'] = traitPercentages[maintype][subtype]['timesSeen'] / traitPercentages[maintype]['totalcount']
       }
       } else {//if maintype isnt already a key, subtype won't exist either first create the objects, then start at 1 timesSeen
         traitPercentages[maintype] = {}
         traitPercentages[maintype][subtype] = {}
         traitPercentages[maintype][subtype]['timesSeen'] = 1
-        traitPercentages['totalcount'] = traitPercentages['totalcount'] + 1
-        traitPercentages[maintype][subtype]['percentage'] = traitPercentages[maintype][subtype]['timesSeen'] / traitPercentages['totalcount']
+        traitPercentages[maintype]['totalcount'] = traitPercentages[maintype]['totalcount'] + 1
+        traitPercentages[maintype][subtype]['percentage'] = traitPercentages[maintype][subtype]['timesSeen'] / traitPercentages[maintype]['totalcount']
       }//end else
       
       
