@@ -240,11 +240,11 @@ async function calculateTraitPercentages(creatoraddress){
 }//end for each nft
 
 //work out percentages
-for (var i = 0;i < traitPercentages.length;i++){//for each maintype
+for (var maintype of traitPercentages){//for each maintype
   
-  for (var j = 0;j < traitPercentages[i].length;j++){//go into each subtype
+  for (var subtype of traitPercentages[maintype]){//go into each subtype
     
-    traitPercentages[i][j]['percentage'] = traitPercentages[i][j]['timesSeen'] / traitPercentages[i]['totalcount']
+    traitPercentages[maintype][subtype]['percentage'] = traitPercentages[maintype][subtype]['timesSeen'] / traitPercentages[maintype]['totalcount']
     
   } 
   
