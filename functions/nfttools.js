@@ -171,7 +171,7 @@ async function combineTraitRarity(creatoraddress) {
   } catch (error) { console.log('Error getting data')}
 
   console.log(traitdata)
-  console.log(nftdata.data[0])
+  console.log(nftdata.data[0].json.attributes)
 
   //for each nft, find its traits, check thier rarity and multiply rarities together and save overall percentage in new nft arrary
 
