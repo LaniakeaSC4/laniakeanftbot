@@ -159,10 +159,19 @@ async function saveMetaplexData(creator) {
 
 //get the nft and trait data from postgres (added with saveMetaplexData) and calculate the statistical rarity of each nft
 async function combineTraitRarity(creatoraddress) {
+  
+  var traitdata = {}
+  var nftdata = {}
+  
+  const loaddata = Promise.all([postgress.getData("solanametaplex", "creatoraddress", creatoraddress, "traitrarity"),postgress.getData("solanametaplex", "creatoraddress", creatoraddress, "withmeta")])
+    try {
+    const thisdata = await loaddata
+    traitdata = thisdata[0]
+    nftdata = thisdata[1]
+  } catch (error) { console.log('Error getting data')}
 
-  //get trait data
-
-  //get nfts
+  console.log(traitdata[0])
+  console.log(nftdata[0])
 
   //for each nft, find its traits, check thier rarity and multiply rarities together and save overall percentage in new nft arrary
 
