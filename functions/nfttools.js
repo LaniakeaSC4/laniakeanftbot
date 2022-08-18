@@ -152,6 +152,9 @@ async function saveMetaplexData(creator) {
     await wait(80)//wait to slow API requests.
   }//end for each NFT metadata
 
+//count and restructure traits here
+//test with local data
+
   console.log('storing result in DB')
   postgress.createTableRow("solanametaplex", "creatoraddress", creator, "withmeta", JSON.stringify(withjson))
 
@@ -201,3 +204,40 @@ async function combineTraitRarity(creatoraddress) {
   //store new nft arrary in postgres
 
 }; module.exports.combineTraitRarity = combineTraitRarity
+
+async function calculateTraitPercentages(creatoraddress){
+  
+  const metaplexdata = await postgress.getData("solanametaplex", "creatoraddress", creatoraddress, "traitrarity")
+  
+  
+  
+  for (var i = 0; i < 1; i++) {//for each nft (1 for testing)
+  var traitPercentages = {}
+  traitPercentages['totalcount'] = 0
+    for (var j = 0; j < metaplexdata.data[0].json.attributes.length; j++) { //for each attribute
+    var maintype = nftdata.data[i].json.attributes[j].trait_type.replace(/[^0-9a-z]/gi, '')
+      var subtype = nftdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '')
+
+
+      if (maintype in traitPercentages) {//if maintype is already a key in the object
+      if (subtype in traitPercentages[maintype]){//if maintype and subtype already exist, +1 to timesSeen
+        traitPercentages[maintype][subtype]['timesSeen'] = traitPercentages[maintype][subtype]['timesSeen'] + 1
+        traitPercentages['totalcount'] = traitPercentages['totalcount'] + 1
+      } else {//maintype exists, but subtype does not. Create new subtype object and start at 1 tikeSeen
+      traitPercentages[maintype][subtype] = {}
+        traitPercentages[maintype][subtype]['timesSeen'] = 1
+        traitPercentages['totalcount'] = traitPercentages['totalcount'] + 1
+      }
+      } else {//if maintype isnt already a key, subtype won't exist either first create the objects, then start at 1 timesSeen
+        traitPercentages[maintype] = {}
+        traitPercentages[maintype][subtype] = {}
+        traitPercentages[maintype][subtype]['timesSeen'] = 1
+        traitPercentages['totalcount'] = traitPercentages['totalcount'] + 1
+      }//end else
+      
+      console.log(traitPercentages)
+  }//end for each trait
+  
+}//end for each nft
+
+} module.exports.calculateTraitPercentages = calculateTraitPercentages

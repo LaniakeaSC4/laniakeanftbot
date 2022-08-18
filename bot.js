@@ -78,7 +78,9 @@ client.on('interactionCreate', async interaction => {
       */
       
 
-      nfttools.combineTraitRarity(creator)
+      //nfttools.combineTraitRarity(creator)
+      
+      nfttools.calculateTraitPercentages(creator)
 
     }//end if user is laniakea
   }//end if test 
