@@ -241,8 +241,10 @@ async function calculateTraitPercentages(creatoraddress){
 
 //work out percentages
 Object.keys(traitPercentages).forEach(maintype => {//for each maintype
-  
+  console.log('looking at '+maintype)
   Object.keys(traitPercentages[maintype]).forEach(subtype => {//go into each subtype
+  console.log('looking at '+subtype)
+  console.log('traitPercentages[maintype][subtype] is ' + traitPercentages[maintype][subtype])
      if (traitPercentages[maintype][subtype] == 'timesSeen') {
     traitPercentages[maintype][subtype]['percentage'] = traitPercentages[maintype][subtype]['timesSeen'] / traitPercentages[maintype]['totalcount']
      } 
