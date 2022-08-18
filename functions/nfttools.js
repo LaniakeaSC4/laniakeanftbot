@@ -148,11 +148,6 @@ async function saveMetaplexData(creator) {
   console.log('getting metadata')
   const metadata = await metaplex.nfts().findAllByCreator({ "creator": creatorkey }).run()
   
-  console.log('typeof metadata is')
-  console.log(typeof(metadata))
-  console.log('typeof metadata is')
-  console.log(typeof(metadata[0]))
-  console.log('metadata.length is:' + metadata.length)
   var withjson = {"data":[]}
 
 for (var i = 0;i < metadata.length;i++){
@@ -163,10 +158,20 @@ for (var i = 0;i < metadata.length;i++){
 }
   
   postgress.createTableRow("solanametaplex","creatoraddress",creator,"withmeta",JSON.stringify(withjson))
-  
-  
- 
 
 }; module.exports.saveMetaplexData = saveMetaplexData
 
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+
+//get the nft and trait data from postgres (added with saveMetaplexData) and calculate the statistical rarity of each nft
+async function combineTraitRarity(creatoraddress){
+  
+  //get trait data
+  
+  //get nfts
+  
+  //for each nft, find its traits, check thier rarity and multiply rarities together and save overall percentage in new nft arrary
+  
+  //store new nft arrary in postgres
+  
+} module.exports.combineTraitRarity = combineTraitRarity
