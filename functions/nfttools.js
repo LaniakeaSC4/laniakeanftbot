@@ -50,7 +50,7 @@ async function calculateranges(collectionsize) {
 
     resolve([mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend])
   }) //end promise
-};module.exports.calculateranges = calculateranges
+}; module.exports.calculateranges = calculateranges
 
 //takes the ranges for this collection and returns string of its rarity description
 async function getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity) {
@@ -82,7 +82,7 @@ async function getraritydescription(mythicstart, mythicend, legendarystart, lege
   else {//this shouldnt trigger if the key is found and the data is complete
     return ('Not found')
   }//end else
-};module.exports.getraritydescription = getraritydescription
+}; module.exports.getraritydescription = getraritydescription
 
 //function to get embed color
 async function getembedcolour(raritydescription) {
@@ -95,7 +95,7 @@ async function getembedcolour(raritydescription) {
     else if (raritydescription === 'Common') { resolve('0x939394') }
     else { resolve('0x939394') }//this shouldnt trigger but if it does, return common grey
   }) //end promise
-};module.exports.getembedcolour = getembedcolour
+}; module.exports.getembedcolour = getembedcolour
 
 async function restructureTraitData(baseTraitData) {
   return new Promise((resolve, reject) => {
@@ -122,7 +122,7 @@ async function restructureTraitData(baseTraitData) {
     }//end for loop of all traits
     resolve(traitPercentages)
   }) //end promise
-};module.exports.restructureTraitData = restructureTraitData
+}; module.exports.restructureTraitData = restructureTraitData
 
 /* this block is for https://github.com/metaplex-foundation/js/ @metaplex-foundation/js */
 /* Gets all NFTs by verified creator address from quiknode (private RPC), then completes metadata (also via quiknode), then saves to DB*/
@@ -159,22 +159,43 @@ async function saveMetaplexData(creator) {
 
 //get the nft and trait data from postgres (added with saveMetaplexData) and calculate the statistical rarity of each nft
 async function combineTraitRarity(creatoraddress) {
-  
+
   var traitdata = {}
   var nftdata = {}
-  
-  const loaddata = Promise.all([postgress.getData("solanametaplex", "creatoraddress", creatoraddress, "traitrarity"),postgress.getData("solanametaplex", "creatoraddress", creatoraddress, "withmeta")])
-    try {
+
+  const loaddata = Promise.all([postgress.getData("solanametaplex", "creatoraddress", creatoraddress, "traitrarity"), postgress.getData("solanametaplex", "creatoraddress", creatoraddress, "withmeta")])
+  try {
     const thisdata = await loaddata
     traitdata = thisdata[0]
     nftdata = thisdata[1]
-  } catch (error) { console.log('Error getting data')}
+  } catch (error) { console.log('Error getting data') }
 
   console.log(traitdata)
   console.log(nftdata.data[0].json.attributes)
 
   //for each nft, find its traits, check thier rarity and multiply rarities together and save overall percentage in new nft arrary
 
+  for (var i = 0; i < nftdata.data.length; i++) {//for each NFT
+    var thesepercentages = []
+
+    for (var j = 0; j < 2; j++) { //for each attribute
+      var maintype = nftdata.data[i].json.attributes[j].trait_type.replace(/[^0-9a-z]/gi, '')
+      var subtype = nftdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '')
+
+      var thispercentage = traitdata[maintype][subtype].value
+      console.log('this percentage is: ' + thispercentage)
+      thesepercentages.push[thispercentage]
+      console.log('thesepercentage arrary is: ' + thesepercentages)
+    }//end for each attribute
+
+    var thisrarity = thesepercentages[0]; console.log('first rarity is: ' + thisrarity)
+    for (var k = 1; k < thesepercentages.length; k++) {
+      thisrarity = thisrarity * thesepercentages[k]
+      console.log('thisrarity is now: ' + thisrarity + '. Multiplied by: ' + thesepercentages[k])
+    }
+    console.log('final rarity is: ' + thisrarity)
+  }
+
   //store new nft arrary in postgres
 
-};module.exports.combineTraitRarity = combineTraitRarity
+}; module.exports.combineTraitRarity = combineTraitRarity
