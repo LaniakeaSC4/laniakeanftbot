@@ -211,7 +211,7 @@ async function calculateTraitPercentages(creatoraddress){
   
   console.log(metaplexdata.data[0])
   
-  for (var i = 0; i < 1; i++) {//for each nft (1 for testing)
+  for (var i = 0; i < 5; i++) {//for each nft (1 for testing)
   var traitPercentages = {}
   traitPercentages['totalcount'] = 0
     for (var j = 0; j < metaplexdata.data[i].json.attributes.length; j++) { //for each attribute
@@ -235,9 +235,9 @@ async function calculateTraitPercentages(creatoraddress){
         traitPercentages['totalcount'] = traitPercentages['totalcount'] + 1
       }//end else
       
-      console.log(traitPercentages)
+      
   }//end for each trait
-  
+  console.log(traitPercentages)
 }//end for each nft
 
 } module.exports.calculateTraitPercentages = calculateTraitPercentages
