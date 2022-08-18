@@ -210,10 +210,11 @@ async function calculateTraitPercentages(creatoraddress){
   const metaplexdata = await postgress.getData("solanametaplex", "creatoraddress", creatoraddress, "withmeta")
   
   console.log(metaplexdata.data[0])
-  
-  for (var i = 0; i < 5; i++) {//for each nft (1 for testing)
   var traitPercentages = {}
   traitPercentages['totalcount'] = 0
+  
+  for (var i = 0; i < 10; i++) {//for each nft (1 for testing)
+  
     for (var j = 0; j < metaplexdata.data[i].json.attributes.length; j++) { //for each attribute
     var maintype = metaplexdata.data[i].json.attributes[j].trait_type.replace(/[^0-9a-z]/gi, '')
       var subtype = metaplexdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '')
