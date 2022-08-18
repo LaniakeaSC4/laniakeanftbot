@@ -40,7 +40,7 @@ client.on('ready', async () => {
 async function clearcommands() {
   return new Promise((resolve, reject) => {
   var serverkeys = Object.keys(servers)
-  serverkeys.forEach((key, index) => {
+  serverkeys.forEach(async (key, index) => {
     const guild = client.guilds.cache.get(servers[key].id)
     guild.commands.set([])
     await wait(1000)
