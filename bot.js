@@ -143,14 +143,17 @@ client.on('interactionCreate', async interaction => {
     if (interaction.member.user.id === "684896787655557216") {
       
       const creator = '13KnbB92VpoKjuokiXrzhPnyfMCcRt5ECLX7fe9fgLuK'
-
-      /* commenting out for now - this works fine
-      baseTraitData = await magiceden.getNFTtraitCounts(collectionstring)//get trait counts from ME
-      traitPercentages = await nfttools.restructureTraitData(baseTraitData)//restructure into our format
-      */
+      
+      var collectionstring = "sac"
       
        //get collection metadata from rpc and store in postgres
       var collectionNFTs = await nfttools.saveMetaplexData(creator)
+      
+       /* commenting out for now - this works fine*/
+      baseTraitData = await magiceden.getNFTtraitCounts(collectionstring)//get trait counts from ME
+      traitPercentages = await nfttools.restructureTraitData(baseTraitData)//restructure into our format
+      
+      postgress.updateTableColumn("solanametaplex","creatoraddress",creator,"traitrarity", traitPercentages) 
       
       
     // nfttools.getNFTjson(creator)
