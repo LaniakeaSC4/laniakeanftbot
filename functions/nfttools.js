@@ -252,5 +252,5 @@ Object.keys(traitPercentages).forEach(maintype => {//for each maintype
   
 }) 
 
-postgress.updateTableColumn("solanametaplex", "creatoraddress", creator, "traitrarity", traitPercentages)
+postgress.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "traitrarity", traitPercentages)
 }; module.exports.calculateTraitPercentages = calculateTraitPercentages
