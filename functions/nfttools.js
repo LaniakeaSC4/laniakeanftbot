@@ -240,14 +240,14 @@ async function calculateTraitPercentages(creatoraddress){
 }//end for each nft
 
 //work out percentages
-for (var maintype of traitPercentages){//for each maintype
+Object.keys(traitPercentages).forEach(maintype => {//for each maintype
   
-  for (var subtype of traitPercentages[maintype]){//go into each subtype
-    
+  Object.keys(traitPercentages[maintype]).forEach(subtype => {//go into each subtype
+     if (traitPercentages[maintype][subtype] == 'timesSeen') {
     traitPercentages[maintype][subtype]['percentage'] = traitPercentages[maintype][subtype]['timesSeen'] / traitPercentages[maintype]['totalcount']
-    
-  } 
+     } 
+  }) 
   
-}
+}) 
 console.log(traitPercentages)
 } module.exports.calculateTraitPercentages = calculateTraitPercentages
