@@ -66,7 +66,7 @@ client.on('interactionCreate', async interaction => {
       const creator = '13KnbB92VpoKjuokiXrzhPnyfMCcRt5ECLX7fe9fgLuK'
       const collectionstring = "sac"
 
-      
+      /*
       
       //get collection metadata from rpc and store in postgres
       await nfttools.saveMetaplexData(creator)
@@ -76,9 +76,9 @@ client.on('interactionCreate', async interaction => {
       traitPercentages = await nfttools.restructureTraitData(baseTraitData)//restructure into our format
       postgress.updateTableColumn("solanametaplex","creatoraddress",creator,"traitrarity", traitPercentages)//save in postgres
       
-      
+      */
 
-      //nfttools.combineTraitRarity(creator)
+      nfttools.combineTraitRarity(creator)
 
     }//end if user is laniakea
   }//end if test 
