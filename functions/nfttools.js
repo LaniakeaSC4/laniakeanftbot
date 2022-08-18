@@ -175,17 +175,17 @@ async function combineTraitRarity(creatoraddress) {
 
   //for each nft, find its traits, check thier rarity and multiply rarities together and save overall percentage in new nft arrary
 
-  for (var i = 0; i < nftdata.data.length; i++) {//for each NFT
+  for (var i = 0; i < 2; i++) {//for each NFT
     var thesepercentages = []
 
-    for (var j = 0; j < 2; j++) { //for each attribute
+    for (var j = 0; j < nftdata.data[0].json.attributes.length; j++) { //for each attribute
       var maintype = nftdata.data[i].json.attributes[j].trait_type.replace(/[^0-9a-z]/gi, '')
       var subtype = nftdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '')
 
       var thispercentage = traitdata[maintype][subtype]
       console.log('this percentage is: ' + thispercentage)
       thesepercentages.push[thispercentage]
-      console.log('thesepercentage arrary is: ' + thesepercentages)
+      console.log(thesepercentages)
     }//end for each attribute
 
     var thisrarity = thesepercentages[0]; console.log('first rarity is: ' + thisrarity)
