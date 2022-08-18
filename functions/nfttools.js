@@ -211,7 +211,7 @@ async function calculateTraitPercentages(creatoraddress){
   
   var traitPercentages = {}
   
-  for (var i = 0; i < 10; i++) {//for each nft (1 for testing)
+  for (var i = 0; i < metadata.data.length; i++) {//for each nft (1 for testing)
   
     for (var j = 0; j < metaplexdata.data[i].json.attributes.length; j++) { //for each attribute
     var maintype = metaplexdata.data[i].json.attributes[j].trait_type.replace(/[^0-9a-z]/gi, '')
@@ -241,10 +241,10 @@ async function calculateTraitPercentages(creatoraddress){
 
 //work out percentages
 Object.keys(traitPercentages).forEach(maintype => {//for each maintype
-  console.log('looking at '+maintype)
+  //console.log('looking at '+maintype)
   Object.keys(traitPercentages[maintype]).forEach(subtype => {//go into each subtype
-  console.log('looking at '+subtype)
-  console.log(traitPercentages[maintype][subtype])
+  //console.log('looking at '+subtype)
+  //console.log(traitPercentages[maintype][subtype])
      if (traitPercentages[maintype][subtype] != 'timesSeen') {
     traitPercentages[maintype][subtype]['percentage'] = traitPercentages[maintype][subtype]['timesSeen'] / traitPercentages[maintype]['totalcount']
      } 
