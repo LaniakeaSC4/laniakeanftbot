@@ -25,12 +25,7 @@ const servers = {
   {
     'id': '901885313608200302', 'snipeschannel': '1004682983036428308'
   }
-}
-module.exports.servers = servers
-
-//=================
-//====  Statup  ===
-//=================
+}; module.exports.servers = servers
 
 //start services
 client.on('ready', async () => {
@@ -41,92 +36,18 @@ client.on('ready', async () => {
   await rebuildCommands()
 })//end client.on Ready
 
-client.on('ready', async () => {
-})
-
 //function to reset slash commands (enable if needed)
 async function clearcommands() {
+  return new Promise((resolve, reject) => {
   var serverkeys = Object.keys(servers)
   serverkeys.forEach((key, index) => {
     const guild = client.guilds.cache.get(servers[key].id)
     guild.commands.set([])
-  })
+    await wait(1000)
+    resolve()
+  })//end for each server
+})//end promise
 }//end function to reset commands
-
-//setup/rebuild discord checkrarity slash command
-async function rebuildCommands() {
-
-  //add supported collections from postgressDB to the slash command
-  var collections = await postgress.getColletionList()
-  var choices = []; for (var i = 0; i < collections.length; i++) { choices.push({ "name": collections[i], "value": collections[i] }) }
-
-  var serverkeys = Object.keys(servers)
-  serverkeys.forEach((key, index) => {
-
-    //build test command
-    client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
-      data: {
-        "name": "test",
-        "description": "ADMIN - Test command",
-        "options": [
-          {
-            "type": 3,
-            "name": "collection",
-            "description": "Enter the collection URL string",
-            "required": true
-          }
-        ]
-      }//end data
-    })//end post
-
-    //build rarity command
-    client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
-      data: {
-        "name": "checkrarity",
-        "description": "Check the rarity of an NFT in a collection we support",
-        "options": [
-          {
-            "type": 3,
-            "name": "collection",
-            "description": "Please select a collection",
-            "choices": choices,
-            "required": true
-          },
-          {
-            "type": 3,
-            "name": "nftnumber",
-            "description": "Enter the # of the NFT to check in selected collection",
-            "required": true
-          }
-        ]
-      }//end data
-    })//end post
-
-    //build database command
-    client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
-      data: {
-        "name": "database",
-        "description": "ADMIN - howrare.is rarity checker database",
-        "options": [
-          {
-            "type": 3,
-            "name": "action",
-            "description": "Action type",
-            "choices": [{ "name": "Add", "value": "add" }, { "name": "Update", "value": "update" }, { "name": "Remove", "value": "remove" }],
-            "required": true
-          },
-          {
-            "type": 3,
-            "name": "collectionstring",
-            "description": "howrare.is URL identifier of collection to add?",
-            "required": true
-          }
-        ]
-      }//end data
-    })//end post command
-
-  })//end for each server loop 
-}//end rebuildCommands
 
 client.on('interactionCreate', async interaction => {
   //console.log(interaction)
@@ -141,13 +62,13 @@ client.on('interactionCreate', async interaction => {
     var collectionstring = interaction.options.getString('collection')
 
     if (interaction.member.user.id === "684896787655557216") {
-      
+
       const creator = '13KnbB92VpoKjuokiXrzhPnyfMCcRt5ECLX7fe9fgLuK'
-      var collectionstring = "sac"
-      
+      const collectionstring = "sac"
+
       /*
       
-       //get collection metadata from rpc and store in postgres
+      //get collection metadata from rpc and store in postgres
       var collectionNFTs = await nfttools.saveMetaplexData(creator)
       
       //get and restructure trait data for ME. Save in postgres
@@ -156,10 +77,10 @@ client.on('interactionCreate', async interaction => {
       postgress.updateTableColumn("solanametaplex","creatoraddress",creator,"traitrarity", traitPercentages)//save in postgres
       
       */
-      
+
       nfttools.combineTraitRarity(creator)
 
-    }
+    }//end if user is laniakea
   }//end if test 
 
 
@@ -267,7 +188,82 @@ client.on('interactionCreate', async interaction => {
       await interaction.editReply({ content: 'NFT not found in collection!' })
     }//end else//end else (if rarity description = 'Not found')
   }//end if command = rarity
-})
+})//end on interaction
+
+//setup/rebuild discord checkrarity slash command
+async function rebuildCommands() {
+
+  //add supported collections from postgressDB to the slash command
+  var collections = await postgress.getColletionList()
+  var choices = []; for (var i = 0; i < collections.length; i++) { choices.push({ "name": collections[i], "value": collections[i] }) }
+
+  var serverkeys = Object.keys(servers)
+  serverkeys.forEach((key, index) => {
+
+    //build test command
+    client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
+      data: {
+        "name": "test",
+        "description": "ADMIN - Test command",
+        "options": [
+          {
+            "type": 3,
+            "name": "collection",
+            "description": "Enter the collection URL string",
+            "required": true
+          }
+        ]
+      }//end data
+    })//end post
+
+    //build rarity command
+    client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
+      data: {
+        "name": "checkrarity",
+        "description": "Check the rarity of an NFT in a collection we support",
+        "options": [
+          {
+            "type": 3,
+            "name": "collection",
+            "description": "Please select a collection",
+            "choices": choices,
+            "required": true
+          },
+          {
+            "type": 3,
+            "name": "nftnumber",
+            "description": "Enter the # of the NFT to check in selected collection",
+            "required": true
+          }
+        ]
+      }//end data
+    })//end post
+
+    //build database command
+    client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
+      data: {
+        "name": "database",
+        "description": "ADMIN - howrare.is rarity checker database",
+        "options": [
+          {
+            "type": 3,
+            "name": "action",
+            "description": "Action type",
+            "choices": [{ "name": "Add", "value": "add" }, { "name": "Update", "value": "update" }, { "name": "Remove", "value": "remove" }],
+            "required": true
+          },
+          {
+            "type": 3,
+            "name": "collectionstring",
+            "description": "howrare.is URL identifier of collection to add?",
+            "required": true
+          }
+        ]
+      }//end data
+    })//end post command
+
+  })//end for each server loop 
+}//end rebuildCommands
 
 const pround = (number, decimalPlaces) => Number(Math.round(Number(number + "e" + decimalPlaces)) + "e" + decimalPlaces * -1)
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))

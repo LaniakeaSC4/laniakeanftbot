@@ -1,14 +1,15 @@
 const postgress = require('./postgres.js')//postgress related commands are in here
-
-//set rarity threshold percentages
-const pmythic = 0.01
-const plegendary = 0.05
-const pepic = 0.15
-const prare = 0.35
-const puncommon = 0.6
+const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
 async function calculateranges(collectionsize) {
   return new Promise((resolve, reject) => {
+
+    //set rarity threshold percentages
+    const pmythic = 0.01
+    const plegendary = 0.05
+    const pepic = 0.15
+    const prare = 0.35
+    const puncommon = 0.6
 
     //initialise threshold variables
     var mythicstart = 0; var mythicend = 0
@@ -49,9 +50,7 @@ async function calculateranges(collectionsize) {
 
     resolve([mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend])
   }) //end promise
-}//end calculate ranges
-module.exports.calculateranges = calculateranges
-
+};module.exports.calculateranges = calculateranges
 
 //takes the ranges for this collection and returns string of its rarity description
 async function getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity) {
@@ -83,8 +82,7 @@ async function getraritydescription(mythicstart, mythicend, legendarystart, lege
   else {//this shouldnt trigger if the key is found and the data is complete
     return ('Not found')
   }//end else
-}//end getraritydescription function
-module.exports.getraritydescription = getraritydescription
+};module.exports.getraritydescription = getraritydescription
 
 //function to get embed color
 async function getembedcolour(raritydescription) {
@@ -97,8 +95,7 @@ async function getembedcolour(raritydescription) {
     else if (raritydescription === 'Common') { resolve('0x939394') }
     else { resolve('0x939394') }//this shouldnt trigger but if it does, return common grey
   }) //end promise
-}//end getembedcolour
-module.exports.getembedcolour = getembedcolour
+};module.exports.getembedcolour = getembedcolour
 
 async function restructureTraitData(baseTraitData) {
   return new Promise((resolve, reject) => {
@@ -125,53 +122,50 @@ async function restructureTraitData(baseTraitData) {
     }//end for loop of all traits
     resolve(traitPercentages)
   }) //end promise
-}//end restructureTraitData 
-module.exports.restructureTraitData = restructureTraitData
-
+};module.exports.restructureTraitData = restructureTraitData
 
 /* this block is for https://github.com/metaplex-foundation/js/ @metaplex-foundation/js */
+/* Gets all NFTs by verified creator address from quiknode (private RPC), then completes metadata (also via quiknode), then saves to DB*/
 
 const { Metaplex, keypairIdentity, bundlrStorage } = require("@metaplex-foundation/js")
 const { Connection, clusterApiUrl, Keypair, PublicKey } = require("@solana/web3.js")
 
 async function saveMetaplexData(creator) {
 
-  const connection = new Connection("https://lingering-multi-layer.solana-mainnet.discover.quiknode.pro/0ca724d92232c90b971ee453e71fcfb84ce1f8d9/")
-  const wallet = Keypair.generate();
-
+  //establish connection
+  const connection = new Connection(process.env.QUICKNODE)
+  const wallet = Keypair.generate()
   const metaplex = Metaplex.make(connection)
     .use(keypairIdentity(wallet))
     .use(bundlrStorage())
 
-  var creatorkey = new PublicKey(creator);
+  var creatorkey = new PublicKey(creator)//make the verified creator address into a public key
 
-  console.log('getting metadata')
+  console.log('getting metadata from RPC - may take several minutes')
   const metadata = await metaplex.nfts().findAllByCreator({ "creator": creatorkey }).run()
-  
-  var withjson = {"data":[]}
 
-for (var i = 0;i < metadata.length;i++){
-  var thisnft = await metaplex.nfts().load({ "metadata" : metadata[i]}).run()
-  withjson.data.push(thisnft)
-  console.log('got nft #' + i)
-  await wait(80)
-}
-  
-  postgress.createTableRow("solanametaplex","creatoraddress",creator,"withmeta",JSON.stringify(withjson))
+  console.log('adding NFT JSON - 1 API request per 80ms - may take some time')
+  var withjson = { "data": [] }
+  for (var i = 0; i < metadata.length; i++) {
+    var thisnft = await metaplex.nfts().load({ "metadata": metadata[i] }).run()
+    withjson.data.push(thisnft)
+    await wait(80)//wait to slow API requests.
+  }//end for each NFT metadata
+
+  console.log('storing result in DB')
+  postgress.createTableRow("solanametaplex", "creatoraddress", creator, "withmeta", JSON.stringify(withjson))
 
 }; module.exports.saveMetaplexData = saveMetaplexData
 
-const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
-
 //get the nft and trait data from postgres (added with saveMetaplexData) and calculate the statistical rarity of each nft
-async function combineTraitRarity(creatoraddress){
-  
+async function combineTraitRarity(creatoraddress) {
+
   //get trait data
-  
+
   //get nfts
-  
+
   //for each nft, find its traits, check thier rarity and multiply rarities together and save overall percentage in new nft arrary
-  
+
   //store new nft arrary in postgres
-  
-} module.exports.combineTraitRarity = combineTraitRarity
+
+};module.exports.combineTraitRarity = combineTraitRarity

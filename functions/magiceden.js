@@ -1,5 +1,4 @@
 const https = require('https')
-//
 
 //returns x number of recent listings from Magic Eden
 function getnewremoteMElistings(collection, number) {
@@ -20,7 +19,7 @@ function getnewremoteMElistings(collection, number) {
 			})
 		}).on("error", (err) => { console.log("Error: " + err.message) })
 	}) //end promise
-}//end getnewremoteMElistings function
+}; module.exports.getNewListings = getnewremoteMElistings
 
 //returns token details from Magic Eden
 async function getremoteMEtokendetails(mintaddress) {
@@ -41,7 +40,7 @@ async function getremoteMEtokendetails(mintaddress) {
 			})
 		}).on("error", (err) => { console.log("Error: " + err.message) })
 	}) //end promise
-}//end getremoteMEtokendetails function
+}; module.exports.getTokenDetails = getremoteMEtokendetails
 
 //returns floor price from Magic Eden API
 async function getremotefloorprice(collection) {
@@ -64,7 +63,7 @@ async function getremotefloorprice(collection) {
 			})
 		}).on("error", (err) => { console.log("Error: " + err.message) })
 	}) //end promise
-}//end getremotefloorprice function
+}; module.exports.getFloorPrice = getremotefloorprice
 
 async function getNFTtraitCounts(collectionstring){
   return new Promise((resolve, reject) => {
@@ -83,9 +82,4 @@ async function getNFTtraitCounts(collectionstring){
 			})
 		}).on("error", (err) => { console.log("Error: " + err.message) })
 	}) //end promise
-}
-
-module.exports.getNewListings = getnewremoteMElistings
-module.exports.getTokenDetails = getremoteMEtokendetails
-module.exports.getFloorPrice = getremotefloorprice
-module.exports.getNFTtraitCounts = getNFTtraitCounts
+}; module.exports.getNFTtraitCounts = getNFTtraitCounts
