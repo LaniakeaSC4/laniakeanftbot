@@ -207,7 +207,7 @@ async function combineTraitRarity(creatoraddress) {
 
 async function calculateTraitPercentages(creatoraddress){
   
-  const metaplexdata = await postgress.getData("solanametaplex", "creatoraddress", creatoraddress, "traitrarity")
+  const metaplexdata = await postgress.getData("solanametaplex", "creatoraddress", creatoraddress, "withmeta")
   
   console.log(metaplexdata.data[0])
   
