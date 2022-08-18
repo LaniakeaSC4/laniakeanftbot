@@ -110,8 +110,8 @@ async function restructureTraitData(baseTraitData) {
 
     for (var i = 0; i < baseTraitData.results.availableAttributes.length; i++) {//then loop through all traits again
       var thispercentage = parseFloat(baseTraitData.results.availableAttributes[i].count) / totalcount//the percantage of this trait
-      var maintype = baseTraitData.results.availableAttributes[i].attribute.trait_type.replace(/[^a-zA-Z0-9 ]/g, "")//main trait type (e.g. "background")
-      var subtype = baseTraitData.results.availableAttributes[i].attribute.value.replace(/[^a-zA-Z0-9 ]/g, "")//trait subtype (e.g. "purple")
+      var maintype = baseTraitData.results.availableAttributes[i].attribute.trait_type.replace(/[^0-9a-z]/gi, '')//main trait type (e.g. "background")
+      var subtype = baseTraitData.results.availableAttributes[i].attribute.value.replace(/[^0-9a-z]/gi, '')//trait subtype (e.g. "purple")
 
       if (maintype in traitPercentages) {//if maintype is already a key in the object add the subtype:percentage object
         traitPercentages[maintype][subtype] = thispercentage
