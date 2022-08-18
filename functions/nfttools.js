@@ -215,8 +215,8 @@ async function calculateTraitPercentages(creatoraddress){
   var traitPercentages = {}
   traitPercentages['totalcount'] = 0
     for (var j = 0; j < metaplexdata.data[i].json.attributes.length; j++) { //for each attribute
-    var maintype = nftdata.data[i].json.attributes[j].trait_type.replace(/[^0-9a-z]/gi, '')
-      var subtype = nftdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '')
+    var maintype = metaplexdata.data[i].json.attributes[j].trait_type.replace(/[^0-9a-z]/gi, '')
+      var subtype = metaplexdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '')
 
 
       if (maintype in traitPercentages) {//if maintype is already a key in the object
