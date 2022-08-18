@@ -235,7 +235,7 @@ async function calculateTraitPercentages(creatoraddress){
         traitPercentages[maintype] = {}
         traitPercentages[maintype][subtype] = {}
         traitPercentages[maintype][subtype]['timesSeen'] = 1
-        traitPercentages[maintype]['totalcount'] = traitPercentages[maintype]['totalcount'] + 1
+        traitPercentages[maintype]['totalcount'] = 1
         traitPercentages[maintype][subtype]['percentage'] = traitPercentages[maintype][subtype]['timesSeen'] / traitPercentages[maintype]['totalcount']
       }//end else
       
