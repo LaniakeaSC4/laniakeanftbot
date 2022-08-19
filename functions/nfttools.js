@@ -282,8 +282,6 @@ async function rankNFTs(creatoraddress) {
   console.log(sorted[4])
   console.log('sixth is')
   console.log(sorted[5])
-  console.log('10th is')
-  console.log(sorted[9])
 
 }; module.exports.rankNFTs = rankNFTs
 
