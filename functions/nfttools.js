@@ -269,7 +269,7 @@ async function rankNFTs(creatoraddress) {
   const input = await postgress.getData("solanametaplex", "creatoraddress", creatoraddress, "withrarity")//get data from DB
 
   //rank NFTs based on statistical rarity
-  var sorted = input.sort((a, b) => a.statisticalRarity - b.statisticalRarity)
+  var sorted = input.data.sort((a, b) => a.statisticalRarity - b.statisticalRarity)
   console.log('first is')
   console.log(sorted[0])
   console.log('second is')
