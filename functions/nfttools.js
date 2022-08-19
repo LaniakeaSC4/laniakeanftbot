@@ -174,34 +174,42 @@ async function combineTraitRarity(creatoraddress) {
   } catch (error) { console.log('Error getting data') }
 
   console.log(nftdata.data[0])
-  console.log(nftdata.data[0].json)
-
   //for each nft, find its traits, check thier rarity and multiply rarities together and save overall percentage in new nft arrary
 
   for (var i = 0; i < 1; i++) {//for each NFT
     var thesepercentages = []
+    var output = {"data" : []}
 
     for (var j = 0; j < nftdata.data[0].json.attributes.length; j++) { //for each attribute
       var maintype = nftdata.data[i].json.attributes[j].trait_type.replace(/[^0-9a-z]/gi, '')
       var subtype = nftdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '')
 
-      console.log(traitdata[maintype])
       var thispercentage = traitdata[maintype][subtype]['percentage']
-      console.log('this percentage is: ' + thispercentage + '. maintype: ' + maintype + '. subtype: ' + subtype)
       thesepercentages.push(thispercentage)
-      console.log(thesepercentages)
     }//end for each attribute
 
-    var thisrarity = parseFloat(thesepercentages[0]); console.log('first rarity is: ' + thisrarity)
+    var thisrarity = parseFloat(thesepercentages[0])
     for (var k = 1; k < thesepercentages.length; k++) {
       thisrarity = thisrarity * parseFloat(thesepercentages[k])
-      console.log('thisrarity is now: ' + thisrarity + '. Multiplied by: ' + thesepercentages[k])
     }
     console.log('final rarity is: ' + thisrarity)
     //now store the NFT with this info
+    output.data[i] = {
+      "id" : nftdata.data[i].json.edition,
+      "name" : nftdata.data[i].json.name, 
+      "image" : nftdata.data[i].json.image,
+      "symbol" : nftdata.data[i].json.symbol,
+      "attributes" : nftdata.data[i].json.attributes,
+      "description" : nftdata.data[i].json.description,
+      "tokenAddress" : nftdata.data[i].address,
+      "mintAuthorityAddress" : nftdata.data[i].mintAuthorityAddress,
+      
+      
+    } 
   }
 
   //store new nft arrary in postgres
+  
 
 }; module.exports.combineTraitRarity = combineTraitRarity
 
