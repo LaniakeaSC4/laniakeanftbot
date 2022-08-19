@@ -63,22 +63,10 @@ client.on('interactionCreate', async interaction => {
     var data = interaction.options.getString('data')
 
     if (interaction.member.user.id === "684896787655557216") {
-
-      if (action === 'fulladd') {
       
-      await interaction.editReply({ content: "getting metaplex data", ephemeral: true })
-      await nfttools.getMetaplexData(data)
-      await interaction.editReply({ content: "Calculating Trait percentages", ephemeral: true })
-      await nfttools.calculateTraitPercentages(data)
-      await interaction.editReply({ content: "Integrating Trait Data", ephemeral: true })
-      await nfttools.combineTraitRarity(data)
-      await interaction.editReply({ content: "ranking NFTs", ephemeral: true })
-      await nfttools.rankNFTs(data)
-      await interaction.editReply({ content: "cleaning up database", ephemeral: true })
-      await nfttools.cleanupDatabase(data)
-      await interaction.editReply({ content: "Task complete", ephemeral: true })
-        
-      }
+      if (action === ('fulladd'||'addstep1'||'addstep2'||'addstep3'||'addstep4'||'addstep5')) {await interaction.editReply({ content: "Command recieved. Adding new collection to database"})}
+
+      if (action === 'fulladd') {await nfttools.addNewNFT(data)}
       
       if (action === 'addstep1') {await nfttools.getMetaplexData(data)}  
       if (action === 'addstep2') {await nfttools.calculateTraitPercentages(data)} 

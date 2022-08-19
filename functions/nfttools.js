@@ -314,6 +314,7 @@ async function addNewNFT(creatoraddress) {
   await calculateTraitPercentages(creatoraddress)
   await combineTraitRarity(creatoraddress)
   await rankNFTs(creatoraddress)
+  await cleanupDatabase(creatoraddress)
 
 
 }; module.exports.addNewNFT = addNewNFT
