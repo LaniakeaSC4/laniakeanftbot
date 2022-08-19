@@ -67,18 +67,14 @@ client.on('interactionCreate', async interaction => {
       const collectionstring = "sac"
 
       
-      /*
-      //get collection metadata from rpc and store in postgres
-      await nfttools.saveMetaplexData(creator)
       
-      //get and restructure trait data for ME. Save in postgres
-      baseTraitData = await magiceden.getNFTtraitCounts(collectionstring)//get trait counts from ME
-      traitPercentages = await nfttools.restructureTraitData(baseTraitData)//restructure into our format
-      postgress.updateTableColumn("solanametaplex","creatoraddress",creator,"traitrarity", traitPercentages)//save in postgres
-      */
- //nfttools.calculateTraitPercentages(creator)
+      //get collection metadata from rpc and store in postgres
+      //await nfttools.getMetaplexData(creator)
+       
+      //get from postgress and caculate the percentages of each trait. Store seperatly in postgress
+      //nfttools.calculateTraitPercentages(creator)
 
-
+      //get trait data and NFT data and combine them
       nfttools.combineTraitRarity(creator)
       
      
