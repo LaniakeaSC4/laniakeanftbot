@@ -141,10 +141,10 @@ async function getMetaplexData(creator) {
 
   var creatorkey = new PublicKey(creator)//make the verified creator address into a public key
 
-  console.log('getting metadata from RPC - may take several minutes')
+  console.log('getting metadata from RPC - should take about 1 minute per 100 NFTs in collection')
   const metadata = await metaplex.nfts().findAllByCreator({ "creator": creatorkey }).run()
 
-  console.log('adding NFT JSON - 1 API request per 80ms - may take some time')
+  console.log('adding NFT JSON - 1 API request per 80ms - (750/minute)')
   var withjson = { "data": [] }
   for (var i = 0; i < metadata.length; i++) {
     var thisnft = await metaplex.nfts().load({ "metadata": metadata[i] }).run()
