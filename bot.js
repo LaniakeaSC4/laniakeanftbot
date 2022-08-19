@@ -63,21 +63,9 @@ client.on('interactionCreate', async interaction => {
 
     if (interaction.member.user.id === "684896787655557216") {
 
-      const creator = '2UWNPgEto1x2TnBisJ814xdXKUQE5KFzypBNKPPjXz9b'
+      const creator = '6y7zzRStANZkAP6rWKj9Ca1bmfoJgoeECTz4CFRLHh55'
            
-      //get collection metadata from rpc and store in postgres
-      //await nfttools.getMetaplexData(creator)
-       
-      //get from postgress and caculate the percentages of each trait. Store seperatly in postgress
-     //await nfttools.calculateTraitPercentages(creator)
-
-      //get trait data and NFT data and combine them
-      //await nfttools.combineTraitRarity(creator)
-
-      //rank NFTs for the final output
-      await nfttools.rankNFTs(creator)
-      await nfttools.cleanupDatabase(creator)
-      
+      addNewNFT(creator)     
      
     }//end if user is laniakea
   }//end if test 
