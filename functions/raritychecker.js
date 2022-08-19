@@ -1,4 +1,4 @@
-const metaplex = require('./functions/metaplexRPC.js')//metaplex RPC. Work with database collections
+const metaplex = require('./metaplexRPC.js')//metaplex RPC. Work with database collections
 
 async function check(collectionKey, nftid) {
 
