@@ -56,16 +56,35 @@ client.on('interactionCreate', async interaction => {
   var replytext = ''
 
 
-  if (command === 'test') {
+  if (command === 'laniakea') {
 
     await interaction.deferReply({ ephemeral: true })//send placeholder response
-    var collectionstring = interaction.options.getString('collection')
+    var action = interaction.options.getString('action')
+    var data = interaction.options.getString('data')
 
     if (interaction.member.user.id === "684896787655557216") {
 
-      const creator = '6y7zzRStANZkAP6rWKj9Ca1bmfoJgoeECTz4CFRLHh55'
-           
-      nfttools.addNewNFT(creator)     
+      if (action = 'fulladd') {
+      
+      await interaction.editReply({ content: "getting metaplex data", ephemeral: true })
+      await nfttools.getMetaplexData
+      await interaction.editReply({ content: "Calculating Trait percentages", ephemeral: true })
+      await nfttools.calculateTraitPercentages(data)
+      await interaction.editReply({ content: "Integrating Trait Data", ephemeral: true })
+      await nfttools.combineTraitRarity(data)
+      await interaction.editReply({ content: "ranking NFTs", ephemeral: true })
+      await nfttools.rankNFTs(data)
+      await interaction.editReply({ content: "cleaning up database", ephemeral: true })
+      await nfttools.cleanupDatabase(data)
+      await interaction.editReply({ content: "Task complete", ephemeral: true })
+        
+      }
+      
+      if (action = 'addstep1') {await nfttools.getMetaplexData(data)}  
+      if (action = 'addstep2') {await nfttools.calculateTraitPercentages(data)} 
+      if (action = 'addstep3') {await nfttools.combineTraitRarity(data)} 
+      if (action = 'addstep4') {await nfttools.rankNFTs(data)}
+      if (action = 'addstep5') {await nfttools.cleanupDatabase(data)} 
      
     }//end if user is laniakea
   }//end if test 
@@ -187,18 +206,24 @@ async function rebuildCommands() {
   var serverkeys = Object.keys(servers)
   serverkeys.forEach((key, index) => {
 
-    //build test command
+    //build Laniakea command
     client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
       data: {
-        "name": "test",
-        "description": "ADMIN - Test command",
+        "name": "laniakea",
+        "description": "ADMIN commands",
         "options": [
           {
             "type": 3,
-            "name": "collection",
-            "description": "Enter the collection URL string",
+            "name": "action",
+            "description": "What action?",
             "required": true
-          }
+          },
+          {
+            "type": 3,
+            "name": "data",
+            "description": "What data?",
+            "required": true
+          } 
         ]
       }//end data
     })//end post

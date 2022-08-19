@@ -144,7 +144,7 @@ async function getMetaplexData(creator) {
   console.log('getting metadata from RPC - should take about 1 minute per 100 NFTs in collection')
   const metadata = await metaplex.nfts().findAllByCreator({ "creator": creatorkey }).run()
 
-  console.log('adding NFT JSON - 1 API request per 80ms - (750/minute)')
+  console.log('adding NFT JSON to the ' + metadata.length  + ' NFTs we recieved - 1 API request per 80ms - (750/minute)')
   var withjson = { "data": [] }
   for (var i = 0; i < metadata.length; i++) {
     var thisnft = await metaplex.nfts().load({ "metadata": metadata[i] }).run()
@@ -197,7 +197,7 @@ async function calculateTraitPercentages(creatoraddress) {
   })//end for each maintype
 
   //store in DB
-  console.log('Storing trait percentages in BD')
+  console.log('Storing trait percentages in DB')
   postgress.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "traitrarity", traitPercentages)
 }; module.exports.calculateTraitPercentages = calculateTraitPercentages
 
@@ -240,7 +240,12 @@ async function combineTraitRarity(creatoraddress) {
     for (var k = 1; k < thesepercentages.length; k++) {//from k = 1
       thisrarity = thisrarity * parseFloat(thesepercentages[k])
     }//end for percentages
-
+    
+    var tokenAddress = '';if (nftdata.data[i].address) {tokenAddress = nftdata.data[i].address}
+    var mintAuthorityAddress = ''; if (nftdata.data[i].mint.mintAuthorityAddress) {mintAuthorityAddress = nftdata.data[i].mint.mintAuthorityAddress}
+    var collectionAddress = '';if (nftdata.data[i].collection.address) {collectionAddress = nftdata.data[i].collection.address}
+    var metadataAddress = ''; if (nftdata.data[i].metadataAddress) {metadataAddress = nftdata.data[i].metadataAddress}
+    
     //now store the NFT with this info into out output object
     output.data[i] = {
       "id": nftdata.data[i].json.edition,
@@ -250,14 +255,14 @@ async function combineTraitRarity(creatoraddress) {
       "symbol": nftdata.data[i].json.symbol,
       "attributes": nftdata.data[i].json.attributes,
       "uri": nftdata.data[i].uri,
-      "tokenAddress": nftdata.data[i].address,
-      "mintAuthorityAddress": nftdata.data[i].mint.mintAuthorityAddress,
-      "collectionAddress": nftdata.data[i].collection.address,
-      "metadataAddress": nftdata.data[i].metadataAddress
+      "tokenAddress": tokenAddress,
+      "mintAuthorityAddress": mintAuthorityAddress,
+      "collectionAddress": collectionAddress,
+      "metadataAddress": metadataAddress
     }//end output data load for this NFT
   }//end for each NFT
   //store new nft arrary in postgres
-  console.log('Storing final object')
+  console.log('Storing final object with ' + output.data.length + ' NFTs + Statistical Rarity')
   postgress.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "withrarity", output)
 }; module.exports.combineTraitRarity = combineTraitRarity
 
@@ -283,7 +288,7 @@ async function rankNFTs(creatoraddress) {
   console.log('forth is')
   console.log(sorted[3])
 
-  console.log('Storing final object')
+  console.log('Storing final object with ' + output.data.length + ' NFTs')
   postgress.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "finaldata", output)
 
 }; module.exports.rankNFTs = rankNFTs
