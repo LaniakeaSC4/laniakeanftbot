@@ -69,13 +69,16 @@ client.on('interactionCreate', async interaction => {
       
       
       //get collection metadata from rpc and store in postgres
-      await nfttools.getMetaplexData(creator)
+      //await nfttools.getMetaplexData(creator)
        
       //get from postgress and caculate the percentages of each trait. Store seperatly in postgress
-      await nfttools.calculateTraitPercentages(creator)
+      //await nfttools.calculateTraitPercentages(creator)
 
       //get trait data and NFT data and combine them
-      await nfttools.combineTraitRarity(creator)
+      //await nfttools.combineTraitRarity(creator)
+
+      //rank NFTs for the final output
+      await nfttools.rankNFTs(creator)
       
      
     }//end if user is laniakea

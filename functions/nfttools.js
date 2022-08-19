@@ -152,7 +152,7 @@ async function getMetaplexData(creator) {
     await wait(80)//wait to slow API requests.
   }//end for each NFT metadata
 
-  console.log('storing result in DB')
+  console.log('storing metaplex data in DB')
   postgress.createTableRow("solanametaplex", "creatoraddress", creator, "withmeta", JSON.stringify(withjson))
 
 }; module.exports.getMetaplexData = getMetaplexData
@@ -160,6 +160,7 @@ async function getMetaplexData(creator) {
 //gets the metaplex data and caculates the percentages of each trait. Stores as seperate object in DB
 async function calculateTraitPercentages(creatoraddress) {
 
+  console.log('Calculating trait percentages')
   const metaplexdata = await postgress.getData("solanametaplex", "creatoraddress", creatoraddress, "withmeta")//get data from DB
   var traitPercentages = {}//establish output object
 
@@ -196,12 +197,14 @@ async function calculateTraitPercentages(creatoraddress) {
   })//end for each maintype
 
   //store in DB
+  console.log('Storing trait percentages in BD')
   postgress.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "traitrarity", traitPercentages)
 }; module.exports.calculateTraitPercentages = calculateTraitPercentages
 
 //get the nft and trait % data from postgres (added with getMetaplexData) and calculate the statistical rarity of each nft
 async function combineTraitRarity(creatoraddress) {
 
+  console.log('Building final object with statistical rarity')
   var traitdata = {}; var nftdata = {}//establish objects
 
   //load NFT and trait data and 
@@ -254,7 +257,28 @@ async function combineTraitRarity(creatoraddress) {
     }//end output data load for this NFT
   }//end for each NFT
   //store new nft arrary in postgres
+  console.log('Storing final object')
   postgress.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "withrarity", output)
 }; module.exports.combineTraitRarity = combineTraitRarity
+
+//get the unranked NFTs with statistical rarity and rank them for the final data
+async function rankNFTs(creatoraddress) {
+
+  console.log('Ranking NFTs')
+  //get data from DB
+  const input = await postgress.getData("solanametaplex", "creatoraddress", creatoraddress, "withrarity")//get data from DB
+
+  //rank NFTs based on statistical rarity
+  var sorted = input.sort((a, b) => a.statisticalRarity - b.statisticalRarity)
+  console.log('first is')
+  console.log(sorted[0])
+  console.log('second is')
+  console.log(sorted[1])
+  console.log('third is')
+  console.log(sorted[2])
+  console.log('forth is')
+  console.log(sorted[3])
+
+}; module.exports.rankNFTs = rankNFTs
 
 
