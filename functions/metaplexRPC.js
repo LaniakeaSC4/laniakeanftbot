@@ -19,7 +19,7 @@ async function getMetaplexData(creator) {
   console.log('getting metadata from RPC - should take about 1 minute per 100 NFTs in collection')
   const metadata = await metaplex.nfts().findAllByCreator({ "creator": creatorkey }).run()
 
-  console.log('adding NFT JSON to the ' + metadata.length  + ' NFTs we recieved - 1 API request per 80ms - (750/minute)')
+  console.log('adding NFT JSON to the ' + metadata.length + ' NFTs we recieved - 1 API request per 80ms - (750/minute)')
   var withjson = { "data": [] }
   for (var i = 0; i < metadata.length; i++) {
     var thisnft = await metaplex.nfts().load({ "metadata": metadata[i] }).run()
@@ -95,6 +95,7 @@ async function combineTraitRarity(creatoraddress) {
   output['collectionSymbol'] = nftdata.data[0].json.symbol
   output['verifiedCreator'] = creatoraddress
   output['collectionCommonName'] = nftdata.data[0].name.substring(0, (nftdata.data[0].name.indexOf('#') - 1))
+  output['collectionKey'] = nftdata.data[0].name.substring(0, (nftdata.data[0].name.indexOf('#') - 1)).replace(/[^0-9a-z]/gi, '')
   output['description'] = nftdata.data[0].json.description
 
   for (var i = 0; i < nftdata.data.length; i++) {//for each NFT
@@ -114,19 +115,19 @@ async function combineTraitRarity(creatoraddress) {
     for (var k = 1; k < thesepercentages.length; k++) {//from k = 1
       thisrarity = thisrarity * parseFloat(thesepercentages[k])
     }//end for percentages
-    
+
     var tokenAddress = ''
-    try {if (nftdata.data[i].address) {tokenAddress = nftdata.data[i].address}} catch {tokenAddress = 'not found'}
-    
+    try { if (nftdata.data[i].address) { tokenAddress = nftdata.data[i].address } } catch { tokenAddress = 'not found' }
+
     var mintAuthorityAddress = ''
-    try {if (nftdata.data[i].mint.mintAuthorityAddress) {mintAuthorityAddress = nftdata.data[i].mint.mintAuthorityAddress}} catch {mintAuthorityAddress = 'not found'}
-    
+    try { if (nftdata.data[i].mint.mintAuthorityAddress) { mintAuthorityAddress = nftdata.data[i].mint.mintAuthorityAddress } } catch { mintAuthorityAddress = 'not found' }
+
     var collectionAddress = ''
-    try {if (nftdata.data[i].collection.address) {collectionAddress = nftdata.data[i].collection.address}} catch {collectionAddress = 'not found'} 
-    
+    try { if (nftdata.data[i].collection.address) { collectionAddress = nftdata.data[i].collection.address } } catch { collectionAddress = 'not found' }
+
     var metadataAddress = ''
-    try {if (nftdata.data[i].metadataAddress) {metadataAddress = nftdata.data[i].metadataAddress}} catch {metadataAddress = 'not found'} 
-    
+    try { if (nftdata.data[i].metadataAddress) { metadataAddress = nftdata.data[i].metadataAddress } } catch { metadataAddress = 'not found' }
+
     //now store the NFT with this info into out output object
     output.data[i] = {
       "id": nftdata.data[i].json.edition,
@@ -192,5 +193,60 @@ async function addNewNFT(creatoraddress) {
   await rankNFTs(creatoraddress)
   await cleanupDatabase(creatoraddress)
 
-
 }; module.exports.addNewNFT = addNewNFT
+
+//get collectionKeys for supported collections
+async function getOurMetaplexCollections() {
+  return new Promise((resolve, reject) => {
+    var pgclient = db.getClient()
+
+    var querystring = "SELECT jsonb_path_query_first(finaldata, '$.collectionKey') FROM solanametaplex"
+
+    pgclient.query(querystring, (err, res) => {
+      if (err) throw err
+      resolve(res.rows)
+    })//end query
+  })//end promise
+}; module.exports.getOurMetaplexCollections = getOurMetaplexCollections
+
+//get verified creator address from collection key
+async function getVerifiedCreator(collectionKey) {
+  return new Promise((resolve, reject) => {
+    var pgclient = db.getClient()
+
+    var querystring = "SELECT jsonb_path_query_first(finaldata, '$.verifiedCreator') AS verifiedCreator FROM solanametaplex WHERE jsonb_path_exists(finaldata, '$.collectionKey ? (@[*] == \"" + collectionKey + "\")')"
+
+    pgclient.query(querystring, (err, res) => {
+      if (err) throw err
+      resolve(res.rows[0])
+    })//end query
+  })//end promise
+}; module.exports.getVerifiedCreator = getVerifiedCreator
+
+//get whole NFT collection by collectionKey
+async function getAllNFTdata(collectionKey) {
+  return new Promise((resolve, reject) => {
+    var pgclient = db.getClient()
+
+    var querystring = "SELECT jsonb_path_query_first(finaldata, '$.data') AS NFTdata FROM solanametaplex WHERE jsonb_path_exists(finaldata, '$.collectionKey ? (@[*] == \"" + collectionKey + "\")')"
+
+    pgclient.query(querystring, (err, res) => {
+      if (err) throw err
+      resolve(res.rows[0])
+    })//end query
+  })//end promise
+}; module.exports.getAllNFTdata = getAllNFTdata
+
+//get asingle NFT collection by collectionKey and NFT ID
+async function getNFTdata(collectionKey, nftid) {
+  return new Promise((resolve, reject) => {
+    var pgclient = db.getClient()
+
+    var querystring = "SELECT jsonb_path_query_first(finaldata, '$.data[*] ? (@.id == " + nftid + " || @.id == '" + nftid + "')') AS NFTdata FROM solanametaplex WHERE jsonb_path_exists(finaldata, '$.collectionKey ? (@[*] == \"" + collectionKey + "\")')"
+
+    pgclient.query(querystring, (err, res) => {
+      if (err) throw err
+      resolve(res.rows[0])
+    })//end query
+  })//end promise
+}; module.exports.getNFTdata = getNFTdata

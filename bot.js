@@ -4,11 +4,12 @@ module.exports.client = client
 
 const postgress = require('./functions/postgres.js')//postgress related commands are in here
 const db = require('./functions/pgclient.js')//if we need to interact with the client directly in here. Rember to use var pgclient = db.getClient() to get/establish client
-const magiceden = require('./functions/magiceden.js')//Magic Eden related commands are in here
-const howrare = require('./functions/howrare.js')//Magic Eden related commands are in here
+const magiceden = require('./functions/magicedenRPC.js')//Magic Eden related commands are in here
+const howrare = require('./functions/howrareRPC.js')//Magic Eden related commands are in here
 const sniper = require('./functions/sniper.js')
 const nfttools = require('./functions/nfttools.js')//generic nft tools like get rarity description from rank in here
-const metaplex = require('./functions/metaplex.js')//metaplex RPC. Work with database collections
+const metaplex = require('./functions/metaplexRPC.js')//metaplex RPC. Work with database collections
+const raritychecker = require('./functions/raritychecker.js')//rarity checker functions
 
 client.login(process.env.BOTTOKEN)
 
@@ -40,14 +41,14 @@ client.on('ready', async () => {
 //function to reset slash commands (enable if needed)
 async function clearcommands() {
   return new Promise((resolve, reject) => {
-  var serverkeys = Object.keys(servers)
-  serverkeys.forEach(async (key, index) => {
-    const guild = client.guilds.cache.get(servers[key].id)
-    guild.commands.set([])
-    await wait(1000)
-    resolve()
-  })//end for each server
-})//end promise
+    var serverkeys = Object.keys(servers)
+    serverkeys.forEach(async (key, index) => {
+      const guild = client.guilds.cache.get(servers[key].id)
+      guild.commands.set([])
+      await wait(1000)
+      resolve()
+    })//end for each server
+  })//end promise
 }//end function to reset commands
 
 client.on('interactionCreate', async interaction => {
@@ -56,26 +57,31 @@ client.on('interactionCreate', async interaction => {
   const command = interaction.commandName.toLowerCase()
   var replytext = ''
 
-  if (command === 'laniakea') {
+  if (command === 'newrarity') {
 
-    var action = interaction.options.getString('action')
-    var data = interaction.options.getString('data')
+    var collectionKey = interaction.options.getString('collectionkey'); var nftid = interaction.options.getString('nftid')
 
     if (interaction.member.user.id === "684896787655557216") {
-      
-      if (action === ('fulladd'||'addstep1'||'addstep2'||'addstep3'||'addstep4'||'addstep5')) {await interaction.reply({ content: "Command recieved. Adding new collection to database"})}
 
-      if (action === 'fulladd') {await metaplex.addNewNFT(data)}
-      
-      if (action === 'addstep1') {await metaplex.getMetaplexData(data)}  
-      if (action === 'addstep2') {await metaplex.calculateTraitPercentages(data)} 
-      if (action === 'addstep3') {await metaplex.combineTraitRarity(data)} 
-      if (action === 'addstep4') {await metaplex.rankNFTs(data)}
-      if (action === 'addstep5') {await metaplex.cleanupDatabase(data)} 
-     
+      raritychecker.check(collectionKey, nftid)
+
     }//end if user is laniakea
-  }//end if test 
+  }//end if command is newrarity
 
+  if (command === 'laniakea') {
+
+    var action = interaction.options.getString('action'); var data = interaction.options.getString('data')
+
+    if (interaction.member.user.id === "684896787655557216") {
+      if (action === ('fulladd' || 'addstep1' || 'addstep2' || 'addstep3' || 'addstep4' || 'addstep5')) { await interaction.reply({ content: "Command recieved. Adding new collection to database" }) }
+      if (action === 'fulladd') { await metaplex.addNewNFT(data) }
+      if (action === 'addstep1') { await metaplex.getMetaplexData(data) }
+      if (action === 'addstep2') { await metaplex.calculateTraitPercentages(data) }
+      if (action === 'addstep3') { await metaplex.combineTraitRarity(data) }
+      if (action === 'addstep4') { await metaplex.rankNFTs(data) }
+      if (action === 'addstep5') { await metaplex.cleanupDatabase(data) }
+    }//end if user is laniakea
+  }//end if command is laniakea 
 
   if (command === 'database') {
 
@@ -193,6 +199,28 @@ async function rebuildCommands() {
   var serverkeys = Object.keys(servers)
   serverkeys.forEach((key, index) => {
 
+    //build newrarity command
+    client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
+      data: {
+        "name": "newrarity",
+        "description": "New rarity command",
+        "options": [
+          {
+            "type": 3,
+            "name": "collectionkey",
+            "description": "Which collection?",
+            "required": true
+          },
+          {
+            "type": 3,
+            "name": "nftid",
+            "description": "Which NFT?",
+            "required": true
+          }
+        ]
+      }//end data
+    })//end post
+
     //build Laniakea command
     client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
       data: {
@@ -210,7 +238,7 @@ async function rebuildCommands() {
             "name": "data",
             "description": "What data?",
             "required": true
-          } 
+          }
         ]
       }//end data
     })//end post
@@ -238,7 +266,7 @@ async function rebuildCommands() {
       }//end data
     })//end post
 
-    //build database command
+    //build database command (for howrare data)
     client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
       data: {
         "name": "database",

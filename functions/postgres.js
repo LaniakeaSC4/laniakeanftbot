@@ -165,9 +165,3 @@ async function deleteColumnData(table, tableprimarykey, thisprimarykey, column) 
     })//end query
   })//end promise
 }; module.exports.deleteColumnData = deleteColumnData
-
-
-
-
-
-
