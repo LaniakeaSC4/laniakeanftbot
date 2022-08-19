@@ -64,7 +64,7 @@ client.on('interactionCreate', async interaction => {
 
     if (interaction.member.user.id === "684896787655557216") {
 
-      if (action = 'fulladd') {
+      if (action === 'fulladd') {
       
       await interaction.editReply({ content: "getting metaplex data", ephemeral: true })
       await nfttools.getMetaplexData(data)
@@ -80,11 +80,11 @@ client.on('interactionCreate', async interaction => {
         
       }
       
-      if (action = 'addstep1') {await nfttools.getMetaplexData(data)}  
-      if (action = 'addstep2') {await nfttools.calculateTraitPercentages(data)} 
-      if (action = 'addstep3') {await nfttools.combineTraitRarity(data)} 
-      if (action = 'addstep4') {await nfttools.rankNFTs(data)}
-      if (action = 'addstep5') {await nfttools.cleanupDatabase(data)} 
+      if (action === 'addstep1') {await nfttools.getMetaplexData(data)}  
+      if (action === 'addstep2') {await nfttools.calculateTraitPercentages(data)} 
+      if (action === 'addstep3') {await nfttools.combineTraitRarity(data)} 
+      if (action === 'addstep4') {await nfttools.rankNFTs(data)}
+      if (action === 'addstep5') {await nfttools.cleanupDatabase(data)} 
      
     }//end if user is laniakea
   }//end if test 
