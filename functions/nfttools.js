@@ -241,10 +241,17 @@ async function combineTraitRarity(creatoraddress) {
       thisrarity = thisrarity * parseFloat(thesepercentages[k])
     }//end for percentages
     
-    var tokenAddress = '';if (nftdata.data[i].address) {tokenAddress = nftdata.data[i].address}
-    var mintAuthorityAddress = ''; if (nftdata.data[i].mint.mintAuthorityAddress) {mintAuthorityAddress = nftdata.data[i].mint.mintAuthorityAddress}
-    var collectionAddress = '';if (nftdata.data[i].collection.address) {collectionAddress = nftdata.data[i].collection.address}
-    var metadataAddress = ''; if (nftdata.data[i].metadataAddress) {metadataAddress = nftdata.data[i].metadataAddress}
+    var tokenAddress = ''
+    try {if (nftdata.data[i].address) {tokenAddress = nftdata.data[i].address}} catch {tokenAddress = 'not found'}
+    
+    var mintAuthorityAddress = ''
+    try {if (nftdata.data[i].mint.mintAuthorityAddress) {mintAuthorityAddress = nftdata.data[i].mint.mintAuthorityAddress}} catch {mintAuthorityAddress = 'not found'}
+    
+    var collectionAddress = ''
+    try {if (nftdata.data[i].collection.address) {collectionAddress = nftdata.data[i].collection.address}} catch {collectionAddress = 'not found'} 
+    
+    var metadataAddress = ''
+    try {if (nftdata.data[i].metadataAddress) {metadataAddress = nftdata.data[i].metadataAddress}} catch {metadataAddress = 'not found'} 
     
     //now store the NFT with this info into out output object
     output.data[i] = {
