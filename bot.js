@@ -76,12 +76,12 @@ client.on('interactionCreate', async interaction => {
       traitPercentages = await nfttools.restructureTraitData(baseTraitData)//restructure into our format
       postgress.updateTableColumn("solanametaplex","creatoraddress",creator,"traitrarity", traitPercentages)//save in postgres
       */
-      
+ //nfttools.calculateTraitPercentages(creator)
 
-      //nfttools.combineTraitRarity(creator)
-      
-      nfttools.calculateTraitPercentages(creator)
 
+      nfttools.combineTraitRarity(creator)
+      
+     
     }//end if user is laniakea
   }//end if test 
 

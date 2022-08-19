@@ -186,7 +186,7 @@ async function combineTraitRarity(creatoraddress) {
       var subtype = nftdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '')
 
       console.log(traitdata[maintype])
-      var thispercentage = traitdata[maintype][subtype]
+      var thispercentage = traitdata[maintype][subtype]['percentage']
       console.log('this percentage is: ' + thispercentage + '. maintype: ' + maintype + '. subtype: ' + subtype)
       thesepercentages.push(thispercentage)
       console.log(thesepercentages)
