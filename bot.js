@@ -8,6 +8,7 @@ const magiceden = require('./functions/magiceden.js')//Magic Eden related comman
 const howrare = require('./functions/howrare.js')//Magic Eden related commands are in here
 const sniper = require('./functions/sniper.js')
 const nfttools = require('./functions/nfttools.js')//generic nft tools like get rarity description from rank in here
+const metaplex = require('./functions/metaplex.js')//metaplex RPC. Work with database collections
 
 client.login(process.env.BOTTOKEN)
 
@@ -55,24 +56,22 @@ client.on('interactionCreate', async interaction => {
   const command = interaction.commandName.toLowerCase()
   var replytext = ''
 
-
   if (command === 'laniakea') {
 
-    await interaction.deferReply({ ephemeral: true })//send placeholder response
     var action = interaction.options.getString('action')
     var data = interaction.options.getString('data')
 
     if (interaction.member.user.id === "684896787655557216") {
       
-      if (action === ('fulladd'||'addstep1'||'addstep2'||'addstep3'||'addstep4'||'addstep5')) {await interaction.editReply({ content: "Command recieved. Adding new collection to database"})}
+      if (action === ('fulladd'||'addstep1'||'addstep2'||'addstep3'||'addstep4'||'addstep5')) {await interaction.reply({ content: "Command recieved. Adding new collection to database"})}
 
-      if (action === 'fulladd') {await nfttools.addNewNFT(data)}
+      if (action === 'fulladd') {await metaplex.addNewNFT(data)}
       
-      if (action === 'addstep1') {await nfttools.getMetaplexData(data)}  
-      if (action === 'addstep2') {await nfttools.calculateTraitPercentages(data)} 
-      if (action === 'addstep3') {await nfttools.combineTraitRarity(data)} 
-      if (action === 'addstep4') {await nfttools.rankNFTs(data)}
-      if (action === 'addstep5') {await nfttools.cleanupDatabase(data)} 
+      if (action === 'addstep1') {await metaplex.getMetaplexData(data)}  
+      if (action === 'addstep2') {await metaplex.calculateTraitPercentages(data)} 
+      if (action === 'addstep3') {await metaplex.combineTraitRarity(data)} 
+      if (action === 'addstep4') {await metaplex.rankNFTs(data)}
+      if (action === 'addstep5') {await metaplex.cleanupDatabase(data)} 
      
     }//end if user is laniakea
   }//end if test 
