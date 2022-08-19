@@ -76,6 +76,7 @@ client.on('interactionCreate', async interaction => {
 
       //rank NFTs for the final output
       await nfttools.rankNFTs(creator)
+      await nfttools.cleanupDatabase(creator)
       
      
     }//end if user is laniakea

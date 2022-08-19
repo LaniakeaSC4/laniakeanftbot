@@ -151,6 +151,21 @@ async function getData(table, tableprimarykey, thisprimarykey, column) {
   })//end promise
 }; module.exports.getData = getData
 
+//generic delete column data from table
+async function deleteColumnData(table, tableprimarykey, thisprimarykey, column) {
+  return new Promise((resolve, reject) => {
+    var pgclient = db.getClient()
+
+    //select the data in this column for a row which has this primary key
+    var querystring = "UPDATE " + table + " SET " + column + " = null WHERE " + tableprimarykey + " = '" + thisprimarykey + "'"
+
+    pgclient.query(querystring, (err, res) => {
+      if (err) throw err
+      resolve('success')//rows[0] because single result expected. Data from this particular column is at rows[0][column]
+    })//end query
+  })//end promise
+}; module.exports.deleteColumnData = deleteColumnData
+
 
 
 

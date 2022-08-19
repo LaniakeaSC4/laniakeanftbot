@@ -270,6 +270,10 @@ async function rankNFTs(creatoraddress) {
 
   //rank NFTs based on statistical rarity
   var sorted = input.data.sort((a, b) => a.statisticalRarity - b.statisticalRarity)
+  var output = input//set output equal to what we got from DB
+  output.data = []//clear just the data part (so we keep the other data)
+  output.data = sorted//set the NFT data equal to the sorted data.
+
   console.log('first is')
   console.log(sorted[0])
   console.log('second is')
@@ -278,11 +282,28 @@ async function rankNFTs(creatoraddress) {
   console.log(sorted[2])
   console.log('forth is')
   console.log(sorted[3])
-  console.log('fith is')
-  console.log(sorted[4])
-  console.log('sixth is')
-  console.log(sorted[5])
+
+  console.log('Storing final object')
+  postgress.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "finaldata", output)
 
 }; module.exports.rankNFTs = rankNFTs
 
+//get the unranked NFTs with statistical rarity and rank them for the final data
+async function cleanupDatabase(creatoraddress) {
 
+  console.log('clearing base metaplex data')
+  await postgress.deleteColumnData("solanametaplex", "creatoraddress", creatoraddress, "withmeta")
+  console.log('clearing unranked data with rarity')
+  await postgress.deleteColumnData("solanametaplex", "creatoraddress", creatoraddress, "withrarity")
+
+}; module.exports.cleanupDatabase = cleanupDatabase
+
+async function addNewNFT(creatoraddress) {
+
+  await getMetaplexData(creatoraddress)
+  await calculateTraitPercentages(creatoraddress)
+  await combineTraitRarity(creatoraddress)
+  await rankNFTs(creatoraddress)
+
+
+}; module.exports.addNewNFT = addNewNFT
