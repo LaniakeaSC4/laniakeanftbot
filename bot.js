@@ -67,7 +67,7 @@ client.on('interactionCreate', async interaction => {
       if (action = 'fulladd') {
       
       await interaction.editReply({ content: "getting metaplex data", ephemeral: true })
-      await nfttools.getMetaplexData
+      await nfttools.getMetaplexData(data)
       await interaction.editReply({ content: "Calculating Trait percentages", ephemeral: true })
       await nfttools.calculateTraitPercentages(data)
       await interaction.editReply({ content: "Integrating Trait Data", ephemeral: true })

@@ -131,7 +131,6 @@ const { Metaplex, keypairIdentity, bundlrStorage } = require("@metaplex-foundati
 const { Connection, clusterApiUrl, Keypair, PublicKey } = require("@solana/web3.js")
 
 async function getMetaplexData(creator) {
-
   //establish connection
   const connection = new Connection(process.env.QUICKNODE)
   const wallet = Keypair.generate()
@@ -153,8 +152,7 @@ async function getMetaplexData(creator) {
   }//end for each NFT metadata
 
   console.log('storing metaplex data in DB')
-  postgress.createTableRow("solanametaplex", "creatoraddress", creator, "withmeta", JSON.stringify(withjson))
-
+  await postgress.createTableRow("solanametaplex", "creatoraddress", creator, "withmeta", JSON.stringify(withjson))
 }; module.exports.getMetaplexData = getMetaplexData
 
 //gets the metaplex data and caculates the percentages of each trait. Stores as seperate object in DB
