@@ -130,7 +130,7 @@ async function restructureTraitData(baseTraitData) {
 const { Metaplex, keypairIdentity, bundlrStorage } = require("@metaplex-foundation/js")
 const { Connection, clusterApiUrl, Keypair, PublicKey } = require("@solana/web3.js")
 
-async function saveMetaplexData(creator) {
+async function getMetaplexData(creator) {
 
   //establish connection
   const connection = new Connection(process.env.QUICKNODE)
@@ -158,65 +158,7 @@ async function saveMetaplexData(creator) {
   console.log('storing result in DB')
   postgress.createTableRow("solanametaplex", "creatoraddress", creator, "withmeta", JSON.stringify(withjson))
 
-}; module.exports.saveMetaplexData = saveMetaplexData
-
-//get the nft and trait data from postgres (added with saveMetaplexData) and calculate the statistical rarity of each nft
-async function combineTraitRarity(creatoraddress) {
-
-  var traitdata = {}
-  var nftdata = {}
-
-  const loaddata = Promise.all([postgress.getData("solanametaplex", "creatoraddress", creatoraddress, "traitrarity"), postgress.getData("solanametaplex", "creatoraddress", creatoraddress, "withmeta")])
-  try {
-    const thisdata = await loaddata
-    traitdata = thisdata[0]
-    nftdata = thisdata[1]
-  } catch (error) { console.log('Error getting data') }
-
-  //for each nft, find its traits, check thier rarity and multiply rarities together and save overall percentage in new nft arrary
-
-  var output = { "data": [] }
-  output['collectionSymbol'] = nftdata.data[0].json.symbol
-  output['verifiedCreator'] = creatoraddress
-  output['collectionCommonName'] = nftdata.data[0].name.substring(0, (nftdata.data[0].name.indexOf('#') - 1))
-
-  for (var i = 0; i < 2; i++) {//for each NFT
-    var thesepercentages = []
-
-
-    for (var j = 0; j < nftdata.data[0].json.attributes.length; j++) { //for each attribute
-      var maintype = nftdata.data[i].json.attributes[j].trait_type.replace(/[^0-9a-z]/gi, '')
-      var subtype = nftdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '')
-
-      var thispercentage = traitdata[maintype][subtype]['percentage']
-      thesepercentages.push(thispercentage)
-    }//end for each attribute
-
-    var thisrarity = parseFloat(thesepercentages[0])
-    for (var k = 1; k < thesepercentages.length; k++) {
-      thisrarity = thisrarity * parseFloat(thesepercentages[k])
-    }
-    //now store the NFT with this info
-    output.data[i] = {
-      "id": nftdata.data[i].json.edition,
-      "name": nftdata.data[i].json.name,
-      "statisticalRarity": thisrarity,
-      "image": nftdata.data[i].json.image,
-      "symbol": nftdata.data[i].json.symbol,
-      "attributes": nftdata.data[i].json.attributes,
-      "uri": nftdata.data[i].uri,
-      "description": nftdata.data[i].json.description,
-      "tokenAddress": nftdata.data[i].address,
-      "mintAuthorityAddress": nftdata.data[i].mint.mintAuthorityAddress,
-      "collectionAddress": nftdata.data[i].collection.address,
-      "metadataAddress": nftdata.data[i].metadataAddress
-    }
-  }
-  console.log(output)
-  //store new nft arrary in postgres
-
-
-}; module.exports.combineTraitRarity = combineTraitRarity
+}; module.exports.getMetaplexData = getMetaplexData
 
 async function calculateTraitPercentages(creatoraddress) {
 
@@ -267,3 +209,63 @@ async function calculateTraitPercentages(creatoraddress) {
 
   postgress.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "traitrarity", traitPercentages)
 }; module.exports.calculateTraitPercentages = calculateTraitPercentages
+
+//get the nft and trait data from postgres (added with getMetaplexData) and calculate the statistical rarity of each nft
+async function combineTraitRarity(creatoraddress) {
+
+  var traitdata = {}
+  var nftdata = {}
+
+  const loaddata = Promise.all([postgress.getData("solanametaplex", "creatoraddress", creatoraddress, "traitrarity"), postgress.getData("solanametaplex", "creatoraddress", creatoraddress, "withmeta")])
+  try {
+    const thisdata = await loaddata
+    traitdata = thisdata[0]
+    nftdata = thisdata[1]
+  } catch (error) { console.log('Error getting data') }
+
+  //for each nft, find its traits, check thier rarity and multiply rarities together and save overall percentage in new nft arrary
+
+  var output = { "data": [] }
+  output['collectionSymbol'] = nftdata.data[0].json.symbol
+  output['verifiedCreator'] = creatoraddress
+  output['collectionCommonName'] = nftdata.data[0].name.substring(0, (nftdata.data[0].name.indexOf('#') - 1))
+
+  for (var i = 0; i < nftdata.data.length; i++) {//for each NFT
+    var thesepercentages = []
+
+
+    for (var j = 0; j < nftdata.data[0].json.attributes.length; j++) { //for each attribute
+      var maintype = nftdata.data[i].json.attributes[j].trait_type.replace(/[^0-9a-z]/gi, '')
+      var subtype = nftdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '')
+
+      var thispercentage = traitdata[maintype][subtype]['percentage']
+      thesepercentages.push(thispercentage)
+    }//end for each attribute
+
+    var thisrarity = parseFloat(thesepercentages[0])
+    for (var k = 1; k < thesepercentages.length; k++) {
+      thisrarity = thisrarity * parseFloat(thesepercentages[k])
+    }
+    //now store the NFT with this info
+    output.data[i] = {
+      "id": nftdata.data[i].json.edition,
+      "name": nftdata.data[i].json.name,
+      "statisticalRarity": thisrarity,
+      "image": nftdata.data[i].json.image,
+      "symbol": nftdata.data[i].json.symbol,
+      "attributes": nftdata.data[i].json.attributes,
+      "uri": nftdata.data[i].uri,
+      "description": nftdata.data[i].json.description,
+      "tokenAddress": nftdata.data[i].address,
+      "mintAuthorityAddress": nftdata.data[i].mint.mintAuthorityAddress,
+      "collectionAddress": nftdata.data[i].collection.address,
+      "metadataAddress": nftdata.data[i].metadataAddress
+    }
+  }
+
+  //store new nft arrary in postgres
+  postgress.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "withrarity", output)
+
+}; module.exports.combineTraitRarity = combineTraitRarity
+
+
