@@ -65,7 +65,7 @@ client.on('interactionCreate', async interaction => {
 
       const creator = '6y7zzRStANZkAP6rWKj9Ca1bmfoJgoeECTz4CFRLHh55'
            
-      addNewNFT(creator)     
+      nfttools.addNewNFT(creator)     
      
     }//end if user is laniakea
   }//end if test 
