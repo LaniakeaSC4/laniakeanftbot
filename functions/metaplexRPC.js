@@ -4,6 +4,7 @@
 const { Metaplex, keypairIdentity, bundlrStorage } = require("@metaplex-foundation/js")
 const { Connection, clusterApiUrl, Keypair, PublicKey } = require("@solana/web3.js")
 const postgress = require('./postgres.js')//postgress related commands are in here
+var db = require('./pgclient.js')//the PG client
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
 async function getMetaplexData(creator) {
@@ -16,25 +17,25 @@ async function getMetaplexData(creator) {
 
   var creatorkey = new PublicKey(creator)//make the verified creator address into a public key
 
-  console.log('getting metadata from RPC - should take about 1 minute per 100 NFTs in collection')
+  console.log('Metaplex: getting metadata from RPC - should take about 1 minute per 100 NFTs in collection')
   const metadata = await metaplex.nfts().findAllByCreator({ "creator": creatorkey }).run()
 
-  console.log('adding NFT JSON to the ' + metadata.length + ' NFTs we recieved - 1 API request per 80ms - (750/minute)')
+  console.log('Metaplex: adding NFT JSON to the ' + metadata.length + ' NFTs we recieved - 1 API request per 50ms')
   var withjson = { "data": [] }
   for (var i = 0; i < metadata.length; i++) {
     var thisnft = await metaplex.nfts().load({ "metadata": metadata[i] }).run()
     withjson.data.push(thisnft)
-    await wait(80)//wait to slow API requests.
+    await wait(50)//wait to slow API requests.
   }//end for each NFT metadata
 
-  console.log('storing metaplex data in DB')
+  console.log('Metaplex: storing metaplex data in DB')
   await postgress.createTableRow("solanametaplex", "creatoraddress", creator, "withmeta", JSON.stringify(withjson))
 }; module.exports.getMetaplexData = getMetaplexData
 
 //gets the metaplex data and caculates the percentages of each trait. Stores as seperate object in DB
 async function calculateTraitPercentages(creatoraddress) {
 
-  console.log('Calculating trait percentages')
+  console.log('Metaplex: Calculating trait percentages')
   const metaplexdata = await postgress.getData("solanametaplex", "creatoraddress", creatoraddress, "withmeta")//get data from DB
   var traitPercentages = {}//establish output object
 
@@ -71,14 +72,14 @@ async function calculateTraitPercentages(creatoraddress) {
   })//end for each maintype
 
   //store in DB
-  console.log('Storing trait percentages in DB')
+  console.log('Metaplex: Storing trait percentages in DB')
   postgress.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "traitrarity", traitPercentages)
 }; module.exports.calculateTraitPercentages = calculateTraitPercentages
 
 //get the nft and trait % data from postgres (added with getMetaplexData) and calculate the statistical rarity of each nft
 async function combineTraitRarity(creatoraddress) {
 
-  console.log('Building final object with statistical rarity')
+  console.log('Metaplex: Building final object with statistical rarity')
   var traitdata = {}; var nftdata = {}//establish objects
 
   //load NFT and trait data and 
@@ -94,6 +95,7 @@ async function combineTraitRarity(creatoraddress) {
   //save some collection specific data into the top level of the output object
   output['collectionSymbol'] = nftdata.data[0].json.symbol
   output['verifiedCreator'] = creatoraddress
+  output['totalNFTs'] = nftdata.data.length
   output['collectionCommonName'] = nftdata.data[0].name.substring(0, (nftdata.data[0].name.indexOf('#') - 1))
   output['collectionKey'] = nftdata.data[0].name.substring(0, (nftdata.data[0].name.indexOf('#') - 1)).replace(/[^0-9a-z]/gi, '')
   output['description'] = nftdata.data[0].json.description
@@ -144,14 +146,14 @@ async function combineTraitRarity(creatoraddress) {
     }//end output data load for this NFT
   }//end for each NFT
   //store new nft arrary in postgres
-  console.log('Storing final object with ' + output.data.length + ' NFTs + Statistical Rarity')
+  console.log('Metaplex: Storing object with ' + output.data.length + ' NFTs + Statistical Rarity')
   postgress.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "withrarity", output)
 }; module.exports.combineTraitRarity = combineTraitRarity
 
 //get the unranked NFTs with statistical rarity and rank them for the final data
 async function rankNFTs(creatoraddress) {
 
-  console.log('Ranking NFTs')
+  console.log('Metaplex: Ranking NFTs')
   //get data from DB
   const input = await postgress.getData("solanametaplex", "creatoraddress", creatoraddress, "withrarity")//get data from DB
 
@@ -170,7 +172,7 @@ async function rankNFTs(creatoraddress) {
   console.log('forth is')
   console.log(sorted[3])
 
-  console.log('Storing final object with ' + output.data.length + ' NFTs')
+  console.log('Metaplex: Storing final object with ' + output.data.length + ' NFTs')
   postgress.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "finaldata", output)
 
 }; module.exports.rankNFTs = rankNFTs
@@ -178,9 +180,9 @@ async function rankNFTs(creatoraddress) {
 //get the unranked NFTs with statistical rarity and rank them for the final data
 async function cleanupDatabase(creatoraddress) {
 
-  console.log('clearing base metaplex data')
+  console.log('Metaplex: clearing raw metaplex data')
   await postgress.deleteColumnData("solanametaplex", "creatoraddress", creatoraddress, "withmeta")
-  console.log('clearing unranked data with rarity')
+  console.log('Metaplex: clearing unranked data with rarity')
   await postgress.deleteColumnData("solanametaplex", "creatoraddress", creatoraddress, "withrarity")
 
 }; module.exports.cleanupDatabase = cleanupDatabase
