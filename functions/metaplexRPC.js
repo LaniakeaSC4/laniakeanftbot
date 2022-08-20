@@ -109,11 +109,16 @@ async function combineTraitRarity(creatoraddress) {
     //add the percentage rarity of each attribute of this NFT to an arrary
     for (var j = 0; j < nftdata.data[0].json.attributes.length; j++) { //for each attribute
       //console.log(nftdata.data[i].json.attributes[j] )
+      try {
+        if (nftdata.data[i].json.attributes[j]) {
       var maintype = nftdata.data[i].json.attributes[j].trait_type.replace(/[^0-9a-z]/gi, '')
       var subtype = nftdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '')
 
       var thispercentage = traitdata[maintype][subtype]['percentage']
-      thesepercentages.push(thispercentage)
+      thesepercentages.push(thispercentage)} else {throw 'var i = ' + i + ' var j = ' + j} 
+      } catch(err) {
+        console.log('Error finding traits: ' + err)
+      }
     }//end for each attribute
 
     //multiply the percentages together to get statistical rarity
