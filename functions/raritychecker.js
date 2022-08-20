@@ -7,7 +7,7 @@ async function check(collectionKey, nftid) {
 	//get NFT data
 	var NFTdata = await metaplex.getNFTdata(collectionKey, nftid)
 	console.log(NFTdata)
-	var collectionSize = postgress.getData("solanametaplex", "collectionkey", collectionKey, 'collectioncount') 
+	var collectionSize = await postgress.getData("solanametaplex", "collectionkey", collectionKey, 'collectioncount') 
 	console.log('collectionsize is: ' + collectionSize)
 	
 	
