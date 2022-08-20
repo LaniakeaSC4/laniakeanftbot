@@ -113,9 +113,9 @@ async function combineTraitRarity(creatoraddress) {
     }//end for each attribute
 
     //multiply the percentages together to get statistical rarity
-    var thisrarity = parseFloat(thesepercentages[0])//first % is the starting point (don't want 1 or 0)
+    var thisrarity = (parseFloat(thesepercentages[0])*10)//first % is the starting point (don't want 1 or 0)
     for (var k = 1; k < thesepercentages.length; k++) {//from k = 1
-      thisrarity = thisrarity * parseFloat(thesepercentages[k])
+      thisrarity = thisrarity * (parseFloat(thesepercentages[k]) * 10)//multiplying percentage 10x so we don't loose any resolution off the right side
     }//end for percentages
 
     var tokenAddress = ''
@@ -129,10 +129,21 @@ async function combineTraitRarity(creatoraddress) {
 
     var metadataAddress = ''
     try { if (nftdata.data[i].metadataAddress) { metadataAddress = nftdata.data[i].metadataAddress } } catch { metadataAddress = 'not found' }
+    
+    //get nft ID from name
+            var thisnftid = 0
+            let namearr = nftdata.data[i].json.name.split(' ')
+            for (var i = 0; i < namearr.length; i++) {
+              let checkthis = namearr[i]
+              if (checkthis.includes('#')) {
+                var nlength = checkthis.length
+                thisnftid = parseFloat(checkthis.substring(1, nlength))
+              }//end if
+            }//end for
 
     //now store the NFT with this info into out output object
     output.data[i] = {
-      "nftid": parseFloat(nftdata.data[i].json.edition),
+      "nftid": thisnftid,
       "name": nftdata.data[i].json.name,
       "statisticalRarity": thisrarity,
       "image": nftdata.data[i].json.image,
