@@ -177,6 +177,7 @@ async function combineTraitRarity(creatoraddress) {
   //store new nft arrary in postgres
   console.log('Metaplex: Storing object with ' + output.data.length + ' NFTs + Statistical Rarity + collectionkey ' + nftdata.data[0].name.substring(0, (nftdata.data[0].name.indexOf('#') - 1)).replace(/[^0-9a-z]/gi, ''))
   postgress.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "withrarity", output)
+  postgress.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "collectioncount", parseFloat(output.data.length))
   postgress.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "collectionkey", nftdata.data[0].name.substring(0, (nftdata.data[0].name.indexOf('#') - 1)).replace(/[^0-9a-z]/gi, '').toLowerCase())
 }; module.exports.combineTraitRarity = combineTraitRarity
 
