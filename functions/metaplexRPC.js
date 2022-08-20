@@ -132,7 +132,7 @@ async function combineTraitRarity(creatoraddress) {
 
     //now store the NFT with this info into out output object
     output.data[i] = {
-      "id": nftdata.data[i].json.edition,
+      "nftid": nftdata.data[i].json.edition,
       "name": nftdata.data[i].json.name,
       "statisticalRarity": thisrarity,
       "image": nftdata.data[i].json.image,
@@ -244,7 +244,7 @@ async function getNFTdata(collectionKey, nftid) {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
 
-    var querystring = "SELECT jsonb_path_query_first(finaldata, '$.data[*] ? (@.id == " + nftid + " || @.id == '" + nftid + "')') AS NFTdata FROM solanametaplex WHERE jsonb_path_exists(finaldata, '$.collectionKey ? (@[*] == \"" + collectionKey + "\")')"
+    var querystring = "SELECT jsonb_path_query_first(finaldata, '$.data[*] ? (@.nftid == " + nftid + " || @.nftid == '" + nftid + "')') AS NFTdata FROM solanametaplex WHERE jsonb_path_exists(finaldata, '$.collectionKey ? (@[*] == \"" + collectionKey + "\")')"
 
     pgclient.query(querystring, (err, res) => {
       if (err) throw err
