@@ -148,6 +148,7 @@ async function combineTraitRarity(creatoraddress) {
   //store new nft arrary in postgres
   console.log('Metaplex: Storing object with ' + output.data.length + ' NFTs + Statistical Rarity')
   postgress.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "withrarity", output)
+  postgress.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "collectionkey", nftdata.data[0].name.substring(0, (nftdata.data[0].name.indexOf('#') - 1)).replace(/[^0-9a-z]/gi, ''))
 }; module.exports.combineTraitRarity = combineTraitRarity
 
 //get the unranked NFTs with statistical rarity and rank them for the final data
@@ -239,12 +240,12 @@ async function getAllNFTdata(collectionKey) {
   })//end promise
 }; module.exports.getAllNFTdata = getAllNFTdata
 
-//get asingle NFT collection by collectionKey and NFT ID
+//get a single NFT collection by collectionKey and NFT ID
 async function getNFTdata(collectionKey, nftid) {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
-
-    var querystring = "SELECT jsonb_path_query_first(finaldata, '$.data[*] ? (@.nftid == " + nftid + " || @.nftid == '" + nftid + "')') AS NFTdata FROM solanametaplex WHERE jsonb_path_exists(finaldata, '$.collectionKey ? (@[*] == \"" + collectionKey + "\")')"
+    
+    var querystring = "SELECT jsonb_path_query_first(finaldata, '$.data[*] ? (@.nftid == " + nftid + " || @.nftid == '" + nftid + "')') AS NFTdata FROM solanametaplex WHERE collectionkey = '"  + collectionKey + "'"
 
     pgclient.query(querystring, (err, res) => {
       if (err) throw err
