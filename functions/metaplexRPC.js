@@ -124,7 +124,7 @@ async function combineTraitRarity(creatoraddress) {
       } else { subtype = 'none'} 
 
       var thispercentage = traitdata[maintype][subtype]['percentage']
-      thesepercentages.push(thispercentage)} else {throw 'var i = ' + i + ' var j = ' + j + ' maintype is: ' + maintype + 'subtype is: ' + subtype} 
+      thesepercentages.push(thispercentage)} else {throw 'var i = ' + i + ' var j = ' + j + ' maintype is: ' + maintype + 'subtype is: ' + subtype + ' for ' + nftdata.data[i].name} 
       } catch(err) {
         console.log('Error finding traits: ' + err)
       }
@@ -226,7 +226,7 @@ async function addNewNFT(creatoraddress) {
   await calculateTraitPercentages(creatoraddress)
   await combineTraitRarity(creatoraddress)
   await rankNFTs(creatoraddress)
-  await cleanupDatabase(creatoraddress)
+  //await cleanupDatabase(creatoraddress)
 
 }; module.exports.addNewNFT = addNewNFT
 
