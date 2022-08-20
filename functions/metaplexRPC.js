@@ -160,6 +160,9 @@ async function rankNFTs(creatoraddress) {
 
   //rank NFTs based on statistical rarity
   var sorted = input.data.sort((a, b) => a.statisticalRarity - b.statisticalRarity)
+  
+  for (i = 0;i < sorted.data.length;i++){sorted.data[i]['rarityRank'] = (i + 1)}//add a rank value
+  
   var output = input//set output equal to what we got from DB
   output.data = []//clear just the data part (so we keep the other data)
   output.data = sorted//set the NFT data equal to the sorted data.
@@ -245,11 +248,11 @@ async function getNFTdata(collectionKey, nftid) {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
     
-    var querystring = 'SELECT jsonb_path_query_first(finaldata, \'$.data[*] ? (@.nftid == ' + parseFloat(nftid) + ' || @.nftid == "' + nftid + '")\') AS NFTdata FROM solanametaplex WHERE collectionkey = \''  + collectionKey + '\''
+    var querystring = 'SELECT jsonb_path_query_first(finaldata, \'$.data[*] ? (@.nftid == ' + parseFloat(nftid) + ' || @.nftid == "' + nftid + '")\') AS nftdata FROM solanametaplex WHERE collectionkey = \''  + collectionKey + '\''
 
     pgclient.query(querystring, (err, res) => {
       if (err) throw err
-      resolve(res.rows[0])
+      resolve(res.rows[0]['nftdata'])
     })//end query
   })//end promise
 }; module.exports.getNFTdata = getNFTdata
