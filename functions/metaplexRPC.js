@@ -47,7 +47,7 @@ async function calculateTraitPercentages(creatoraddress) {
       var maintype = metaplexdata.data[i].json.attributes[j].trait_type.replace(/[^0-9a-z]/gi, '')//clean the key
       
       var subtype = ''
-      if (metaplexdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '') != null) {
+      if (metaplexdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '')) {
       subtype = metaplexdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '')//clean the key
       } else { subtype = 'none'} 
 
@@ -119,7 +119,7 @@ async function combineTraitRarity(creatoraddress) {
       //var subtype = nftdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '')
       
       var subtype = ''
-      if (nftdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '') != null) {
+      if (nftdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '')) {
       subtype = nftdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '')//clean the key
       } else { subtype = 'none'} 
 
