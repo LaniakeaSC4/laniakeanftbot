@@ -124,7 +124,7 @@ async function combineTraitRarity(creatoraddress) {
       } else { subtype = 'none'} 
 
       var thispercentage = traitdata[maintype][subtype]['percentage']
-      thesepercentages.push(thispercentage)} else {throw 'var i = ' + i + ' var j = ' + j} 
+      thesepercentages.push(thispercentage)} else {throw 'var i = ' + i + ' var j = ' + j + ' maintype is: ' + maintype} 
       } catch(err) {
         console.log('Error finding traits: ' + err)
       }
