@@ -10,6 +10,7 @@ async function check(collectionKey, nftid) {
 	var collectionSize = postgress.getData("solanametaplex", "collectionkey", collectionKey, 'collectioncount') 
 	console.log('collectionsize is: ' + collectionSize)
 	
+	
 	var ranges = await nfttools.calculateranges(collectionSize)
 
       var mythicstart = ranges[0]; var mythicend = ranges[1]
