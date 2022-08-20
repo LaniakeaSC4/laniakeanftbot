@@ -58,12 +58,15 @@ client.on('interactionCreate', async interaction => {
   var replytext = ''
 
   if (command === 'newrarity') {
+    
+    await interaction.deferReply()
 
     var collectionKey = interaction.options.getString('collectionkey'); var nftid = interaction.options.getString('nftid')
 
     if (interaction.member.user.id === "684896787655557216") {
 
-      raritychecker.check(collectionKey, nftid)
+      rarityembed = await raritychecker.check(collectionKey, nftid)
+      await interaction.editReply({ embeds: rarityembed }) 
 
     }//end if user is laniakea
   }//end if command is newrarity
