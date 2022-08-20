@@ -45,7 +45,11 @@ async function calculateTraitPercentages(creatoraddress) {
   for (var i = 0; i < metaplexdata.data.length; i++) {//for each nft in the metaplex data
     for (var j = 0; j < metaplexdata.data[i].json.attributes.length; j++) { //for each attribute of this NFT
       var maintype = metaplexdata.data[i].json.attributes[j].trait_type.replace(/[^0-9a-z]/gi, '')//clean the key
-      var subtype = metaplexdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '')//clean the key
+      
+      var subtype = ''
+      if (metaplexdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '') != null) {
+      subtype = metaplexdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '')//clean the key
+      } else { subtype = 'none'} 
 
       if (maintype in traitPercentages) {//if maintype is already a key in the object
         if (subtype in traitPercentages[maintype]) {//if maintype and subtype already exist, +1 to timesSeen and +1 to total count for that maintype
@@ -112,7 +116,12 @@ async function combineTraitRarity(creatoraddress) {
       try {
         if (nftdata.data[i].json.attributes[j]) {
       var maintype = nftdata.data[i].json.attributes[j].trait_type.replace(/[^0-9a-z]/gi, '')
-      var subtype = nftdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '')
+      //var subtype = nftdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '')
+      
+      var subtype = ''
+      if (nftdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '') != null) {
+      subtype = nftdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '')//clean the key
+      } else { subtype = 'none'} 
 
       var thispercentage = traitdata[maintype][subtype]['percentage']
       thesepercentages.push(thispercentage)} else {throw 'var i = ' + i + ' var j = ' + j} 
