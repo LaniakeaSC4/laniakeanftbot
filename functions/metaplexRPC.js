@@ -102,13 +102,13 @@ async function combineTraitRarity(creatoraddress) {
   output['collectionCommonName'] = nftdata.data[0].name.substring(0, (nftdata.data[0].name.indexOf('#') - 1))
   output['collectionKey'] = nftdata.data[0].name.substring(0, (nftdata.data[0].name.indexOf('#') - 1)).replace(/[^0-9a-z]/gi, '')
   output['description'] = nftdata.data[0].json.description
-//nftdata.data.length 
-  for (var i = 0; i < 2; i++) {//for each NFT
+  
+  for (var i = 0; i < nftdata.data.length; i++) {//for each NFT
     var thesepercentages = []
 
     //add the percentage rarity of each attribute of this NFT to an arrary
     for (var j = 0; j < nftdata.data[0].json.attributes.length; j++) { //for each attribute
-      console.log(nftdata.data[i].json.attributes[j] )
+      //console.log(nftdata.data[i].json.attributes[j] )
       var maintype = nftdata.data[i].json.attributes[j].trait_type.replace(/[^0-9a-z]/gi, '')
       var subtype = nftdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '')
 
