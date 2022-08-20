@@ -22,9 +22,12 @@ async function getMetaplexData(creator) {
 
   console.log('Metaplex: adding NFT JSON to the ' + metadata.length + ' NFTs we recieved - 1 API request per 50ms')
   var withjson = { "data": [] }
+  var heartbeat = 0
   for (var i = 0; i < metadata.length; i++) {
     var thisnft = await metaplex.nfts().load({ "metadata": metadata[i] }).run()
     withjson.data.push(thisnft)
+    heartbeat = heartbeat + 1
+    if ((heartbeat % 50) == 0) {console.log('I\'ve sent ' + heartbeat + ' json load requests')} 
     await wait(50)//wait to slow API requests.
   }//end for each NFT metadata
 
@@ -133,8 +136,8 @@ async function combineTraitRarity(creatoraddress) {
     //get nft ID from name
             var thisnftid = 0
             let namearr = nftdata.data[i].json.name.split(' ')
-            for (var i = 0; i < namearr.length; i++) {
-              let checkthis = namearr[i]
+            for (var l = 0; l < namearr.length; l++) {
+              let checkthis = namearr[l]
               if (checkthis.includes('#')) {
                 var nlength = checkthis.length
                 thisnftid = parseFloat(checkthis.substring(1, nlength))
