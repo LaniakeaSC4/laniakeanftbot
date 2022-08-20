@@ -161,7 +161,7 @@ async function rankNFTs(creatoraddress) {
   //rank NFTs based on statistical rarity
   var sorted = input.data.sort((a, b) => a.statisticalRarity - b.statisticalRarity)
   
-  for (i = 0;i < sorted.length;i++){sorted.data[i]['rarityRank'] = (i + 1)}//add a rank value
+  for (i = 0;i < sorted.length;i++){sorted[i]['rarityRank'] = (i + 1)}//add a rank value
   
   var output = input//set output equal to what we got from DB
   output.data = []//clear just the data part (so we keep the other data)
