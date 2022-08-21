@@ -6,7 +6,7 @@ const metaplex = require('./metaplexRPC.js')//metaplex RPC. Work with database c
 
 //get supported collections 
 
-var collections = await postgress.getSupportedCollections()
+var collections = {} 
 
 //old
 /*
@@ -19,7 +19,6 @@ const sniperCollections = [
 
 //build array of [0,1,2,etc] for each collection we have. These integers can be used to key access to sniperCollections arrary to loop other functions through all supported collections
 var sniperSequencer = []
-for (var i = 0; i < collections[collectionkey].length; i++) { sniperSequencer.push(i) }
 
 var initialget = 20//how many listings will sniper get initially (max 20)
 var refreshget = 10//how many will sniper get on each check (max 20) - should be less then initial get or extras will count as new
@@ -33,6 +32,9 @@ var epiclimit = 5
 var rarelimit = 2.5
 
 const initaliseSniperCollections = async () => {
+  collections = await postgress.getSupportedCollections()
+  for (var i = 0; i < collections[collectionkey].length; i++) { sniperSequencer.push(i) }
+  
   for (const seq of sniperSequencer) {//for each collection
     //get initial set of listings and store them in the local history arrary for that collection
     await magiceden.getNewListings(collections['meslug'][seq], initialget).then(async thislistings => {
