@@ -34,7 +34,7 @@ const servers = {
 client.on('ready', async () => {
   console.log('I am ready!')
   sniperv2.initialise()
-  sniperv2.start()
+  //sniperv2.start()
   sniper.initialise()
   sniper.start()
   clearcommands()
