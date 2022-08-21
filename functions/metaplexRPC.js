@@ -130,7 +130,7 @@ async function combineTraitRarity(creatoraddress) {
       } else { subtype = 'none'} 
 
       var thispercentage = traitdata[maintype][subtype]['percentage']
-      thesepercentages.push(thispercentage)} else {throw 'var i = ' + i + ' var j = ' + j + ' maintype is: ' + maintype + 'subtype is: ' + subtype + ' for ' + nftdata.data[i].name} 
+      thesepercentages.push(thispercentage)} else {throw 'var i = ' + i + ' var j = ' + j + '.  maintype is a ' + typeof maintype + ': ' + maintype + '. subtype is a ' + typeof subtype + ': ' + subtype} 
       } catch(err) {
         console.log('Error finding traits: ' + err)
       }
