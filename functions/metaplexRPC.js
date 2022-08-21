@@ -116,11 +116,11 @@ async function combineTraitRarity(creatoraddress) {
       try {
         if (nftdata.data[i].json.attributes[j]) {
       var maintype = nftdata.data[i].json.attributes[j].trait_type.replace(/[^0-9a-z]/gi, '').toString()
-      //var subtype = nftdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '').toString()
+      //var subtype = nftdata.data[i].json.attributes[j].value.toString().replace(/[^0-9a-z]/gi, '')
       
       var subtype = ''
-      if (nftdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '').toString()) {
-      subtype = nftdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '').toString()//clean the key
+      if (nftdata.data[i].json.attributes[j].value.toString().replace(/[^0-9a-z]/gi, '')) {
+      subtype = nftdata.data[i].json.attributes[j].value.toString().replace(/[^0-9a-z]/gi, '')//clean the key
       } else { subtype = 'none'} 
 
       var thispercentage = traitdata[maintype][subtype]['percentage']
