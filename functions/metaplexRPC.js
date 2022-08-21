@@ -44,11 +44,11 @@ async function calculateTraitPercentages(creatoraddress) {
 
   for (var i = 0; i < metaplexdata.data.length; i++) {//for each nft in the metaplex data
     for (var j = 0; j < metaplexdata.data[i].json.attributes.length; j++) { //for each attribute of this NFT
-      var maintype = metaplexdata.data[i].json.attributes[j].trait_type.replace(/[^0-9a-z]/gi, '')//clean the key
+      var maintype = metaplexdata.data[i].json.attributes[j].trait_type.replace(/[^0-9a-z]/gi, '').toString()//clean the key
       
       var subtype = ''
-      if (metaplexdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '')) {
-      subtype = metaplexdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '')//clean the key
+      if (metaplexdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '').toString()) {
+      subtype = metaplexdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '').toString()//clean the key
       } else { subtype = 'none'} 
 
       if (maintype in traitPercentages) {//if maintype is already a key in the object
@@ -104,7 +104,7 @@ async function combineTraitRarity(creatoraddress) {
   output['verifiedCreator'] = creatoraddress
   output['totalNFTs'] = nftdata.data.length
   output['collectionCommonName'] = nftdata.data[0].name.substring(0, (nftdata.data[0].name.indexOf('#') - 1))
-  output['collectionKey'] = nftdata.data[0].name.substring(0, (nftdata.data[0].name.indexOf('#') - 1)).replace(/[^0-9a-z]/gi, '')
+  output['collectionKey'] = nftdata.data[0].name.substring(0, (nftdata.data[0].name.indexOf('#') - 1)).replace(/[^0-9a-z]/gi, '').toString()
   output['description'] = nftdata.data[0].json.description
   
   for (var i = 0; i < nftdata.data.length; i++) {//for each NFT
@@ -115,12 +115,12 @@ async function combineTraitRarity(creatoraddress) {
       //console.log(nftdata.data[i].json.attributes[j] )
       try {
         if (nftdata.data[i].json.attributes[j]) {
-      var maintype = nftdata.data[i].json.attributes[j].trait_type.replace(/[^0-9a-z]/gi, '')
-      //var subtype = nftdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '')
+      var maintype = nftdata.data[i].json.attributes[j].trait_type.replace(/[^0-9a-z]/gi, '').toString()
+      //var subtype = nftdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '').toString()
       
       var subtype = ''
-      if (nftdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '')) {
-      subtype = nftdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '')//clean the key
+      if (nftdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '').toString()) {
+      subtype = nftdata.data[i].json.attributes[j].value.replace(/[^0-9a-z]/gi, '').toString()//clean the key
       } else { subtype = 'none'} 
 
       var thispercentage = traitdata[maintype][subtype]['percentage']
@@ -175,10 +175,10 @@ async function combineTraitRarity(creatoraddress) {
     }//end output data load for this NFT
   }//end for each NFT
   //store new nft arrary in postgres
-  console.log('Metaplex: Storing object with ' + output.data.length + ' NFTs + Statistical Rarity + collectionkey ' + nftdata.data[0].name.substring(0, (nftdata.data[0].name.indexOf('#') - 1)).replace(/[^0-9a-z]/gi, ''))
+  console.log('Metaplex: Storing object with ' + output.data.length + ' NFTs + Statistical Rarity + collectionkey ' + nftdata.data[0].name.substring(0, (nftdata.data[0].name.indexOf('#') - 1)).replace(/[^0-9a-z]/gi, '').toString())
   postgress.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "withrarity", output)
   postgress.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "collectioncount", parseFloat(output.data.length))
-  postgress.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "collectionkey", nftdata.data[0].name.substring(0, (nftdata.data[0].name.indexOf('#') - 1)).replace(/[^0-9a-z]/gi, '').toLowerCase())
+  postgress.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "collectionkey", nftdata.data[0].name.substring(0, (nftdata.data[0].name.indexOf('#') - 1)).replace(/[^0-9a-z]/gi, '').toString().toLowerCase())
 }; module.exports.combineTraitRarity = combineTraitRarity
 
 //get the unranked NFTs with statistical rarity and rank them for the final data
