@@ -45,11 +45,15 @@ const initaliseSniperCollections = async () => {
     })//end then
     await main.wait(2000)//add delay between API requests
   }//for seq of sniperSequencer
+  startsniper()
 }//end initaliseSniperCollections
 module.exports.initialise = initaliseSniperCollections
 
 //main sniper function
 async function startsniper() {
+  console.log('SniperV2: starting main function')
+  console.log('SniperV2: sniperSequencer is')
+  console.log(sniperSequencer)
   await Promise.all(sniperSequencer.map(async value => {//this was added to make sure to sequentially initiate the sniper loops. Not sure its working as intended, but loops are spread out
     var thisinterval = the_interval + (value * 1100)//interval for each collection is 1.1 seconds longer to avoid more than 2 ME API requests per second
     console.log('SniperV2: Initialising recheckloop for collection: ' + value + '. Setting interval for this collection to: ' + thisinterval)
