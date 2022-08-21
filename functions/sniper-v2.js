@@ -39,9 +39,9 @@ const initaliseSniperCollections = async () => {
   
   for (const seq of sniperSequencer) {//for each collection
     //get initial set of listings and store them in the local history arrary for that collection
-    await magiceden.getNewListings(collections['meslug'][seq], initialget).then(async thislistings => {
-      collections['meslug'][seq]['listings'] = thislistings//fill tracked listings with the listings we just got
-      console.log('SniperV2: added initial ' + initialget + ' Listings for ' + collections['meslug'][seq])
+    await magiceden.getNewListings(collections[seq]['meslug'], initialget).then(async thislistings => {
+      collections[seq]['meslug']['listings'] = thislistings//fill tracked listings with the listings we just got
+      console.log('SniperV2: added initial ' + initialget + ' Listings for ' + collections[seq]['meslug'])
     })//end then
     await main.wait(2000)//add delay between API requests
   }//for seq of sniperSequencer
@@ -55,19 +55,19 @@ async function startsniper() {
     console.log('SniperV2: Initialising recheckloop for collection: ' + value + '. Setting interval for this collection to: ' + thisinterval)
 
     await setInterval(async function (k) {//do this every X minutes
-      await magiceden.getNewListings(collections['meslug'][k], refreshget).then(async thislistings => {//get latest X listings from Magic Eden
+      await magiceden.getNewListings(collections[k]['meslug'], refreshget).then(async thislistings => {//get latest X listings from Magic Eden
         /* heartbeat logging - enable if you want update each minute for each collection */
         //console.log("I am doing my " + minutes + " minute check for " + sniperCollections[k][0] + '. I have this many in my history at start: ' + sniperCollections[k][1].length)
 
-        var rebuildarrary = collections['meslug'][k]['listings']//save all the acquired listings in a temporary arrary
+        var rebuildarrary = collections[k]['meslug']['listings']//save all the acquired listings in a temporary arrary
 
         for (var i = 0; i < thislistings.length; i++) {//for all listings recieved from magiceden.getNewListings function
 
-          if (collections['meslug'][seq]['listings'] .some(e => (e.tokenAddress === thislistings[i].tokenAddress && e.price === thislistings[i].price))) {
+          if (collections[seq]['meslug']['listings'] .some(e => (e.tokenAddress === thislistings[i].tokenAddress && e.price === thislistings[i].price))) {
             //actions if token address and price match (i.e. we've seen this one before)
           } else {
             //actions if token address or price does not match one we have seen before
-            console.log('SniperV2: New/updated ' + collections['meslug'][k] + ' entry ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
+            console.log('SniperV2: New/updated ' + collections[k]['meslug'] + ' entry ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
             rebuildarrary.unshift(thislistings[i])//add the new entry to the start of the rebuild arrary so we can remember this one if we see it later
 
             var thisprice = main.pround(thislistings[i].price, 6)//set price of this lisitng
@@ -90,9 +90,9 @@ async function startsniper() {
               }//end if
             }//end for
 
-var NFTdata = await metaplex.getNFTdata(collections['collectionkey'][k], thisnftid)
+var NFTdata = await metaplex.getNFTdata(collections[k]['collectionkey'], thisnftid)
 	//console.log(NFTdata)
-	var collectionSize = await postgress.getData("solanametaplex", "collectionkey", collections['collectionkey'][k], 'collectioncount') 
+	var collectionSize = await postgress.getData("solanametaplex", "collectionkey", collections[k]['collectionkey'], 'collectioncount') 
 	console.log('SniperV2: collectionsize is: ' + collectionSize)
 	
 	
@@ -145,7 +145,7 @@ var NFTdata = await metaplex.getNFTdata(collections['collectionkey'][k], thisnft
             var raritydescription = await nfttools.getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity)
             */
             
-            var floorprice = await magiceden.getFloorPrice(collections['collectionkey'][k])
+            var floorprice = await magiceden.getFloorPrice(collections[k]['collectionkey'])
             var thisfloorprice = main.pround(floorprice, 6)
             var snipe = await testifsnipe(raritydescription, thisprice, thisfloorprice)
 
@@ -154,7 +154,7 @@ var NFTdata = await metaplex.getNFTdata(collections['collectionkey'][k], thisnft
             var thislimit = snipe[2]
 
             if (thissnipe != "false") {
-              console.log('SniperV2: we have a ' + collections['meslug'][k] + ' snipe!')
+              console.log('SniperV2: we have a ' + collections[k]['meslug'] + ' snipe!')
 
               /*
               var embedcolour = await nfttools.getembedcolour(raritydescription)
@@ -193,7 +193,7 @@ var NFTdata = await metaplex.getNFTdata(collections['collectionkey'][k], thisnft
           }//end for number to remove
         }//end if rebuildarrary is longer than max length
 
-        collections['meslug'][k]['listings'] = rebuildarrary//overwrite main listings arrary with the temp rebuild one
+        collections[k]['meslug']['listings'] = rebuildarrary//overwrite main listings arrary with the temp rebuild one
 
       })//end then after getting 
     }, thisinterval, value)//end recheck listing loop
