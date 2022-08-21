@@ -117,9 +117,11 @@ async function combineTraitRarity(creatoraddress) {
     var thesepercentages = []
 
     //add the percentage rarity of each attribute of this NFT to an arrary
-    console.log(nftdata.data[i].json)
+    try {
+    if (nftdata.data[i].json){
     for (var j = 0; j < nftdata.data[i].json.attributes.length; j++) { //for each attribute
       console.log(nftdata.data[i].json.attributes[j] )
+      
       try {
         if (nftdata.data[i].json.attributes[j]) {
       var maintype = nftdata.data[i].json.attributes[j].trait_type.toString().replace(/[^0-9a-z]/gi, '')
@@ -180,6 +182,8 @@ async function combineTraitRarity(creatoraddress) {
       "collectionAddress": collectionAddress,
       "metadataAddress": metadataAddress
     }//end output data load for this NFT
+    } else {throw 'there was no JSON'}
+    } catch(err) {console.log('Error with this nft: ' + err) }
   }//end for each NFT
   //store new nft arrary in postgres
   console.log('Metaplex: Storing object with ' + output.data.length + ' NFTs + Statistical Rarity + collectionkey ' + nftdata.data[0].name.substring(0, (nftdata.data[0].name.indexOf('#') - 1)).toString().replace(/[^0-9a-z]/gi, ''))
