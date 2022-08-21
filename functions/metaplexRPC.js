@@ -43,6 +43,9 @@ async function calculateTraitPercentages(creatoraddress) {
   var traitPercentages = {}//establish output object
 
   for (var i = 0; i < metaplexdata.data.length; i++) {//for each nft in the metaplex data
+  
+  try {
+    if (metaplexdata.data[i].json.attributes) {
     for (var j = 0; j < metaplexdata.data[i].json.attributes.length; j++) { //for each attribute of this NFT
       var maintype = metaplexdata.data[i].json.attributes[j].trait_type.toString().replace(/[^0-9a-z]/gi, '')//clean the key
       
@@ -67,6 +70,9 @@ async function calculateTraitPercentages(creatoraddress) {
         traitPercentages[maintype]['totalcount'] = 1
       }//end else
     }//end for each trait
+    } else { throw 'var i = ' + i + ' var j = ' + j + ' maintype is: ' + maintype + 'subtype is: ' + subtype + ' for ' + metaplex.data[i].name }
+  } catch(err) {
+        console.log('Error finding traits: ' + err)
   }//end for each nft
 
   //work out percentages
