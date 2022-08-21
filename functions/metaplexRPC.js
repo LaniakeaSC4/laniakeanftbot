@@ -72,7 +72,7 @@ async function calculateTraitPercentages(creatoraddress) {
     }//end for each trait
     } else { throw 'var i = ' + i + ' var j = ' + j + ' maintype is: ' + maintype + 'subtype is: ' + subtype + ' for ' + metaplex.data[i].name }
   } catch(err) {
-        console.log('Error finding traits: ' + err)
+        console.log('Error finding traits: ' + err)} 
   }//end for each nft
 
   //work out percentages
