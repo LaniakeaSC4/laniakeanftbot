@@ -63,14 +63,14 @@ async function startsniper() {
         /* heartbeat logging - enable if you want update each minute for each collection */
         //console.log("I am doing my " + minutes + " minute check for " + sniperCollections[k][0] + '. I have this many in my history at start: ' + sniperCollections[k][1].length)
 
-        var rebuildarrary = collections[k]['meslug']['listings']//save all the acquired listings in a temporary arrary
+        var rebuildarrary = collections[k]['listings']//save all the acquired listings in a temporary arrary
         
 console.log('SniperV2: logging listings')
-console.log(collections[k]['meslug']['listings'])
+console.log(collections[k]['listings'])
 
         for (var i = 0; i < thislistings.length; i++) {//for all listings recieved from magiceden.getNewListings function
 
-          if (collections[k]['meslug']['listings'].some(e => (e.tokenAddress === thislistings[i].tokenAddress && e.price === thislistings[i].price))) {
+          if (collections[k]['listings'].some(e => (e.tokenAddress === thislistings[i].tokenAddress && e.price === thislistings[i].price))) {
             //actions if token address and price match (i.e. we've seen this one before)
           } else {
             //actions if token address or price does not match one we have seen before
@@ -200,7 +200,7 @@ var NFTdata = await metaplex.getNFTdata(collections[k]['collectionkey'], thisnft
           }//end for number to remove
         }//end if rebuildarrary is longer than max length
 
-        collections[k]['meslug']['listings'] = rebuildarrary//overwrite main listings arrary with the temp rebuild one
+        collections[k]['listings'] = rebuildarrary//overwrite main listings arrary with the temp rebuild one
 
       })//end then after getting 
     }, thisinterval, value)//end recheck listing loop
