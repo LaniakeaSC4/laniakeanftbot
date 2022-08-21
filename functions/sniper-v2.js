@@ -23,7 +23,7 @@ var sniperSequencer = []
 var initialget = 20//how many listings will sniper get initially (max 20)
 var refreshget = 10//how many will sniper get on each check (max 20) - should be less then initial get or extras will count as new
 var maxlength = 50//how many records history will we keep for each collection
-var minutes = 1, the_interval = minutes * 60 * 1000//refresh interval for sniper bot
+var minutes = 0.5, the_interval = minutes * 60 * 1000//refresh interval for sniper bot
 
 //set multipliers above floor price at which listings become snipes
 var mythiclimit = 50
@@ -40,7 +40,7 @@ const initaliseSniperCollections = async () => {
   for (const seq of sniperSequencer) {//for each collection
     //get initial set of listings and store them in the local history arrary for that collection
     await magiceden.getNewListings(collections[seq]['meslug'], initialget).then(async thislistings => {
-      collections[seq]['meslug']['listings'] = thislistings//fill tracked listings with the listings we just got
+      collections[seq]['listings'] = thislistings//fill tracked listings with the listings we just got
       console.log('SniperV2: added initial ' + initialget + ' Listings for ' + collections[seq]['meslug'])
     })//end then
     await main.wait(2000)//add delay between API requests
