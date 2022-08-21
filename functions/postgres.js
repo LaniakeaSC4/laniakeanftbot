@@ -165,3 +165,34 @@ async function deleteColumnData(table, tableprimarykey, thisprimarykey, column) 
     })//end query
   })//end promise
 }; module.exports.deleteColumnData = deleteColumnData
+
+//get a particular column for all rows
+async function getRowsForColumn(table, column) {
+  return new Promise((resolve, reject) => {
+    var pgclient = db.getClient()
+
+    //select the data in this column for a row which has this primary key
+    var querystring = "SELECT " + column + " FROM " + table
+
+    pgclient.query(querystring, (err, res) => {
+      if (err) throw err
+      resolve(res.rows)
+    }) //end query
+  }) //end promise
+};
+module.exports.getRowsForColumn = getRowsForColumn
+
+//get a particular column for all rows
+async function getSupportedCollections() {
+  return new Promise((resolve, reject) => {
+    var pgclient = db.getClient()
+
+    //select the data in this column for a row which has this primary key
+    var querystring = "SELECT collectionkey, collectioncount, meslug FROM \"solanametaplex\""
+
+    pgclient.query(querystring, (err, res) => {
+      if (err) throw err
+      resolve(res.rows)
+    }) //end query
+  }) //end promise
+};module.exports.getSupportedCollections = getSupportedCollections

@@ -7,6 +7,7 @@ const db = require('./functions/pgclient.js')//if we need to interact with the c
 const magiceden = require('./functions/magicedenRPC.js')//Magic Eden related commands are in here
 const howrare = require('./functions/howrareRPC.js')//Magic Eden related commands are in here
 const sniper = require('./functions/sniper.js')
+const sniperv2 = require('./functions/sniper-v2.js')
 const nfttools = require('./functions/nfttools.js')//generic nft tools like get rarity description from rank in here
 const metaplex = require('./functions/metaplexRPC.js')//metaplex RPC. Work with database collections
 const raritychecker = require('./functions/raritychecker.js')//rarity checker functions
@@ -21,17 +22,19 @@ client.login(process.env.BOTTOKEN)
 const servers = {
   "monkeypox":
   {
-    'id': '978975057739124767', 'snipeschannel': '996130357260845156'
+    'id': '978975057739124767', 'snipeschannel': '996130357260845156', 'v2snipechannel' : '1010818537272660090'
   },
   "secretsnake":
   {
-    'id': '901885313608200302', 'snipeschannel': '1004682983036428308'
+    'id': '901885313608200302', 'snipeschannel': '1004682983036428308', 'v2snipechannel' : '1010818705002864701'
   }
 }; module.exports.servers = servers
 
 //start services
 client.on('ready', async () => {
   console.log('I am ready!')
+  sniperv2.initialise()
+  sniperv2.start()
   sniper.initialise()
   sniper.start()
   clearcommands()
