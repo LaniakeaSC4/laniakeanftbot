@@ -183,8 +183,8 @@ async function combineTraitRarity(creatoraddress) {
       "collectionAddress": collectionAddress,
       "metadataAddress": metadataAddress
     }//end output data load for this NFT
-    } else { throw 'there was no JSON'}
-    } catch(err) {jsonerrors = jsonerrors + 1} finally{ console.log(jsonerrors + '/' + nftdata.data.length + ' gave JSON errors')} 
+    } else {jsonerrors = jsonerrors + 1 }
+    } catch(err) {} finally{ console.log(jsonerrors + '/' + nftdata.data.length + ' gave JSON errors')} 
   }//end for each NFT
   //store new nft arrary in postgres
   console.log('Metaplex: Storing object with ' + output.data.length + ' NFTs + Statistical Rarity + collectionkey ' + nftdata.data[0].name.substring(0, (nftdata.data[0].name.indexOf('#') - 1)).toString().replace(/[^0-9a-z]/gi, ''))
@@ -199,7 +199,7 @@ async function rankNFTs(creatoraddress) {
   console.log('Metaplex: Ranking NFTs')
   //get data from DB
   const input = await postgress.getData("solanametaplex", "creatoraddress", creatoraddress, "withrarity")//get data from DB
-
+console.log(input.data.length)
   //rank NFTs based on statistical rarity
   var sorted = input.data.sort((a, b) => a.statisticalRarity - b.statisticalRarity)
   
