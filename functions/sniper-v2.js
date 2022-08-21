@@ -35,7 +35,7 @@ const initaliseSniperCollections = async () => {
   collections = await postgress.getSupportedCollections()
   console.log('log collections')
   console.log(collections)
-  for (var i = 0; i < collections[collectionkey].length; i++) { sniperSequencer.push(i) }
+  for (var i = 0; i < collections.length; i++) { sniperSequencer.push(i) }
   
   for (const seq of sniperSequencer) {//for each collection
     //get initial set of listings and store them in the local history arrary for that collection
