@@ -33,6 +33,8 @@ var rarelimit = 2.5
 
 const initaliseSniperCollections = async () => {
   collections = await postgress.getSupportedCollections()
+  console.log('log collections')
+  console.log(collections)
   for (var i = 0; i < collections[collectionkey].length; i++) { sniperSequencer.push(i) }
   
   for (const seq of sniperSequencer) {//for each collection
