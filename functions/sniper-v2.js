@@ -64,10 +64,13 @@ async function startsniper() {
         //console.log("I am doing my " + minutes + " minute check for " + sniperCollections[k][0] + '. I have this many in my history at start: ' + sniperCollections[k][1].length)
 
         var rebuildarrary = collections[k]['meslug']['listings']//save all the acquired listings in a temporary arrary
+        
+console.log('SniperV2: logging listings')
+console.log(collections[k]['meslug']['listings'])
 
         for (var i = 0; i < thislistings.length; i++) {//for all listings recieved from magiceden.getNewListings function
 
-          if (collections[k]['meslug']['listings'] .some(e => (e.tokenAddress === thislistings[i].tokenAddress && e.price === thislistings[i].price))) {
+          if (collections[k]['meslug']['listings'].some(e => (e.tokenAddress === thislistings[i].tokenAddress && e.price === thislistings[i].price))) {
             //actions if token address and price match (i.e. we've seen this one before)
           } else {
             //actions if token address or price does not match one we have seen before
