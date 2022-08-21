@@ -65,8 +65,8 @@ async function startsniper() {
 
         var rebuildarrary = collections[k]['listings']//save all the acquired listings in a temporary arrary
         
-console.log('SniperV2: logging listings')
-console.log(collections[k]['listings'])
+//console.log('SniperV2: logging listings')
+//console.log(collections[k]['listings'])
 
         for (var i = 0; i < thislistings.length; i++) {//for all listings recieved from magiceden.getNewListings function
 
@@ -182,7 +182,7 @@ var NFTdata = await metaplex.getNFTdata(collections[k]['collectionkey'], thisnft
                   thissnipechannel = main.servers[key].v2snipechannel
 
                   //send snipes
-                  sendsnipes(thisserverid, thissnipechannel, thisname, thisembedcolour, thisrarity, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink)
+                  sendsnipes(thisserverid, thissnipechannel, thisname, thisembedcolour, NFTdata.rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink)
 
                 })//end for each server
               }//end if this is a snipe
