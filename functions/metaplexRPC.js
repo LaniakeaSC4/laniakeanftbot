@@ -26,9 +26,9 @@ async function getMetaplexData(creatoraddress) {
 
   await wait(5000)
   
-  var cleanmetastring = recievedmetadata.toString().replace(/\\/g, "")
+  var cleanmetastring = recievedmetadata[0].toString().replace(/\\/g, "")
   console.log('logging cleanmetastring'  + typeof cleanmetastring)
-  console.log(cleanmetastring[0])
+  console.log(cleanmetastring)
 
   await wait(5000)
 
