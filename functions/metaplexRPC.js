@@ -20,7 +20,7 @@ async function getMetaplexData(creator) {
   const rawmeta = { "data": [] }
   console.log('Metaplex: getting metadata from RPC - should take about 1 minute per 100 NFTs in collection')
   const recievedmetadata = await metaplex.nfts().findAllByCreator({ "creator": creatorkey }).run()
-  rawdata.metadata = recievedmetadata
+  rawmeta.data = recievedmetadata
 
   //check quality here?
 
