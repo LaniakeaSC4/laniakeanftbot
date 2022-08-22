@@ -17,71 +17,45 @@ async function getMetaplexData(creatoraddress) {
 
   var creatorkey = new PublicKey(creatoraddress)//make the verified creator address into a public key
 
-  //const rawmeta = { "data": [] }
   console.log('Metaplex: getting metadata from RPC - should take about 1 minute per 100 NFTs in collection')
-  var recievedmetadata = await metaplex.nfts().findAllByCreator({ "creator": creatorkey }).run()
+  const metadata = await metaplex.nfts().findAllByCreator({ "creator": creatorkey }).run()
 
-  console.log('logging recievedmetadata[0] ' + typeof recievedmetadata)
-  console.log(recievedmetadata[0])
-
-  await wait(5000)
-  
-  var cleanmetastring = JSON.stringify(recievedmetadata).replace(/\\/g, "")
-  console.log('logging cleanmetastring '  + typeof cleanmetastring)
-  console.log(cleanmetastring)
-
-  /*await wait(5000)
-
-  var cleanmetajson = JSON.parse(cleanmetastring)
-  console.log('logging cleanmetajson ' + typeof cleanmetajson)
-  console.log(cleanmetajson[0])
-
-  await wait(5000)*/
-
-  //rawmeta.data = recievedmetadata
-
-  //check quality here?
-
-  console.log('Metaplex: storing raw metaplex data in DB')
-  await sql.createTableRow("solanametaplex", "creatoraddress", creatoraddress, "rawmeta", cleanmetastring)
-
-}; module.exports.getMetaplexData = getMetaplexData
-
-//get raw metaplex metadata from DB and 
-async function addMetaData(creatoraddress) {
-  //establish connection
-  const connection = new Connection(process.env.QUICKNODE)
-  const wallet = Keypair.generate()
-  const metaplex = Metaplex.make(connection)
-    .use(keypairIdentity(wallet))
-    .use(bundlrStorage())
-
-  console.log('Retrieving raw metadata from database')
-  const rawmetaplexdata = await sql.getData("solanametaplex", "creatoraddress", creatoraddress, "rawmeta")//get data from DB
-  var metaplexdata = rawmetaplexdata
-
-  console.log('logging without edit ' + typeof rawmetaplexdata[0])
-  console.log(rawmetaplexdata[0])
-  console.log('after parsing ' + typeof JSON.parse(metaplexdata[0]))
-  console.log(JSON.parse(metaplexdata[0]))
-
-  console.log('Metaplex: adding NFT JSON to the ' + metaplexdata.length + ' NFTs we recieved - 1 API request per 50ms')
-  var withjson = { "data": [] }
+  console.log('Metaplex: adding NFT JSON to the ' + metadata.length + ' NFTs we recieved - 1 API request per 50ms')
+  var withjson = { "data": [], "fails": [] }
   var heartbeat = 0
-  for (var i = 0; i < metaplexdata.length; i++) {
-    var thisnft = await metaplex.nfts().load({ "metadata": metaplexdata[i] }).run()
+  for (var i = 0; i < metadata.length; i++) {
+    var thisnft = await metaplex.nfts().load({ "metadata": metadata[i] }).run()
 
-    //check quality and handle it here??
-
-    withjson.data.push(thisnft)
-    heartbeat = heartbeat + 1
-    if ((heartbeat % 50) == 0) { console.log('I\'ve sent ' + heartbeat + ' json load requests') }
-    await wait(50)//wait to slow API requests.
+    if (thisnft.json != null) {
+      withjson.data.push(thisnft)
+      heartbeat = heartbeat + 1
+      if ((heartbeat % 50) == 0) { console.log('I\'ve sent ' + heartbeat + ' json load requests') }
+      await wait(50)//wait to slow API requests.
+    } else {
+      console.log(thisnft.name + "failed to add JSON. Pushing metadata[i] to fail list")
+      withjson.fails.push(metadata[i])
+    }
   }//end for each NFT metadata
 
-  console.log('Metaplex: storing NFT data with added JSON data in DB in column \"withmeta\"')
-  await sql.createTableRow("solanametaplex", "creatoraddress", creator, "withmeta", JSON.stringify(withjson))
-}; module.exports.addMetaData = addMetaData
+  //retry the fails
+  console.log('retrying ' + withjson.fails.length + ' fails')
+  var heartbeat = 0
+  for (var i = 0; i < withjson.fails.length; i++) {
+    var thisnft = await metaplex.nfts().load({ "metadata": withjson.fails[i] }).run()
+
+    if (thisnft.json != null) {
+      withjson.data.push(thisnft)
+      heartbeat = heartbeat + 1
+      if ((heartbeat % 5) == 0) { console.log('I\'ve sent ' + heartbeat + ' json load requests') }
+      await wait(50)//wait to slow API requests.
+    } else {
+      console.log(thisnft.name + "failed to add JSON twice. Will not be in final obj.data")
+    }
+  }//end for each fail
+
+  console.log('Metaplex: storing metaplex data in DB')
+  await postgress.createTableRow("solanametaplex", "creatoraddress", creatoraddress, "withjson", JSON.stringify(withjson))
+}; module.exports.getMetaplexData = getMetaplexData
 
 //gets the metaplex data and caculates the percentages of each trait. Stores as seperate object in DB
 async function calculateTraitPercentages(creatoraddress) {

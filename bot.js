@@ -82,14 +82,13 @@ client.on('interactionCreate', async interaction => {
     var action = interaction.options.getString('action'); var data = interaction.options.getString('data')
 
     if (interaction.member.user.id === "684896787655557216") {
-      if (action === ('fulladd' || 'addstep1' || 'addstep2' || 'addstep3' || 'addstep4' || 'addstep5' || 'addstep6')) { await interaction.reply({ content: "Command recieved. Adding new collection to database" }) }
+      if (action === ('fulladd' || 'addstep1' || 'addstep2' || 'addstep3' || 'addstep4' || 'addstep5')) { await interaction.reply({ content: "Command recieved. Adding new collection to database" }) }
       if (action === 'fulladd') { await metaplex.addNewNFT(data) }
       if (action === 'addstep1') { await metaplex.getMetaplexData(data) }
-      if (action === 'addstep2') { await metaplex.addMetaData(data) }
-      if (action === 'addstep3') { await metaplex.calculateTraitPercentages(data) }
-      if (action === 'addstep4') { await metaplex.combineTraitRarity(data) }
-      if (action === 'addstep5') { await metaplex.rankNFTs(data) }
-      if (action === 'addstep6') { await metaplex.cleanupDatabase(data) }
+      if (action === 'addstep2') { await metaplex.calculateTraitPercentages(data) }
+      if (action === 'addstep3') { await metaplex.combineTraitRarity(data) }
+      if (action === 'addstep4') { await metaplex.rankNFTs(data) }
+      if (action === 'addstep5') { await metaplex.cleanupDatabase(data) }
     }//end if user is laniakea
   }//end if command is laniakea 
 
