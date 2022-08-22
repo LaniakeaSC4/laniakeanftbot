@@ -282,7 +282,6 @@ async function cleanupDatabase(creatoraddress) {
 async function addNewNFT(creatoraddress) {
 
   await getMetaplexData(creatoraddress)
-  await addMetaData(creatoraddress)
   await calculateTraitPercentages(creatoraddress)
   await combineTraitRarity(creatoraddress)
   await rankNFTs(creatoraddress)
