@@ -206,8 +206,8 @@ async function rankNFTs(creatoraddress) {
 console.log(input.data.length)
 
 for (var i =0;i<input.data.length;i++){
-  if (input.data[i].statisticalRarity == null) {
-    console.log(input.data[i])
+  if (input.data[i] == null) {
+    console.log('found a null data')
   } 
 }
 
