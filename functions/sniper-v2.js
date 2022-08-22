@@ -1,7 +1,7 @@
 const main = require('../bot.js')
 const magiceden = require('./magicedenRPC.js')//Magic Eden related commands are in here
 const nfttools = require('./nfttools.js')//generic nft tools like get rarity description from rank in here
-const postgress = require('./postgres.js')//postgress related commands are in here
+const sql = require('./postgreSQL.js')//sql related commands are in here
 const metaplex = require('./metaplexRPC.js')//metaplex RPC. Work with database collections
 
 //get supported collections 
@@ -32,7 +32,7 @@ var epiclimit = 5
 var rarelimit = 2.5
 
 const initaliseSniperCollections = async () => {
-  collections = await postgress.getSupportedCollections()
+  collections = await sql.getSupportedCollections()
   console.log('log collections')
   console.log(collections)
   for (var i = 0; i < collections.length; i++) { sniperSequencer.push(i) }
@@ -99,7 +99,7 @@ async function startsniper() {
 
 var NFTdata = await metaplex.getNFTdata(collections[k]['collectionkey'], thisnftid)
 	//console.log(NFTdata)
-	var collectionSize = await postgress.getData("solanametaplex", "collectionkey", collections[k]['collectionkey'], 'collectioncount') 
+	var collectionSize = await sql.getData("solanametaplex", "collectionkey", collections[k]['collectionkey'], 'collectioncount') 
 	console.log('SniperV2: collectionsize is: ' + collectionSize)
 	
 	

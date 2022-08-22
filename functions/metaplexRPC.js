@@ -3,7 +3,7 @@
 
 const { Metaplex, keypairIdentity, bundlrStorage } = require("@metaplex-foundation/js")
 const { Connection, clusterApiUrl, Keypair, PublicKey } = require("@solana/web3.js")
-const postgress = require('./postgres.js')//postgress related commands are in here
+const sql = require('./postgreSQL.js')//sql related commands are in here
 var db = require('./pgclient.js')//the PG client
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -17,62 +17,81 @@ async function getMetaplexData(creator) {
 
   var creatorkey = new PublicKey(creator)//make the verified creator address into a public key
 
+  const rawmeta = { "data": [] }
   console.log('Metaplex: getting metadata from RPC - should take about 1 minute per 100 NFTs in collection')
-  const metadata = await metaplex.nfts().findAllByCreator({ "creator": creatorkey }).run()
+  const recievedmetadata = await metaplex.nfts().findAllByCreator({ "creator": creatorkey }).run()
+  rawdata.metadata = recievedmetadata
+
+  //check quality here?
+
+  console.log('Metaplex: storing raw metaplex data in DB')
+  await sql.createTableRow("solanametaplex", "creatoraddress", creator, "rawmeta", JSON.stringify(rawmeta))
+
+}; module.exports.getMetaplexData = getMetaplexData
+
+//get raw metaplex metadata from DB and 
+async function addMetaData(creator) {
+
+  console.log('Retrieving raw metadata from database')
+  const metaplexdata = await sql.getData("solanametaplex", "creatoraddress", creatoraddress, "rawmeta")//get data from DB
 
   console.log('Metaplex: adding NFT JSON to the ' + metadata.length + ' NFTs we recieved - 1 API request per 50ms')
   var withjson = { "data": [] }
   var heartbeat = 0
-  for (var i = 0; i < metadata.length; i++) {
-    var thisnft = await metaplex.nfts().load({ "metadata": metadata[i] }).run()
+  for (var i = 0; i < metaplexdata.data.length; i++) {
+    var thisnft = await metaplex.nfts().load({ "metadata": metaplexdata.data[i] }).run()
+
+    //check quality and handle it here??
+
     withjson.data.push(thisnft)
     heartbeat = heartbeat + 1
-    if ((heartbeat % 50) == 0) {console.log('I\'ve sent ' + heartbeat + ' json load requests')} 
+    if ((heartbeat % 50) == 0) { console.log('I\'ve sent ' + heartbeat + ' json load requests') }
     await wait(50)//wait to slow API requests.
   }//end for each NFT metadata
 
-  console.log('Metaplex: storing metaplex data in DB')
-  await postgress.createTableRow("solanametaplex", "creatoraddress", creator, "withmeta", JSON.stringify(withjson))
-}; module.exports.getMetaplexData = getMetaplexData
+  console.log('Metaplex: storing NFT data with added JSON data in DB in column \"withmeta\"')
+  await sql.createTableRow("solanametaplex", "creatoraddress", creator, "withmeta", JSON.stringify(withjson))
+}; module.exports.addMetaData = addMetaData
 
 //gets the metaplex data and caculates the percentages of each trait. Stores as seperate object in DB
 async function calculateTraitPercentages(creatoraddress) {
 
   console.log('Metaplex: Calculating trait percentages')
-  const metaplexdata = await postgress.getData("solanametaplex", "creatoraddress", creatoraddress, "withmeta")//get data from DB
+  const metaplexdata = await sql.getData("solanametaplex", "creatoraddress", creatoraddress, "withmeta")//get data from DB
   var traitPercentages = {}//establish output object
 
   for (var i = 0; i < metaplexdata.data.length; i++) {//for each nft in the metaplex data
-  
-  try {
-    if (metaplexdata.data[i].json) {
-    for (var j = 0; j < metaplexdata.data[i].json.attributes.length; j++) { //for each attribute of this NFT
-      var maintype = metaplexdata.data[i].json.attributes[j].trait_type.toString().replace(/[^0-9a-z]/gi, '')//clean the key
-      
-      var subtype = ''
-      if (metaplexdata.data[i].json.attributes[j].value.toString().replace(/[^0-9a-z]/gi, '')) {
-      subtype = metaplexdata.data[i].json.attributes[j].value.toString().replace(/[^0-9a-z]/gi, '')//clean the key
-      } else { subtype = 'none'} 
 
-      if (maintype in traitPercentages) {//if maintype is already a key in the object
-        if (subtype in traitPercentages[maintype]) {//if maintype and subtype already exist, +1 to timesSeen and +1 to total count for that maintype
-          traitPercentages[maintype][subtype]['timesSeen'] = traitPercentages[maintype][subtype]['timesSeen'] + 1
-          traitPercentages[maintype]['totalcount'] = traitPercentages[maintype]['totalcount'] + 1
-        } else {//maintype exists, but subtype does not. Create new subtype object and start at 1 timesSeen
-          traitPercentages[maintype][subtype] = {}
-          traitPercentages[maintype][subtype]['timesSeen'] = 1
-          traitPercentages[maintype]['totalcount'] = traitPercentages[maintype]['totalcount'] + 1//maintype already existed, so we can add 1 to it
-        }
-      } else {//if maintype isnt already a key, subtype won't exist either first create the objects, then start at 1 timesSeen and totalcount
-        traitPercentages[maintype] = {}
-        traitPercentages[maintype][subtype] = {}
-        traitPercentages[maintype][subtype]['timesSeen'] = 1
-        traitPercentages[maintype]['totalcount'] = 1
-      }//end else
-    }//end for each trait
-    } else { throw 'var i = ' + i + ' var j = ' + j + ' maintype is: ' + maintype + 'subtype is: ' + subtype + ' for ' + metaplexdata.data[i].name }
-  } catch(err) {
-        console.log('Error finding traits: ' + err)} 
+    try {
+      if (metaplexdata.data[i].json) {
+        for (var j = 0; j < metaplexdata.data[i].json.attributes.length; j++) { //for each attribute of this NFT
+          var maintype = metaplexdata.data[i].json.attributes[j].trait_type.toString().replace(/[^0-9a-z]/gi, '')//clean the key
+
+          var subtype = ''
+          if (metaplexdata.data[i].json.attributes[j].value.toString().replace(/[^0-9a-z]/gi, '')) {
+            subtype = metaplexdata.data[i].json.attributes[j].value.toString().replace(/[^0-9a-z]/gi, '')//clean the key
+          } else { subtype = 'none' }
+
+          if (maintype in traitPercentages) {//if maintype is already a key in the object
+            if (subtype in traitPercentages[maintype]) {//if maintype and subtype already exist, +1 to timesSeen and +1 to total count for that maintype
+              traitPercentages[maintype][subtype]['timesSeen'] = traitPercentages[maintype][subtype]['timesSeen'] + 1
+              traitPercentages[maintype]['totalcount'] = traitPercentages[maintype]['totalcount'] + 1
+            } else {//maintype exists, but subtype does not. Create new subtype object and start at 1 timesSeen
+              traitPercentages[maintype][subtype] = {}
+              traitPercentages[maintype][subtype]['timesSeen'] = 1
+              traitPercentages[maintype]['totalcount'] = traitPercentages[maintype]['totalcount'] + 1//maintype already existed, so we can add 1 to it
+            }
+          } else {//if maintype isnt already a key, subtype won't exist either first create the objects, then start at 1 timesSeen and totalcount
+            traitPercentages[maintype] = {}
+            traitPercentages[maintype][subtype] = {}
+            traitPercentages[maintype][subtype]['timesSeen'] = 1
+            traitPercentages[maintype]['totalcount'] = 1
+          }//end else
+        }//end for each trait
+      } else { throw 'var i = ' + i + ' var j = ' + j + ' maintype is: ' + maintype + 'subtype is: ' + subtype + ' for ' + metaplexdata.data[i].name }
+    } catch (err) {
+      console.log('Error finding traits: ' + err)
+    }
   }//end for each nft
 
   //work out percentages
@@ -86,17 +105,17 @@ async function calculateTraitPercentages(creatoraddress) {
 
   //store in DB
   console.log('Metaplex: Storing trait percentages in DB')
-  postgress.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "traitrarity", traitPercentages)
+  sql.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "traitrarity", traitPercentages)
 }; module.exports.calculateTraitPercentages = calculateTraitPercentages
 
-//get the nft and trait % data from postgres (added with getMetaplexData) and calculate the statistical rarity of each nft
+//get the nft and trait % data from SQL (added with getMetaplexData) and calculate the statistical rarity of each nft
 async function combineTraitRarity(creatoraddress) {
 
   console.log('Metaplex: Building final object with statistical rarity')
   var traitdata = {}; var nftdata = {}//establish objects
 
   //load NFT and trait data and 
-  const loaddata = Promise.all([postgress.getData("solanametaplex", "creatoraddress", creatoraddress, "traitrarity"), postgress.getData("solanametaplex", "creatoraddress", creatoraddress, "withmeta")])
+  const loaddata = Promise.all([sql.getData("solanametaplex", "creatoraddress", creatoraddress, "traitrarity"), sql.getData("solanametaplex", "creatoraddress", creatoraddress, "withmeta")])
   try {
     const thisdata = await loaddata
     traitdata = thisdata[0]
@@ -112,97 +131,98 @@ async function combineTraitRarity(creatoraddress) {
   output['collectionCommonName'] = nftdata.data[0].name.substring(0, (nftdata.data[0].name.indexOf('#') - 1))
   output['collectionKey'] = nftdata.data[0].name.substring(0, (nftdata.data[0].name.indexOf('#') - 1)).toString().replace(/[^0-9a-z]/gi, '')
   output['description'] = nftdata.data[0].json.description
-  
-  for (var i =0;i<nftdata.data.length;i++){
-  if (nftdata.data[i].json == null) {
-    console.log('there was a null json')
-    console.log(nftdata.data[i])
-  } 
-}
-  
-  
+
+  for (var i = 0; i < nftdata.data.length; i++) {
+    if (nftdata.data[i].json == null) {
+      console.log('there was a null json')
+      console.log(nftdata.data[i])
+    }
+  }
+
+
   var jsonerrors = 0
   for (var i = 0; i < nftdata.data.length; i++) {//for each NFT
     var thesepercentages = []
 
     //add the percentage rarity of each attribute of this NFT to an arrary
     try {
-    if (nftdata.data[i].json){
-    for (var j = 0; j < nftdata.data[i].json.attributes.length; j++) { //for each attribute
-      //console.log(nftdata.data[i].json.attributes[j] )
-      
-      try {
-        if (nftdata.data[i].json.attributes[j]) {
-      var maintype = nftdata.data[i].json.attributes[j].trait_type.toString().replace(/[^0-9a-z]/gi, '')
-      //var subtype = nftdata.data[i].json.attributes[j].value.toString().replace(/[^0-9a-z]/gi, '')
-      
-      var subtype = ''
-      if (nftdata.data[i].json.attributes[j].value.toString().replace(/[^0-9a-z]/gi, '')) {
-      subtype = nftdata.data[i].json.attributes[j].value.toString().replace(/[^0-9a-z]/gi, '')//clean the key
-      } else { subtype = 'none'} 
+      if (nftdata.data[i].json) {
+        for (var j = 0; j < nftdata.data[i].json.attributes.length; j++) { //for each attribute
+          //console.log(nftdata.data[i].json.attributes[j] )
 
-      var thispercentage = traitdata[maintype][subtype]['percentage']
-      thesepercentages.push(thispercentage)} else {throw 'var i = ' + i + ' var j = ' + j + '.  maintype is a ' + typeof maintype + ': ' + maintype + '. subtype is a ' + typeof subtype + ': ' + subtype} 
-      } catch(err) {
-        console.log('Error finding traits: ' + err)
-      }
-    }//end for each attribute
+          try {
+            if (nftdata.data[i].json.attributes[j]) {
+              var maintype = nftdata.data[i].json.attributes[j].trait_type.toString().replace(/[^0-9a-z]/gi, '')
+              //var subtype = nftdata.data[i].json.attributes[j].value.toString().replace(/[^0-9a-z]/gi, '')
 
-    //multiply the percentages together to get statistical rarity
-    var thisrarity = (parseFloat(thesepercentages[0])*10)//first % is the starting point (don't want 1 or 0)
-    for (var k = 1; k < thesepercentages.length; k++) {//from k = 1
-      thisrarity = thisrarity * (parseFloat(thesepercentages[k]) * 10)//multiplying percentage 10x so we don't loose any resolution off the right side
-    }//end for percentages
+              var subtype = ''
+              if (nftdata.data[i].json.attributes[j].value.toString().replace(/[^0-9a-z]/gi, '')) {
+                subtype = nftdata.data[i].json.attributes[j].value.toString().replace(/[^0-9a-z]/gi, '')//clean the key
+              } else { subtype = 'none' }
 
-    var tokenAddress = ''
-    try { if (nftdata.data[i].address) { tokenAddress = nftdata.data[i].address } } catch { tokenAddress = 'not found' }
+              var thispercentage = traitdata[maintype][subtype]['percentage']
+              thesepercentages.push(thispercentage)
+            } else { throw 'var i = ' + i + ' var j = ' + j + '.  maintype is a ' + typeof maintype + ': ' + maintype + '. subtype is a ' + typeof subtype + ': ' + subtype }
+          } catch (err) {
+            console.log('Error finding traits: ' + err)
+          }
+        }//end for each attribute
 
-    var mintAuthorityAddress = ''
-    try { if (nftdata.data[i].mint.mintAuthorityAddress) { mintAuthorityAddress = nftdata.data[i].mint.mintAuthorityAddress } } catch { mintAuthorityAddress = 'not found' }
+        //multiply the percentages together to get statistical rarity
+        var thisrarity = (parseFloat(thesepercentages[0]) * 10)//first % is the starting point (don't want 1 or 0)
+        for (var k = 1; k < thesepercentages.length; k++) {//from k = 1
+          thisrarity = thisrarity * (parseFloat(thesepercentages[k]) * 10)//multiplying percentage 10x so we don't loose any resolution off the right side
+        }//end for percentages
 
-    var collectionAddress = ''
-    try { if (nftdata.data[i].collection.address) { collectionAddress = nftdata.data[i].collection.address } } catch { collectionAddress = 'not found' }
+        var tokenAddress = ''
+        try { if (nftdata.data[i].address) { tokenAddress = nftdata.data[i].address } } catch { tokenAddress = 'not found' }
 
-    var metadataAddress = ''
-    try { if (nftdata.data[i].metadataAddress) { metadataAddress = nftdata.data[i].metadataAddress } } catch { metadataAddress = 'not found' }
-    
-    //get nft ID from name
-            var thisnftid = 0
-            let namearr = nftdata.data[i].json.name.split(' ')
-            for (var m = 0; m < namearr.length; m++) {
-              let checkthis = namearr[m]
-              if (checkthis.includes('#')) {
-                var nlength = checkthis.length
-                thisnftid = parseFloat(checkthis.substring(1, nlength))
-              }//end if
-            }//end for
+        var mintAuthorityAddress = ''
+        try { if (nftdata.data[i].mint.mintAuthorityAddress) { mintAuthorityAddress = nftdata.data[i].mint.mintAuthorityAddress } } catch { mintAuthorityAddress = 'not found' }
 
-    //now store the NFT with this info into out output object
-    output.data[i] = {
-      "nftid": thisnftid,
-      "name": nftdata.data[i].json.name,
-      "statisticalRarity": thisrarity,
-      "image": nftdata.data[i].json.image,
-      "symbol": nftdata.data[i].json.symbol,
-      "attributes": nftdata.data[i].json.attributes,
-      "uri": nftdata.data[i].uri,
-      "tokenAddress": tokenAddress,
-      "mintAuthorityAddress": mintAuthorityAddress,
-      "collectionAddress": collectionAddress,
-      "metadataAddress": metadataAddress
-    }//end output data load for this NFT
-    } else {jsonerrors = jsonerrors + 1 }
-    } catch(err) {
-      
-      
+        var collectionAddress = ''
+        try { if (nftdata.data[i].collection.address) { collectionAddress = nftdata.data[i].collection.address } } catch { collectionAddress = 'not found' }
+
+        var metadataAddress = ''
+        try { if (nftdata.data[i].metadataAddress) { metadataAddress = nftdata.data[i].metadataAddress } } catch { metadataAddress = 'not found' }
+
+        //get nft ID from name
+        var thisnftid = 0
+        let namearr = nftdata.data[i].json.name.split(' ')
+        for (var m = 0; m < namearr.length; m++) {
+          let checkthis = namearr[m]
+          if (checkthis.includes('#')) {
+            var nlength = checkthis.length
+            thisnftid = parseFloat(checkthis.substring(1, nlength))
+          }//end if
+        }//end for
+
+        //now store the NFT with this info into out output object
+        output.data[i] = {
+          "nftid": thisnftid,
+          "name": nftdata.data[i].json.name,
+          "statisticalRarity": thisrarity,
+          "image": nftdata.data[i].json.image,
+          "symbol": nftdata.data[i].json.symbol,
+          "attributes": nftdata.data[i].json.attributes,
+          "uri": nftdata.data[i].uri,
+          "tokenAddress": tokenAddress,
+          "mintAuthorityAddress": mintAuthorityAddress,
+          "collectionAddress": collectionAddress,
+          "metadataAddress": metadataAddress
+        }//end output data load for this NFT
+      } else { jsonerrors = jsonerrors + 1 }
+    } catch (err) {
+
+
     }
   }//end for each NFT
   console.log(jsonerrors + '/' + nftdata.data.length + ' gave JSON errors')
-  //store new nft arrary in postgres
+  //store new nft arrary in SQL
   console.log('Metaplex: Storing object with ' + output.data.length + ' NFTs + Statistical Rarity + collectionkey ' + nftdata.data[0].name.substring(0, (nftdata.data[0].name.indexOf('#') - 1)).toString().replace(/[^0-9a-z]/gi, ''))
-  postgress.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "withrarity", output)
-  postgress.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "collectioncount", parseFloat(output.data.length))
-  postgress.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "collectionkey", nftdata.data[0].name.substring(0, (nftdata.data[0].name.indexOf('#') - 1)).toString().replace(/[^0-9a-z]/gi, '').toLowerCase())
+  sql.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "withrarity", output)
+  sql.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "collectioncount", parseFloat(output.data.length))
+  sql.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "collectionkey", nftdata.data[0].name.substring(0, (nftdata.data[0].name.indexOf('#') - 1)).toString().replace(/[^0-9a-z]/gi, '').toLowerCase())
 }; module.exports.combineTraitRarity = combineTraitRarity
 
 //get the unranked NFTs with statistical rarity and rank them for the final data
@@ -210,21 +230,21 @@ async function rankNFTs(creatoraddress) {
 
   console.log('Metaplex: Ranking NFTs')
   //get data from DB
-  const input = await postgress.getData("solanametaplex", "creatoraddress", creatoraddress, "withrarity")//get data from DB
-console.log(input.data.length)
+  const input = await sql.getData("solanametaplex", "creatoraddress", creatoraddress, "withrarity")//get data from DB
+  console.log(input.data.length)
 
-var filtered = []
-for (var i =0;i<input.data.length;i++){
-  if (input.data[i] != null) {
-    filtered.push(input.data[i])
-  } 
-}
+  var filtered = []
+  for (var i = 0; i < input.data.length; i++) {
+    if (input.data[i] != null) {
+      filtered.push(input.data[i])
+    }
+  }
 
   //rank NFTs based on statistical rarity
   var sorted = filtered.sort((a, b) => a.statisticalRarity - b.statisticalRarity)
-  
-  for (i = 0;i < sorted.length;i++){sorted[i]['rarityRank'] = (i + 1)}//add a rank value
-  
+
+  for (i = 0; i < sorted.length; i++) { sorted[i]['rarityRank'] = (i + 1) }//add a rank value
+
   var output = input//set output equal to what we got from DB
   output.data = []//clear just the data part (so we keep the other data)
   output.data = sorted//set the NFT data equal to the sorted data.
@@ -239,7 +259,7 @@ for (var i =0;i<input.data.length;i++){
   console.log(sorted[3])
 
   console.log('Metaplex: Storing final object with ' + output.data.length + ' NFTs')
-  postgress.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "finaldata", output)
+  sql.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "finaldata", output)
 
 }; module.exports.rankNFTs = rankNFTs
 
@@ -247,15 +267,16 @@ for (var i =0;i<input.data.length;i++){
 async function cleanupDatabase(creatoraddress) {
 
   console.log('Metaplex: clearing raw metaplex data')
-  await postgress.deleteColumnData("solanametaplex", "creatoraddress", creatoraddress, "withmeta")
+  await sql.deleteColumnData("solanametaplex", "creatoraddress", creatoraddress, "withmeta")
   console.log('Metaplex: clearing unranked data with rarity')
-  await postgress.deleteColumnData("solanametaplex", "creatoraddress", creatoraddress, "withrarity")
+  await sql.deleteColumnData("solanametaplex", "creatoraddress", creatoraddress, "withrarity")
 
 }; module.exports.cleanupDatabase = cleanupDatabase
 
 async function addNewNFT(creatoraddress) {
 
   await getMetaplexData(creatoraddress)
+  await addMetaData(creatoraddress)
   await calculateTraitPercentages(creatoraddress)
   await combineTraitRarity(creatoraddress)
   await rankNFTs(creatoraddress)
@@ -309,8 +330,8 @@ async function getAllNFTdata(collectionKey) {
 async function getNFTdata(collectionKey, nftid) {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
-    
-    var querystring = 'SELECT jsonb_path_query_first(finaldata, \'$.data[*] ? (@.nftid == ' + parseFloat(nftid) + ' || @.nftid == "' + nftid + '")\') AS nftdata FROM solanametaplex WHERE collectionkey = \''  + collectionKey + '\''
+
+    var querystring = 'SELECT jsonb_path_query_first(finaldata, \'$.data[*] ? (@.nftid == ' + parseFloat(nftid) + ' || @.nftid == "' + nftid + '")\') AS nftdata FROM solanametaplex WHERE collectionkey = \'' + collectionKey + '\''
 
     pgclient.query(querystring, (err, res) => {
       if (err) throw err

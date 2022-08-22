@@ -2,7 +2,7 @@ const { Client, Intents } = require('discord.js')
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES] })
 module.exports.client = client
 
-const postgress = require('./functions/postgres.js')//postgress related commands are in here
+const sql = require('./functions/postgreSQL.js')//sql related commands are in here
 const db = require('./functions/pgclient.js')//if we need to interact with the client directly in here. Rember to use var pgclient = db.getClient() to get/establish client
 const magiceden = require('./functions/magicedenRPC.js')//Magic Eden related commands are in here
 const howrare = require('./functions/howrareRPC.js')//Magic Eden related commands are in here
@@ -79,13 +79,14 @@ client.on('interactionCreate', async interaction => {
     var action = interaction.options.getString('action'); var data = interaction.options.getString('data')
 
     if (interaction.member.user.id === "684896787655557216") {
-      if (action === ('fulladd' || 'addstep1' || 'addstep2' || 'addstep3' || 'addstep4' || 'addstep5')) { await interaction.reply({ content: "Command recieved. Adding new collection to database" }) }
+      if (action === ('fulladd' || 'addstep1' || 'addstep2' || 'addstep3' || 'addstep4' || 'addstep5' || 'addstep6')) { await interaction.reply({ content: "Command recieved. Adding new collection to database" }) }
       if (action === 'fulladd') { await metaplex.addNewNFT(data) }
       if (action === 'addstep1') { await metaplex.getMetaplexData(data) }
-      if (action === 'addstep2') { await metaplex.calculateTraitPercentages(data) }
-      if (action === 'addstep3') { await metaplex.combineTraitRarity(data) }
-      if (action === 'addstep4') { await metaplex.rankNFTs(data) }
-      if (action === 'addstep5') { await metaplex.cleanupDatabase(data) }
+      if (action === 'addstep2') { await metaplex.addMetaData(data) }
+      if (action === 'addstep3') { await metaplex.calculateTraitPercentages(data) }
+      if (action === 'addstep4') { await metaplex.combineTraitRarity(data) }
+      if (action === 'addstep5') { await metaplex.rankNFTs(data) }
+      if (action === 'addstep6') { await metaplex.cleanupDatabase(data) }
     }//end if user is laniakea
   }//end if command is laniakea 
 
@@ -100,7 +101,7 @@ client.on('interactionCreate', async interaction => {
         await howrare.getCollection(collectionstring).then(async thisdata => {
           //if there is a statistical rarity
           if ('statistical_rarity' in thisdata.result.data.items[0].all_ranks) {
-            var result = await postgress.addHowRareCollection(thisdata, collectionstring)
+            var result = await sql.addHowRareCollection(thisdata, collectionstring)
             if (result === 'success') {
               replytext = 'Success. Database has been added. Please now restart your discord client to see updated commands.'
               clearcommands()
@@ -117,7 +118,7 @@ client.on('interactionCreate', async interaction => {
 
       if (interaction.member.user.id === "684896787655557216") {
         if (action === 'remove') {
-          await postgress.removeHowRareCollection(collectionstring).then(async result => {
+          await sql.removeHowRareCollection(collectionstring).then(async result => {
             if (result === 'success') {
               replytext = 'Success. Database has been removed. Please now restart your discord client to see updated commands.'
               clearcommands()
@@ -143,7 +144,7 @@ client.on('interactionCreate', async interaction => {
     //we dont have to check if collection is in database as list of collections was established from database
     var thiscollection = interaction.options.getString('collection')
     var thisnftnumber = interaction.options.getString('nftnumber')
-    var returnedrarity = await postgress.getNFTproperties(thiscollection, thisnftnumber)
+    var returnedrarity = await sql.getNFTproperties(thiscollection, thisnftnumber)
 
     if (returnedrarity != 'NFT not in collection') {//is this check enough? if this is found, will everything else pass?
 
@@ -151,7 +152,7 @@ client.on('interactionCreate', async interaction => {
       var thisname = returnedrarity[1]
       var thisimage = returnedrarity[2]
 
-      var collectionsize = await postgress.getCollectionSize(thiscollection)
+      var collectionsize = await sql.getCollectionSize(thiscollection)
       var ranges = await nfttools.calculateranges(collectionsize)
 
       var mythicstart = ranges[0]; var mythicend = ranges[1]
@@ -198,8 +199,8 @@ client.on('interactionCreate', async interaction => {
 //setup/rebuild discord checkrarity slash command
 async function rebuildCommands() {
 
-  //add supported collections from postgressDB to the slash command
-  var collections = await postgress.getColletionList()
+  //add supported collections from sqlDB to the slash command
+  var collections = await sql.getColletionList()
   var choices = []; for (var i = 0; i < collections.length; i++) { choices.push({ "name": collections[i], "value": collections[i] }) }
 
   var serverkeys = Object.keys(servers)

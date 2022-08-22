@@ -1,5 +1,5 @@
 /*
-This file is for functions which connect to the postgress database
+This file is for functions which connect to the sql database
 
 Postgress client established and connected in pgclint.js
 
@@ -15,7 +15,7 @@ var db = require('./pgclient.js')
 async function createTable() {
   var pgclient = db.getClient()
   return new Promise((resolve, reject) => {
-    //add supported collections from postgressDB to the slash command
+    //add supported collections from sqlDB to the slash command
     pgclient.query('CREATE TABLE solanametaplex(collection_id TEXT PRIMARY KEY, data JSONB)', (err, res) => {
       if (err) throw err
       resolve()
@@ -24,7 +24,7 @@ async function createTable() {
 };module.exports.createTable = createTable*/
 
 //get the number of items (NFTs) in the local howrare.is data. This becomes collection size, used for determining rarity thresholds.
-async function getPostgresCollectionSize(collectionID) {
+async function getSQLCollectionSize(collectionID) {
   var pgclient = db.getClient()
   return new Promise((resolve, reject) => {
     var querystring = "SELECT COUNT(*) FROM (SELECT jsonb_path_query(data, '$.result.data.items[*]') FROM howraredata WHERE collection_id = '" + collectionID + "') AS nftcount"
@@ -34,7 +34,7 @@ async function getPostgresCollectionSize(collectionID) {
       resolve(res.rows[0].count)//return count of rows (number of NFTs)
     })//end query
   })//end promise
-}; module.exports.getCollectionSize = getPostgresCollectionSize
+}; module.exports.getCollectionSize = getSQLCollectionSize
 
 //get NFT properties (rarity, name, image) from local howrare.is data.
 async function getPosrgresNFTproperties(collectionstring, nftid) {
@@ -59,7 +59,7 @@ async function getPosrgresNFTproperties(collectionstring, nftid) {
 async function getColletionList() {
   var pgclient = db.getClient()
   return new Promise((resolve, reject) => {
-    //add supported collections from postgressDB to the slash command
+    //add supported collections from sqlDB to the slash command
     var collectionlist = []
     pgclient.query('SELECT collection_id FROM howraredata', (err, res) => {
       if (err) throw err

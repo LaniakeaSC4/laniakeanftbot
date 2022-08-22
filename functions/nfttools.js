@@ -1,4 +1,4 @@
-const postgress = require('./postgres.js')//postgress related commands are in here
+const sql = require('./postgreSQL.js')//sql related commands are in here
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
 async function calculateranges(collectionsize) {

@@ -1,5 +1,5 @@
 const metaplex = require('./metaplexRPC.js')//metaplex RPC. Work with database collections
-const postgress = require('./postgres.js')//postgress related commands are in here
+const sql = require('./postgreSQL.js')//sql related commands are in here
 const nfttools = require('./nfttools.js')//generic nft tools like get rarity description from rank in here
 
 async function check(collectionKey, nftid) {
@@ -7,7 +7,7 @@ async function check(collectionKey, nftid) {
 	//get NFT data
 	var NFTdata = await metaplex.getNFTdata(collectionKey, nftid)
 	console.log(NFTdata)
-	var collectionSize = await postgress.getData("solanametaplex", "collectionkey", collectionKey, 'collectioncount') 
+	var collectionSize = await sql.getData("solanametaplex", "collectionkey", collectionKey, 'collectioncount') 
 	console.log('collectionsize is: ' + collectionSize)
 	
 	
