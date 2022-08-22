@@ -114,8 +114,9 @@ async function combineTraitRarity(creatoraddress) {
   output['description'] = nftdata.data[0].json.description
   
   for (var i =0;i<nftdata.data.length;i++){
-  if (nftdata.data[i] == null) {
-    console.log('there was a null object')
+  if (nftdata.data[i].json == null) {
+    console.log('there was a null json')
+    console.log(nftdata.data[i])
   } 
 }
   
