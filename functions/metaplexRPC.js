@@ -17,15 +17,15 @@ async function getMetaplexData(creatoraddress) {
 
   var creatorkey = new PublicKey(creatoraddress)//make the verified creator address into a public key
 
-  const rawmeta = { "data": [] }
+  //const rawmeta = { "data": [] }
   console.log('Metaplex: getting metadata from RPC - should take about 1 minute per 100 NFTs in collection')
   const recievedmetadata = await metaplex.nfts().findAllByCreator({ "creator": creatorkey }).run()
-  rawmeta.data = recievedmetadata
+  //rawmeta.data = recievedmetadata
 
   //check quality here?
 
   console.log('Metaplex: storing raw metaplex data in DB')
-  await sql.createTableRow("solanametaplex", "creatoraddress", creatoraddress, "rawmeta", JSON.stringify(rawmeta))
+  await sql.createTableRow("solanametaplex", "creatoraddress", creatoraddress, "rawmeta", recievedmetadata)
 
 }; module.exports.getMetaplexData = getMetaplexData
 
@@ -41,11 +41,11 @@ async function addMetaData(creatoraddress) {
   console.log('Retrieving raw metadata from database')
   const metaplexdata = await sql.getData("solanametaplex", "creatoraddress", creatoraddress, "rawmeta")//get data from DB
 
-  console.log('Metaplex: adding NFT JSON to the ' + metaplexdata.data.length + ' NFTs we recieved - 1 API request per 50ms')
+  console.log('Metaplex: adding NFT JSON to the ' + metaplexdata.length + ' NFTs we recieved - 1 API request per 50ms')
   var withjson = { "data": [] }
   var heartbeat = 0
-  for (var i = 0; i < metaplexdata.data.length; i++) {
-    var thisnft = await metaplex.nfts().load({ "metadata": JSON.stringify(metaplexdata.data[i]) }).run()
+  for (var i = 0; i < metaplexdata.length; i++) {
+    var thisnft = await metaplex.nfts().load({ "metadata": metaplexdata[i] }).run()
 
     //check quality and handle it here??
 
