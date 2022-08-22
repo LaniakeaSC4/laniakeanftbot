@@ -15,7 +15,7 @@ async function getMetaplexData(creatoraddress) {
     .use(keypairIdentity(wallet))
     .use(bundlrStorage())
 
-  var creatorkey = new PublicKey(creator)//make the verified creator address into a public key
+  var creatorkey = new PublicKey(creatoraddress)//make the verified creator address into a public key
 
   const rawmeta = { "data": [] }
   console.log('Metaplex: getting metadata from RPC - should take about 1 minute per 100 NFTs in collection')
@@ -31,6 +31,12 @@ async function getMetaplexData(creatoraddress) {
 
 //get raw metaplex metadata from DB and 
 async function addMetaData(creatoraddress) {
+  //establish connection
+  const connection = new Connection(process.env.QUICKNODE)
+  const wallet = Keypair.generate()
+  const metaplex = Metaplex.make(connection)
+    .use(keypairIdentity(wallet))
+    .use(bundlrStorage())
 
   console.log('Retrieving raw metadata from database')
   const metaplexdata = await sql.getData("solanametaplex", "creatoraddress", creatoraddress, "rawmeta")//get data from DB
