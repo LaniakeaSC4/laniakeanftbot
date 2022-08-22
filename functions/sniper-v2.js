@@ -152,7 +152,7 @@ var NFTdata = await metaplex.getNFTdata(collections[k]['collectionkey'], thisnft
             var raritydescription = await nfttools.getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity)
             */
             
-            var floorprice = await magiceden.getFloorPrice(collections[k]['collectionkey'])
+            var floorprice = await magiceden.getFloorPrice(collections[k]['meslug'])
             var thisfloorprice = main.pround(floorprice, 6)
             var snipe = await testifsnipe(raritydescription, thisprice, thisfloorprice)
 
