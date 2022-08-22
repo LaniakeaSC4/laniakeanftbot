@@ -205,14 +205,15 @@ async function rankNFTs(creatoraddress) {
   const input = await postgress.getData("solanametaplex", "creatoraddress", creatoraddress, "withrarity")//get data from DB
 console.log(input.data.length)
 
+var filtered = []
 for (var i =0;i<input.data.length;i++){
-  if (input.data[i] == null) {
-    console.log('found a null data')
+  if (input.data[i] != null) {
+    filtered.push(data[i])
   } 
 }
 
   //rank NFTs based on statistical rarity
-  var sorted = input.data.sort((a, b) => a.statisticalRarity - b.statisticalRarity)
+  var sorted = filtered.sort((a, b) => a.statisticalRarity - b.statisticalRarity)
   
   for (i = 0;i < sorted.length;i++){sorted[i]['rarityRank'] = (i + 1)}//add a rank value
   
