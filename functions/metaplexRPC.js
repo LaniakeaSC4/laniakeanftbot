@@ -21,28 +21,29 @@ async function getMetaplexData(creatoraddress) {
   console.log('Metaplex: getting metadata from RPC - should take about 1 minute per 100 NFTs in collection')
   var recievedmetadata = await metaplex.nfts().findAllByCreator({ "creator": creatorkey }).run()
 
-  console.log('logging recievedmetadata ' + typeof recievedmetadata)
+  console.log('logging recievedmetadata[0] ' + typeof recievedmetadata)
   console.log(recievedmetadata[0])
 
   await wait(5000)
   
-  var cleanmetastring = JSON.stringify(recievedmetadata[0]).replace(/\\/g, "")
+  var cleanmetastring = JSON.stringify(recievedmetadata).replace(/\\/g, "")
   console.log('logging cleanmetastring '  + typeof cleanmetastring)
   console.log(cleanmetastring)
 
-  await wait(5000)
+  /*await wait(5000)
 
   var cleanmetajson = JSON.parse(cleanmetastring)
   console.log('logging cleanmetajson ' + typeof cleanmetajson)
   console.log(cleanmetajson[0])
 
-  await wait(5000)
+  await wait(5000)*/
+
   //rawmeta.data = recievedmetadata
 
   //check quality here?
 
   console.log('Metaplex: storing raw metaplex data in DB')
-  await sql.createTableRow("solanametaplex", "creatoraddress", creatoraddress, "rawmeta", JSON.stringify(cleanmetajson))
+  await sql.createTableRow("solanametaplex", "creatoraddress", creatoraddress, "rawmeta", cleanmetastring)
 
 }; module.exports.getMetaplexData = getMetaplexData
 
@@ -56,7 +57,8 @@ async function addMetaData(creatoraddress) {
     .use(bundlrStorage())
 
   console.log('Retrieving raw metadata from database')
-  const metaplexdata = await sql.getData("solanametaplex", "creatoraddress", creatoraddress, "rawmeta")//get data from DB
+  const rawmetaplexdata = await sql.getData("solanametaplex", "creatoraddress", creatoraddress, "rawmeta")//get data from DB
+  var metaplexdata = JSON.parse(rawmetaplexdata)
 
   console.log('Metaplex: adding NFT JSON to the ' + metaplexdata.length + ' NFTs we recieved - 1 API request per 50ms')
   var withjson = { "data": [] }
