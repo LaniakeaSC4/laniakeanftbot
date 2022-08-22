@@ -7,7 +7,7 @@ const sql = require('./postgreSQL.js')//sql related commands are in here
 var db = require('./pgclient.js')//the PG client
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
-async function getMetaplexData(creator) {
+async function getMetaplexData(creatoraddress) {
   //establish connection
   const connection = new Connection(process.env.QUICKNODE)
   const wallet = Keypair.generate()
@@ -25,12 +25,12 @@ async function getMetaplexData(creator) {
   //check quality here?
 
   console.log('Metaplex: storing raw metaplex data in DB')
-  await sql.createTableRow("solanametaplex", "creatoraddress", creator, "rawmeta", JSON.stringify(rawmeta))
+  await sql.createTableRow("solanametaplex", "creatoraddress", creatoraddress, "rawmeta", JSON.stringify(rawmeta))
 
 }; module.exports.getMetaplexData = getMetaplexData
 
 //get raw metaplex metadata from DB and 
-async function addMetaData(creator) {
+async function addMetaData(creatoraddress) {
 
   console.log('Retrieving raw metadata from database')
   const metaplexdata = await sql.getData("solanametaplex", "creatoraddress", creatoraddress, "rawmeta")//get data from DB
