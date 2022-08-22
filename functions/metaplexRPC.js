@@ -23,6 +23,7 @@ async function getMetaplexData(creatoraddress) {
   console.log('Metaplex: adding NFT JSON to the ' + metadata.length + ' NFTs we recieved - 1 API request per 65ms')
   var withjson = { "data": [], "fails": [] }
   var heartbeat = 0
+  
   for (var i = 0; i < metadata.length; i++) {
     var thisnft = await metaplex.nfts().load({ "metadata": metadata[i] }).run()
 
