@@ -34,11 +34,14 @@ const servers = {
 client.on('ready', async () => {
   console.log('I am ready!')
   sniperv2.initialise()
-  //sniperv2.start()
+  
   sniper.initialise()
   sniper.start()
-  clearcommands()
-  await rebuildCommands()
+
+  //limit of 50 per day. Disabled rebuilding.
+  //clearcommands()
+  //await rebuildCommands()
+
 })//end client.on Ready
 
 //function to reset slash commands (enable if needed)
