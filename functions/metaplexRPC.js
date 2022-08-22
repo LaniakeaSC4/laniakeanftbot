@@ -20,7 +20,7 @@ async function getMetaplexData(creatoraddress) {
   console.log('Metaplex: getting metadata from RPC - should take about 1 minute per 100 NFTs in collection')
   const metadata = await metaplex.nfts().findAllByCreator({ "creator": creatorkey }).run()
 
-  console.log('Metaplex: adding NFT JSON to the ' + metadata.length + ' NFTs we recieved - 1 API request per 50ms')
+  console.log('Metaplex: adding NFT JSON to the ' + metadata.length + ' NFTs we recieved - 1 API request per 65ms')
   var withjson = { "data": [], "fails": [] }
   var heartbeat = 0
   for (var i = 0; i < metadata.length; i++) {
@@ -29,32 +29,33 @@ async function getMetaplexData(creatoraddress) {
     if (thisnft.json != null) {
       withjson.data.push(thisnft)
       heartbeat = heartbeat + 1
-      if ((heartbeat % 50) == 0) { console.log('I\'ve sent ' + heartbeat + ' json load requests') }
-      await wait(50)//wait to slow API requests.
+      if ((heartbeat % 50) == 0) { console.log('Metaplex: I\'ve sent ' + heartbeat + ' json load requests') }
+      await wait(65)//wait to slow API requests.
     } else {
-      console.log(thisnft.name + "failed to add JSON. Pushing metadata[i] to fail list")
+      console.log('Metaplex: ' + thisnft.name + ' failed to add JSON. Pushing metadata[i] to fail list')
       withjson.fails.push(metadata[i])
     }
   }//end for each NFT metadata
 
   //retry the fails
-  console.log('retrying ' + withjson.fails.length + ' fails')
+  console.log('Metaplex: retrying ' + withjson.fails.length + ' fails')
   var heartbeat = 0
   for (var i = 0; i < withjson.fails.length; i++) {
     var thisnft = await metaplex.nfts().load({ "metadata": withjson.fails[i] }).run()
 
     if (thisnft.json != null) {
+      console.log('Metaplex: ' + thisnft.name + ' got data on retry')
       withjson.data.push(thisnft)
       heartbeat = heartbeat + 1
-      if ((heartbeat % 5) == 0) { console.log('I\'ve sent ' + heartbeat + ' json load requests') }
-      await wait(50)//wait to slow API requests.
+      if ((heartbeat % 5) == 0) { console.log('Metaplex: I\'ve sent ' + heartbeat + ' json load requests') }
+      await wait(80)//wait to slow API requests.
     } else {
-      console.log(thisnft.name + "failed to add JSON twice. Will not be in final obj.data")
+      console.log("Metaplex: failed to add JSON twice. " + thisnft.name + " will not be in final obj.data")
     }
   }//end for each fail
 
-  console.log('Metaplex: storing metaplex data in DB')
-  await postgress.createTableRow("solanametaplex", "creatoraddress", creatoraddress, "withjson", JSON.stringify(withjson))
+  console.log('Metaplex: storing metaplex data (with JSON) in DB')
+  await sql.createTableRow("solanametaplex", "creatoraddress", creatoraddress, "withjson", JSON.stringify(withjson))
 }; module.exports.getMetaplexData = getMetaplexData
 
 //gets the metaplex data and caculates the percentages of each trait. Stores as seperate object in DB
@@ -92,9 +93,9 @@ async function calculateTraitPercentages(creatoraddress) {
             traitPercentages[maintype]['totalcount'] = 1
           }//end else
         }//end for each trait
-      } else { throw 'var i = ' + i + ' var j = ' + j + ' maintype is: ' + maintype + 'subtype is: ' + subtype + ' for ' + metaplexdata.data[i].name }
+      } else { throw 'Metaplex: var i = ' + i + ' var j = ' + j + ' maintype is: ' + maintype + 'subtype is: ' + subtype + ' for ' + metaplexdata.data[i].name }
     } catch (err) {
-      console.log('Error finding traits: ' + err)
+      console.log('Metaplex: Error finding traits: ' + err)
     }
   }//end for each nft
 
@@ -124,7 +125,7 @@ async function combineTraitRarity(creatoraddress) {
     const thisdata = await loaddata
     traitdata = thisdata[0]
     nftdata = thisdata[1]
-  } catch (error) { console.log('Error getting data') }
+  } catch (error) { console.log('Metaplex: Error getting data') }
 
   var output = { "data": [] }//establish output object
 
@@ -138,7 +139,7 @@ async function combineTraitRarity(creatoraddress) {
 
   for (var i = 0; i < nftdata.data.length; i++) {
     if (nftdata.data[i].json == null) {
-      console.log('there was a null json')
+      console.log('Metaplex: there was a null json')
       console.log(nftdata.data[i])
     }
   }
@@ -166,9 +167,9 @@ async function combineTraitRarity(creatoraddress) {
 
               var thispercentage = traitdata[maintype][subtype]['percentage']
               thesepercentages.push(thispercentage)
-            } else { throw 'var i = ' + i + ' var j = ' + j + '.  maintype is a ' + typeof maintype + ': ' + maintype + '. subtype is a ' + typeof subtype + ': ' + subtype }
+            } else { throw 'Metaplex: var i = ' + i + ' var j = ' + j + '.  maintype is a ' + typeof maintype + ': ' + maintype + '. subtype is a ' + typeof subtype + ': ' + subtype }
           } catch (err) {
-            console.log('Error finding traits: ' + err)
+            console.log('Metaplex: Error finding traits: ' + err)
           }
         }//end for each attribute
 
@@ -221,7 +222,7 @@ async function combineTraitRarity(creatoraddress) {
 
     }
   }//end for each NFT
-  console.log(jsonerrors + '/' + nftdata.data.length + ' gave JSON errors')
+  console.log('Metaplex: ' + jsonerrors + '/' + nftdata.data.length + ' gave JSON errors')
   //store new nft arrary in SQL
   console.log('Metaplex: Storing object with ' + output.data.length + ' NFTs + Statistical Rarity + collectionkey ' + nftdata.data[0].name.substring(0, (nftdata.data[0].name.indexOf('#') - 1)).toString().replace(/[^0-9a-z]/gi, ''))
   sql.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "withrarity", output)
@@ -235,7 +236,7 @@ async function rankNFTs(creatoraddress) {
   console.log('Metaplex: Ranking NFTs')
   //get data from DB
   const input = await sql.getData("solanametaplex", "creatoraddress", creatoraddress, "withrarity")//get data from DB
-  console.log(input.data.length)
+  console.log('Metaplex: input.data.length is: ' + input.data.length)
 
   var filtered = []
   for (var i = 0; i < input.data.length; i++) {
@@ -253,13 +254,13 @@ async function rankNFTs(creatoraddress) {
   output.data = []//clear just the data part (so we keep the other data)
   output.data = sorted//set the NFT data equal to the sorted data.
 
-  console.log('first is')
+  console.log('Metaplex: first is')
   console.log(sorted[0])
-  console.log('second is')
+  console.log('Metaplex: second is')
   console.log(sorted[1])
-  console.log('third is')
+  console.log('Metaplex: third is')
   console.log(sorted[2])
-  console.log('forth is')
+  console.log('Metaplex: forth is')
   console.log(sorted[3])
 
   console.log('Metaplex: Storing final object with ' + output.data.length + ' NFTs')
