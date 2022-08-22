@@ -232,7 +232,7 @@ async function combineTraitRarity(creatoraddress) {
 }; module.exports.combineTraitRarity = combineTraitRarity
 
 //get the unranked NFTs with statistical rarity and rank them for the final data
-async function rankNFTs(creatoraddress) {
+async function rankNFTs(creatoraddress, meslug) {
 
   console.log('Metaplex: Ranking NFTs')
   //get data from DB
@@ -266,6 +266,7 @@ async function rankNFTs(creatoraddress) {
 
   console.log('Metaplex: Storing final object with ' + output.data.length + ' NFTs')
   sql.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "finaldata", output)
+  sql.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "meslug", meslug)
 
 }; module.exports.rankNFTs = rankNFTs
 
@@ -279,12 +280,12 @@ async function cleanupDatabase(creatoraddress) {
 
 }; module.exports.cleanupDatabase = cleanupDatabase
 
-async function addNewNFT(creatoraddress) {
+async function addNewNFT(creatoraddress, meslug) {
 
   await getMetaplexData(creatoraddress)
   await calculateTraitPercentages(creatoraddress)
   await combineTraitRarity(creatoraddress)
-  await rankNFTs(creatoraddress)
+  await rankNFTs(creatoraddress, meslug)
   //await cleanupDatabase(creatoraddress)
 
 }; module.exports.addNewNFT = addNewNFT
