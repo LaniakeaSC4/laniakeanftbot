@@ -23,7 +23,7 @@ async function getMetaplexData(creatoraddress) {
   console.log('Metaplex: adding NFT JSON to the ' + metadata.length + ' NFTs we recieved - 1 API request per 65ms')
   var withjson = { "data": [], "fails": [] }
   var heartbeat = 0
-  
+
   for (var i = 0; i < metadata.length; i++) {
     var thisnft = await metaplex.nfts().load({ "metadata": metadata[i] }).run()
 
@@ -63,7 +63,7 @@ async function getMetaplexData(creatoraddress) {
 async function calculateTraitPercentages(creatoraddress) {
 
   console.log('Metaplex: Calculating trait percentages')
-  const metaplexdata = await sql.getData("solanametaplex", "creatoraddress", creatoraddress, "withmeta")//get data from DB
+  const metaplexdata = await sql.getData("solanametaplex", "creatoraddress", creatoraddress, "withjson")//get data from DB
   var traitPercentages = {}//establish output object
 
   for (var i = 0; i < metaplexdata.data.length; i++) {//for each nft in the metaplex data
@@ -121,7 +121,7 @@ async function combineTraitRarity(creatoraddress) {
   var traitdata = {}; var nftdata = {}//establish objects
 
   //load NFT and trait data and 
-  const loaddata = Promise.all([sql.getData("solanametaplex", "creatoraddress", creatoraddress, "traitrarity"), sql.getData("solanametaplex", "creatoraddress", creatoraddress, "withmeta")])
+  const loaddata = Promise.all([sql.getData("solanametaplex", "creatoraddress", creatoraddress, "traitrarity"), sql.getData("solanametaplex", "creatoraddress", creatoraddress, "withjson")])
   try {
     const thisdata = await loaddata
     traitdata = thisdata[0]
@@ -272,8 +272,8 @@ async function rankNFTs(creatoraddress) {
 //get the unranked NFTs with statistical rarity and rank them for the final data
 async function cleanupDatabase(creatoraddress) {
 
-  console.log('Metaplex: clearing raw metaplex data')
-  await sql.deleteColumnData("solanametaplex", "creatoraddress", creatoraddress, "withmeta")
+  console.log('Metaplex: clearing raw metaplex + JSON data')
+  await sql.deleteColumnData("solanametaplex", "creatoraddress", creatoraddress, "withjson")
   console.log('Metaplex: clearing unranked data with rarity')
   await sql.deleteColumnData("solanametaplex", "creatoraddress", creatoraddress, "withrarity")
 
