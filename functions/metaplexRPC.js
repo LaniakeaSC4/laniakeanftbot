@@ -208,7 +208,7 @@ console.log(input.data.length)
 var filtered = []
 for (var i =0;i<input.data.length;i++){
   if (input.data[i] != null) {
-    filtered.push(data[i])
+    filtered.push(input.data[i])
   } 
 }
 
