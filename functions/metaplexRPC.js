@@ -22,19 +22,19 @@ async function getMetaplexData(creatoraddress) {
   var recievedmetadata = await metaplex.nfts().findAllByCreator({ "creator": creatorkey }).run()
 
   console.log('logging recievedmetadata ' + typeof recievedmetadata)
-  console.log(recievedmetadata)
+  console.log(recievedmetadata[0])
 
   await wait(5000)
   
   var cleanmetastring = recievedmetadata.toString().replace(/\\/g, "")
   console.log('logging cleanmetastring'  + typeof cleanmetastring)
-  console.log(cleanmetastring)
+  console.log(cleanmetastring[0])
 
   await wait(5000)
 
   var cleanmetajson = JSON.parse(cleanmetastring)
   console.log('logging cleanmetajson' + typeof cleanmetajson)
-  console.log(cleanmetajson)
+  console.log(cleanmetajson[0])
 
   await wait(5000)
   //rawmeta.data = recievedmetadata
