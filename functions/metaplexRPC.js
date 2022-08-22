@@ -19,13 +19,14 @@ async function getMetaplexData(creatoraddress) {
 
   //const rawmeta = { "data": [] }
   console.log('Metaplex: getting metadata from RPC - should take about 1 minute per 100 NFTs in collection')
-  const recievedmetadata = await metaplex.nfts().findAllByCreator({ "creator": creatorkey }).run().replace(/\\/g, "")
+  var recievedmetadata = await metaplex.nfts().findAllByCreator({ "creator": creatorkey }).run()
+  var cleanmetadata = recievedmetadata.replace(/\\/g, "")
   //rawmeta.data = recievedmetadata
 
   //check quality here?
 
   console.log('Metaplex: storing raw metaplex data in DB')
-  await sql.createTableRow("solanametaplex", "creatoraddress", creatoraddress, "rawmeta", recievedmetadata)
+  await sql.createTableRow("solanametaplex", "creatoraddress", creatoraddress, "rawmeta", cleanmetadata)
 
 }; module.exports.getMetaplexData = getMetaplexData
 
