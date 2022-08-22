@@ -35,7 +35,7 @@ async function addMetaData(creatoraddress) {
   console.log('Retrieving raw metadata from database')
   const metaplexdata = await sql.getData("solanametaplex", "creatoraddress", creatoraddress, "rawmeta")//get data from DB
 
-  console.log('Metaplex: adding NFT JSON to the ' + metadata.length + ' NFTs we recieved - 1 API request per 50ms')
+  console.log('Metaplex: adding NFT JSON to the ' + metaplexdata.data.length + ' NFTs we recieved - 1 API request per 50ms')
   var withjson = { "data": [] }
   var heartbeat = 0
   for (var i = 0; i < metaplexdata.data.length; i++) {
