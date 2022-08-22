@@ -45,7 +45,7 @@ async function addMetaData(creatoraddress) {
   var withjson = { "data": [] }
   var heartbeat = 0
   for (var i = 0; i < metaplexdata.data.length; i++) {
-    var thisnft = await metaplex.nfts().load({ "metadata": JSON.parse(metaplexdata.data[i]) }).run()
+    var thisnft = await metaplex.nfts().load({ "metadata": JSON.stringify(metaplexdata.data[i]) }).run()
 
     //check quality and handle it here??
 
