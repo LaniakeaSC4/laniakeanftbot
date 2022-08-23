@@ -23,7 +23,7 @@ var sniperSequencer = []
 var initialget = 20//how many listings will sniper get initially (max 20)
 var refreshget = 10//how many will sniper get on each check (max 20) - should be less then initial get or extras will count as new
 var maxlength = 50//how many records history will we keep for each collection
-var minutes = 0.5, the_interval = minutes * 60 * 1000//refresh interval for sniper bot
+var minutes = 2.5, the_interval = minutes * 60 * 1000//refresh interval for sniper bot
 
 //set multipliers above floor price at which listings become snipes
 var mythiclimit = 50
@@ -52,8 +52,6 @@ module.exports.initialise = initaliseSniperCollections
 //main sniper function
 async function startsniper() {
   console.log('SniperV2: starting main function')
-  console.log('SniperV2: sniperSequencer is')
-  console.log(sniperSequencer)
   await Promise.all(sniperSequencer.map(async value => {//this was added to make sure to sequentially initiate the sniper loops. Not sure its working as intended, but loops are spread out
     var thisinterval = the_interval + (value * 1100)//interval for each collection is 1.1 seconds longer to avoid more than 2 ME API requests per second
     console.log('SniperV2: Initialising recheckloop for collection: ' + value + '. Setting interval for this collection to: ' + thisinterval)
@@ -65,9 +63,6 @@ async function startsniper() {
 
         var rebuildarrary = collections[k]['listings']//save all the acquired listings in a temporary arrary
         
-//console.log('SniperV2: logging listings')
-//console.log(collections[k]['listings'])
-
         for (var i = 0; i < thislistings.length; i++) {//for all listings recieved from magiceden.getNewListings function
 
           if (collections[k]['listings'].some(e => (e.tokenAddress === thislistings[i].tokenAddress && e.price === thislistings[i].price))) {
@@ -116,41 +111,6 @@ var NFTdata = await metaplex.getNFTdata(collections[k]['collectionkey'], thisnft
 
       var embedcolour = await nfttools.getembedcolour(raritydescription)
       var thisembedcolour = parseInt(embedcolour, 16)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-            //get rarity
-            for (var i = 0; i < sniperCollections[k][1].length; i++) {
-              if (thistoken.mintAddress == sniperCollections[k][1][i].tokenMint) {
-                thisrarity = sniperCollections[k][1][i].rarity.moonrank.rank//end moonrank data from ME
-                break
-              }//end if
-            }//end for
-
-            var ranges = await nfttools.calculateranges(sniperCollections[k][2])
-
-            var mythicstart = ranges[0]; var mythicend = ranges[1]
-            var legendarystart = ranges[2]; var legendaryend = ranges[3]
-            var epicstart = ranges[4]; var epicend = ranges[5]
-            var rarestart = ranges[6]; var rareend = ranges[7]
-            var uncommonstart = ranges[8]; var uncommonend = ranges[9]
-            var commonstart = ranges[10]; var commonend = ranges[11]
-
-            var raritydescription = await nfttools.getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity)
-            */
             
             var floorprice = await magiceden.getFloorPrice(collections[k]['meslug'])
             var thisfloorprice = main.pround(floorprice, 6)
@@ -162,11 +122,6 @@ var NFTdata = await metaplex.getNFTdata(collections[k]['collectionkey'], thisnft
 
             if (thissnipe != "false") {
               console.log('SniperV2: we have a ' + collections[k]['meslug'] + ' snipe!')
-
-              /*
-              var embedcolour = await nfttools.getembedcolour(raritydescription)
-              var thisembedcolour = parseInt(embedcolour, 16)//store outside subsection so we can access it
-              */
 
               var thisserver = ''
               var thisserverid = ''

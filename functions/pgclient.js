@@ -3,16 +3,16 @@ var client
 
 module.exports = {
   getClient: function () {
-    console.log('checking if we need to return PG client')
+    //console.log('checking if we need to return PG client')
     if (client) return client; // if it is already there, grab it here
-    console.log('building new client')
+    //console.log('building new client')
     client = new pg.Client({
       connectionString: process.env.DATABASE_URL,
       ssl: { rejectUnauthorized: false }
     })
-    console.log('connecting client')
+    //console.log('connecting client')
     client.connect()
-    console.log('returning client')
+    //console.log('returning client')
     return client;
   }
 } 
