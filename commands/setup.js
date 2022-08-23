@@ -7,10 +7,10 @@ module.exports = {
 		.addStringOption(option =>
 		option.setName('action')
 			.setDescription('Action Type')
-			.setRequired(true))
+			.setRequired(true)
 			.addChoices(
 				{ name: 'Start Setup', value: 'start' },
-				),
+				)),
 	async execute(interaction) {
 	  
 	    //setup command
