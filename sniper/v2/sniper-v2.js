@@ -24,9 +24,10 @@ var rarelimit = 2.5
 
 const initaliseSniperCollections = async () => {
   collections = await sql.getSupportedCollections()
-  console.log('log collections')
-  console.log(collections)
-  for (var i = 0; i < collections.length; i++) { sniperSequencer.push(i) }
+
+  var currentcollections = ""
+  for (var i = 0; i < collections.length; i++) { sniperSequencer.push(i); currentcollections = (currentcollections + "| " + collections[i].collectionkey + " |") }
+  console.log('Starting sniper with: ' + currentcollections)
 
   for (const seq of sniperSequencer) {//for each collection
     //get initial set of listings and store them in the local history arrary for that collection
@@ -45,7 +46,7 @@ async function startsniper() {
   console.log('SniperV2: starting main function')
   await Promise.all(sniperSequencer.map(async value => {//this was added to make sure to sequentially initiate the sniper loops. Not sure its working as intended, but loops are spread out
     var thisinterval = the_interval + (value * 1100)//interval for each collection is 1.1 seconds longer to avoid more than 2 ME API requests per second
-    console.log('SniperV2: Initialising recheckloop for collection: ' + value + '. Setting interval for this collection to: ' + thisinterval)
+    console.log('SniperV2: Initialising recheckloop for collection: ' + collections[value].collectionkey + '. Setting interval for this collection to: ' + thisinterval)
 
     await setInterval(async function (k) {//do this every X minutes
       await magiceden.getNewListings(collections[k]['meslug'], refreshget).then(async thislistings => {//get latest X listings from Magic Eden
