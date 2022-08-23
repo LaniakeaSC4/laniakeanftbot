@@ -7,7 +7,7 @@ const howrare = require('./sniper/v1/howrareRPC.js')//Howrare.is related command
 
 const nfttools = require('./tools/nfttools.js')//generic nft tools like get rarity description from rank in here
 const metaplex = require('./sniper/v2/metaplexRPC.js')//metaplex RPC. Work with database collections
-const raritychecker = require('./tools/raritychecker.js')//rarity checker functions
+const raritychecker = require('./raritychecker/raritychecker.js')//rarity checker functions
 
 client.login(process.env.BOTTOKEN)
 
