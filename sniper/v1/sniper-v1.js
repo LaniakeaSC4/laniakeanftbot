@@ -1,6 +1,9 @@
 const main = require('../bot.js')
-const magiceden = require('./magicedenRPC.js')//Magic Eden related commands are in here
+const magiceden = require('../magicedenRPC.js')//Magic Eden related commands are in here
 const nfttools = require('./nfttools.js')//generic nft tools like get rarity description from rank in here
+
+const pround = (number, decimalPlaces) => Number(Math.round(Number(number + "e" + decimalPlaces)) + "e" + decimalPlaces * -1)
+const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
 //Collections the sniper bot will watch. Must be on moonrank.app
 const sniperCollections = [
@@ -32,7 +35,7 @@ const initaliseSniperCollections = async () => {
       sniperCollections[seq][1] = thislistings//fill tracked listings with the listings we just got
       console.log('added initial ' + initialget + ' Listings for ' + sniperCollections[seq][0])
     })//end then
-    await main.wait(2000)//add delay between API requests
+    await wait(2000)//add delay between API requests
   }//for seq of sniperSequencer
 }//end initaliseSniperCollections
 module.exports.initialise = initaliseSniperCollections
@@ -59,7 +62,7 @@ async function startsniper() {
             console.log('New/updated ' + sniperCollections[k][0] + ' entry ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
             rebuildarrary.unshift(thislistings[i])//add the new entry to the start of the rebuild arrary so we can remember this one if we see it later
 
-            var thisprice = main.pround(thislistings[i].price, 6)//set price of this lisitng
+            var thisprice = pround(thislistings[i].price, 6)//set price of this lisitng
             var recievedtoken = await magiceden.getTokenDetails(thislistings[i].tokenMint)
 
             var thistoken = recievedtoken
@@ -98,7 +101,7 @@ async function startsniper() {
 
             var raritydescription = await nfttools.getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, thisrarity)
             var floorprice = await magiceden.getFloorPrice(sniperCollections[k][0])
-            var thisfloorprice = main.pround(floorprice, 6)
+            var thisfloorprice = pround(floorprice, 6)
             var snipe = await testifsnipe(raritydescription, thisprice, thisfloorprice)
 
             var thissnipe = snipe[0]
@@ -168,17 +171,17 @@ async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisrarit
             },
             {
               "name": "List Price",
-              "value": main.pround(thisprice, 3) + ' SOL',
+              "value": pround(thisprice, 3) + ' SOL',
               "inline": true
             },
             {
               "name": "Floor Price",
-              "value": main.pround(floorprice, 3) + ' SOL',
+              "value": pround(floorprice, 3) + ' SOL',
               "inline": true
             },
             {
               "name": "Snipe Price",
-              "value": 'For ' + raritydescription + ' NFTs, any price less than ' + thislimit + 'x the floor price of ' + main.pround(floorprice, 3) + ' SOL is a snipe (i.e. less than ' + main.pround(thissnipeprice, 3) + ' SOL)',
+              "value": 'For ' + raritydescription + ' NFTs, any price less than ' + thislimit + 'x the floor price of ' + pround(floorprice, 3) + ' SOL is a snipe (i.e. less than ' + pround(thissnipeprice, 3) + ' SOL)',
               "inline": true
             }
           ],

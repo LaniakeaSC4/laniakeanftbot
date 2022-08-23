@@ -1,21 +1,12 @@
 const main = require('../bot.js')
-const magiceden = require('./magicedenRPC.js')//Magic Eden related commands are in here
+const magiceden = require('../magicedenRPC.js')//Magic Eden related commands are in here
 const nfttools = require('./nfttools.js')//generic nft tools like get rarity description from rank in here
 const sql = require('./postgreSQL.js')//sql related commands are in here
-const metaplex = require('./metaplexRPC.js')//metaplex RPC. Work with database collections
 
-//get supported collections 
+const pround = (number, decimalPlaces) => Number(Math.round(Number(number + "e" + decimalPlaces)) + "e" + decimalPlaces * -1)
+const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
-var collections = {} 
-
-//old
-/*
-const sniperCollections = [
-  ['monkeypox_nft', [], 2400],
-  ['crypto_coral_tribe', [], 6565],
-  ['yeah_tigers', [], 10000],
-  ['sphynx_underground_society', [], 7777]
-]*/
+var collections = {}
 
 //build array of [0,1,2,etc] for each collection we have. These integers can be used to key access to sniperCollections arrary to loop other functions through all supported collections
 var sniperSequencer = []
@@ -36,14 +27,14 @@ const initaliseSniperCollections = async () => {
   console.log('log collections')
   console.log(collections)
   for (var i = 0; i < collections.length; i++) { sniperSequencer.push(i) }
-  
+
   for (const seq of sniperSequencer) {//for each collection
     //get initial set of listings and store them in the local history arrary for that collection
     await magiceden.getNewListings(collections[seq]['meslug'], initialget).then(async thislistings => {
       collections[seq]['listings'] = thislistings//fill tracked listings with the listings we just got
       console.log('SniperV2: added initial ' + initialget + ' Listings for ' + collections[seq]['meslug'])
     })//end then
-    await main.wait(2000)//add delay between API requests
+    await wait(2000)//add delay between API requests
   }//for seq of sniperSequencer
   startsniper()
 }//end initaliseSniperCollections
@@ -62,7 +53,7 @@ async function startsniper() {
         //console.log("I am doing my " + minutes + " minute check for " + sniperCollections[k][0] + '. I have this many in my history at start: ' + sniperCollections[k][1].length)
 
         var rebuildarrary = collections[k]['listings']//save all the acquired listings in a temporary arrary
-        
+
         for (var i = 0; i < thislistings.length; i++) {//for all listings recieved from magiceden.getNewListings function
 
           if (collections[k]['listings'].some(e => (e.tokenAddress === thislistings[i].tokenAddress && e.price === thislistings[i].price))) {
@@ -72,7 +63,7 @@ async function startsniper() {
             console.log('SniperV2: New/updated ' + collections[k]['meslug'] + ' entry ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
             rebuildarrary.unshift(thislistings[i])//add the new entry to the start of the rebuild arrary so we can remember this one if we see it later
 
-            var thisprice = main.pround(thislistings[i].price, 6)//set price of this lisitng
+            var thisprice = pround(thislistings[i].price, 6)//set price of this lisitng
             var recievedtoken = await magiceden.getTokenDetails(thislistings[i].tokenMint)
 
             var thistoken = recievedtoken
@@ -82,7 +73,7 @@ async function startsniper() {
 
             //get nft from nane
             var thisnftid = ''
-           
+
             let namearr = thistoken.name.split(' ')
             for (var i = 0; i < namearr.length; i++) {
               let checkthis = namearr[i]
@@ -92,28 +83,28 @@ async function startsniper() {
               }//end if
             }//end for
 
-var NFTdata = await metaplex.getNFTdata(collections[k]['collectionkey'], thisnftid)
-	//console.log(NFTdata)
-	var collectionSize = await sql.getData("solanametaplex", "collectionkey", collections[k]['collectionkey'], 'collectioncount') 
-	console.log('SniperV2: collectionsize is: ' + collectionSize)
-	
-	
-	var ranges = await nfttools.calculateranges(collectionSize)
+            var NFTdata = await sql.getNFTdata(collections[k]['collectionkey'], thisnftid)
+            //console.log(NFTdata)
+            var collectionSize = await sql.getData("solanametaplex", "collectionkey", collections[k]['collectionkey'], 'collectioncount')
+            console.log('SniperV2: collectionsize is: ' + collectionSize)
 
-      var mythicstart = ranges[0]; var mythicend = ranges[1]
-      var legendarystart = ranges[2]; var legendaryend = ranges[3]
-      var epicstart = ranges[4]; var epicend = ranges[5]
-      var rarestart = ranges[6]; var rareend = ranges[7]
-      var uncommonstart = ranges[8]; var uncommonend = ranges[9]
-      var commonstart = ranges[10]; var commonend = ranges[11]
 
-      var raritydescription = await nfttools.getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, NFTdata.rarityRank)
+            var ranges = await nfttools.calculateranges(collectionSize)
 
-      var embedcolour = await nfttools.getembedcolour(raritydescription)
-      var thisembedcolour = parseInt(embedcolour, 16)
-            
+            var mythicstart = ranges[0]; var mythicend = ranges[1]
+            var legendarystart = ranges[2]; var legendaryend = ranges[3]
+            var epicstart = ranges[4]; var epicend = ranges[5]
+            var rarestart = ranges[6]; var rareend = ranges[7]
+            var uncommonstart = ranges[8]; var uncommonend = ranges[9]
+            var commonstart = ranges[10]; var commonend = ranges[11]
+
+            var raritydescription = await nfttools.getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, NFTdata.rarityRank)
+
+            var embedcolour = await nfttools.getembedcolour(raritydescription)
+            var thisembedcolour = parseInt(embedcolour, 16)
+
             var floorprice = await magiceden.getFloorPrice(collections[k]['meslug'])
-            var thisfloorprice = main.pround(floorprice, 6)
+            var thisfloorprice = pround(floorprice, 6)
             var snipe = await testifsnipe(raritydescription, thisprice, thisfloorprice)
 
             var thissnipe = snipe[0]
@@ -180,17 +171,17 @@ async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisrarit
             },
             {
               "name": "List Price",
-              "value": main.pround(thisprice, 3) + ' SOL',
+              "value": pround(thisprice, 3) + ' SOL',
               "inline": true
             },
             {
               "name": "Floor Price",
-              "value": main.pround(floorprice, 3) + ' SOL',
+              "value": pround(floorprice, 3) + ' SOL',
               "inline": true
             },
             {
               "name": "Snipe Price",
-              "value": 'For ' + raritydescription + ' NFTs, any price less than ' + thislimit + 'x the floor price of ' + main.pround(floorprice, 3) + ' SOL is a snipe (i.e. less than ' + main.pround(thissnipeprice, 3) + ' SOL)',
+              "value": 'For ' + raritydescription + ' NFTs, any price less than ' + thislimit + 'x the floor price of ' + pround(floorprice, 3) + ' SOL is a snipe (i.e. less than ' + pround(thissnipeprice, 3) + ' SOL)',
               "inline": true
             }
           ],

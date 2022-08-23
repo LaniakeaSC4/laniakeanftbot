@@ -9,7 +9,7 @@ Otherwise, a new clinet is established and connected, then returned.
 Get the connected client in each function with - var pgclient = db.getClient()
 Then query databse with - pgclient.query()
 */
-var db = require('./pgclient.js')
+var db = require('../clients/pgclient.js')
 
 /*enable if needed and edit query
 async function createTable() {
@@ -196,3 +196,59 @@ async function getSupportedCollections() {
     }) //end query
   }) //end promise
 };module.exports.getSupportedCollections = getSupportedCollections
+
+//get collectionKeys for supported collections
+async function getOurMetaplexCollections() {
+  return new Promise((resolve, reject) => {
+    var pgclient = db.getClient()
+
+    var querystring = "SELECT jsonb_path_query_first(finaldata, '$.collectionKey') FROM solanametaplex"
+
+    pgclient.query(querystring, (err, res) => {
+      if (err) throw err
+      resolve(res.rows)
+    })//end query
+  })//end promise
+}; module.exports.getOurMetaplexCollections = getOurMetaplexCollections
+
+//get verified creator address from collection key
+async function getVerifiedCreator(collectionKey) {
+  return new Promise((resolve, reject) => {
+    var pgclient = db.getClient()
+
+    var querystring = "SELECT jsonb_path_query_first(finaldata, '$.verifiedCreator') AS verifiedCreator FROM solanametaplex WHERE jsonb_path_exists(finaldata, '$.collectionKey ? (@[*] == \"" + collectionKey + "\")')"
+
+    pgclient.query(querystring, (err, res) => {
+      if (err) throw err
+      resolve(res.rows[0])
+    })//end query
+  })//end promise
+}; module.exports.getVerifiedCreator = getVerifiedCreator
+
+//get whole NFT collection by collectionKey
+async function getAllNFTdata(collectionKey) {
+  return new Promise((resolve, reject) => {
+    var pgclient = db.getClient()
+
+    var querystring = "SELECT jsonb_path_query_first(finaldata, '$.data') AS NFTdata FROM solanametaplex WHERE jsonb_path_exists(finaldata, '$.collectionKey ? (@[*] == \"" + collectionKey + "\")')"
+
+    pgclient.query(querystring, (err, res) => {
+      if (err) throw err
+      resolve(res.rows[0])
+    })//end query
+  })//end promise
+}; module.exports.getAllNFTdata = getAllNFTdata
+
+//get a single NFT collection by collectionKey and NFT ID
+async function getNFTdata(collectionKey, nftid) {
+  return new Promise((resolve, reject) => {
+    var pgclient = db.getClient()
+
+    var querystring = 'SELECT jsonb_path_query_first(finaldata, \'$.data[*] ? (@.nftid == ' + parseFloat(nftid) + ' || @.nftid == "' + nftid + '")\') AS nftdata FROM solanametaplex WHERE collectionkey = \'' + collectionKey + '\''
+
+    pgclient.query(querystring, (err, res) => {
+      if (err) throw err
+      resolve(res.rows[0]['nftdata'])
+    })//end query
+  })//end promise
+}; module.exports.getNFTdata = getNFTdata

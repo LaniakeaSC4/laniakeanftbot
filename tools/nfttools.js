@@ -1,6 +1,3 @@
-const sql = require('./postgreSQL.js')//sql related commands are in here
-const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
-
 async function calculateranges(collectionsize) {
   return new Promise((resolve, reject) => {
 

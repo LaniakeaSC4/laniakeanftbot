@@ -3,10 +3,22 @@
 
 const { Metaplex, keypairIdentity, bundlrStorage } = require("@metaplex-foundation/js")
 const { Connection, clusterApiUrl, Keypair, PublicKey } = require("@solana/web3.js")
-const sql = require('./postgreSQL.js')//sql related commands are in here
-var db = require('./pgclient.js')//the PG client
+const sql = require('../../tools/commonSQL.js')//common sql related commands are in here
+var db = require('../../clients/pgclient.js')//the PG client to make SQL queries
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
+//fulladd - do all steps
+async function addNewNFT(creatoraddress, meslug) {
+
+  await getMetaplexData(creatoraddress)
+  await calculateTraitPercentages(creatoraddress)
+  await combineTraitRarity(creatoraddress)
+  await rankNFTs(creatoraddress, meslug)
+  await cleanupDatabase(creatoraddress)
+
+}; module.exports.addNewNFT = addNewNFT
+
+//addstep1
 async function getMetaplexData(creatoraddress) {
   //establish connection
   const connection = new Connection(process.env.QUICKNODE)
@@ -59,7 +71,7 @@ async function getMetaplexData(creatoraddress) {
   await sql.createTableRow("solanametaplex", "creatoraddress", creatoraddress, "withjson", JSON.stringify(withjson))
 }; module.exports.getMetaplexData = getMetaplexData
 
-//gets the metaplex data and caculates the percentages of each trait. Stores as seperate object in DB
+//addstep2 - gets the metaplex data and caculates the percentages of each trait. Stores as seperate object in DB
 async function calculateTraitPercentages(creatoraddress) {
 
   console.log('Metaplex: Calculating trait percentages')
@@ -114,7 +126,7 @@ async function calculateTraitPercentages(creatoraddress) {
   sql.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "traitrarity", traitPercentages)
 }; module.exports.calculateTraitPercentages = calculateTraitPercentages
 
-//get the nft and trait % data from SQL (added with getMetaplexData) and calculate the statistical rarity of each nft
+//addstep3 - get the nft and trait % data from SQL (added with getMetaplexData) and calculate the statistical rarity of each nft
 async function combineTraitRarity(creatoraddress) {
 
   console.log('Metaplex: Building final object with statistical rarity')
@@ -144,7 +156,6 @@ async function combineTraitRarity(creatoraddress) {
       console.log(nftdata.data[i])
     }
   }
-
 
   var jsonerrors = 0
   for (var i = 0; i < nftdata.data.length; i++) {//for each NFT
@@ -220,7 +231,6 @@ async function combineTraitRarity(creatoraddress) {
       } else { jsonerrors = jsonerrors + 1 }
     } catch (err) {
 
-
     }
   }//end for each NFT
   console.log('Metaplex: ' + jsonerrors + '/' + nftdata.data.length + ' gave JSON errors')
@@ -231,7 +241,7 @@ async function combineTraitRarity(creatoraddress) {
   sql.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "collectionkey", nftdata.data[0].name.substring(0, (nftdata.data[0].name.indexOf('#') - 1)).toString().replace(/[^0-9a-z]/gi, '').toLowerCase())
 }; module.exports.combineTraitRarity = combineTraitRarity
 
-//get the unranked NFTs with statistical rarity and rank them for the final data
+//addstep4 - get the unranked NFTs with statistical rarity and rank them for the final data
 async function rankNFTs(creatoraddress, meslug) {
 
   console.log('Metaplex: Ranking NFTs')
@@ -270,7 +280,7 @@ async function rankNFTs(creatoraddress, meslug) {
 
 }; module.exports.rankNFTs = rankNFTs
 
-//get the unranked NFTs with statistical rarity and rank them for the final data
+//addstep5 - delete data we no longer need from sql columns
 async function cleanupDatabase(creatoraddress) {
 
   console.log('Metaplex: clearing raw metaplex + JSON data')
@@ -279,69 +289,3 @@ async function cleanupDatabase(creatoraddress) {
   await sql.deleteColumnData("solanametaplex", "creatoraddress", creatoraddress, "withrarity")
 
 }; module.exports.cleanupDatabase = cleanupDatabase
-
-async function addNewNFT(creatoraddress, meslug) {
-
-  await getMetaplexData(creatoraddress)
-  await calculateTraitPercentages(creatoraddress)
-  await combineTraitRarity(creatoraddress)
-  await rankNFTs(creatoraddress, meslug)
-  //await cleanupDatabase(creatoraddress)
-
-}; module.exports.addNewNFT = addNewNFT
-
-//get collectionKeys for supported collections
-async function getOurMetaplexCollections() {
-  return new Promise((resolve, reject) => {
-    var pgclient = db.getClient()
-
-    var querystring = "SELECT jsonb_path_query_first(finaldata, '$.collectionKey') FROM solanametaplex"
-
-    pgclient.query(querystring, (err, res) => {
-      if (err) throw err
-      resolve(res.rows)
-    })//end query
-  })//end promise
-}; module.exports.getOurMetaplexCollections = getOurMetaplexCollections
-
-//get verified creator address from collection key
-async function getVerifiedCreator(collectionKey) {
-  return new Promise((resolve, reject) => {
-    var pgclient = db.getClient()
-
-    var querystring = "SELECT jsonb_path_query_first(finaldata, '$.verifiedCreator') AS verifiedCreator FROM solanametaplex WHERE jsonb_path_exists(finaldata, '$.collectionKey ? (@[*] == \"" + collectionKey + "\")')"
-
-    pgclient.query(querystring, (err, res) => {
-      if (err) throw err
-      resolve(res.rows[0])
-    })//end query
-  })//end promise
-}; module.exports.getVerifiedCreator = getVerifiedCreator
-
-//get whole NFT collection by collectionKey
-async function getAllNFTdata(collectionKey) {
-  return new Promise((resolve, reject) => {
-    var pgclient = db.getClient()
-
-    var querystring = "SELECT jsonb_path_query_first(finaldata, '$.data') AS NFTdata FROM solanametaplex WHERE jsonb_path_exists(finaldata, '$.collectionKey ? (@[*] == \"" + collectionKey + "\")')"
-
-    pgclient.query(querystring, (err, res) => {
-      if (err) throw err
-      resolve(res.rows[0])
-    })//end query
-  })//end promise
-}; module.exports.getAllNFTdata = getAllNFTdata
-
-//get a single NFT collection by collectionKey and NFT ID
-async function getNFTdata(collectionKey, nftid) {
-  return new Promise((resolve, reject) => {
-    var pgclient = db.getClient()
-
-    var querystring = 'SELECT jsonb_path_query_first(finaldata, \'$.data[*] ? (@.nftid == ' + parseFloat(nftid) + ' || @.nftid == "' + nftid + '")\') AS nftdata FROM solanametaplex WHERE collectionkey = \'' + collectionKey + '\''
-
-    pgclient.query(querystring, (err, res) => {
-      if (err) throw err
-      resolve(res.rows[0]['nftdata'])
-    })//end query
-  })//end promise
-}; module.exports.getNFTdata = getNFTdata

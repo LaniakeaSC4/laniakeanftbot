@@ -2,21 +2,21 @@ const { Client, Intents } = require('discord.js')
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES] })
 module.exports.client = client
 
-const sql = require('./functions/postgreSQL.js')//sql related commands are in here
-const db = require('./functions/pgclient.js')//if we need to interact with the client directly in here. Rember to use var pgclient = db.getClient() to get/establish client
-const magiceden = require('./functions/magicedenRPC.js')//Magic Eden related commands are in here
-const howrare = require('./functions/howrareRPC.js')//Magic Eden related commands are in here
-const sniper = require('./functions/sniper.js')
-const sniperv2 = require('./functions/sniper-v2.js')
-const nfttools = require('./functions/nfttools.js')//generic nft tools like get rarity description from rank in here
-const metaplex = require('./functions/metaplexRPC.js')//metaplex RPC. Work with database collections
-const raritychecker = require('./functions/raritychecker.js')//rarity checker functions
+const sql = require('./tools/commonSQL.js')//common sql related commands are in here
+const howrare = require('./sniper/v1/howrareRPC.js')//Howrare.is related commands are in here
+
+const nfttools = require('./tools/nfttools.js')//generic nft tools like get rarity description from rank in here
+const metaplex = require('./sniper/v2/metaplexRPC.js')//metaplex RPC. Work with database collections
+const raritychecker = require('./tools/raritychecker.js.js')//rarity checker functions
 
 client.login(process.env.BOTTOKEN)
 
 //======================
 //==== Sniper Setup  ===
 //======================
+
+const sniper = require('./sniper/v1/sniper-v1.js')
+const sniperv2 = require('./sniper/v2/sniper-v2.js')
 
 //channels and servers
 const servers = {
@@ -39,8 +39,8 @@ client.on('ready', async () => {
   sniper.start()
 
   //limit of 50 per day. Disabled rebuilding.
-  clearcommands()
-  await rebuildCommands()
+  //clearcommands()
+  //await rebuildCommands()
 
 })//end client.on Ready
 

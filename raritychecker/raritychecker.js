@@ -5,7 +5,7 @@ const nfttools = require('./nfttools.js')//generic nft tools like get rarity des
 async function check(collectionKey, nftid) {
 
 	//get NFT data
-	var NFTdata = await metaplex.getNFTdata(collectionKey, nftid)
+	var NFTdata = await sql.getNFTdata(collectionKey, nftid)
 	console.log(NFTdata)
 	var collectionSize = await sql.getData("solanametaplex", "collectionkey", collectionKey, 'collectioncount') 
 	console.log('collectionsize is: ' + collectionSize)

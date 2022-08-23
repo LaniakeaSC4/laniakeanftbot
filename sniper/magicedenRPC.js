@@ -64,22 +64,3 @@ async function getremotefloorprice(collection) {
 		}).on("error", (err) => { console.log("Error: " + err.message) })
 	}) //end promise
 }; module.exports.getFloorPrice = getremotefloorprice
-
-async function getNFTtraitCounts(collectionstring) {
-	return new Promise((resolve, reject) => {
-		var thiscollection = 'https://api-mainnet.magiceden.dev/rpc/getCollectionEscrowStats/' + collectionstring
-
-		https.get(thiscollection, (resp) => {
-			let data = ''
-			// A chunk of data has been received.
-			resp.on('data', (chunk) => {
-				data += chunk
-			});
-			// The whole response has been received. Print out the result.
-			resp.on('end', () => {
-				JSON.parse(data)
-				resolve(JSON.parse(data))
-			})
-		}).on("error", (err) => { console.log("Error: " + err.message) })
-	}) //end promise
-}; module.exports.getNFTtraitCounts = getNFTtraitCounts
