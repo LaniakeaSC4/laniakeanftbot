@@ -38,5 +38,5 @@ module.exports = {
 
       }//end if start
     }//end if user is laniakea
-	},//ennld execute block
+	},//end execute block
 }//end module.exports

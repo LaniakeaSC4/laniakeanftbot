@@ -72,7 +72,7 @@ const servers = {
   }
 }; module.exports.servers = servers
 
-/*
+
 //start services
 client.on('ready', async () => {
   console.log('I am ready!')
@@ -83,12 +83,12 @@ client.on('ready', async () => {
   //sniper.start()
 
   //limit of 50 per day. Disabled rebuilding.
-  clearcommands()
-  await wait(300)
-  await rebuildCommands()
+  //clearcommands()
+  //await wait(300)
+  //await rebuildCommands()
 
 })//end client.on Ready
-
+/*
 
 
 //function to reset slash commands (enable if needed)
@@ -110,29 +110,7 @@ client.on('interactionCreate', async interaction => {
   const command = interaction.commandName.toLowerCase()
   var replytext = ''
 
-  //setup command
-  if (command === 'setup') {
-    if (interaction.member.user.id === "684896787655557216") {//only me for now
-      var action = interaction.options.getString('action')
-      if (action === 'start') {
-
-        const row = new client.ActionRowBuilder()
-          .addComponents(
-            new client.ButtonBuilder()
-              .setCustomId('beginsetup')
-              .setLabel('Let\'s do it')
-              .setStyle(ButtonStyle.Primary),
-          )
-
-        await interaction.reply({ content: 'Would you like to setup this server?', components: [row], ephemeral: true });
-
-      }//end if start
-    }//end if user is laniakea
-  }//end if command is setup
-
-  if (interaction.isButton()){
-    console.log('a button was clicked!')
-  }
+  
 
   //rarity checker v2
   if (command === 'newrarity') {
@@ -142,24 +120,6 @@ client.on('interactionCreate', async interaction => {
     rarityembed = await raritychecker.check(collectionKey, nftid)
     await interaction.editReply({ embeds: rarityembed })
   }//end if command is newrarity
-
-  //my admin commands
-  if (command === 'laniakea') {
-
-    var action = interaction.options.getString('action'); var data = interaction.options.getString('data')
-    if (interaction.options.getString('extradata')) { var meslug = interaction.options.getString('extradata') }//if there is extra data, set meslug to it
-
-    //for adding new metaplex collections
-    if (interaction.member.user.id === "684896787655557216") {
-      if (action === ('fulladd' || 'addstep1' || 'addstep2' || 'addstep3' || 'addstep4' || 'addstep5')) { await interaction.reply({ content: "Command recieved. Adding new collection to database" }) }
-      if (action === 'fulladd') { await metaplex.addNewNFT(data, meslug) }
-      if (action === 'addstep1') { await metaplex.getMetaplexData(data) }
-      if (action === 'addstep2') { await metaplex.calculateTraitPercentages(data) }
-      if (action === 'addstep3') { await metaplex.combineTraitRarity(data) }
-      if (action === 'addstep4') { await metaplex.rankNFTs(data, meslug) }
-      if (action === 'addstep5') { await metaplex.cleanupDatabase(data) }
-    }//end if user is laniakea
-  }//end if command is laniakea 
 
   //rarity checker v1
   if (command === 'database') {

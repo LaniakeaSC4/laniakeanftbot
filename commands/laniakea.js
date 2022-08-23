@@ -15,44 +15,18 @@ module.exports = {
 		.setName('laniakea')
 		.setDescription('BotOwner Commands')
 		.addStringOption(option =>
-		option.setName('action')
+		  option.setName('action')
 			.setDescription('What action?')
 			.setRequired(true))
-					.addStringOption(option =>
-		option.setName('data')
+		.addStringOption(option =>
+		  option.setName('data')
 			.setDescription('What data?')
 			.setRequired(true))
-					.addStringOption(option =>
-					  option.setName('extradata')
-					  .setDescription('extra data?')
-					  .setRequired(false)),
+		.addStringOption(option =>
+			option.setName('extradata')
+			.setDescription('extra data?')
+			.setRequired(false)),
 				
-				/*
-				"name": "laniakea",
-        "description": "ADMIN commands",
-        "options": [
-          {
-            "type": 3,
-            "name": "action",
-            "description": "What action?",
-            "required": true
-          },
-          {
-            "type": 3,
-            "name": "data",
-            "description": "What data?",
-            "required": true
-          },
-          {
-            "type": 3,
-            "name": "extradata",
-            "description": "What extra data?",
-            "required": false
-          }
-        ]*/
-				
-				
-
 //when command is triggered, do this
 	async execute(interaction) {
     var action = interaction.options.getString('action'); var data = interaction.options.getString('data')
@@ -69,5 +43,5 @@ module.exports = {
       if (action === 'addstep4') { await metaplex.rankNFTs(data, meslug) }
       if (action === 'addstep5') { await metaplex.cleanupDatabase(data) }
     }//end if user is laniakea
-	},//ennld execute block
+	},//end execute block
 }//end module.exports
