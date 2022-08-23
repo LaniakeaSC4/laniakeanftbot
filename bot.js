@@ -1,4 +1,4 @@
-const { Client, Intents, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js')
+const { Client, Intents } = require('discord.js')
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES] })
 module.exports.client = client
 
@@ -71,9 +71,9 @@ client.on('interactionCreate', async interaction => {
       var action = interaction.options.getString('action')
       if (action === 'start') {
 
-        const row = new ActionRowBuilder()
+        const row = new client.ActionRowBuilder()
           .addComponents(
-            new ButtonBuilder()
+            new client.ButtonBuilder()
               .setCustomId('beginsetup')
               .setLabel('Let\'s do it')
               .setStyle(ButtonStyle.Primary),
