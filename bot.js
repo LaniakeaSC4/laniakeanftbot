@@ -36,8 +36,9 @@ client.on('ready', async () => {
   console.log('I am ready!')
   sniperv2.initialise()
 
-  sniper.initialise()
-  sniper.start()
+  //endable/disable sniper v1
+  //sniper.initialise()
+  //sniper.start()
 
   //limit of 50 per day. Disabled rebuilding.
   clearcommands()
