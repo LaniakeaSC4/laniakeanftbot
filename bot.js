@@ -1,4 +1,4 @@
-const { Client, Intents } = require('discord.js')
+const { Client, Intents, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js')
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES] })
 module.exports.client = client
 
@@ -71,12 +71,23 @@ client.on('interactionCreate', async interaction => {
       var action = interaction.options.getString('action')
       if (action === 'start') {
 
-        await interaction.deferReply()//send tempory 'thinking' reply
+        const row = new ActionRowBuilder()
+          .addComponents(
+            new ButtonBuilder()
+              .setCustomId('beginsetup')
+              .setLabel('Let\'s do it')
+              .setStyle(ButtonStyle.Primary),
+          )
 
-      }
+        await interaction.reply({ content: 'Would you like to setup this server?', components: [row], ephemeral: true });
 
+      }//end if start
     }//end if user is laniakea
-  }//end if command is newrarity
+  }//end if command is setup
+
+  if (interaction.isButton()){
+    console.log('a button was clicked!')
+  }
 
   //rarity checker v2
   if (command === 'newrarity') {

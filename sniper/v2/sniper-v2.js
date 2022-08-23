@@ -87,8 +87,6 @@ async function startsniper() {
             var NFTdata = await sql.getNFTdata(collections[k]['collectionkey'], thisnftid)
             //console.log(NFTdata)
             var collectionSize = await sql.getData("solanametaplex", "collectionkey", collections[k]['collectionkey'], 'collectioncount')
-            console.log('SniperV2: collectionsize is: ' + collectionSize)
-
 
             var ranges = await nfttools.calculateranges(collectionSize)
 
