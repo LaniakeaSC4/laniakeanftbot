@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ButtonBuilder} = require('discord.js');
+const { SlashCommandBuilder, ButtonBuilder, ActionRowBuilder } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -19,7 +19,7 @@ module.exports = {
       var action = interaction.options.getString('action')
       if (action === 'start') {
 
-        const row = new client.ActionRowBuilder()
+        const row = new ActionRowBuilder()
           .addComponents(
             new ButtonBuilder()
               .setCustomId('beginsetup')
