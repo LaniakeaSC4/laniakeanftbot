@@ -72,6 +72,7 @@ const servers = {
   }
 }; module.exports.servers = servers
 
+/*
 //start services
 client.on('ready', async () => {
   console.log('I am ready!')
@@ -88,7 +89,7 @@ client.on('ready', async () => {
 
 })//end client.on Ready
 
-/*
+
 
 //function to reset slash commands (enable if needed)
 async function clearcommands() {
