@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, ButtonBuilder} = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -21,7 +21,7 @@ module.exports = {
 
         const row = new client.ActionRowBuilder()
           .addComponents(
-            new client.ButtonBuilder()
+            new ButtonBuilder()
               .setCustomId('beginsetup')
               .setLabel('Let\'s do it')
               .setStyle(ButtonStyle.Primary),
