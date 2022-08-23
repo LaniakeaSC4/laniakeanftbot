@@ -4,7 +4,7 @@
 const { Metaplex, keypairIdentity, bundlrStorage } = require("@metaplex-foundation/js")
 const { Connection, clusterApiUrl, Keypair, PublicKey } = require("@solana/web3.js")
 const sql = require('../../tools/commonSQL.js')//common sql related commands are in here
-var db = require('../../clients/pgclient.js')//the PG client to make SQL queries
+
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
 //fulladd - do all steps
