@@ -1,8 +1,10 @@
 //const { Client, Intents } = require('discord.js')
 //const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES] })
 
+const fs = require('node:fs');
+const path = require('node:path');
 
-const { Client, GatewayIntentBits } = require('discord.js');
+const { Client, GatewayIntentBits, SlashCommandBuilder } = require('discord.js');
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -10,6 +12,34 @@ const client = new Client({
   ],
 });
 
+client.login(process.env.BOTTOKEN)
+
+client.commands = new Collection();
+const commandsPath = path.join(__dirname, 'commands');
+const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+
+for (const file of commandFiles) {
+	const filePath = path.join(commandsPath, file);
+	const command = require(filePath);
+	// Set a new item in the Collection
+	// With the key as the command name and the value as the exported module
+	client.commands.set(command.data.name, command);
+}
+
+client.on('interactionCreate', async interaction => {
+	if (!interaction.isChatInputCommand()) return;
+
+	const command = client.commands.get(interaction.commandName);
+
+	if (!command) return;
+
+	try {
+		await command.execute(interaction);
+	} catch (error) {
+		console.error(error);
+		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+	}
+})
 
 module.exports.client = client
 
@@ -20,7 +50,7 @@ const nfttools = require('./tools/nfttools.js')//generic nft tools like get rari
 
 const raritychecker = require('./raritychecker/raritychecker.js')//rarity checker functions
 
-client.login(process.env.BOTTOKEN)
+
 
 //======================
 //==== Sniper Setup  ===
@@ -57,6 +87,8 @@ client.on('ready', async () => {
   await rebuildCommands()
 
 })//end client.on Ready
+
+/*
 
 //function to reset slash commands (enable if needed)
 async function clearcommands() {
@@ -358,6 +390,7 @@ async function rebuildCommands() {
 
   })//end for each server loop 
 }//end rebuildCommands
+*/
 
 const pround = (number, decimalPlaces) => Number(Math.round(Number(number + "e" + decimalPlaces)) + "e" + decimalPlaces * -1)
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
