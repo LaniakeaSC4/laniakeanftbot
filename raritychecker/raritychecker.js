@@ -42,7 +42,7 @@ async function check(collectionKey, nftid) {
         "width": 75
       },
       "footer": {
-        "text": "Bot by Laniakea#3683"
+        "text": "Bot and Rarity data by Laniakea#3683"
       }
     }
   ]//end embed  

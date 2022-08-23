@@ -6,7 +6,7 @@ const sql = require('./tools/commonSQL.js')//common sql related commands are in 
 const howrare = require('./sniper/v1/howrareRPC.js')//Howrare.is related commands are in here
 
 const nfttools = require('./tools/nfttools.js')//generic nft tools like get rarity description from rank in here
-const metaplex = require('./sniper/v2/metaplexRPC.js')//metaplex RPC. Work with database collections
+
 const raritychecker = require('./raritychecker/raritychecker.js')//rarity checker functions
 
 client.login(process.env.BOTTOKEN)
@@ -17,16 +17,17 @@ client.login(process.env.BOTTOKEN)
 
 const sniper = require('./sniper/v1/sniper-v1.js')
 const sniperv2 = require('./sniper/v2/sniper-v2.js')
+const metaplex = require('./sniper/v2/addCollection.js')//metaplex RPC
 
 //channels and servers
 const servers = {
   "monkeypox":
   {
-    'id': '978975057739124767', 'snipeschannel': '996130357260845156', 'v2snipechannel' : '1010818537272660090'
+    'id': '978975057739124767', 'snipeschannel': '996130357260845156', 'v2snipechannel': '1010818537272660090'
   },
   "secretsnake":
   {
-    'id': '901885313608200302', 'snipeschannel': '1004682983036428308', 'v2snipechannel' : '1010818705002864701'
+    'id': '901885313608200302', 'snipeschannel': '1004682983036428308', 'v2snipechannel': '1010818705002864701'
   }
 }; module.exports.servers = servers
 
@@ -34,13 +35,14 @@ const servers = {
 client.on('ready', async () => {
   console.log('I am ready!')
   sniperv2.initialise()
-  
+
   sniper.initialise()
   sniper.start()
 
   //limit of 50 per day. Disabled rebuilding.
-  //clearcommands()
-  //await rebuildCommands()
+  clearcommands()
+  await wait(300)
+  await rebuildCommands()
 
 })//end client.on Ready
 
@@ -63,24 +65,35 @@ client.on('interactionCreate', async interaction => {
   const command = interaction.commandName.toLowerCase()
   var replytext = ''
 
-  if (command === 'newrarity') {
-    
-    await interaction.deferReply()
+  //setup command
+  if (command === 'setup') {
+    if (interaction.member.user.id === "684896787655557216") {//only me for now
+      var action = interaction.options.getString('action')
+      if (action === 'start') {
 
-    var collectionKey = interaction.options.getString('collectionkey'); var nftid = interaction.options.getString('nftid')
+        await interaction.deferReply()//send tempory 'thinking' reply
 
-    if (interaction.member.user.id === "684896787655557216") {
-
-      rarityembed = await raritychecker.check(collectionKey, nftid)
-      await interaction.editReply({ embeds: rarityembed }) 
+      }
 
     }//end if user is laniakea
   }//end if command is newrarity
 
+  //rarity checker v2
+  if (command === 'newrarity') {
+    await interaction.deferReply()//send tempory 'thinking' reply
+    //get the inputs from the command
+    var collectionKey = interaction.options.getString('collectionkey'); var nftid = interaction.options.getString('nftid')
+    rarityembed = await raritychecker.check(collectionKey, nftid)
+    await interaction.editReply({ embeds: rarityembed })
+  }//end if command is newrarity
+
+  //my admin commands
   if (command === 'laniakea') {
 
-    var action = interaction.options.getString('action'); var data = interaction.options.getString('data');var meslug = interaction.options.getString('extradata') 
+    var action = interaction.options.getString('action'); var data = interaction.options.getString('data')
+    if (interaction.options.getString('extradata')) { var meslug = interaction.options.getString('extradata') }//if there is extra data, set meslug to it
 
+    //for adding new metaplex collections
     if (interaction.member.user.id === "684896787655557216") {
       if (action === ('fulladd' || 'addstep1' || 'addstep2' || 'addstep3' || 'addstep4' || 'addstep5')) { await interaction.reply({ content: "Command recieved. Adding new collection to database" }) }
       if (action === 'fulladd') { await metaplex.addNewNFT(data, meslug) }
@@ -92,8 +105,8 @@ client.on('interactionCreate', async interaction => {
     }//end if user is laniakea
   }//end if command is laniakea 
 
+  //rarity checker v1
   if (command === 'database') {
-
     await interaction.deferReply({ ephemeral: true })//send placeholder response
     var action = interaction.options.getString('action')
     var collectionstring = interaction.options.getString('collectionstring')
@@ -141,7 +154,6 @@ client.on('interactionCreate', async interaction => {
   }//end if database
 
   if (command === 'checkrarity') {
-
     await interaction.deferReply()//send placeholder response
     //we dont have to check if collection is in database as list of collections was established from database
     var thiscollection = interaction.options.getString('collection')
@@ -198,7 +210,7 @@ client.on('interactionCreate', async interaction => {
   }//end if command = rarity
 })//end on interaction
 
-//setup/rebuild discord checkrarity slash command
+//setup/rebuild discord slash commands
 async function rebuildCommands() {
 
   //add supported collections from sqlDB to the slash command
@@ -253,12 +265,12 @@ async function rebuildCommands() {
             "name": "extradata",
             "description": "What extra data?",
             "required": false
-          } 
+          }
         ]
       }//end data
     })//end post
 
-    //build rarity command
+    //build rarity v1 command
     client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
       data: {
         "name": "checkrarity",
@@ -298,6 +310,23 @@ async function rebuildCommands() {
             "type": 3,
             "name": "collectionstring",
             "description": "howrare.is URL identifier of collection to add?",
+            "required": true
+          }
+        ]
+      }//end data
+    })//end post command
+
+    //build server setup command
+    client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
+      data: {
+        "name": "setup",
+        "description": "setup this server for Laniakea Bot",
+        "options": [
+          {
+            "type": 3,
+            "name": "action",
+            "description": "Action type",
+            "choices": [{ "name": "Start", "value": "start" }],
             "required": true
           }
         ]
