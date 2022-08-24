@@ -22,6 +22,8 @@ var legendarylimit = 25
 var epiclimit = 5
 var rarelimit = 2.5
 
+var supportedservers = []
+
 const initaliseSniperCollections = async () => {
   collections = await sql.getSupportedCollections()
 
@@ -39,7 +41,7 @@ const initaliseSniperCollections = async () => {
   }//for seq of sniperSequencer
 
   //get servers
-  var supportedservers = await sql.getSupportedServers()
+  supportedservers = await sql.getSupportedServers()
   console.log(supportedservers)
 
   startsniper()
@@ -118,23 +120,40 @@ async function startsniper() {
             if (thissnipe != "false") {
               console.log('SniperV2: we have a ' + collections[k]['meslug'] + ' snipe!')
 
-              var thisserver = ''
               var thisserverid = ''
               var thissnipechannel = ''
 
               if (thissnipe != "false") {//if this is a snipe send messages out to each server
-                var serverkeys = Object.keys(main.servers)
-                serverkeys.forEach((key, index) => {//for each server
 
-                  //get the snipes channel id from the servers config object
-                  thisserver = main.servers[key]
-                  thisserverid = main.servers[key].id
-                  thissnipechannel = main.servers[key].v2snipechannel
+                for  (i = 0;i < supportedservers.length;i++){
+                  
+                  //get the snipes channel id to send the snipe to
+                  thisserverid = supportedservers[i].serverid
+                  if (raritydescription === 'Rare'){thissnipechannel = supportedservers[i].raresnipes}
+                  if (raritydescription === 'Epic'){thissnipechannel = supportedservers[i].epicsnipes}
+                  if (raritydescription === 'Legendary'){thissnipechannel = supportedservers[i].legendarysnipes}
+                  if (raritydescription === 'Mythic'){thissnipechannel = supportedservers[i].mythicsnipes}
 
                   //send snipes
                   sendsnipes(thisserverid, thissnipechannel, thisname, thisembedcolour, NFTdata.rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink)
 
-                })//end for each server
+                }
+                
+                /*var serverkeys = Object.keys(main.servers)
+                serverkeys.forEach((key, index) => {//for each server
+
+                  //get the snipes channel id from the servers config object
+                  
+                  thisserverid = main.servers[key].id
+                  thissnipechannel = main.servers[key].v2snipechannel
+
+
+                  
+                  //send snipes
+                  sendsnipes(thisserverid, thissnipechannel, thisname, thisembedcolour, NFTdata.rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink)
+
+                })//end for each server*/
+
               }//end if this is a snipe
             }//end if not false
           }//end else for a token we havnt seen before
