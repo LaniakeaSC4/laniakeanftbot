@@ -4,7 +4,7 @@
  */
 
 //import discord parts we need
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js')
 
 //import metaplex RPC - add database functionality
 const raritychecker = require('../raritychecker/raritychecker.js')

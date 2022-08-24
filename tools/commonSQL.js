@@ -202,7 +202,7 @@ async function getOurMetaplexCollections() {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
 
-    var querystring = "SELECT jsonb_path_query_first(finaldata, '$.collectionKey') FROM solanametaplex"
+    var querystring = "SELECT collectionkey FROM solanametaplex"
 
     pgclient.query(querystring, (err, res) => {
       if (err) throw err
