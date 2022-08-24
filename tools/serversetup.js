@@ -115,17 +115,7 @@ async function start(guildid) {
 							guild.channels.create({
 								name: channelcheck[key].name,
 								type: ChannelType.GuildText,
-								parent: laniakeacategory,
-								permissionOverwrites: [
-									{
-										id: guild.roles.everyone,
-										deny: [PermissionFlagsBits.ViewChannel],
-									},
-									{
-										id: '996170261353222219',//the bot ID
-										allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages],
-									},
-								]
+								parent: laniakeacategory
 							}).then(async newchannel => {
 								console.log('created new channel ' + newchannel.name + ' it\'s ID is: ' + newchannel.id)
 								channelcheck.snipecategory.server_cid = newchannel.id//save category channel ID to we can add children
