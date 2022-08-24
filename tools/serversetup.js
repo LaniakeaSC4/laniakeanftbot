@@ -12,14 +12,14 @@ async function start(guildid) {
 	console.log(existingchannels)
 
 	var channelcheck = { 
-		"snipercategory" : { "dbfound" : false, "serverfound" : false, "db_cid" : '', "server_cid" : ''},
+		"snipecategory" : { "dbfound" : false, "serverfound" : false, "db_cid" : '', "server_cid" : ''},
 		"raresnipes" : { "dbfound" : false, "serverfound" : false, "db_cid" : '', "server_cid" : ''},
 		"epicsnipes" : { "dbfound" : false, "serverfound" : false, "db_cid" : '', "server_cid" : ''},
 		"legenradysnipes" : { "dbfound" : false, "serverfound" : false, "db_cid" : '', "server_cid" : ''},
 		"mythicsnipes" : { "dbfound" : false, "serverfound" : false, "db_cid" : '', "server_cid" : ''}
 	}
 
-	if (existingchannels[0].snipercategory) {channelcheck.snipercategory.dbfound = true; channelcheck.snipercategory.db_cid = existingchannels[0].snipercategory}
+	if (existingchannels[0].snipecategory) {channelcheck.snipecategory.dbfound = true; channelcheck.snipecategory.db_cid = existingchannels[0].snipecategory}
 	if (existingchannels[0].raresnipes) {channelcheck.raresnipes.dbfound = true; channelcheck.raresnipes.db_cid = existingchannels[0].raresnipes}
 	if (existingchannels[0].epicsnipes) {channelcheck.epicsnipes.dbfound = true; channelcheck.epicsnipes.db_cid = existingchannels[0].epicsnipes}
 	if (existingchannels[0].legenradysnipes) {channelcheck.legenradysnipes.dbfound = true; channelcheck.legenradysnipes.db_cid = existingchannels[0].legenradysnipes}
@@ -31,10 +31,10 @@ async function start(guildid) {
 		channels.forEach(channel =>{
 
 		//check for the channels in server
-		if (channel.id === channelcheck.snipercategory.db_cid) {
+		if (channel.id === channelcheck.snipecategory.db_cid) {
 			console.log('Found the saved category channel')
-			channelcheck.snipercategory.serverfound = true
-			channelcheck.snipercategory.server_cid = channel.id
+			channelcheck.snipecategory.serverfound = true
+			channelcheck.snipecategory.server_cid = channel.id
 		}
 		if (channel.id === channelcheck.raresnipes.db_cid) {
 			console.log('Found the saved raresnipes channel')
