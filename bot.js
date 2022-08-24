@@ -44,8 +44,8 @@ const setup = require('./tools/serversetup.js')
 client.on('interactionCreate', async interaction => {
   if (!interaction.isButton()) return;
   if (interaction.customId === 'beginsetup') {
-    var setup = await setup.start(interaction)
-    console.log('setup status was: ' + setup)
+    var setupstatus = await setup.start(interaction)
+    console.log('setup status was: ' + setupstatus)
   }//end if button is 'beginsetup'
 })//end on interactionCreate
 
