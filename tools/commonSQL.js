@@ -266,3 +266,17 @@ async function getSniperChannels(serverid) {
     })//end query
   })//end promise
 }; module.exports.getSniperChannels = getSniperChannels
+
+//get supported servers
+async function getSupportedServers() {
+  return new Promise((resolve, reject) => {
+    var pgclient = db.getClient()
+
+    var querystring = "SELECT serverid,raresnipes,epicsnipes,legendarysnipes,mythicsnipes FROM servers"
+
+    pgclient.query(querystring, (err, res) => {
+      if (err) throw err
+      resolve(res.rows)
+    })//end query
+  })//end promise
+}; module.exports.getSupportedServers = getSupportedServers

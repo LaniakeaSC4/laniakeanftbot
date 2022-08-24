@@ -37,6 +37,9 @@ const initaliseSniperCollections = async () => {
     })//end then
     await wait(2000)//add delay between API requests
   }//for seq of sniperSequencer
+
+  //get servers
+
   startsniper()
 }//end initaliseSniperCollections
 module.exports.initialise = initaliseSniperCollections
