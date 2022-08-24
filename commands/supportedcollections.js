@@ -18,7 +18,7 @@ module.exports = {
    
    var unsortedcollections = await sql.getOurMetaplexCollections() 
    
-   var collections = unsortedcollections.sort((a, b) => a.collectionkey - b.collectionkey)
+   var collections = unsortedcollections.sort((a,b) => (a.collectionkey > b.collectionkey) ? 1 : ((b.collectionkey > a.collectionkey) ? -1 : 0)) 
    
    var replystring = '```' + collections[0].collectionkey
    
