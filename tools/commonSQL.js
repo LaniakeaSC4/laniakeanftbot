@@ -258,7 +258,7 @@ async function getSniperChannels(serverid) {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
 
-    var querystring = "SELECT snipercategory,raresnipes,epicsnipes,legenradysnipes,mythicsnipes FROM servers WHERE serverid = '"+ serverid + "'"
+    var querystring = "SELECT snipecategory,raresnipes,epicsnipes,legenradysnipes,mythicsnipes FROM servers WHERE serverid = '"+ serverid + "'"
 
     pgclient.query(querystring, (err, res) => {
       if (err) throw err
