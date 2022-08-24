@@ -4,9 +4,15 @@ const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord.js');
 //const { clientId, guildId, token } = require('./config.json');
 
+const sql = require('./tools/commonSQL.js')//common sql related commands are in here
+const servers = sql.getRowsForColumn('servers', 'serverid')
+for (var server in servers[serverid]) {
+  console.log('server is')
+  console.log(server)
+}
+
 const clientId = '996170261353222219' 
 const guildId = '978975057739124767'
-const token = process.env.BOTTOKEN
 
 const commands = [];
 const commandsPath = path.join(__dirname, 'commands');
@@ -18,7 +24,7 @@ for (const file of commandFiles) {
 	commands.push(command.data.toJSON());
 }
 
-const rest = new REST({ version: '10' }).setToken(token);
+const rest = new REST({ version: '10' }).setToken(process.env.BOTTOKEN);
  
  rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
 	.then(() => console.log('Successfully registered application commands.'))

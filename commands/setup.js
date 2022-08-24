@@ -4,8 +4,6 @@
 
 //import discord parts we need
 const { SlashCommandBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle } = require('discord.js');
-//import common SQL commands
-const sql = require('../tools/commonSQL.js')
 
 //build the slash command
 module.exports = {

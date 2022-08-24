@@ -41,9 +41,12 @@ client.on('interactionCreate', async interaction => {
 	}
 })
 
+const setup = require('./tools/serversetup.js')
 client.on('interactionCreate', interaction => {
 	if (!interaction.isButton()) return;
-	console.log(interaction);
+	if (interaction.customId === 'beginsetup'){
+	  //setup.start(message.guildId,)
+	} 
 });
 
 module.exports.client = client
