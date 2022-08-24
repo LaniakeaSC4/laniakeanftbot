@@ -6,13 +6,10 @@ const { Routes } = require('discord.js');
 
 const sql = require('./tools/commonSQL.js')//common sql related commands are in here
 
-(async () => {
+const getservers = async () => {
   const servers = await sql.getRowsForColumn('servers', 'serverid')
-for (var server in servers[serverid]) {
-  console.log('server is')
-  console.log(server)
-} 
-})();
+return servers
+}
 
 
 const clientId = '996170261353222219' 
@@ -30,6 +27,18 @@ for (const file of commandFiles) {
 
 const rest = new REST({ version: '10' }).setToken(process.env.BOTTOKEN);
  
- rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
-	.then(() => console.log('Successfully registered application commands.'))
-	.catch(console.error);
+ getservers().then(servers => {
+   
+   for (var guildId in servers[serverid]) {
+  console.log('server is')
+  console.log(guildId)
+  
+  rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
+    .then(() => console.log('Successfully registered application commands.'))
+    .catch(console.error);
+    
+}  
+   
+   
+ })
+ 
