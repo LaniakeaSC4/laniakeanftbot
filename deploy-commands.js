@@ -29,11 +29,11 @@ const rest = new REST({ version: '10' }).setToken(process.env.BOTTOKEN);
  
  getservers().then(servers => {
    console.log(servers)
-   for (var guildId in servers[serverid]) {
+   for (var i = 0;i < servers.length;i++) {
   console.log('server is')
-  console.log(guildId)
+  console.log(servers[i].serverid)
   
-  rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
+  rest.put(Routes.applicationGuildCommands(clientId, servers[i].serverid), { body: commands })
     .then(() => console.log('Successfully registered application commands.'))
     .catch(console.error);
     
