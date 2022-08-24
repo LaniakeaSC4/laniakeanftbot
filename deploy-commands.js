@@ -5,7 +5,7 @@ const { Routes } = require('discord.js');
 //const { clientId, guildId, token } = require('./config.json');
 
 const sql = require('./tools/commonSQL.js')//common sql related commands are in here
-const servers = sql.getRowsForColumn('servers', 'serverid')
+const servers = await sql.getRowsForColumn('servers', 'serverid')
 for (var server in servers[serverid]) {
   console.log('server is')
   console.log(server)
