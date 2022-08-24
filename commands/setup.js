@@ -9,7 +9,7 @@ const { SlashCommandBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle, Permi
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('setup')
-		.setDescription('Setup this server')
+		.setDescription('Setup this server for Laniakea Sniper Bot')
 		.addStringOption(option =>
 		option.setName('action')
 			.setDescription('Action Type')
