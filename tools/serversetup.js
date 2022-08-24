@@ -1,5 +1,6 @@
 const sql = require('./commonSQL.js')//common sql related commands are in here
 const main = require('../bot.js')
+const { ChannelType, PermissionFlagsBits } = require('discord.js');
 
 async function start(guildid) {
 	console.log('setting up guild ' + guildid)
