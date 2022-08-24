@@ -17,11 +17,11 @@ async function start(guildid) {
 	console.log(existingchannels)
 
 	var channelcheck = {
-		"snipecategory": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "LANIAKEA SNIPER BOT", "servercolumn" : "snipecategory" },
-		"raresnipes": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "Rare Snipes", "servercolumn" : "raresnipes" },
-		"epicsnipes": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "Epic Snipes", "servercolumn" : "epicsnipes" },
-		"legendarysnipes": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "Legendary Snipes", "servercolumn" : "legendarysnipes" },
-		"mythicsnipes": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "Mythic Snipes", "servercolumn" : "mythicsnipes" }
+		"snipecategory": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "LANIAKEA SNIPER BOT", "servercolumn": "snipecategory" },
+		"raresnipes": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "Rare Snipes", "servercolumn": "raresnipes" },
+		"epicsnipes": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "Epic Snipes", "servercolumn": "epicsnipes" },
+		"legendarysnipes": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "Legendary Snipes", "servercolumn": "legendarysnipes" },
+		"mythicsnipes": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "Mythic Snipes", "servercolumn": "mythicsnipes" }
 	}
 
 	if (existingchannels[0].snipecategory) { channelcheck.snipecategory.dbfound = true; channelcheck.snipecategory.db_cid = existingchannels[0].snipecategory }
@@ -93,37 +93,46 @@ async function start(guildid) {
 					console.log(newchannel.id)
 					channelcheck.snipecategory.server_cid = newchannel.id//save category channel ID to we can add children
 					await sql.updateTableColumn('servers', 'serverid', guildid, 'snipecategory', newchannel.id)
+				}).then(async result => {
+
+					createchildren()
+
 				})
-			} else {console.log('Category channel already existed')}
+			} else {
+				console.log('Category channel already existed')
+				createchildren()
+			}
 
-			//get the category channel object so we can add children
-			console.log('fetching category channel')
-			const laniakeacategory = await main.client.channels.fetch(channelcheck.snipecategory.server_cid)
 
-			for (const key in channelcheck) {
-				if (channelcheck[key] != snipecategory) {//we have created the category already
-					if (channelcheck[key].verified === false) {//if this one isnt verified as present
+			async function createchildren() {
+				//get the category channel object so we can add children
+				console.log('fetching category channel')
+				const laniakeacategory = await main.client.channels.fetch(channelcheck.snipecategory.server_cid)
+				for (const key in channelcheck) {
+					if (channelcheck[key] != snipecategory) {//we have created the category already
+						if (channelcheck[key].verified === false) {//if this one isnt verified as present
 
-						guild.channels.create({
-							name: channelcheck[key].name,
-							type: ChannelType.GuildText,
-							parent: laniakeacategory,
-							permissionOverwrites: [
-								{
-									id: guild.roles.everyone,
-									deny: [PermissionFlagsBits.ViewChannel],
-								},
-								{
-									id: '996170261353222219',//the bot ID
-									allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages],
-								},
-							]
-						}).then(async newchannel => {
-							console.log('created new channel ' + newchannel.name + ' it\'s ID is: ' + newchannel.id)
-							channelcheck.snipecategory.server_cid = newchannel.id//save category channel ID to we can add children
-							await sql.updateTableColumn('servers', 'serverid', guildid, channelcheck[key].servercolumn, newchannel.id)
-						})
+							guild.channels.create({
+								name: channelcheck[key].name,
+								type: ChannelType.GuildText,
+								parent: laniakeacategory,
+								permissionOverwrites: [
+									{
+										id: guild.roles.everyone,
+										deny: [PermissionFlagsBits.ViewChannel],
+									},
+									{
+										id: '996170261353222219',//the bot ID
+										allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages],
+									},
+								]
+							}).then(async newchannel => {
+								console.log('created new channel ' + newchannel.name + ' it\'s ID is: ' + newchannel.id)
+								channelcheck.snipecategory.server_cid = newchannel.id//save category channel ID to we can add children
+								await sql.updateTableColumn('servers', 'serverid', guildid, channelcheck[key].servercolumn, newchannel.id)
+							})
 
+						}
 					}
 				}
 			}
