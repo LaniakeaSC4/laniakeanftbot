@@ -109,7 +109,7 @@ async function start(guildid) {
 				console.log('fetching category channel')
 				const laniakeacategory = await main.client.channels.fetch(channelcheck.snipecategory.server_cid)
 				for (const key in channelcheck) {
-					if (channelcheck[key] != snipecategory) {//we have created the category already
+					if (channelcheck[key] != 'snipecategory') {//we have created the category already
 						if (channelcheck[key].verified === false) {//if this one isnt verified as present
 
 							guild.channels.create({
