@@ -4,7 +4,7 @@ const { ChannelType, PermissionFlagsBits, PermissionsBitField  } = require('disc
 
 async function start(interaction) {
 
-	if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageServer, true)) {console.log('user didnt have manage channel permissions'); return 'no manage channels'}
+	if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {console.log('user didnt have manage channel permissions'); return 'no manage channels'}
 
 	const guildid = interaction.message.guildId
 	//check if this server is in the table

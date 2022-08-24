@@ -20,7 +20,7 @@ module.exports = {
 
 //when command is triggered, do this
 	async execute(interaction) {
-    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageServer, true)) {//only if you have manage channels
+    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
       var action = interaction.options.getString('action')
       if (action === 'start') {
 
@@ -37,6 +37,6 @@ module.exports = {
         await interaction.reply({ content: 'Would you like to setup this server?', components: [row], ephemeral: true });
 
       }//end if start
-    } else {await interaction.reply('Sorry, you do not have permissions to run this command (Manage Server/Admin required)')}//end if user has manage channels
+    } else {await interaction.reply('Sorry, you do not have permissions to run this command (Manage Channels/Admin required)')}//end if user has manage channels
 	},//end execute block
 }//end module.exports
