@@ -8,6 +8,8 @@ async function start(guildid) {
 
 	//get saved sniper channels (if any)
 	const existingchannels = await sql.getSniperChannels(guildid)
+	console.log('log exisiting channels')
+	console.log(existingchannels)
 
 	var channelcheck = { 
 		"snipercategory" : { "dbfound" : false, "serverfound" : false, "db_cid" : '', "server_cid" : ''},
@@ -57,6 +59,7 @@ async function start(guildid) {
 
 		})
 
+		console.log('log final channelcheck')
 		console.log(channelcheck)
 
 	})
