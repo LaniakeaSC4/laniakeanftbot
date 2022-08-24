@@ -6,6 +6,62 @@ async function start(guildid) {
 	console.log('setting up guild ' + guildid)
 	const guild = main.client.guilds.cache.get(guildid)
 
+	//get saved sniper channels (if any)
+	const existingchannels = await sql.getSniperChannels(guildid)
+
+	var channelcheck = { 
+		"snipercategory" : { "dbfound" : false, "serverfound" : false, "db_cid" : '', "server_cid" : ''},
+		"raresnipes" : { "dbfound" : false, "serverfound" : false, "db_cid" : '', "server_cid" : ''},
+		"epicsnipes" : { "dbfound" : false, "serverfound" : false, "db_cid" : '', "server_cid" : ''},
+		"legenradysnipes" : { "dbfound" : false, "serverfound" : false, "db_cid" : '', "server_cid" : ''},
+		"mythicsnipes" : { "dbfound" : false, "serverfound" : false, "db_cid" : '', "server_cid" : ''}
+	}
+
+	if (existingchannels[0].snipercategory) {channelcheck.snipercategory.dbfound = true; channelcheck.snipercategory.db_cid = existingchannels[0].snipercategory}
+	if (existingchannels[0].raresnipes) {channelcheck.raresnipes.dbfound = true; channelcheck.raresnipes.db_cid = existingchannels[0].raresnipes}
+	if (existingchannels[0].epicsnipes) {channelcheck.epicsnipes.dbfound = true; channelcheck.epicsnipes.db_cid = existingchannels[0].epicsnipes}
+	if (existingchannels[0].legenradysnipes) {channelcheck.legenradysnipes.dbfound = true; channelcheck.legenradysnipes.db_cid = existingchannels[0].legenradysnipes}
+	if (existingchannels[0].mythicsnipes) {channelcheck.mythicsnipes.dbfound = true; channelcheck.mythicsnipes.db_cid = existingchannels[0].mythicsnipes}
+
+	//get the guild channels to see if our saved ones still exist
+	await guild.channels.fetch()
+	.then(channels => {
+		channels.forEach(channel =>{
+
+		//check for the channels in server
+		if (channel.id === channelcheck.snipercategory.db_cid) {
+			console.log('Found the saved category channel')
+			channelcheck.snipercategory.serverfound = true
+			channelcheck.snipercategory.server_cid = channel.id
+		}
+		if (channel.id === channelcheck.raresnipes.db_cid) {
+			console.log('Found the saved raresnipes channel')
+			channelcheck.raresnipes.serverfound = true
+			channelcheck.raresnipes.server_cid = channel.id
+		}
+		if (channel.id === channelcheck.epicsnipes.db_cid) {
+			console.log('Found the saved epicsnipes channel')
+			channelcheck.epicsnipes.serverfound = true
+			channelcheck.epicsnipes.server_cid = channel.id
+		}
+		if (channel.id === channelcheck.legenradysnipes.db_cid) {
+			console.log('Found the saved legenradysnipes channel')
+			channelcheck.legenradysnipes.serverfound = true
+			channelcheck.legenradysnipes.server_cid = channel.id
+		}
+		if (channel.id === channelcheck.mythicsnipes.db_cid) {
+			console.log('Found the saved mythicsnipes channel')
+			channelcheck.mythicsnipes.serverfound = true
+			channelcheck.mythicsnipes.server_cid = channel.id
+		}
+
+		})
+
+		console.log(channelcheck)
+
+	})
+
+	/*
 	guild.channels.create({
 		name: 'LANIAKEA SNIPER BOT',
 		type: ChannelType.GuildCategory,
@@ -16,6 +72,7 @@ async function start(guildid) {
 			},
 		]
 	})
+	*/
 
 
 } module.exports.start = start
