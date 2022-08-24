@@ -32,7 +32,7 @@ async function start(guildid) {
 
 	//get the guild channels to see if our saved ones still exist
 	await guild.channels.fetch()
-		.then(channels => {
+		.then(async channels => {
 			channels.forEach(channel => {
 
 				//check for the channels in server
@@ -88,7 +88,7 @@ async function start(guildid) {
 							allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages],
 						},
 					]
-				}).then(newchannel => {
+				}).then(async newchannel => {
 					console.log('created new category channel it\'s ID is:')
 					console.log(newchannel.id)
 					channelcheck.snipecategory.server_cid = newchannel.id//save category channel ID to we can add children
@@ -118,7 +118,7 @@ async function start(guildid) {
 									allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages],
 								},
 							]
-						}).then(newchannel => {
+						}).then(async newchannel => {
 							console.log('created new channel ' + newchannel.name + ' it\'s ID is: ' + newchannel.id)
 							channelcheck.snipecategory.server_cid = newchannel.id//save category channel ID to we can add children
 							await sql.updateTableColumn('servers', 'serverid', guildid, channelcheck[key].servercolumn, newchannel.id)
