@@ -1,9 +1,12 @@
 const sql = require('./commonSQL.js')//common sql related commands are in here
 const main = require('../bot.js')
-const { ChannelType, PermissionFlagsBits } = require('discord.js');
+const { ChannelType, PermissionFlagsBits, PermissionsBitField  } = require('discord.js');
 
-async function start(guildid) {
+async function start(interaction) {
 
+	if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, false)) {console.log('user didnt have manage channel permissions'); return 'no manage channels'}
+
+	const guildid = interaction.message.guildId
 	//check if this server is in the table
 
 	//check if bot has manage channels and if not return
@@ -128,9 +131,6 @@ async function start(guildid) {
 			}
 		})
 
-	/*
-	
-	*/
-
+		return 'complete'
 
 } module.exports.start = start

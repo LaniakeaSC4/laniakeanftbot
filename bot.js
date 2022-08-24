@@ -41,10 +41,11 @@ client.on('interactionCreate', async interaction => {
 
 //button interactions
 const setup = require('./tools/serversetup.js')
-client.on('interactionCreate', interaction => {
+client.on('interactionCreate', async interaction => {
   if (!interaction.isButton()) return;
   if (interaction.customId === 'beginsetup') {
-    setup.start(interaction.message.guildId)
+    var setup = await setup.start(interaction)
+    console.log('setup status was: ' + setup)
   }//end if button is 'beginsetup'
 })//end on interactionCreate
 
