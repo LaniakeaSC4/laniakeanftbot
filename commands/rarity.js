@@ -23,25 +23,6 @@ module.exports = {
       .setDescription('Which NFT # in the collection?' )
       .setRequired(true)),
       
-      /*
-      
-       "name": "newrarity",
-        "description": "New rarity command",
-        "options": [
-          {
-            "type": 3,
-            "name": "collectionkey",
-            "description": "Which collection?",
-            "required": true
-          },
-          {
-            "type": 3,
-            "name": "nftid",
-            "description": "Which NFT?",
-            "required": true
-          }
-        ]*/
-
   //when command is triggered, do this
   async execute(interaction) {
     await interaction.deferReply()//send tempory 'thinking' reply

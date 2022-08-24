@@ -8,6 +8,8 @@ const { SlashCommandBuilder } = require('discord.js');
 
 //import metaplex RPC - add database functionality
 const metaplex = require('../sniper/v2/addCollection.js')
+//import common SQL commands
+const sql = require('../tools/commonSQL.js')
 
 //build the slash command
 module.exports = {
@@ -42,6 +44,7 @@ module.exports = {
       if (action === 'addstep3') { await metaplex.combineTraitRarity(data) }
       if (action === 'addstep4') { await metaplex.rankNFTs(data, meslug) }
       if (action === 'addstep5') { await metaplex.cleanupDatabase(data) }
+      
     }//end if user is laniakea
 	},//end execute block
 }//end module.exports

@@ -41,6 +41,11 @@ client.on('interactionCreate', async interaction => {
 	}
 })
 
+client.on('interactionCreate', interaction => {
+	if (!interaction.isButton()) return;
+	console.log(interaction);
+});
+
 module.exports.client = client
 
 const sql = require('./tools/commonSQL.js')//common sql related commands are in here
@@ -111,16 +116,6 @@ client.on('interactionCreate', async interaction => {
   var replytext = ''
 
   
-
-  //rarity checker v2
-  if (command === 'newrarity') {
-    await interaction.deferReply()//send tempory 'thinking' reply
-    //get the inputs from the command
-    var collectionKey = interaction.options.getString('collectionkey'); var nftid = interaction.options.getString('nftid')
-    rarityembed = await raritychecker.check(collectionKey, nftid)
-    await interaction.editReply({ embeds: rarityembed })
-  }//end if command is newrarity
-
   //rarity checker v1
   if (command === 'database') {
     await interaction.deferReply({ ephemeral: true })//send placeholder response
@@ -236,56 +231,6 @@ async function rebuildCommands() {
   var serverkeys = Object.keys(servers)
   serverkeys.forEach((key, index) => {
 
-    //build newrarity command
-    client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
-      data: {
-        "name": "newrarity",
-        "description": "New rarity command",
-        "options": [
-          {
-            "type": 3,
-            "name": "collectionkey",
-            "description": "Which collection?",
-            "required": true
-          },
-          {
-            "type": 3,
-            "name": "nftid",
-            "description": "Which NFT?",
-            "required": true
-          }
-        ]
-      }//end data
-    })//end post
-
-    //build Laniakea command
-    client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
-      data: {
-        "name": "laniakea",
-        "description": "ADMIN commands",
-        "options": [
-          {
-            "type": 3,
-            "name": "action",
-            "description": "What action?",
-            "required": true
-          },
-          {
-            "type": 3,
-            "name": "data",
-            "description": "What data?",
-            "required": true
-          },
-          {
-            "type": 3,
-            "name": "extradata",
-            "description": "What extra data?",
-            "required": false
-          }
-        ]
-      }//end data
-    })//end post
-
     //build rarity v1 command
     client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
       data: {
@@ -326,23 +271,6 @@ async function rebuildCommands() {
             "type": 3,
             "name": "collectionstring",
             "description": "howrare.is URL identifier of collection to add?",
-            "required": true
-          }
-        ]
-      }//end data
-    })//end post command
-
-    //build server setup command
-    client.api.applications(client.user.id).guilds(servers[key].id).commands.post({//adding commmand to our servers
-      data: {
-        "name": "setup",
-        "description": "setup this server for Laniakea Bot",
-        "options": [
-          {
-            "type": 3,
-            "name": "action",
-            "description": "Action type",
-            "choices": [{ "name": "Start", "value": "start" }],
             "required": true
           }
         ]
