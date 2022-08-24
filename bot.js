@@ -44,7 +44,7 @@ const setup = require('./tools/serversetup.js')
 client.on('interactionCreate', interaction => {
   if (!interaction.isButton()) return;
   if (interaction.customId === 'beginsetup') {
-    //setup.start(message.guildId,)
+    setup.start(interaction.message.guildId)
   }//end if button is 'beginsetup'
 })//end on interactionCreate
 
