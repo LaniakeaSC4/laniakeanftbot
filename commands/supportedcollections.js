@@ -16,12 +16,15 @@ module.exports = {
   //when command is triggered, do this
   async execute(interaction) {
    
-   collections = await sql.getOurMetaplexCollections() 
-   var replystring = '```'
+   var unsortedcollections = await sql.agetOurMetaplexCollections() 
    
-   for (var i =0;i < collections.length;i++){
+   var collections = unsortedcollections.sort((a, b) => a.collectionkey - b.collectionkey)
+   
+   var replystring = '```' + collections[0].collectionkey
+   
+   for (var i =1;i < collections.length;i++){
      
-     replystring = replystring + ', ' + collections[0].collectionkey
+     replystring = replystring + ', ' + collections[i].collectionkey
      
    } 
    
