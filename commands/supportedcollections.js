@@ -27,6 +27,6 @@ module.exports = {
    
    replystring = replystring + '```'
    
-    await interaction.Reply({ content : replystring })
+    await interaction.reply({ content : replystring })
   }, //end execute block
 } //end module.exports
