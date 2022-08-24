@@ -1,6 +1,3 @@
-//const { Client, Intents } = require('discord.js')
-//const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES] })
-
 const fs = require('node:fs');
 const path = require('node:path');
 
@@ -13,52 +10,48 @@ const client = new Client({
 });
 
 client.login(process.env.BOTTOKEN)
+module.exports.client = client
 
-client.commands = new Collection();
-const commandsPath = path.join(__dirname, 'commands');
-const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+//setup commands - this adds them to the client at client.commands
+client.commands = new Collection()//collection is discord fancy arrary with extended functionality
+const commandsPath = path.join(__dirname, 'commands')//all commands are at ./commands/
+const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'))//only .js files
 
-for (const file of commandFiles) {
-	const filePath = path.join(commandsPath, file);
-	const command = require(filePath);
-	// Set a new item in the Collection
-	// With the key as the command name and the value as the exported module
-	client.commands.set(command.data.name, command);
-}
+for (const file of commandFiles) {//for each command file
+  const filePath = path.join(commandsPath, file)//join all the files
+  const command = require(filePath)//import each one with requrie
+  // Set a new item in the Collection
+  // With the key as the command name and the value as the exported module
+  client.commands.set(command.data.name, command)
+}//end for each command file
 
+//send interactions back to thier respective command file
 client.on('interactionCreate', async interaction => {
-	if (!interaction.isChatInputCommand()) return;
+  if (!interaction.isChatInputCommand()) return//if this interaction isnt a slash command
+  const command = client.commands.get(interaction.commandName)//get name
+  if (!command) return//if no name stop
 
-	const command = client.commands.get(interaction.commandName);
+  try {
+    await command.execute(interaction)//execute in command file
+  } catch (error) {
+    console.error(error);
+    await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+  }//end catch
+})//end on interactionCreate
 
-	if (!command) return;
-
-	try {
-		await command.execute(interaction);
-	} catch (error) {
-		console.error(error);
-		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
-	}
-})
-
+//button interactions
 const setup = require('./tools/serversetup.js')
 client.on('interactionCreate', interaction => {
-	if (!interaction.isButton()) return;
-	if (interaction.customId === 'beginsetup'){
-	  //setup.start(message.guildId,)
-	} 
-});
-
-module.exports.client = client
+  if (!interaction.isButton()) return;
+  if (interaction.customId === 'beginsetup') {
+    //setup.start(message.guildId,)
+  }//end if button is 'beginsetup'
+})//end on interactionCreate
 
 const sql = require('./tools/commonSQL.js')//common sql related commands are in here
 const howrare = require('./sniper/v1/howrareRPC.js')//Howrare.is related commands are in here
-
 const nfttools = require('./tools/nfttools.js')//generic nft tools like get rarity description from rank in here
-
 const raritychecker = require('./raritychecker/raritychecker.js')//rarity checker functions
-
-
 
 //======================
 //==== Sniper Setup  ===
