@@ -16,7 +16,7 @@ module.exports = {
   //when command is triggered, do this
   async execute(interaction) {
    
-   var unsortedcollections = await sql.agetOurMetaplexCollections() 
+   var unsortedcollections = await sql.getOurMetaplexCollections() 
    
    var collections = unsortedcollections.sort((a, b) => a.collectionkey - b.collectionkey)
    
