@@ -4,9 +4,9 @@ const { ChannelType, PermissionFlagsBits } = require('discord.js');
 
 async function start(guildid) {
 
-	//check if bot has manage channels and if not return
-
 	//check if this server is in the table
+
+	//check if bot has manage channels and if not return
 
 	console.log('setting up guild ' + guildid)
 	const guild = main.client.guilds.cache.get(guildid)
@@ -109,7 +109,7 @@ async function start(guildid) {
 				console.log('fetching category channel')
 				const laniakeacategory = await main.client.channels.fetch(channelcheck.snipecategory.server_cid)
 				for (const key in channelcheck) {
-					if (channelcheck[key] != 'snipecategory') {//we have created the category already
+					if (key != 'snipecategory') {//we have created the category already
 						if (channelcheck[key].verified === false) {//if this one isnt verified as present
 
 							guild.channels.create({
