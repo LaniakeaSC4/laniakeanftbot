@@ -3,6 +3,9 @@ const main = require('../bot.js')
 const { ChannelType, PermissionFlagsBits } = require('discord.js');
 
 async function start(guildid) {
+	
+	//check if bot has manage channels and if not return
+	
 	console.log('setting up guild ' + guildid)
 	const guild = main.client.guilds.cache.get(guildid)
 
@@ -64,6 +67,9 @@ async function start(guildid) {
 
 			})
 
+			console.log('log final channelcheck')
+			console.log(channelcheck)
+
 			if (channelcheck.snipecategory.verified === false) {
 				console.log('Category channel was not found - creating it')
 				guild.channels.create({
@@ -79,10 +85,12 @@ async function start(guildid) {
 							allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages],
 						},
 					]
+				}).then(newchannel => {
+					console.log('created new channel it\'s ID is:')
+					console.log(newchannel.id)
 				})
 			}
-			console.log('log final channelcheck')
-			console.log(channelcheck)
+
 
 		})
 
