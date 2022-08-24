@@ -28,13 +28,10 @@ for (const file of commandFiles) {
 const rest = new REST({ version: '10' }).setToken(process.env.BOTTOKEN);
  
  getservers().then(servers => {
-   console.log(servers)
    for (var i = 0;i < servers.length;i++) {
-  console.log('server is')
-  console.log(servers[i].serverid)
   
   rest.put(Routes.applicationGuildCommands(clientId, servers[i].serverid), { body: commands })
-    .then(() => console.log('Successfully registered application commands.'))
+    .then(() => console.log('Successfully registered application commands for: ' + servers[i].serverid))
     .catch(console.error);
     
 }  
