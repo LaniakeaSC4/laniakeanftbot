@@ -27,12 +27,11 @@ for (const file of commandFiles) {
 
 const rest = new REST({ version: '10' }).setToken(process.env.BOTTOKEN);
  
-var thisserver = ""//for log output only
+
  getservers().then(servers => {
    for (var i = 0;i < servers.length;i++) {
-  thisserver = servers[i].serverid//for log output only
-  rest.put(Routes.applicationGuildCommands(clientId, servers[i].serverid), { body: commands })
-    .then(() => console.log('Successfully registered application commands for: ' + thisserver))
+    rest.put(Routes.applicationGuildCommands(clientId, servers[i].serverid), { body: commands })
+    .then(() => console.log('Successfully registered application commands'))
     .catch(console.error);
     
 }  

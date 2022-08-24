@@ -25,7 +25,7 @@ module.exports = {
         )//end add components
 
       //send the reply (including button row)
-      await interaction.reply({ content: 'Setup this server for Laniakea Sniper Bot\n\nTap below to create a new channel category and 4 new channels to recieve snipes!\n\n```LANIAKEA SNIPER BOT\n|-rare-snipes\n|-epic-snipes\n|-legendary-snipes\n|-mythic-snipes```\n\nIf channel already exists (by ID) it won\'t be recreated.\nYou are free to rename the channels and add member permissions (remember to give the bot send permissions!', components: [row], ephemeral: true })
+      await interaction.reply({ content: 'Would you like to setup this server for Laniakea Sniper Bot?\n\nTap below to create a new channel category and 4 new channels to recieve snipes!\n\n```LANIAKEA SNIPER BOT\n|-rare-snipes\n|-epic-snipes\n|-legendary-snipes\n|-mythic-snipes```\nIf channel already exists (by ID) it won\'t be recreated.\nDefault permissions on these channels will be; Deny @\'everyone and allow @\'laniakea Bot.\nYou are free to rename the channels and add member permissions (remember to give the bot send permissions!)', components: [row], ephemeral: true })
     } else { await interaction.reply({ content: 'Sorry, you do not have permissions to run this command (Manage Channels/Admin required)', ephemeral: true }) }//end if user has manage channels
   },//end execute block
 }//end module.exports

@@ -39,6 +39,8 @@ const initaliseSniperCollections = async () => {
   }//for seq of sniperSequencer
 
   //get servers
+  var supportedservers = await sql.getSupportedServers()
+  console.log(supportedservers)
 
   startsniper()
 }//end initaliseSniperCollections
