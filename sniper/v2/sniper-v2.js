@@ -110,7 +110,7 @@ async function startsniper() {
             var thisembedcolour = parseInt(embedcolour, 16)
 
             var floorprice = await magiceden.getFloorPrice(collections[k]['meslug'])
-            var thisfloorprice = pround(floorprice, 6)
+            var thisfloorprice = pround(parseFloat(floorprice), 6)
             var snipe = await testifsnipe(raritydescription, thisprice, thisfloorprice)
 
             var thissnipe = snipe[0]
@@ -169,11 +169,18 @@ module.exports.start = startsniper
 async function snipeHotness(thisprice,thislimit){
   console.log('checking snipe hotness')
   console.log('this price is: ' + thisprice + typeof thislimit + 'thislimit is: ' + thislimit + typeof thislimit)
-  if (thisprice <= thislimit*0.2) {return 'Blazing Hot'}
-  if (thisprice <= thislimit*0.4 && thisprice > thislimit*0.2){return 'Red Hot'}
-  if (thisprice <= thislimit*0.6 && thisprice > thislimit*0.4){return 'Hot'}
-  if (thisprice <= thislimit*0.8 && thisprice > thislimit*0.6){return 'Warm'}
-  if (thisprice <= thislimit && thisprice > thislimit*0.8){return 'Hot'}
+
+  var blazinglimit = ((thislimit-thisprice)*0.2)+thisprice
+  var redhotlimit = ((thislimit-thisprice)*0.4)+thisprice
+  var hotlimit = ((thislimit-thisprice)*0.6)+thisprice
+  var warmlimit = ((thislimit-thisprice)*0.8)+thisprice
+  var coollimit = thislimit
+
+  if (thisprice <= blazinglimit) {return '🔥🔥🔥🔥🔥Blazing Hot'}
+  if (thisprice <= redhotlimit && thisprice > blazinglimit){return '🔥🔥🔥🔥Red Hot'}
+  if (thisprice <= hotlimit && thisprice > redhotlimit){return '🔥🔥🔥Hot'}
+  if (thisprice <= warmlimit && thisprice > hotlimit){return '🔥🔥Warm'}
+  if (thisprice <= coollimit && thisprice > warmlimit){return '🔥Cool'}
 }
 
 async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage, listinglink,hotness) {
@@ -192,17 +199,17 @@ async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisrarit
             },
             {
               "name": "List Price",
-              "value": pround(thisprice, 3) + ' SOL',
+              "value": pround(parseFloat(thisprice), 3) + ' SOL',
               "inline": true
             },
             {
               "name": "Floor Price",
-              "value": pround(floorprice, 3) + ' SOL',
+              "value": pround(parseFloat(floorprice), 3) + ' SOL',
               "inline": true
             },
             {
               "name": "Snipe Price",
-              "value": 'For ' + raritydescription + ' NFTs, any price less than ' + thislimit + 'x the floor price of ' + pround(floorprice, 3) + ' SOL is a snipe (i.e. less than ' + pround(thissnipeprice, 3) + ' SOL)',
+              "value": 'For ' + raritydescription + ' NFTs, any price less than ' + parseFloat(thislimit) + 'x the floor price of ' + pround(parseFloat(floorprice), 3) + ' SOL is a snipe (i.e. less than ' + pround(parseFloat(thissnipeprice), 3) + ' SOL)',
               "inline": true
             }
           ],
