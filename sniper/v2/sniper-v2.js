@@ -114,11 +114,11 @@ async function startsniper() {
             var snipe = await testifsnipe(raritydescription, thisprice, thisfloorprice)
 
             var thissnipe = snipe[0]
-            var thissnipeprice = snipe[1]
-            var thislimit = snipe[2]
+            var thissnipeprice = parseFloat(snipe[1])
+            var thislimit = parseFloat(snipe[2])
 
             //calculate snipe hotness here
-            var hotness = await snipeHotness(thisprice,thislimit)
+            var hotness = await snipeHotness(parseFloat(thisprice),parseFloat(thislimit))
 
             if (thissnipe != "false") {
               console.log('SniperV2: we have a ' + collections[k]['meslug'] + ' snipe!')
