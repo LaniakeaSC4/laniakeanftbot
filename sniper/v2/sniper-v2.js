@@ -119,6 +119,7 @@ async function startsniper() {
 
             //calculate snipe hotness here
             var hotness = await snipeHotness(parseFloat(thisprice),parseFloat(thislimit))
+            console.log('hotness is: ' + hotness)
 
             if (thissnipe != "false") {
               console.log('SniperV2: we have a ' + collections[k]['meslug'] + ' snipe!')
@@ -166,6 +167,8 @@ async function startsniper() {
 module.exports.start = startsniper
 
 async function snipeHotness(thisprice,thislimit){
+  console.log('checking snipe hotness')
+  console.log('this price is: ' + thisprice + typeof thislimit + 'thislimit is: ' + thislimit + typeof thislimit)
   if (thisprice <= thislimit*0.2) {return 'Blazing Hot'}
   if (thisprice <= thislimit*0.4 && thisprice > thislimit*0.2){return 'Red Hot'}
   if (thisprice <= thislimit*0.6 && thisprice > thislimit*0.4){return 'Hot'}
