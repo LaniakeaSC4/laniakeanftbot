@@ -111,7 +111,7 @@ async function startsniper() {
 
             var floorprice = await magiceden.getFloorPrice(collections[k]['meslug'])
             var thisfloorprice = pround(parseFloat(floorprice), 6)
-            var snipe = await testifsnipe(raritydescription, thisprice, thisfloorprice)
+            var snipe = await testifsnipe(raritydescription, parseFloat(thisprice), parseFloat(thisfloorprice))
 
             var thissnipe = snipe[0]
             var thissnipeprice = parseFloat(snipe[1])
@@ -170,17 +170,17 @@ async function snipeHotness(thisprice,thislimit){
   console.log('checking snipe hotness')
   console.log('this price is: ' + thisprice + typeof thislimit + 'thislimit is: ' + thislimit + typeof thislimit)
 
-  var blazinglimit = ((thislimit-thisprice)*0.2)+thisprice
-  var redhotlimit = ((thislimit-thisprice)*0.4)+thisprice
-  var hotlimit = ((thislimit-thisprice)*0.6)+thisprice
-  var warmlimit = ((thislimit-thisprice)*0.8)+thisprice
-  var coollimit = thislimit
+  var blazinglimit = ((thislimit-thisprice)*0.2)+thisprice;console.log('blazing limit is: ' + blazinglimit)
+  var redhotlimit = ((thislimit-thisprice)*0.4)+thisprice;console.log('redhotlimit limit is: ' + redhotlimit)
+  var hotlimit = ((thislimit-thisprice)*0.6)+thisprice;console.log('hotlimit limit is: ' + hotlimit)
+  var warmlimit = ((thislimit-thisprice)*0.8)+thisprice;console.log('warmlimit limit is: ' + warmlimit)
+  var coollimit = thislimit;console.log('coollimit limit is: ' + coollimit)
 
-  if (thisprice <= blazinglimit) {return '🔥🔥🔥🔥🔥Blazing Hot'}
-  if (thisprice <= redhotlimit && thisprice > blazinglimit){return '🔥🔥🔥🔥Red Hot'}
-  if (thisprice <= hotlimit && thisprice > redhotlimit){return '🔥🔥🔥Hot'}
-  if (thisprice <= warmlimit && thisprice > hotlimit){return '🔥🔥Warm'}
-  if (thisprice <= coollimit && thisprice > warmlimit){return '🔥Cool'}
+  if (thisprice >= blazinglimit) {return '🔥🔥🔥🔥🔥\nBlazing Hot'}
+  if (thisprice >= redhotlimit && thisprice > blazinglimit){return '🔥🔥🔥🔥\nRed Hot'}
+  if (thisprice >= hotlimit && thisprice > redhotlimit){return '🔥🔥🔥\nHot'}
+  if (thisprice >= warmlimit && thisprice > hotlimit){return '🔥🔥\nWarm'}
+  if (thisprice >= coollimit && thisprice > warmlimit){return '🔥\nCool'}
 }
 
 async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage, listinglink,hotness) {
