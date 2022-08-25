@@ -118,7 +118,7 @@ async function startsniper() {
             var thislimit = parseFloat(snipe[2])
 
             //calculate snipe hotness here
-            var hotness = await snipeHotness(parseFloat(thisprice),parseFloat(thislimit))
+            var hotness = await snipeHotness(parseFloat(thisprice),parseFloat(thissnipeprice))
             console.log('hotness is: ' + hotness)
 
             if (thissnipe != "false") {
