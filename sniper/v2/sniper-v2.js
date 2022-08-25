@@ -110,7 +110,9 @@ async function startsniper() {
             var thisembedcolour = parseInt(embedcolour, 16)
 
             var floorprice = await magiceden.getFloorPrice(collections[k]['meslug'])
+            console.log('floorprice is: ' + floorprice + typeof floorprice)
             var thisfloorprice = pround(parseFloat(floorprice), 6)
+            console.log('thisfloorprice is ' + thisfloorprice + typeof thisfloorprice)
             var snipe = await testifsnipe(raritydescription, parseFloat(thisprice), parseFloat(thisfloorprice))
 console.log('snipe2 is ' + snipe[2] + typeof snipe[2])
             var thissnipe = snipe[0]
