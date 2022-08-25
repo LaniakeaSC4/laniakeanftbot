@@ -150,7 +150,7 @@ console.log('snipe2 is ' + snipe[2] + typeof snipe[2])
 
                 }//for each supported server (from SQL)                
              // }//end if this is a snipe
-            } else {console.log('was not a snipe')} //end if not false
+            } else {console.log('this was not a snipe')} //end if not false
           }//end else for a token we havnt seen before
         }//end for loop of each listing recieved
 
