@@ -176,11 +176,11 @@ async function snipeHotness(thisprice,thislimit){
   var warmlimit = ((thislimit-thisprice)*0.8)+thisprice;console.log('warmlimit limit is: ' + warmlimit)
   var coollimit = thislimit;console.log('coollimit limit is: ' + coollimit)
 
-  if (thisprice >= blazinglimit) {return '🔥🔥🔥🔥🔥\nBlazing Hot'}
-  if (thisprice >= redhotlimit && thisprice > blazinglimit){return '🔥🔥🔥🔥\nRed Hot'}
-  if (thisprice >= hotlimit && thisprice > redhotlimit){return '🔥🔥🔥\nHot'}
-  if (thisprice >= warmlimit && thisprice > hotlimit){return '🔥🔥\nWarm'}
-  if (thisprice >= coollimit && thisprice > warmlimit){return '🔥\nCool'}
+  if (thisprice <= blazinglimit) {return '🔥🔥🔥🔥🔥\nBlazing Hot'}
+  if (thisprice <= redhotlimit && thisprice > blazinglimit){return '🔥🔥🔥🔥\nRed Hot'}
+  if (thisprice <= hotlimit && thisprice > redhotlimit){return '🔥🔥🔥\nHot'}
+  if (thisprice <= warmlimit && thisprice > hotlimit){return '🔥🔥\nWarm'}
+  if (thisprice <= coollimit && thisprice > warmlimit){return '🔥\nCool'}
 }
 
 async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage, listinglink,hotness) {
