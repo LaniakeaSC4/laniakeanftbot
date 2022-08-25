@@ -114,6 +114,8 @@ async function startsniper() {
             var thisfloorprice = pround(parseFloat(floorprice), 6)
             console.log('thisfloorprice is ' + thisfloorprice + typeof thisfloorprice)
             var snipe = await testifsnipe(raritydescription, parseFloat(thisprice), parseFloat(thisfloorprice))
+            console.log('Snipe is')
+            console.log(snipe)
 console.log('snipe2 is ' + snipe[2] + typeof snipe[2])
             var thissnipe = snipe[0]
             var thissnipeprice = parseFloat(snipe[1])
