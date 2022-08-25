@@ -117,6 +117,9 @@ async function startsniper() {
             var thissnipeprice = snipe[1]
             var thislimit = snipe[2]
 
+            //calculate snipe hotness here
+            var hotness = snipeHotness(thisprice,thislimit)
+
             if (thissnipe != "false") {
               console.log('SniperV2: we have a ' + collections[k]['meslug'] + ' snipe!')
 
@@ -135,25 +138,9 @@ async function startsniper() {
                   if (raritydescription === 'Mythic'){thissnipechannel = supportedservers[i].mythicsnipes}
 
                   //send snipes
-                  sendsnipes(thisserverid, thissnipechannel, thisname, thisembedcolour, NFTdata.rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink)
+                  sendsnipes(thisserverid, thissnipechannel, thisname, thisembedcolour, NFTdata.rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
 
-                }
-                
-                /*var serverkeys = Object.keys(main.servers)
-                serverkeys.forEach((key, index) => {//for each server
-
-                  //get the snipes channel id from the servers config object
-                  
-                  thisserverid = main.servers[key].id
-                  thissnipechannel = main.servers[key].v2snipechannel
-
-
-                  
-                  //send snipes
-                  sendsnipes(thisserverid, thissnipechannel, thisname, thisembedcolour, NFTdata.rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink)
-
-                })//end for each server*/
-
+                }//for each supported server (from SQL)                
               }//end if this is a snipe
             }//end if not false
           }//end else for a token we havnt seen before
@@ -178,12 +165,20 @@ async function startsniper() {
 }//end startsniper
 module.exports.start = startsniper
 
-async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage, listinglink) {
+async function snipeHotness(thisprice,thislimit){
+  if (thisprice <= thislimit*0.2) {return 'Blazing Hot'}
+  if (thisprice <= thislimit*0.4 && thisprice > thislimit*0.2){return 'Red Hot'}
+  if (thisprice <= thislimit*0.6 && thisprice > thislimit*0.4){return 'Hot'}
+  if (thisprice <= thislimit*0.8 && thisprice > thislimit*0.6){return 'Warm'}
+  if (thisprice <= thislimit && thisprice > thislimit*0.8){return 'Hot'}
+}
+
+async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage, listinglink,hotness) {
   return new Promise((resolve, reject) => {
     main.client.guilds.cache.get(server).channels.cache.get(snipeschannel).send({
       embeds: [
         {
-          "title": 'Snipe Opportunity: ' + nftname,
+          "title": hotness + 'Snipe Opportunity: ' + nftname,
           "color": embedcolour,
           "description": 'Buy at: ' + listinglink,
           "fields": [
