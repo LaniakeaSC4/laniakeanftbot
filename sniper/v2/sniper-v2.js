@@ -181,7 +181,7 @@ async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisrarit
     main.client.guilds.cache.get(server).channels.cache.get(snipeschannel).send({
       embeds: [
         {
-          "title": hotness + 'Snipe Opportunity: ' + nftname,
+          "title": hotness + ' Snipe Opportunity\n' + nftname,
           "color": embedcolour,
           "description": 'Buy at: ' + listinglink,
           "fields": [
