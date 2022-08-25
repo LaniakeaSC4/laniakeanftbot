@@ -114,6 +114,10 @@ async function startsniper() {
             var thisfloorprice = pround(parseFloat(floorprice), 6)
             console.log('thisfloorprice is ' + thisfloorprice + typeof thisfloorprice)
             var snipe = await testifsnipe(raritydescription, parseFloat(thisprice), parseFloat(thisfloorprice))
+            
+            if (snipe != "false") {
+              console.log('SniperV2: we have a ' + collections[k]['meslug'] + ' snipe!')
+
             console.log('Snipe is')
             console.log(snipe)
 console.log('snipe2 is ' + snipe[2] + typeof snipe[2])
@@ -126,13 +130,11 @@ console.log('snipe2 is ' + snipe[2] + typeof snipe[2])
             var hotness = await snipeHotness(parseFloat(thisprice),thisfloorprice,parseFloat(thissnipeprice))
             console.log('hotness is: ' + hotness)
 
-            if (thissnipe != "false") {
-              console.log('SniperV2: we have a ' + collections[k]['meslug'] + ' snipe!')
-
+            
               var thisserverid = ''
               var thissnipechannel = ''
 
-              if (thissnipe != "false") {//if this is a snipe send messages out to each server
+             // if (thissnipe != "false") {//if this is a snipe send messages out to each server
 
                 for  (i = 0;i < supportedservers.length;i++){
                   
@@ -147,8 +149,8 @@ console.log('snipe2 is ' + snipe[2] + typeof snipe[2])
                   sendsnipes(thisserverid, thissnipechannel, thisname, thisembedcolour, NFTdata.rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
 
                 }//for each supported server (from SQL)                
-              }//end if this is a snipe
-            }//end if not false
+             // }//end if this is a snipe
+            } else {console.log('was not a snipe')} //end if not false
           }//end else for a token we havnt seen before
         }//end for loop of each listing recieved
 
