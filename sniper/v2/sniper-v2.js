@@ -17,10 +17,10 @@ var maxlength = 50//how many records history will we keep for each collection
 var minutes = 2.5, the_interval = minutes * 60 * 1000//refresh interval for sniper bot
 
 //set multipliers above floor price at which listings become snipes
-var mythiclimit = 50
-var legendarylimit = 25
-var epiclimit = 5
-var rarelimit = 2.5
+var mythiclimit = 25
+var legendarylimit = 12.5
+var epiclimit = 2.5
+var rarelimit = 1.25
 
 var supportedservers = []
 
