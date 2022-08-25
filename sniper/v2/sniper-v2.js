@@ -118,7 +118,7 @@ async function startsniper() {
             var thislimit = parseFloat(snipe[2])
 
             //calculate snipe hotness here
-            var hotness = await snipeHotness(parseFloat(thisprice),parseFloat(thissnipeprice))
+            var hotness = await snipeHotness(parseFloat(thisprice),thisfloorprice,parseFloat(thissnipeprice))
             console.log('hotness is: ' + hotness)
 
             if (thissnipe != "false") {
@@ -166,14 +166,14 @@ async function startsniper() {
 }//end startsniper
 module.exports.start = startsniper
 
-async function snipeHotness(thisprice,thislimit){
+async function snipeHotness(thisprice,floorprice,thislimit){
   console.log('checking snipe hotness')
   console.log('this price is: ' + thisprice + typeof thislimit + 'thislimit is: ' + thislimit + typeof thislimit)
 
-  var blazinglimit = ((thislimit-thisprice)*0.2)+thisprice;console.log('blazing limit is: ' + blazinglimit)
-  var redhotlimit = ((thislimit-thisprice)*0.4)+thisprice;console.log('redhotlimit limit is: ' + redhotlimit)
-  var hotlimit = ((thislimit-thisprice)*0.6)+thisprice;console.log('hotlimit limit is: ' + hotlimit)
-  var warmlimit = ((thislimit-thisprice)*0.8)+thisprice;console.log('warmlimit limit is: ' + warmlimit)
+  var blazinglimit = ((thislimit-floorprice)*0.2);console.log('blazing limit is: ' + blazinglimit)
+  var redhotlimit = ((thislimit-floorprice)*0.4);console.log('redhotlimit limit is: ' + redhotlimit)
+  var hotlimit = ((thislimit-floorprice)*0.6);console.log('hotlimit limit is: ' + hotlimit)
+  var warmlimit = ((thislimit-floorprice)*0.8);console.log('warmlimit limit is: ' + warmlimit)
   var coollimit = thislimit;console.log('coollimit limit is: ' + coollimit)
 
   if (thisprice <= blazinglimit) {return '🔥🔥🔥🔥🔥\nBlazing Hot'}
