@@ -13,6 +13,8 @@
     "start": "node bot.js"
 
   },
+  
+  "engines" : { "node" : "18.8.0"}, 
 
   "dependencies": {
 
