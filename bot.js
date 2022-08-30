@@ -1,7 +1,6 @@
-const fs = require('node:fs');
-const path = require('node:path');
-require('dotenv').config()
-console.log(process.env) // remove this after you've confirmed it working
+require('dotenv').config()//import process environment vars into app engine nodejs environment using dotenv
+const fs = require('node:fs')
+const path = require('node:path')
 
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const client = new Client({
