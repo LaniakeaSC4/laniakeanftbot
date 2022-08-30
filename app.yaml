@@ -1,8 +1,0 @@
-runtime: nodejs16
-handlers:
-  - url: /
-    script: auto
-env_variables:
-  BOTTOKEN: 'OTk2MTcwMjYxMzUzMjIyMjE5.Gq4aPA.N3yi4DLcZMx1RfWpxzC6GowVsFeLErd0Gib_DQ'
-  DATABASE_URL: 'postgres://luytlozfnjvvzv:7e71b23a85783bcd409035dc111874e298114f98e6a6d4d7edf3d33233c8c1a2@ec2-52-210-97-223.eu-west-1.compute.amazonaws.com:5432/d4qvsjsl0dq5dq'
-  QUICKNODE: 'https://lingering-multi-layer.solana-mainnet.discover.quiknode.pro/0ca724d92232c90b971ee453e71fcfb84ce1f8d9/'
