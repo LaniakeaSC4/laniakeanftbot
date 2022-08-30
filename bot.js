@@ -1,4 +1,5 @@
 require('dotenv').config()//import process environment vars into app engine nodejs environment using dotenv
+process.title = 'nftbot'
 const fs = require('node:fs')
 const path = require('node:path')
 

@@ -10,7 +10,9 @@
 
   "scripts": {
 
-    "start": "node bot.js"
+    "start": "node bot.js", 
+    
+    "stop": "pkill --signal SIGINT nftbot"
 
   },
 
