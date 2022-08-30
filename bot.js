@@ -2,6 +2,8 @@ require('dotenv').config()//import process environment vars into app engine node
 const fs = require('node:fs')
 const path = require('node:path')
 
+const logger = require('./tools/winston.js')
+
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const client = new Client({
   intents: [
@@ -79,6 +81,9 @@ const servers = {
 //start services
 client.on('ready', async () => {
   console.log('I am ready!')
+  // Writes some log entries
+  logger.error('warp nacelles offline');
+  logger.info('shields at 99%');
   sniperv2.initialise()
 
   //endable/disable sniper v1
