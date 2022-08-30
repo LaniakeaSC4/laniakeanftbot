@@ -49,7 +49,7 @@ client.on('interactionCreate', async interaction => {
   if (!interaction.isButton()) return;
   if (interaction.customId === 'beginsetup') {
     var setupstatus = await setup.start(interaction)
-    console.log('setup status was: ' + setupstatus)
+    w.log.info('setup status was: ' + setupstatus)
   }//end if button is 'beginsetup'
 })//end on interactionCreate
 
@@ -81,7 +81,7 @@ const servers = {
 
 //start services
 client.on('ready', async () => {
-  console.log('I am ready!')
+  w.log.info('I am ready!')
   // Writes some log entries
   w.log.error('warp nacelles offline');
   w.log.info('shields at 99%');
@@ -114,7 +114,7 @@ async function clearcommands() {
 }//end function to reset commands
 
 client.on('interactionCreate', async interaction => {
-  //console.log(interaction)
+  //w.log.info(interaction)
 
   const command = interaction.commandName.toLowerCase()
   var replytext = ''

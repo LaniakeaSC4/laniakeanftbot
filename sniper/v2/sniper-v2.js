@@ -29,20 +29,20 @@ const initaliseSniperCollections = async () => {
 
   var currentcollections = ""
   for (var i = 0; i < collections.length; i++) { sniperSequencer.push(i); currentcollections = (currentcollections + "| " + collections[i].collectionkey + " |") }
-  console.log('Starting sniper with: ' + currentcollections)
+  w.log.info('Starting sniper with: ' + currentcollections)
 
   for (const seq of sniperSequencer) {//for each collection
     //get initial set of listings and store them in the local history arrary for that collection
     await magiceden.getNewListings(collections[seq]['meslug'], initialget).then(async thislistings => {
       collections[seq]['listings'] = thislistings//fill tracked listings with the listings we just got
-      console.log('SniperV2: added initial ' + initialget + ' Listings for ' + collections[seq]['meslug'])
+      w.log.info('SniperV2: added initial ' + initialget + ' Listings for ' + collections[seq]['meslug'])
     })//end then
     await wait(2000)//add delay between API requests
   }//for seq of sniperSequencer
 
   //get servers
   supportedservers = await sql.getSupportedServers()
-  console.log(supportedservers)
+  w.log.info(supportedservers)
 
   startsniper()
 }//end initaliseSniperCollections
@@ -50,15 +50,15 @@ module.exports.initialise = initaliseSniperCollections
 
 //main sniper function
 async function startsniper() {
-  console.log('SniperV2: starting main function')
+  w.log.info('SniperV2: starting main function')
   await Promise.all(sniperSequencer.map(async value => {//this was added to make sure to sequentially initiate the sniper loops. Not sure its working as intended, but loops are spread out
     var thisinterval = the_interval + (value * 1100)//interval for each collection is 1.1 seconds longer to avoid more than 2 ME API requests per second
-    console.log('SniperV2: Initialising recheckloop for collection: ' + collections[value].collectionkey + '. Setting interval for this collection to: ' + thisinterval)
+    w.log.info('SniperV2: Initialising recheckloop for collection: ' + collections[value].collectionkey + '. Setting interval for this collection to: ' + thisinterval)
 
     await setInterval(async function (k) {//do this every X minutes
       await magiceden.getNewListings(collections[k]['meslug'], refreshget).then(async thislistings => {//get latest X listings from Magic Eden
         /* heartbeat logging - enable if you want update each minute for each collection */
-        //console.log("I am doing my " + minutes + " minute check for " + sniperCollections[k][0] + '. I have this many in my history at start: ' + sniperCollections[k][1].length)
+        //w.log.info("I am doing my " + minutes + " minute check for " + sniperCollections[k][0] + '. I have this many in my history at start: ' + sniperCollections[k][1].length)
 
         var rebuildarrary = collections[k]['listings']//save all the acquired listings in a temporary arrary
 
@@ -68,7 +68,7 @@ async function startsniper() {
             //actions if token address and price match (i.e. we've seen this one before)
           } else {
             //actions if token address or price does not match one we have seen before
-            console.log('SniperV2: New/updated ' + collections[k]['meslug'] + ' entry ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
+            w.log.info('SniperV2: New/updated ' + collections[k]['meslug'] + ' entry ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
             rebuildarrary.unshift(thislistings[i])//add the new entry to the start of the rebuild arrary so we can remember this one if we see it later
 
             var thisprice = pround(thislistings[i].price, 6)//set price of this lisitng
@@ -92,7 +92,7 @@ async function startsniper() {
             }//end for
 
             var NFTdata = await sql.getNFTdata(collections[k]['collectionkey'], thisnftid)
-            //console.log(NFTdata)
+            //w.log.info(NFTdata)
             var collectionSize = await sql.getData("solanametaplex", "collectionkey", collections[k]['collectionkey'], 'collectioncount')
 
             var ranges = await nfttools.calculateranges(collectionSize)
@@ -110,25 +110,25 @@ async function startsniper() {
             var thisembedcolour = parseInt(embedcolour, 16)
 
             var floorprice = await magiceden.getFloorPrice(collections[k]['meslug'])
-            console.log('floorprice is: ' + floorprice + typeof floorprice)
+            w.log.info('floorprice is: ' + floorprice + typeof floorprice)
             var thisfloorprice = pround(parseFloat(floorprice), 6)
-            console.log('thisfloorprice is ' + thisfloorprice + typeof thisfloorprice)
+            w.log.info('thisfloorprice is ' + thisfloorprice + typeof thisfloorprice)
             var snipe = await testifsnipe(raritydescription, parseFloat(thisprice), parseFloat(thisfloorprice))
             
             if (snipe != "false") {
-              console.log('SniperV2: we have a ' + collections[k]['meslug'] + ' snipe!')
+              w.log.info('SniperV2: we have a ' + collections[k]['meslug'] + ' snipe!')
 
-            console.log('Snipe is')
-            console.log(snipe)
-console.log('snipe2 is ' + snipe[2] + typeof snipe[2])
+            w.log.info('Snipe is')
+            w.log.info(snipe)
+w.log.info('snipe2 is ' + snipe[2] + typeof snipe[2])
             var thissnipe = snipe[0]
             var thissnipeprice = parseFloat(snipe[1])
             var thislimit = parseFloat(snipe[2])
-            console.log('thislimit is ' + thislimit + typeof thislimit)
+            w.log.info('thislimit is ' + thislimit + typeof thislimit)
 
             //calculate snipe hotness here
             var hotness = await snipeHotness(parseFloat(thisprice),thisfloorprice,parseFloat(thissnipeprice))
-            console.log('hotness is: ' + hotness)
+            w.log.info('hotness is: ' + hotness)
 
             
               var thisserverid = ''
@@ -150,16 +150,16 @@ console.log('snipe2 is ' + snipe[2] + typeof snipe[2])
 
                 }//for each supported server (from SQL)                
              // }//end if this is a snipe
-            } else {console.log('this was not a snipe')} //end if not false
+            } else {w.log.info('this was not a snipe')} //end if not false
           }//end else for a token we havnt seen before
         }//end for loop of each listing recieved
 
         //for each collection we store a max history. Clear the oldest ones if it's longer than that. 
         if (rebuildarrary.length > maxlength) {
           var numbertoremove = rebuildarrary.length - maxlength
-          console.log('SniperV2: number to remove is: ' + numbertoremove)
+          w.log.info('SniperV2: number to remove is: ' + numbertoremove)
           for (var i = 0; i < numbertoremove; i++) {
-            console.log("SniperV2: 1 removal loop - popping here")
+            w.log.info("SniperV2: 1 removal loop - popping here")
             rebuildarrary.pop()//remove oldest entry
           }//end for number to remove
         }//end if rebuildarrary is longer than max length
@@ -174,14 +174,14 @@ console.log('snipe2 is ' + snipe[2] + typeof snipe[2])
 module.exports.start = startsniper
 
 async function snipeHotness(thisprice,floorprice,thislimit){
-  console.log('checking snipe hotness')
-  console.log('this price is: ' + thisprice + typeof thislimit + 'thislimit is: ' + thislimit + typeof thislimit)
+  w.log.info('checking snipe hotness')
+  w.log.info('this price is: ' + thisprice + typeof thislimit + 'thislimit is: ' + thislimit + typeof thislimit)
 
-  var blazinglimit = ((thislimit-floorprice)*0.2);console.log('blazing limit is: ' + blazinglimit)
-  var redhotlimit = ((thislimit-floorprice)*0.4);console.log('redhotlimit limit is: ' + redhotlimit)
-  var hotlimit = ((thislimit-floorprice)*0.6);console.log('hotlimit limit is: ' + hotlimit)
-  var warmlimit = ((thislimit-floorprice)*0.8);console.log('warmlimit limit is: ' + warmlimit)
-  var coollimit = thislimit;console.log('coollimit limit is: ' + coollimit)
+  var blazinglimit = ((thislimit-floorprice)*0.2);w.log.info('blazing limit is: ' + blazinglimit)
+  var redhotlimit = ((thislimit-floorprice)*0.4);w.log.info('redhotlimit limit is: ' + redhotlimit)
+  var hotlimit = ((thislimit-floorprice)*0.6);w.log.info('hotlimit limit is: ' + hotlimit)
+  var warmlimit = ((thislimit-floorprice)*0.8);w.log.info('warmlimit limit is: ' + warmlimit)
+  var coollimit = thislimit;w.log.info('coollimit limit is: ' + coollimit)
 
   if (thisprice <= blazinglimit) {return '🔥🔥🔥🔥🔥 Blazing Hot'}
   if (thisprice <= redhotlimit && thisprice > blazinglimit){return '🔥🔥🔥🔥 Red Hot'}
@@ -237,7 +237,7 @@ async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisrarit
 //returns rarity description (i.e. "Mythic" if its a snipe, else returns 'false') also returns 
 async function testifsnipe(raritydescription, thisprice, floorprice) {
   return new Promise((resolve, reject) => {
-    console.log('SniperV2: testing for snipe with an ' + raritydescription + ' at a list price of ' + thisprice + ' and the floor price is ' + floorprice)
+    w.log.info('SniperV2: testing for snipe with an ' + raritydescription + ' at a list price of ' + thisprice + ' and the floor price is ' + floorprice)
 
     //make calculation of if this is a snipe using rarity, floor price and nft price
     var hotrarities = ['Mythic', 'Legendary', 'Epic', 'Rare']
