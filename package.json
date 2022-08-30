@@ -13,23 +13,34 @@
     "start": "node bot.js"
 
   },
-  
-  "engines" : { "node" : "18.8.0", "npm" : "8.18.0"}, 
+
+  "engines": {
+
+    "node": "18.8.0",
+
+    "npm": "8.18.0"
+
+  },
 
   "dependencies": {
 
+    "@google-cloud/logging-winston": "^5.1.4",
+
+    "@metaplex-foundation/js": "0.15.0",
+
+    "@solana/web3.js": "*",
+
     "discord.js": "14.2.0",
 
-    "request": "2.81.0", 
-    
-    "pg" : "8.7.3",
-    
-    "@metaplex-foundation/js" : "0.15.0",
+    "dotenv": "*",
 
-    "@solana/web3.js" :"*",
+    "pg": "8.7.3",
 
-    "dotenv" : "*"
+    "request": "2.81.0",
+
+    "winston": "^3.8.1"
 
   }
 
 }
+
