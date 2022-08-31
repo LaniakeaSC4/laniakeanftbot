@@ -4,6 +4,7 @@ const fs = require('node:fs')
 const path = require('node:path')
 
 const w = require('./tools/winston.js')
+const { Collection } = require('discord.js')
 
 /*
 const { Client, Collection, GatewayIntentBits } = require('discord.js');

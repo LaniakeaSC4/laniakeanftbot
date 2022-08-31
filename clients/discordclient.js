@@ -1,4 +1,4 @@
-const { Client, Collection, GatewayIntentBits } = require('discord.js')
+const { Client } = require('discord.js')
 var discordclient
 
 module.exports = {
