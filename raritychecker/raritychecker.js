@@ -1,6 +1,6 @@
 const sql = require('../tools/commonSQL.js')//sql related commands are in here
 const nfttools = require('../tools/nfttools.js')//generic nft tools like get rarity description from rank in here
-const w = require('./tools/winston.js')
+const w = require('../tools/winston.js')
 
 async function check(collectionKey, nftid) {
 

@@ -1,7 +1,7 @@
 const main = require('../../bot.js')
 const magiceden = require('../magicedenRPC.js')//Magic Eden related commands are in here
 const nfttools = require('../../tools/nfttools.js')//generic nft tools like get rarity description from rank in here
-const w = require('./tools/winston.js')
+const w = require('../../tools/winston.js')
 
 const pround = (number, decimalPlaces) => Number(Math.round(Number(number + "e" + decimalPlaces)) + "e" + decimalPlaces * -1)
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))

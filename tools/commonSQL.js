@@ -10,7 +10,7 @@ Get the connected client in each function with - var pgclient = db.getClient()
 Then query databse with - pgclient.query()
 */
 var db = require('../clients/pgclient.js')
-const w = require('./tools/winston.js')
+const w = require('./winston.js')
 
 /*enable if needed and edit query
 async function createTable() {

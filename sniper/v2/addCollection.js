@@ -4,7 +4,7 @@
 const { Metaplex, keypairIdentity, bundlrStorage } = require("@metaplex-foundation/js")
 const { Connection, clusterApiUrl, Keypair, PublicKey } = require("@solana/web3.js")
 const sql = require('../../tools/commonSQL.js')//common sql related commands are in here
-const w = require('./tools/winston.js')
+const w = require('../../tools/winston.js')
 
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 

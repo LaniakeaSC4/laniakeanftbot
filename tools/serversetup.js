@@ -1,7 +1,7 @@
 const sql = require('./commonSQL.js')//common sql related commands are in here
 const main = require('../bot.js')
 const { ChannelType, PermissionFlagsBits, PermissionsBitField  } = require('discord.js')
-const w = require('./tools/winston.js')
+const w = require('./winston.js')
 
 async function start(interaction) {
 

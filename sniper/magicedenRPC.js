@@ -1,5 +1,5 @@
 const https = require('https')
-const w = require('./tools/winston.js')
+const w = require('../tools/winston.js')
 
 //returns x number of recent listings from Magic Eden
 function getnewremoteMElistings(collection, number) {

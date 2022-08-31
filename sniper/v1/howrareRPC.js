@@ -1,5 +1,5 @@
 const https = require('https')
-const w = require('./tools/winston.js')
+const w = require('../../tools/winston.js')
 
 //get complete howrare.is dataset
 async function getRemoteHowRareData(collection) {
