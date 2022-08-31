@@ -1,6 +1,7 @@
 const main = require('../../bot.js')
 const magiceden = require('../magicedenRPC.js')//Magic Eden related commands are in here
 const nfttools = require('../../tools/nfttools.js')//generic nft tools like get rarity description from rank in here
+const w = require('./tools/winston.js')
 
 const pround = (number, decimalPlaces) => Number(Math.round(Number(number + "e" + decimalPlaces)) + "e" + decimalPlaces * -1)
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
@@ -33,7 +34,7 @@ const initaliseSniperCollections = async () => {
     //get initial set of listings and store them in the local history arrary for that collection
     await magiceden.getNewListings(sniperCollections[seq][0], initialget).then(async thislistings => {
       sniperCollections[seq][1] = thislistings//fill tracked listings with the listings we just got
-      console.log('added initial ' + initialget + ' Listings for ' + sniperCollections[seq][0])
+      w.log.info('added initial ' + initialget + ' Listings for ' + sniperCollections[seq][0])
     })//end then
     await wait(2000)//add delay between API requests
   }//for seq of sniperSequencer
@@ -44,12 +45,12 @@ module.exports.initialise = initaliseSniperCollections
 async function startsniper() {
   await Promise.all(sniperSequencer.map(async value => {//this was added to make sure to sequentially initiate the sniper loops. Not sure its working as intended, but loops are spread out
     var thisinterval = the_interval + (value * 1100)//interval for each collection is 1.1 seconds longer to avoid more than 2 ME API requests per second
-    console.log('Initialising recheckloop for collection: ' + value + '. Setting interval for this collection to: ' + thisinterval)
+    w.log.info('Initialising recheckloop for collection: ' + value + '. Setting interval for this collection to: ' + thisinterval)
 
     await setInterval(async function (k) {//do this every X minutes
       await magiceden.getNewListings(sniperCollections[k][0], refreshget).then(async thislistings => {//get latest X listings from Magic Eden
         /* heartbeat logging - enable if you want update each minute for each collection */
-        //console.log("I am doing my " + minutes + " minute check for " + sniperCollections[k][0] + '. I have this many in my history at start: ' + sniperCollections[k][1].length)
+        //w.log.info("I am doing my " + minutes + " minute check for " + sniperCollections[k][0] + '. I have this many in my history at start: ' + sniperCollections[k][1].length)
 
         var rebuildarrary = sniperCollections[k][1]//save all the acquired listings in a temporary arrary
 
@@ -59,7 +60,7 @@ async function startsniper() {
             //actions if token address and price match (i.e. we've seen this one before)
           } else {
             //actions if token address or price does not match one we have seen before
-            console.log('New/updated ' + sniperCollections[k][0] + ' entry ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
+            w.log.info('New/updated ' + sniperCollections[k][0] + ' entry ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
             rebuildarrary.unshift(thislistings[i])//add the new entry to the start of the rebuild arrary so we can remember this one if we see it later
 
             var thisprice = pround(thislistings[i].price, 6)//set price of this lisitng
@@ -109,7 +110,7 @@ async function startsniper() {
             var thislimit = snipe[2]
 
             if (thissnipe != "false") {
-              console.log('we have a ' + sniperCollections[k][0] + ' snipe!')
+              w.log.info('we have a ' + sniperCollections[k][0] + ' snipe!')
 
               var embedcolour = await nfttools.getembedcolour(raritydescription)
               var thisembedcolour = parseInt(embedcolour, 16)//store outside subsection so we can access it
@@ -139,9 +140,9 @@ async function startsniper() {
         //for each collection we store a max history. Clear the oldest ones if it's longer than that. 
         if (rebuildarrary.length > maxlength) {
           var numbertoremove = rebuildarrary.length - maxlength
-          console.log('number to remove is: ' + numbertoremove)
+          w.log.info('number to remove is: ' + numbertoremove)
           for (var i = 0; i < numbertoremove; i++) {
-            console.log("1 removal loop - popping here")
+            w.log.info("1 removal loop - popping here")
             rebuildarrary.pop()//remove oldest entry
           }//end for number to remove
         }//end if rebuildarrary is longer than max length
@@ -202,7 +203,7 @@ async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisrarit
 //returns rarity description (i.e. "Mythic" if its a snipe, else returns 'false') also returns 
 async function testifsnipe(raritydescription, thisprice, floorprice) {
   return new Promise((resolve, reject) => {
-    console.log('testing for snipe with an ' + raritydescription + ' at a list price of ' + thisprice + ' and the floor price is ' + floorprice)
+    w.log.info('testing for snipe with an ' + raritydescription + ' at a list price of ' + thisprice + ' and the floor price is ' + floorprice)
 
     //make calculation of if this is a snipe using rarity, floor price and nft price
     var hotrarities = ['Mythic', 'Legendary', 'Epic', 'Rare']

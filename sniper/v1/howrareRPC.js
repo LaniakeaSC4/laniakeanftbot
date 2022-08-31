@@ -1,4 +1,5 @@
 const https = require('https')
+const w = require('./tools/winston.js')
 
 //get complete howrare.is dataset
 async function getRemoteHowRareData(collection) {
@@ -14,10 +15,10 @@ async function getRemoteHowRareData(collection) {
 			// The whole response has been received.
 			resp.on('end', () => {
 				var thiscollection = JSON.parse(data)
-				//console.log('howrare API code is; ' + thiscollection.result.api_code)
+				//w.log.info('howrare API code is; ' + thiscollection.result.api_code)
 				resolve(thiscollection)//return the recieved X listings
 			})
-		}).on("error", (err) => { console.log("Error: " + err.message) })
+		}).on("error", (err) => { w.log.info("Error: " + err.message) })
 	}) //end promise
 }//end getremoteHowRareData function
 

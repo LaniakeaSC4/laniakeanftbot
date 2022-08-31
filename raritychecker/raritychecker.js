@@ -1,13 +1,14 @@
 const sql = require('../tools/commonSQL.js')//sql related commands are in here
 const nfttools = require('../tools/nfttools.js')//generic nft tools like get rarity description from rank in here
+const w = require('./tools/winston.js')
 
 async function check(collectionKey, nftid) {
 
   //get NFT data
   var NFTdata = await sql.getNFTdata(collectionKey, nftid)
-  console.log(NFTdata)
+  //w.log.info(NFTdata)
   var collectionSize = await sql.getData("solanametaplex", "collectionkey", collectionKey, 'collectioncount')
-  console.log('collectionsize is: ' + collectionSize)
+  //w.log.info('collectionsize is: ' + collectionSize)
 
 
   var ranges = await nfttools.calculateranges(collectionSize)

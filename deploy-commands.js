@@ -2,6 +2,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord.js');
+const w = require('./tools/winston.js')
+
 //const { clientId, guildId, token } = require('./config.json');
 
 const sql = require('./tools/commonSQL.js')//common sql related commands are in here
@@ -31,7 +33,7 @@ const rest = new REST({ version: '10' }).setToken(process.env.BOTTOKEN);
  getservers().then(servers => {
    for (var i = 0;i < servers.length;i++) {
     rest.put(Routes.applicationGuildCommands(clientId, servers[i].serverid), { body: commands })
-    .then(() => console.log('Successfully registered application commands'))
+    .then(() => w.log.info('Successfully registered application commands'))
     .catch(console.error);
     
 }  

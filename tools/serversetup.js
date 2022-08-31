@@ -1,23 +1,24 @@
 const sql = require('./commonSQL.js')//common sql related commands are in here
 const main = require('../bot.js')
-const { ChannelType, PermissionFlagsBits, PermissionsBitField  } = require('discord.js');
+const { ChannelType, PermissionFlagsBits, PermissionsBitField  } = require('discord.js')
+const w = require('./tools/winston.js')
 
 async function start(interaction) {
 
-	if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {console.log('user didnt have manage channel permissions'); return 'no manage channels'}
+	if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {w.log.info('user didnt have manage channel permissions'); return 'no manage channels'}
 
 	const guildid = interaction.message.guildId
 	//check if this server is in the table
 
 	//check if bot has manage channels and if not return
 
-	console.log('setting up guild ' + guildid)
+	w.log.info('setting up guild ' + guildid)
 	const guild = main.client.guilds.cache.get(guildid)
 
 	//get saved sniper channels (if any)
 	const existingchannels = await sql.getSniperChannels(guildid)
-	console.log('log exisiting channels')
-	console.log(existingchannels)
+	w.log.info('log exisiting channels')
+	w.log.info(existingchannels)
 
 	var channelcheck = {
 		"snipecategory": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "LANIAKEA SNIPER BOT", "servercolumn": "snipecategory" },
@@ -40,31 +41,31 @@ async function start(interaction) {
 
 				//check for the channels in server
 				if (channel.id === channelcheck.snipecategory.db_cid) {
-					console.log('Found the saved category channel')
+					w.log.info('Found the saved category channel')
 					channelcheck.snipecategory.serverfound = true
 					channelcheck.snipecategory.server_cid = channel.id
 					channelcheck.snipecategory.verified = true
 				}
 				if (channel.id === channelcheck.raresnipes.db_cid) {
-					console.log('Found the saved raresnipes channel')
+					w.log.info('Found the saved raresnipes channel')
 					channelcheck.raresnipes.serverfound = true
 					channelcheck.raresnipes.server_cid = channel.id
 					channelcheck.raresnipes.verified = true
 				}
 				if (channel.id === channelcheck.epicsnipes.db_cid) {
-					console.log('Found the saved epicsnipes channel')
+					w.log.info('Found the saved epicsnipes channel')
 					channelcheck.epicsnipes.serverfound = true
 					channelcheck.epicsnipes.server_cid = channel.id
 					channelcheck.epicsnipes.verified = true
 				}
 				if (channel.id === channelcheck.legendarysnipes.db_cid) {
-					console.log('Found the saved legendarysnipes channel')
+					w.log.info('Found the saved legendarysnipes channel')
 					channelcheck.legendarysnipes.serverfound = true
 					channelcheck.legendarysnipes.server_cid = channel.id
 					channelcheck.legendarysnipes.verified = true
 				}
 				if (channel.id === channelcheck.mythicsnipes.db_cid) {
-					console.log('Found the saved mythicsnipes channel')
+					w.log.info('Found the saved mythicsnipes channel')
 					channelcheck.mythicsnipes.serverfound = true
 					channelcheck.mythicsnipes.server_cid = channel.id
 					channelcheck.mythicsnipes.verified = true
@@ -72,12 +73,12 @@ async function start(interaction) {
 
 			})
 
-			console.log('log final channelcheck')
-			console.log(channelcheck)
+			w.log.info('log final channelcheck')
+			w.log.info(channelcheck)
 
 			//first check and create the category channel
 			if (channelcheck.snipecategory.verified === false) {
-				console.log('Category channel was not found - creating it')
+				w.log.info('Category channel was not found - creating it')
 				guild.channels.create({
 					name: channelcheck.snipecategory.name,
 					type: ChannelType.GuildCategory,
@@ -92,8 +93,8 @@ async function start(interaction) {
 						},
 					]
 				}).then(async newchannel => {
-					console.log('created new category channel it\'s ID is:')
-					console.log(newchannel.id)
+					w.log.info('created new category channel it\'s ID is:')
+					w.log.info(newchannel.id)
 					channelcheck.snipecategory.server_cid = newchannel.id//save category channel ID to we can add children
 					await sql.updateTableColumn('servers', 'serverid', guildid, 'snipecategory', newchannel.id)
 				}).then(async result => {
@@ -102,14 +103,14 @@ async function start(interaction) {
 
 				})
 			} else {
-				console.log('Category channel already existed')
+				w.log.info('Category channel already existed')
 				createchildren()
 			}
 
 
 			async function createchildren() {
 				//get the category channel object so we can add children
-				console.log('fetching category channel')
+				w.log.info('fetching category channel')
 				const laniakeacategory = await main.client.channels.fetch(channelcheck.snipecategory.server_cid)
 				for (const key in channelcheck) {
 					if (key != 'snipecategory') {//we have created the category already
@@ -120,7 +121,7 @@ async function start(interaction) {
 								type: ChannelType.GuildText,
 								parent: laniakeacategory
 							}).then(async newchannel => {
-								console.log('created new channel ' + newchannel.name + ' it\'s ID is: ' + newchannel.id)
+								w.log.info('created new channel ' + newchannel.name + ' it\'s ID is: ' + newchannel.id)
 								channelcheck.snipecategory.server_cid = newchannel.id//save category channel ID to we can add children
 								await sql.updateTableColumn('servers', 'serverid', guildid, channelcheck[key].servercolumn, newchannel.id)
 							})

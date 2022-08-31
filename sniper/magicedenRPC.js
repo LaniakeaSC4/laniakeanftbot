@@ -1,4 +1,5 @@
 const https = require('https')
+const w = require('./tools/winston.js')
 
 //returns x number of recent listings from Magic Eden
 function getnewremoteMElistings(collection, number) {
@@ -17,7 +18,7 @@ function getnewremoteMElistings(collection, number) {
 				var thislistings = JSON.parse(data)
 				resolve(thislistings)//return the recieved X listings
 			})
-		}).on("error", (err) => { console.log("Error: " + err.message) })
+		}).on("error", (err) => { w.log.info("Error: " + err.message) })
 	}) //end promise
 }; module.exports.getNewListings = getnewremoteMElistings
 
@@ -38,7 +39,7 @@ async function getremoteMEtokendetails(mintaddress) {
 				var thistoken = JSON.parse(data)
 				resolve(thistoken)//return the recieved tokendetails
 			})
-		}).on("error", (err) => { console.log("Error: " + err.message) })
+		}).on("error", (err) => { w.log.info("Error: " + err.message) })
 	}) //end promise
 }; module.exports.getTokenDetails = getremoteMEtokendetails
 
@@ -61,6 +62,6 @@ async function getremotefloorprice(collection) {
 				var thisFP = rawFP / 1000000000
 				resolve(thisFP)
 			})
-		}).on("error", (err) => { console.log("Error: " + err.message) })
+		}).on("error", (err) => { w.log.info("Error: " + err.message) })
 	}) //end promise
 }; module.exports.getFloorPrice = getremotefloorprice

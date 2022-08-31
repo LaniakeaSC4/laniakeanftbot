@@ -10,6 +10,7 @@ Get the connected client in each function with - var pgclient = db.getClient()
 Then query databse with - pgclient.query()
 */
 var db = require('../clients/pgclient.js')
+const w = require('./tools/winston.js')
 
 /*enable if needed and edit query
 async function createTable() {
@@ -28,7 +29,7 @@ async function getSQLCollectionSize(collectionID) {
   var pgclient = db.getClient()
   return new Promise((resolve, reject) => {
     var querystring = "SELECT COUNT(*) FROM (SELECT jsonb_path_query(data, '$.result.data.items[*]') FROM howraredata WHERE collection_id = '" + collectionID + "') AS nftcount"
-    console.log(querystring)
+    w.log.info(querystring)
     pgclient.query(querystring, (err, res) => {
       if (err) throw err
       resolve(res.rows[0].count)//return count of rows (number of NFTs)
@@ -75,7 +76,7 @@ async function addHowRareCollection(thisdata, collectionstring) {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
     if (thisdata.result.api_code === 200) {//function recieves data blob acquired from howrare. Check if HTTP status was 200
-      console.log('Recieved collection: ' + thisdata.result.data.collection + 'from howrare.is with status code:' + thisdata.result.api_code + '. Ready to add to DB')
+      w.log.info('Recieved collection: ' + thisdata.result.data.collection + 'from howrare.is with status code:' + thisdata.result.api_code + '. Ready to add to DB')
 
       //inset into howraredata table, adding a created on and updated date. If already exists, do nothing
       var querystring = 'INSERT INTO howraredata( collection_ID, data, created_on, last_updated ) VALUES ( $1,$2,to_timestamp($3 / 1000.0),to_timestamp($4 / 1000.0) ) ON CONFLICT (collection_ID) DO NOTHING'
@@ -85,7 +86,7 @@ async function addHowRareCollection(thisdata, collectionstring) {
         if (err) throw err
         resolve('success')//return a string 'success' if all worked.
       })//end query
-    } else { console.log('Error: collection ' + collectionstring + ' returned status code ' + thisdata.result.api_code + ' from howrare.is.'); resolve('fail')/* Status code wasnt 200 */ }
+    } else { w.log.info('Error: collection ' + collectionstring + ' returned status code ' + thisdata.result.api_code + ' from howrare.is.'); resolve('fail')/* Status code wasnt 200 */ }
   })//end promise
 }; module.exports.addHowRarecollection = addHowRareCollection
 

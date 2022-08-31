@@ -5,6 +5,7 @@ const path = require('node:path')
 
 const w = require('./tools/winston.js')
 
+/*
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const client = new Client({
   intents: [
@@ -13,7 +14,10 @@ const client = new Client({
   ],
 });
 
-client.login(process.env.BOTTOKEN)
+client.login(process.env.BOTTOKEN)*/
+
+var discord = require('../clients/discordclient.js')
+const client = discord.getClient()
 module.exports.client = client
 
 //setup commands - this adds them to the client at client.commands
@@ -38,7 +42,7 @@ client.on('interactionCreate', async interaction => {
   try {
     await command.execute(interaction)//execute in command file
   } catch (error) {
-    console.error(error);
+    w.log.error(error);
     await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
   }//end catch
 })//end on interactionCreate
@@ -81,11 +85,17 @@ const servers = {
 
 //start services
 client.on('ready', async () => {
+  
+  
+
+
   w.log.info('I am ready!')
   // Writes some log entries
   w.log.error('warp nacelles offline');
   w.log.info('shields at 99%');
   sniperv2.initialise()
+
+
 
   //endable/disable sniper v1
   //sniper.initialise()
