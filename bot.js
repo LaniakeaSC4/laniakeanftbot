@@ -16,7 +16,7 @@ const client = new Client({
 
 client.login(process.env.BOTTOKEN)*/
 
-var discord = require('../clients/discordclient.js')
+var discord = require('./clients/discordclient.js')
 const client = discord.getClient()
 module.exports.client = client
 
@@ -42,7 +42,7 @@ client.on('interactionCreate', async interaction => {
   try {
     await command.execute(interaction)//execute in command file
   } catch (error) {
-    w.log.error(error);
+    w.log.info(error);
     await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
   }//end catch
 })//end on interactionCreate
