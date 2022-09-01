@@ -16,20 +16,23 @@ module.exports = {
   //when command is triggered, do this
   async execute(interaction) {
    
-   var unsortedcollections = await sql.getOurMetaplexCollections() 
+   var unsortedcollections = await sql.getOurMetaplexCollections()//set from sql
    
+   //sort alphabetically
    var collections = unsortedcollections.sort((a,b) => (a.collectionkey > b.collectionkey) ? 1 : ((b.collectionkey > a.collectionkey) ? -1 : 0)) 
    
+   //start reply with codeblock markdown and first sorted element
    var replystring = '```' + collections[0].collectionkey
    
+   //from second element to the end
    for (var i =1;i < collections.length;i++){
-     
+     //add each collection and a comma
      replystring = replystring + ', ' + collections[i].collectionkey
      
    } 
-   
+   //close the codeblock
    replystring = replystring + '```'
-   
+   //send reply
     await interaction.reply({ content : replystring })
   }, //end execute block
 } //end module.exports

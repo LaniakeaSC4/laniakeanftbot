@@ -1,9 +1,12 @@
+/* Creates new discord client and returns that connected client to a function that needs it */
+
 const { Client, GatewayIntentBits } = require('discord.js')
 var discordclient
 
 module.exports = {
 	getClient: function () {
-	  if (discordclient) return discordclient; // if it is already there, grab it here
+	  if (discordclient) return discordclient; // if it is already there, grab it here and return it
+	  //else, set up new client, connect it and return it
 	  discordclient = new Client({
 		intents: [
 		  GatewayIntentBits.Guilds,

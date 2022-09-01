@@ -1,7 +1,9 @@
-const sql = require('./commonSQL.js')//common sql related commands are in here
-const main = require('../bot.js')
+var discord = require('../clients/discordclient.js')
+const client = discord.getClient()
 const { ChannelType, PermissionFlagsBits, PermissionsBitField  } = require('discord.js')
+
 const w = require('./winston.js')
+const sql = require('./commonSQL.js')//common sql related commands are in here
 
 async function start(interaction) {
 
@@ -13,7 +15,7 @@ async function start(interaction) {
 	//check if bot has manage channels and if not return
 
 	w.log.info('setting up guild ' + guildid)
-	const guild = main.client.guilds.cache.get(guildid)
+	const guild = client.guilds.cache.get(guildid)
 
 	//get saved sniper channels (if any)
 	const existingchannels = await sql.getSniperChannels(guildid)
@@ -111,7 +113,7 @@ async function start(interaction) {
 			async function createchildren() {
 				//get the category channel object so we can add children
 				w.log.info('fetching category channel')
-				const laniakeacategory = await main.client.channels.fetch(channelcheck.snipecategory.server_cid)
+				const laniakeacategory = await client.channels.fetch(channelcheck.snipecategory.server_cid)
 				for (const key in channelcheck) {
 					if (key != 'snipecategory') {//we have created the category already
 						if (channelcheck[key].verified === false) {//if this one isnt verified as present

@@ -1,5 +1,6 @@
+var discord = require('../../clients/discordclient.js')
+const client = discord.getClient()
 const w = require('../../tools/winston.js')
-const main = require('../../bot.js')
 const magiceden = require('../magicedenRPC.js')//Magic Eden related commands are in here
 const nfttools = require('../../tools/nfttools.js')//generic nft tools like get rarity description from rank in here
 const sql = require('../../tools/commonSQL.js')//sql related commands are in here
@@ -96,7 +97,7 @@ async function startsniper() {
             //w.log.info(NFTdata)
             var collectionSize = await sql.getData("solanametaplex", "collectionkey", collections[k]['collectionkey'], 'collectioncount')
 
-            var ranges = await nfttools.calculateranges(collectionSize)
+            /*var ranges = await nfttools.calculateranges(collectionSize)
 
             var mythicstart = ranges[0]; var mythicend = ranges[1]
             var legendarystart = ranges[2]; var legendaryend = ranges[3]
@@ -104,8 +105,8 @@ async function startsniper() {
             var rarestart = ranges[6]; var rareend = ranges[7]
             var uncommonstart = ranges[8]; var uncommonend = ranges[9]
             var commonstart = ranges[10]; var commonend = ranges[11]
-
-            var raritydescription = await nfttools.getraritydescription(mythicstart, mythicend, legendarystart, legendaryend, epicstart, epicend, rarestart, rareend, uncommonstart, uncommonend, commonstart, commonend, NFTdata.rarityRank)
+*/
+            var raritydescription = await nfttools.getraritydescription(collectionSize, NFTdata.rarityRank)
 
             var embedcolour = await nfttools.getembedcolour(raritydescription)
             var thisembedcolour = parseInt(embedcolour, 16)
@@ -193,7 +194,7 @@ async function snipeHotness(thisprice,floorprice,thislimit){
 
 async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage, listinglink,hotness) {
   return new Promise((resolve, reject) => {
-    main.client.guilds.cache.get(server).channels.cache.get(snipeschannel).send({
+    client.guilds.cache.get(server).channels.cache.get(snipeschannel).send({
       embeds: [
         {
           "title": hotness + ' Snipe Opportunity\n' + nftname,
