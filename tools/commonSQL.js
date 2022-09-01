@@ -249,7 +249,8 @@ async function getNFTdata(collectionKey, nftid) {
 try {
     pgclient.query(querystring, (err, res) => {
       if (err) throw err
-      resolve(res.rows[0]['nftdata'])
+      if (res.rows[0]){
+      resolve(res.rows[0]['nftdata'])} else {resolve(null)} 
     })//end query
 } catch {
   w.log.error('error getting that nft data')
