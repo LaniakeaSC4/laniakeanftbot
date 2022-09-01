@@ -246,11 +246,15 @@ async function getNFTdata(collectionKey, nftid) {
     var pgclient = db.getClient()
 
     var querystring = 'SELECT jsonb_path_query_first(finaldata, \'$.data[*] ? (@.nftid == ' + parseFloat(nftid) + ' || @.nftid == "' + nftid + '")\') AS nftdata FROM solanametaplex WHERE collectionkey = \'' + collectionKey + '\''
-
+try {
     pgclient.query(querystring, (err, res) => {
       if (err) throw err
       resolve(res.rows[0]['nftdata'])
     })//end query
+} catch {
+  w.log.error('error getting that nft data')
+  return null
+}
   })//end promise
 }; module.exports.getNFTdata = getNFTdata
 

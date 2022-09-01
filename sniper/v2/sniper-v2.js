@@ -94,6 +94,7 @@ async function startsniper() {
             }//end for
 
             var NFTdata = await sql.getNFTdata(collections[k]['collectionkey'], thisnftid)
+            if (NFTdata) {
             //w.log.info(NFTdata)
             var collectionSize = await sql.getData("solanametaplex", "collectionkey", collections[k]['collectionkey'], 'collectioncount')
 
@@ -153,6 +154,8 @@ w.log.info('snipe2 is ' + snipe[2] + typeof snipe[2])
                 }//for each supported server (from SQL)                
              // }//end if this is a snipe
             } else {w.log.info('this was not a snipe')} //end if not false
+            } else {w.log.error('error getting nft data')
+            }//end else if get nft data failed
           }//end else for a token we havnt seen before
         }//end for loop of each listing recieved
 

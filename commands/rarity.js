@@ -29,6 +29,9 @@ module.exports = {
     //get the inputs from the command
     var collectionKey = interaction.options.getString('collectionkey'); var nftid = interaction.options.getString('nftid')
     rarityembed = await raritychecker.check(collectionKey, nftid)
-    await interaction.editReply({ embeds: rarityembed })
+    if (rarityembed) {
+    await interaction.editReply({ embeds: rarityembed })} else {w.log.error('error checking this rarity')
+      await interaction.editReply({ content: "there has been an error checking this NFT" })
+    }
   }, //end execute block
 } //end module.exports

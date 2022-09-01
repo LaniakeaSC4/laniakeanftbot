@@ -6,6 +6,7 @@ async function check(collectionKey, nftid) {
 
   //get NFT data from metaplex data
   var NFTdata = await sql.getNFTdata(collectionKey, nftid)
+  if (Nftdata) {
   var collectionSize = await sql.getData("solanametaplex", "collectionkey", collectionKey, 'collectioncount')
 
 /*
@@ -50,4 +51,6 @@ async function check(collectionKey, nftid) {
     }
   ]//end embed  
   return rarityembed
+  } else { w.log.error('error checking that rarity') 
+  return null} 
 }; module.exports.check = check
