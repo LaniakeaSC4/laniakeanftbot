@@ -240,8 +240,8 @@ async function combineTraitRarity(creatoraddress) {
   await sql.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "withrarity", output)
   w.log.info('Metaplex: storing collection count of: ' + parseFloat(output.data.length))
   await sql.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "collectioncount", parseFloat(output.data.length))
-  w.log.info('Metaplex: storing collection key: ' + nftdata.data[10].name.substring(0, (nftdata.data[0].name.indexOf('#') - 1)).toString().replace(/[^0-9a-z]/gi, '').toLowerCase())
-  await sql.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "collectionkey", nftdata.data[10].name.substring(0, (nftdata.data[0].name.indexOf('#') - 1)).toString().replace(/[^0-9a-z]/gi, '').toLowerCase())
+  w.log.info('Metaplex: storing collection key: ' + nftdata.data[10].json.name.substring(0, (nftdata.data[0].name.indexOf('#') - 1)).toString().replace(/[^0-9a-z]/gi, '').toLowerCase())
+  await sql.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "collectionkey", nftdata.data[10].json.name.substring(0, (nftdata.data[0].name.indexOf('#') - 1)).toString().replace(/[^0-9a-z]/gi, '').toLowerCase())
 }; module.exports.combineTraitRarity = combineTraitRarity
 
 //addstep4 - get the unranked NFTs with statistical rarity and rank them for the final data
