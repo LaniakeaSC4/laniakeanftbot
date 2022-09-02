@@ -6,13 +6,13 @@ const { Collection } = require('discord.js')
 const fs = require('node:fs')
 const path = require('node:path')
 const w = require('./tools/winston.js')
-const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms)) 
+const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
 const sniperv2 = require('./sniper/v2/sniper-v2.js')
 
 //start services
 client.on('ready', async () => {
-  
+
   w.log.info('Warp drive activated');
   sniperv2.initialise()
 
@@ -59,6 +59,6 @@ client.on('interactionCreate', async interaction => {
   if (!interaction.isButton()) return;
   if (interaction.customId === 'beginsetup') {
     var setupstatus = await setup.start(interaction)
-    w.log.info('setup status was: ' + setupstatus)
+    if (setupstatus) { w.log.info('setup status was sucessful') }
   }//end if button is 'beginsetup'
 })//end on interactionCreate 

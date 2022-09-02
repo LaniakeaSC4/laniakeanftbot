@@ -5,14 +5,13 @@ const w = require('../tools/winston.js')
 async function check(collectionKey, nftid) {
 
   //get NFT data from metaplex data
-  var NFTdata = await sql.getNFTdata(collectionKey, nftid)
-  if (NFTdata) {
+  var NFTdata = await sql.getNFTdata(collectionKey, nftid)//get NFT data from our database
+  if (NFTdata) {//if there was any error getting the NFT data, function will return null. If it didnt return null - proceed
+    //get collection size
     var collectionSize = await sql.getData("solanametaplex", "collectionkey", collectionKey, 'collectioncount')
-
     //get rarity description (e.g. 'legendary')
     var raritydescription = await nfttools.getraritydescription(collectionSize, NFTdata.rarityRank)
     var thisembedcolour = await nfttools.getembedcolour(raritydescription)
-    //var thisembedcolour = parseInt(embedcolour, 16)
 
     //build embed
     var rarityembed = [
@@ -40,5 +39,5 @@ async function check(collectionKey, nftid) {
   } else {
     w.log.error('error getting NFTdata from SQL')
     return null//return null to be handled by calling function
-  }
+  }//end else
 }; module.exports.check = check

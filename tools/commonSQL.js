@@ -24,88 +24,7 @@ async function createTable() {
   })
 };module.exports.createTable = createTable*/
 
-//get the number of items (NFTs) in the local howrare.is data. This becomes collection size, used for determining rarity thresholds.
-async function getSQLCollectionSize(collectionID) {
-  var pgclient = db.getClient()
-  return new Promise((resolve, reject) => {
-    var querystring = "SELECT COUNT(*) FROM (SELECT jsonb_path_query(data, '$.result.data.items[*]') FROM howraredata WHERE collection_id = '" + collectionID + "') AS nftcount"
-    w.log.info(querystring)
-    pgclient.query(querystring, (err, res) => {
-      if (err) throw err
-      resolve(res.rows[0].count)//return count of rows (number of NFTs)
-    })//end query
-  })//end promise
-}; module.exports.getCollectionSize = getSQLCollectionSize
-
-//get NFT properties (rarity, name, image) from local howrare.is data.
-async function getPosrgresNFTproperties(collectionstring, nftid) {
-  var pgclient = db.getClient()
-  return new Promise((resolve, reject) => {
-    var querystring = "SELECT jsonb_path_query_first(data #> '{result,data,items}', '$[*] ? (@.id == " + nftid + " || @.id == \"" + nftid + "\")') AS result FROM howraredata WHERE  collection_id = '" + collectionstring + "' "
-    pgclient.query(querystring, (err, res) => {
-      if (err) throw err
-      if (res.rows[0].result != null) {
-        var thisnftrarity = res.rows[0].result.all_ranks.statistical_rarity
-        var thisnftname = res.rows[0].result.name
-        var thisnftimage = res.rows[0].result.image
-        resolve([thisnftrarity, thisnftname, thisnftimage])
-      } else {
-        resolve('NFT not in collection')
-      }//end else
-    })//end query
-  })//end promise
-}; module.exports.getNFTproperties = getPosrgresNFTproperties
-
-//get list of all collections we have locally saved from howrare.is. collection_id is a string from the URL of the collection.
-async function getColletionList() {
-  var pgclient = db.getClient()
-  return new Promise((resolve, reject) => {
-    //add supported collections from sqlDB to the slash command
-    var collectionlist = []
-    pgclient.query('SELECT collection_id FROM howraredata', (err, res) => {
-      if (err) throw err
-      for (var i = 0; i < res.rows.length; i++) {//loop through results and push to collectionlist
-        collectionlist.push(res.rows[i].collection_id)
-      }//end for each row
-      resolve(collectionlist)
-    })//end query
-  })//end promise
-}; module.exports.getColletionList = getColletionList
-
-async function addHowRareCollection(thisdata, collectionstring) {
-  return new Promise((resolve, reject) => {
-    var pgclient = db.getClient()
-    if (thisdata.result.api_code === 200) {//function recieves data blob acquired from howrare. Check if HTTP status was 200
-      w.log.info('Recieved collection: ' + thisdata.result.data.collection + 'from howrare.is with status code:' + thisdata.result.api_code + '. Ready to add to DB')
-
-      //inset into howraredata table, adding a created on and updated date. If already exists, do nothing
-      var querystring = 'INSERT INTO howraredata( collection_ID, data, created_on, last_updated ) VALUES ( $1,$2,to_timestamp($3 / 1000.0),to_timestamp($4 / 1000.0) ) ON CONFLICT (collection_ID) DO NOTHING'
-      var querydata = [collectionstring, thisdata, Date.now(), Date.now()]
-
-      pgclient.query(querystring, querydata, (err, res) => {
-        if (err) throw err
-        resolve('success')//return a string 'success' if all worked.
-      })//end query
-    } else { w.log.info('Error: collection ' + collectionstring + ' returned status code ' + thisdata.result.api_code + ' from howrare.is.'); resolve('fail')/* Status code wasnt 200 */ }
-  })//end promise
-}; module.exports.addHowRarecollection = addHowRareCollection
-
-//remove howrare data. Can also be done direct in PG
-async function removeHowRareCollection(collectionstring) {
-  return new Promise((resolve, reject) => {
-    var pgclient = db.getClient()
-
-    var querystring = 'DELETE FROM howraredata WHERE collection_id = $1'
-    var querydata = [collectionstring]
-
-    pgclient.query(querystring, querydata, (err, res) => {
-      if (err) throw err
-      resolve('success')//resolve success if this worked.
-    })//end query
-  })//end promise
-}; module.exports.removeHowRareCollection = removeHowRareCollection
-
-//creates a table row and adds data to one column - use if row dosent already exist
+//creates a table row and adds data to one column - use if row dosent already exist - needs error handling like getNFTdata
 async function createTableRow(table, tableprimarykey, thisprimarykey, column, data) {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
@@ -121,7 +40,7 @@ async function createTableRow(table, tableprimarykey, thisprimarykey, column, da
   })//end promise
 }; module.exports.createTableRow = createTableRow
 
-//adds data to a column in an existing row
+//adds data to a column in an existing row - needs error handling like getNFTdata
 async function updateTableColumn(table, tableprimarykey, thisprimarykey, column, data) {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
@@ -137,7 +56,7 @@ async function updateTableColumn(table, tableprimarykey, thisprimarykey, column,
   })//end promise
 }; module.exports.updateTableColumn = updateTableColumn
 
-//generic get data from table
+//generic get data from table - needs error handling like getNFTdata
 async function getData(table, tableprimarykey, thisprimarykey, column) {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
@@ -152,7 +71,7 @@ async function getData(table, tableprimarykey, thisprimarykey, column) {
   })//end promise
 }; module.exports.getData = getData
 
-//generic delete column data from table
+//generic delete column data from table - needs error handling like getNFTdata
 async function deleteColumnData(table, tableprimarykey, thisprimarykey, column) {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
@@ -167,7 +86,7 @@ async function deleteColumnData(table, tableprimarykey, thisprimarykey, column) 
   })//end promise
 }; module.exports.deleteColumnData = deleteColumnData
 
-//get a particular column for all rows
+//get a particular column for all rows - needs error handling like getNFTdata
 async function getRowsForColumn(table, column) {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
@@ -183,7 +102,7 @@ async function getRowsForColumn(table, column) {
 };
 module.exports.getRowsForColumn = getRowsForColumn
 
-//get a particular column for all rows
+//get a particular column for all rows - needs error handling like getNFTdata
 async function getSupportedCollections() {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
@@ -198,7 +117,7 @@ async function getSupportedCollections() {
   }) //end promise
 }; module.exports.getSupportedCollections = getSupportedCollections
 
-//get collectionKeys for supported collections
+//get collectionKeys for supported collections - needs error handling like getNFTdata
 async function getOurMetaplexCollections() {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
@@ -212,7 +131,7 @@ async function getOurMetaplexCollections() {
   })//end promise
 }; module.exports.getOurMetaplexCollections = getOurMetaplexCollections
 
-//get verified creator address from collection key
+//get verified creator address from collection key - needs error handling like getNFTdata
 async function getVerifiedCreator(collectionKey) {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
@@ -240,7 +159,7 @@ async function getAllNFTdata(collectionKey) {
   })//end promise
 }; module.exports.getAllNFTdata = getAllNFTdata
 
-//get a single NFT collection by collectionKey and NFT ID
+//get a single NFT collection by collectionKey and NFT ID - needs error handling like getNFTdata
 async function getNFTdata(collectionKey, nftid) {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
@@ -257,12 +176,12 @@ async function getNFTdata(collectionKey, nftid) {
       })//end query
     } catch {
       w.log.error('error getting that nft data: ' + err)
-      resolve(null)
+      resolve(null)//if there was an error getting NFT data return null to be handled by the calling function
     }
   })//end promise
 }; module.exports.getNFTdata = getNFTdata
 
-//get sniper channels for a particualr server ID
+//get sniper channels for a particualr server ID - needs error handling like getNFTdata
 async function getSniperChannels(serverid) {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
@@ -276,7 +195,7 @@ async function getSniperChannels(serverid) {
   })//end promise
 }; module.exports.getSniperChannels = getSniperChannels
 
-//get supported servers
+//get supported servers - needs error handling like getNFTdata
 async function getSupportedServers() {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
@@ -289,3 +208,94 @@ async function getSupportedServers() {
     })//end query
   })//end promise
 }; module.exports.getSupportedServers = getSupportedServers
+
+/* sniper v1 function
+//get the number of items (NFTs) in the local howrare.is data. This becomes collection size, used for determining rarity thresholds.
+async function getSQLCollectionSize(collectionID) {
+  var pgclient = db.getClient()
+  return new Promise((resolve, reject) => {
+    var querystring = "SELECT COUNT(*) FROM (SELECT jsonb_path_query(data, '$.result.data.items[*]') FROM howraredata WHERE collection_id = '" + collectionID + "') AS nftcount"
+    w.log.info(querystring)
+    pgclient.query(querystring, (err, res) => {
+      if (err) throw err
+      resolve(res.rows[0].count)//return count of rows (number of NFTs)
+    })//end query
+  })//end promise
+}; module.exports.getCollectionSize = getSQLCollectionSize
+*/
+
+/* sniper v1 function
+//get NFT properties (rarity, name, image) from local howrare.is data.
+async function getPosrgresNFTproperties(collectionstring, nftid) {
+  var pgclient = db.getClient()
+  return new Promise((resolve, reject) => {
+    var querystring = "SELECT jsonb_path_query_first(data #> '{result,data,items}', '$[*] ? (@.id == " + nftid + " || @.id == \"" + nftid + "\")') AS result FROM howraredata WHERE  collection_id = '" + collectionstring + "' "
+    pgclient.query(querystring, (err, res) => {
+      if (err) throw err
+      if (res.rows[0].result != null) {
+        var thisnftrarity = res.rows[0].result.all_ranks.statistical_rarity
+        var thisnftname = res.rows[0].result.name
+        var thisnftimage = res.rows[0].result.image
+        resolve([thisnftrarity, thisnftname, thisnftimage])
+      } else {
+        resolve('NFT not in collection')
+      }//end else
+    })//end query
+  })//end promise
+}; module.exports.getNFTproperties = getPosrgresNFTproperties
+*/
+
+/* sniper v1 function
+//get list of all collections we have locally saved from howrare.is. collection_id is a string from the URL of the collection.
+async function getColletionList() {
+  var pgclient = db.getClient()
+  return new Promise((resolve, reject) => {
+    //add supported collections from sqlDB to the slash command
+    var collectionlist = []
+    pgclient.query('SELECT collection_id FROM howraredata', (err, res) => {
+      if (err) throw err
+      for (var i = 0; i < res.rows.length; i++) {//loop through results and push to collectionlist
+        collectionlist.push(res.rows[i].collection_id)
+      }//end for each row
+      resolve(collectionlist)
+    })//end query
+  })//end promise
+}; module.exports.getColletionList = getColletionList
+*/
+
+/* sniper v1 function
+async function addHowRareCollection(thisdata, collectionstring) {
+  return new Promise((resolve, reject) => {
+    var pgclient = db.getClient()
+    if (thisdata.result.api_code === 200) {//function recieves data blob acquired from howrare. Check if HTTP status was 200
+      w.log.info('Recieved collection: ' + thisdata.result.data.collection + 'from howrare.is with status code:' + thisdata.result.api_code + '. Ready to add to DB')
+
+      //inset into howraredata table, adding a created on and updated date. If already exists, do nothing
+      var querystring = 'INSERT INTO howraredata( collection_ID, data, created_on, last_updated ) VALUES ( $1,$2,to_timestamp($3 / 1000.0),to_timestamp($4 / 1000.0) ) ON CONFLICT (collection_ID) DO NOTHING'
+      var querydata = [collectionstring, thisdata, Date.now(), Date.now()]
+
+      pgclient.query(querystring, querydata, (err, res) => {
+        if (err) throw err
+        resolve('success')//return a string 'success' if all worked.
+      })//end query
+    } else { w.log.info('Error: collection ' + collectionstring + ' returned status code ' + thisdata.result.api_code + ' from howrare.is.'); resolve('fail')}
+  })//end promise
+}; module.exports.addHowRarecollection = addHowRareCollection
+*/
+
+/* sniper v1 function
+//remove howrare data. Can also be done direct in PG
+async function removeHowRareCollection(collectionstring) {
+  return new Promise((resolve, reject) => {
+    var pgclient = db.getClient()
+
+    var querystring = 'DELETE FROM howraredata WHERE collection_id = $1'
+    var querydata = [collectionstring]
+
+    pgclient.query(querystring, querydata, (err, res) => {
+      if (err) throw err
+      resolve('success')//resolve success if this worked.
+    })//end query
+  })//end promise
+}; module.exports.removeHowRareCollection = removeHowRareCollection
+*/
