@@ -42,10 +42,9 @@ const initaliseSniperCollections = async () => {
     await wait(2000)//add delay between API requests
   }//for seq of sniperSequencer
 
-  //get servers
+  //get servers and load into supported servers var
   supportedservers = await sql.getSupportedServers()
-  w.log.info(supportedservers)
-
+  
   startsniper()
 }//end initaliseSniperCollections
 module.exports.initialise = initaliseSniperCollections
