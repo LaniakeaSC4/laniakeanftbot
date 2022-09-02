@@ -16,21 +16,28 @@ module.exports = {
     .setDescription('Check the rarity of an NFT')
     .addStringOption(option =>
       option.setName('collectionkey')
-      .setDescription('Which collection? For list of collections use /supportedcollections')
-      .setRequired(true))
+        .setDescription('Which collection? For list of collections use /supportedcollections')
+        .setRequired(true))
     .addStringOption(option =>
       option.setName('nftid')
-      .setDescription('Which NFT # in the collection?' )
-      .setRequired(true)),
-      
+        .setDescription('Which NFT # in the collection?')
+        .setRequired(true)),
+
   //when command is triggered, do this
   async execute(interaction) {
     //get the inputs from the command
     var collectionKey = interaction.options.getString('collectionkey'); var nftid = interaction.options.getString('nftid')
-    rarityembed = await raritychecker.check(collectionKey, nftid)
-    if (rarityembed) {
-    await interaction.reply({ embeds: rarityembed })} else {w.log.error('error checking this rarity')
-      await interaction.reply({ content: "there has been an error checking this NFT" })
-    }
+    var supportedcollections = await sql.getOurMetaplexCollections()//set supported collections from sql
+    if (supportedcollections.includes(collectionKey)) {//check if the user has typed a valid collection in the database
+      rarityembed = await raritychecker.check(collectionKey, nftid)//check rarity
+      if (rarityembed) {//if an embed is returned, reply with it
+        await interaction.reply({ embeds: rarityembed })
+      } else {//if null was returned
+        w.log.error('error checking this rarity')
+        await interaction.reply({ content: "there has been an error checking this NFT" })
+      }//end else (if embed was returned)
+    } else {//if collection wasnt in database
+      interaction.reply('The collection your entered is not in our database. Check spelling or supported collections with /supported collections')
+    }//end else (if collection is in database)
   }, //end execute block
 } //end module.exports

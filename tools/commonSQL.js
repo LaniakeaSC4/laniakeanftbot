@@ -196,7 +196,7 @@ async function getSupportedCollections() {
       resolve(res.rows)
     }) //end query
   }) //end promise
-};module.exports.getSupportedCollections = getSupportedCollections
+}; module.exports.getSupportedCollections = getSupportedCollections
 
 //get collectionKeys for supported collections
 async function getOurMetaplexCollections() {
@@ -244,18 +244,21 @@ async function getAllNFTdata(collectionKey) {
 async function getNFTdata(collectionKey, nftid) {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
-
-    var querystring = 'SELECT jsonb_path_query_first(finaldata, \'$.data[*] ? (@.nftid == ' + parseFloat(nftid) + ' || @.nftid == "' + nftid + '")\') AS nftdata FROM solanametaplex WHERE collectionkey = \'' + collectionKey + '\''
-try {
-    pgclient.query(querystring, (err, res) => {
-      if (err) throw err
-      if (res.rows[0]){
-      resolve(res.rows[0]['nftdata'])} else {resolve(null)} 
-    })//end query
-} catch {
-  w.log.error('error getting that nft data')
-  return null
-}
+    try {
+      var querystring = 'SELECT jsonb_path_query_first(finaldata, \'$.data[*] ? (@.nftid == ' + parseFloat(nftid) + ' || @.nftid == "' + nftid + '")\') AS nftdata FROM solanametaplex WHERE collectionkey = \'' + collectionKey + '\''
+      pgclient.query(querystring, (err, res) => {
+        if (err) throw err
+        if (res.rows[0]) {
+          resolve(res.rows[0]['nftdata'])
+        } else {
+          resolve(null)
+          w.log.error('SQL error - row was empty')//is this needed or will the if (err) throw err prevent this?
+        }
+      })//end query
+    } catch {
+      w.log.error('error getting that nft data: ' + err)
+      resolve(null)
+    }
   })//end promise
 }; module.exports.getNFTdata = getNFTdata
 
@@ -264,7 +267,7 @@ async function getSniperChannels(serverid) {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
 
-    var querystring = "SELECT snipecategory,raresnipes,epicsnipes,legendarysnipes,mythicsnipes FROM servers WHERE serverid = '"+ serverid + "'"
+    var querystring = "SELECT snipecategory,raresnipes,epicsnipes,legendarysnipes,mythicsnipes FROM servers WHERE serverid = '" + serverid + "'"
 
     pgclient.query(querystring, (err, res) => {
       if (err) throw err
