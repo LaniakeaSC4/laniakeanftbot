@@ -44,7 +44,6 @@ async function getremotefloorprice(collection) {
 	}) //end promise
 }; module.exports.getFloorPrice = getremotefloorprice
 
-/* commenting this out. Not needed because we are using our own data. Keep for possible future use.
 //returns token details from Magic Eden
 async function getremoteMEtokendetails(mintaddress) {
 	return new Promise((resolve, reject) => {
@@ -65,4 +64,3 @@ async function getremoteMEtokendetails(mintaddress) {
 		}).on("error", (err) => { w.log.info("Error: " + err.message) })
 	}) //end promise
 }; module.exports.getTokenDetails = getremoteMEtokendetails
-*/

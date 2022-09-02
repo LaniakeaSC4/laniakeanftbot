@@ -1,40 +1,39 @@
-const fs = require('node:fs');
-const path = require('node:path');
-const { REST } = require('@discordjs/rest');
-const { Routes } = require('discord.js');
-const w = require('./tools/winston.js')
+/* deploys application commands to supported servers in our SQL database
+* this should mean there is no way to run a command on a non-supported server
+*but should put additional checked in place with any server setup commands
+*/
+
 require('dotenv').config()//import process environment vars into app engine nodejs environment using dotenv
+const fs = require('node:fs')//to read command files
+const path = require('node:path')//to read command files
+const { REST } = require('@discordjs/rest')//discord API stuff
+const { Routes } = require('discord.js')//discord API stuff
+const w = require('./tools/winston.js')//for logging
+const sql = require('./tools/commonSQL.js')//to get supported servers
 
-const sql = require('./tools/commonSQL.js')//common sql related commands are in here
-
+//get servers from our SQL
 const getservers = async () => {
   const servers = await sql.getRowsForColumn('servers', 'serverid')
   return servers
-}
+}//end getservers
 
-const clientId = '996170261353222219'
-const guildId = '978975057739124767'
+const clientId = '996170261353222219'//our bot ID - this is what we will be registering commands for
+const commands = []//start empty
+const commandsPath = path.join(__dirname, 'commands')//find path to folder
+const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'))//join all .js files in that folder
 
-const commands = [];
-const commandsPath = path.join(__dirname, 'commands');
-const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+for (const file of commandFiles) {//for each file
+  const filePath = path.join(commandsPath, file)//join all the filepaths
+  const command = require(filePath)//require them as command
+  commands.push(command.data.toJSON())//push all commands into commands arrary
+}//end for
 
-for (const file of commandFiles) {
-  const filePath = path.join(commandsPath, file);
-  const command = require(filePath);
-  commands.push(command.data.toJSON());
-}
+const rest = new REST({ version: '10' }).setToken(process.env.BOTTOKEN)//login to REST API
 
-const rest = new REST({ version: '10' }).setToken(process.env.BOTTOKEN);
-
-getservers().then(servers => {
-  for (var i = 0; i < servers.length; i++) {
+getservers().then(servers => {//get supported servers
+  for (var i = 0; i < servers.length; i++) {//for each server, register commands
     rest.put(Routes.applicationGuildCommands(clientId, servers[i].serverid), { body: commands })
       .then(() => w.log.info('Successfully registered application commands'))
       .catch(console.error);
-
-  }
-
-
-})
-
+  }//end for
+})//end then
