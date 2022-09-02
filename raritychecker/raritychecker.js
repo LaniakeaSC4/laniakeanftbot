@@ -11,8 +11,8 @@ async function check(collectionKey, nftid) {
 
     //get rarity description (e.g. 'legendary')
     var raritydescription = await nfttools.getraritydescription(collectionSize, NFTdata.rarityRank)
-    var embedcolour = await nfttools.getembedcolour(raritydescription)
-    var thisembedcolour = parseInt(embedcolour, 16)
+    var thisembedcolour = await nfttools.getembedcolour(raritydescription)
+    //var thisembedcolour = parseInt(embedcolour, 16)
 
     //build embed
     var rarityembed = [
@@ -38,7 +38,7 @@ async function check(collectionKey, nftid) {
     ]//end embed  
     return rarityembed
   } else {
-    w.log.error('error checking that rarity')
-    return null
+    w.log.error('error getting NFTdata from SQL')
+    return null//return null to be handled by calling function
   }
 }; module.exports.check = check

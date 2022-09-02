@@ -26,6 +26,7 @@ module.exports = {
 
   //when command is triggered, do this
   async execute(interaction) {
+
     //get the inputs from the command
     var collectionKey = interaction.options.getString('collectionkey'); var nftid = interaction.options.getString('nftid')
     var supportedcollections = await sql.getOurMetaplexCollections()//set supported collections from sql
@@ -35,22 +36,19 @@ module.exports = {
     for (var i = 0; i < supportedcollections.length; i++) {
       if (supportedcollections[i].collectionkey === collectionKey) {
         validcollection = true
-        w.log.info("matched database collection: " + collectionKey)
         break
-      } else {w.log.info("no match for this collection key setting validcollection to false")}
+      }//end if
     }//end for
-
-    
-    
+   
     if (validcollection) {//check if the user has typed a valid collection in the database
       rarityembed = await raritychecker.check(collectionKey, nftid)//check rarity
       if (rarityembed) {//if an embed is returned, reply with it
         await interaction.reply({ embeds: rarityembed })
-      } else {//if null was returned
+      } else {//if collection was present, but there was some error with this particular NFT
         w.log.error('error checking this rarity')
         await interaction.reply({ content: "The collection your entered **does** exist in our database, but not this NFT# please check you entered it correctly" })
       }//end else (if embed was returned)
-    } else {//if collection wasnt in database
+    } else {//if collection wasnt in database (raritychecker.check function returned null)
       interaction.reply('The collection your entered is not in our database. Check spelling or supported collections with /supported collections')
     }//end else (if collection is in database)
   }, //end execute block

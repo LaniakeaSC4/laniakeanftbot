@@ -97,8 +97,8 @@ async function startsniper() {
             if (NFTdata) {
               var collectionSize = await sql.getData("solanametaplex", "collectionkey", collections[k]['collectionkey'], 'collectioncount')
               var raritydescription = await nfttools.getraritydescription(collectionSize, NFTdata.rarityRank)
-              var embedcolour = await nfttools.getembedcolour(raritydescription)
-              var thisembedcolour = parseInt(embedcolour, 16)
+              var thisembedcolour = await nfttools.getembedcolour(raritydescription)
+              //var thisembedcolour = parseInt(embedcolour, 16)
               var floorprice = await magiceden.getFloorPrice(collections[k]['meslug'])
               var thisfloorprice = pround(parseFloat(floorprice), 6)
               var snipe = await testifsnipe(raritydescription, parseFloat(thisprice), parseFloat(thisfloorprice))

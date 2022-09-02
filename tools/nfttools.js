@@ -81,12 +81,12 @@ async function getraritydescription(collectionsize, thisrarity) {
 //function to get embed color
 async function getembedcolour(raritydescription) {
   return new Promise((resolve, reject) => {
-    if (raritydescription === 'Mythic') { resolve('0xed2839') }
-    else if (raritydescription === 'Legendary') { resolve('0xfe8100') }
-    else if (raritydescription === 'Epic') { resolve('0x9901f6') }
-    else if (raritydescription === 'Rare') { resolve('0x19aaeb') }
-    else if (raritydescription === 'Uncommon') { resolve('0x20d48a') }
-    else if (raritydescription === 'Common') { resolve('0x939394') }
-    else { resolve('0x939394') }//this shouldnt trigger but if it does, return common grey
+    if (raritydescription === 'Mythic') { resolve(parseInt('0xed2839', 16)) }
+    else if (raritydescription === 'Legendary') { resolve(parseInt('0xfe8100', 16)) }
+    else if (raritydescription === 'Epic') { resolve(parseInt('0x9901f6', 16)) }
+    else if (raritydescription === 'Rare') { resolve(parseInt('0x19aaeb', 16)) }
+    else if (raritydescription === 'Uncommon') { resolve(parseInt('0x20d48a', 16)) }
+    else if (raritydescription === 'Common') { resolve(parseInt('0x939394', 16)) }
+    else { resolve(parseInt('0x939394', 16)) }//this shouldnt trigger but if it does, return common grey
   }) //end promise
 }; module.exports.getembedcolour = getembedcolour
