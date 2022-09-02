@@ -10,12 +10,12 @@ const loggingWinston = new LoggingWinston();
 const logger = winston.createLogger({
   level: 'info',
   transports: [
-    new winston.transports.Console(),
+    new winston.transports.Console({ "format" : "simple" }),
     // Add Cloud Logging
     loggingWinston,
   ],
   exceptionHandlers: [
-    new winston.transports.Console(),
+    new winston.transports.Console({ "format" : "simple" }),
     // Add Cloud Logging
     loggingWinston,
   ] 
