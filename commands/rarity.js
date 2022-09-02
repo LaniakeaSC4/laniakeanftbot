@@ -7,7 +7,7 @@
 const { SlashCommandBuilder } = require('discord.js')
 //import metaplex RPC - add database functionality
 const raritychecker = require('../raritychecker/raritychecker.js')
-const sql = require('../../tools/commonSQL.js')//import SQL commands for getting supported collections
+const sql = require('../tools/commonSQL.js')//import SQL commands for getting supported collections
 
 //build the slash command
 module.exports = {
