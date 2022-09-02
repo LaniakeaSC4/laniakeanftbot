@@ -36,6 +36,7 @@ module.exports = {
       if (supportedcollections[i].collectionkey === collectionKey) {
         validcollection = true
         w.log.info("matched database collection: " + collectionKey)
+        break
       } else {w.log.info("no match for this collection key setting validcollection to false")}
     }//end for
 

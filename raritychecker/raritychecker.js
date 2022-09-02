@@ -6,7 +6,7 @@ async function check(collectionKey, nftid) {
 
   //get NFT data from metaplex data
   var NFTdata = await sql.getNFTdata(collectionKey, nftid)
-  if (Nftdata) {
+  if (NFTdata) {
     var collectionSize = await sql.getData("solanametaplex", "collectionkey", collectionKey, 'collectioncount')
 
     //get rarity description (e.g. 'legendary')
