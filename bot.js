@@ -13,7 +13,7 @@ const sniperv2 = require('./sniper/v2/sniper-v2.js')
 //start services
 client.on('ready', async () => {
   
-  w.logger.log("info",'Warp drive activated');
+  w.log.info('Warp drive activated');
   sniperv2.initialise()
 
 })//end client.on Ready
