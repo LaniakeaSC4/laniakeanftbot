@@ -14,6 +14,11 @@ const logger = winston.createLogger({
     // Add Cloud Logging
     loggingWinston,
   ],
+  exceptionHandlers: [
+    new winston.transports.Console(),
+    // Add Cloud Logging
+    loggingWinston,
+  ] 
 });
 
 module.exports.log = logger
