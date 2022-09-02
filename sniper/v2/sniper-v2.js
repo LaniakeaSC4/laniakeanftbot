@@ -37,7 +37,7 @@ const initaliseSniperCollections = async () => {
     //get initial set of listings and store them in the local history arrary for that collection
     await magiceden.getNewListings(collections[seq]['meslug'], initialget).then(async thislistings => {
       collections[seq]['listings'] = thislistings//fill tracked listings with the listings we just got
-      w.log.info('SniperV2: added initial ' + initialget + ' Listings for ' + collections[seq]['meslug'])
+      //w.log.info('SniperV2: added initial ' + initialget + ' Listings for ' + collections[seq]['meslug'])
     })//end then
     await wait(2000)//add delay between API requests
   }//for seq of sniperSequencer
