@@ -29,9 +29,19 @@ module.exports = {
     //get the inputs from the command
     var collectionKey = interaction.options.getString('collectionkey'); var nftid = interaction.options.getString('nftid')
     var supportedcollections = await sql.getOurMetaplexCollections()//set supported collections from sql
-    w.log.info("type of collection key is; " + typeof collectionKey)
-    w.log.info("type of supported collections are: " + typeof supportedcollections + " " + supportedcollections) 
-    if (supportedcollections.includes(collectionKey)) {//check if the user has typed a valid collection in the database
+    
+    //check if collection is supported
+    var validcollection = false
+    for (var i = 0; i < supportedcollections.length; i++) {
+      if (supportedcollections[i].collectionkey === collectionKey) {
+        validcollection = true
+        w.log.info("matched database collection: " + collectionKey)
+      } else {w.log.info("no match for this collection key setting validcollection to false")}
+    }//end for
+
+    
+    
+    if (validcollection) {//check if the user has typed a valid collection in the database
       rarityembed = await raritychecker.check(collectionKey, nftid)//check rarity
       if (rarityembed) {//if an embed is returned, reply with it
         await interaction.reply({ embeds: rarityembed })
