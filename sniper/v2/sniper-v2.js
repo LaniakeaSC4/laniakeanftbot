@@ -37,7 +37,7 @@ const initaliseSniperCollections = async () => {
     //get initial set of listings and store them in the local history arrary for that collection
     await magiceden.getNewListings(collections[seq]['meslug'], initialget).then(async thislistings => {
       collections[seq]['listings'] = thislistings//fill tracked listings with the listings we just got
-      //w.log.info('SniperV2: added initial ' + initialget + ' Listings for ' + collections[seq]['meslug'])
+      w.log.info('SniperV2: added initial ' + initialget + ' Listings for ' + collections[seq]['meslug'])
     })//end then
     await wait(2000)//add delay between API requests
   }//for seq of sniperSequencer
@@ -55,7 +55,7 @@ async function startsniper() {
   w.log.info('SniperV2: starting main function')
   await Promise.all(sniperSequencer.map(async value => {//this was added to make sure to sequentially initiate the sniper loops. Not sure its working as intended, but loops are spread out
     var thisinterval = the_interval + (value * 1100)//interval for each collection is 1.1 seconds longer to avoid more than 2 ME API requests per second
-    //w.log.info('SniperV2: Initialising recheckloop for collection: ' + collections[value].collectionkey + '. Setting interval for this collection to: ' + thisinterval)
+    w.log.info('SniperV2: Initialising recheckloop for collection: ' + collections[value].collectionkey + '. Setting interval for this collection to: ' + thisinterval)
 
     await setInterval(async function (k) {//do this every X minutes
       await magiceden.getNewListings(collections[k]['meslug'], refreshget).then(async thislistings => {//get latest X listings from Magic Eden
