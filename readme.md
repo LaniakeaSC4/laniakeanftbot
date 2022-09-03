@@ -6,7 +6,7 @@ After migrating to GCP these are the installed npm packages:
 
 * engines
     * "node": "18.8.0"
-      * 
+      * latest version at the time. Not doing anyting too crazy with node so latest version should generally work. Should be safe enough to apply updates. 
     * "npm": "8.18.0"
  * dependencies
     * "@google-cloud/logging-winston": "^5.1.4",
