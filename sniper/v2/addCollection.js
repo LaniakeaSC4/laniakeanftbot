@@ -44,7 +44,7 @@ async function getMetaplexData(creatoraddress) {
       withjson.data.push(thisnft)
       heartbeat = heartbeat + 1
       if ((heartbeat % 50) == 0) { w.log.info('Metaplex: I\'ve sent ' + heartbeat + ' json load requests') }
-      await wait(100)//wait to slow API requests.
+      await wait(120)//wait to slow API requests.
     } else {
       w.log.info('Metaplex: ' + thisnft.name + ' failed to add JSON. Pushing metadata[i] to fail list')
       withjson.fails.push(metadata[i])
