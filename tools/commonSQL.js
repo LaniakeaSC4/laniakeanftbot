@@ -163,21 +163,23 @@ async function getAllNFTdata(collectionKey) {
 async function getNFTdata(collectionKey, nftid) {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
-    try {
       var querystring = 'SELECT jsonb_path_query_first(finaldata, \'$.data[*] ? (@.nftid == ' + parseFloat(nftid) + ' || @.nftid == "' + nftid + '")\') AS nftdata FROM solanametaplex WHERE collectionkey = \'' + collectionKey + '\''
-      pgclient.query(querystring, (err, res) => {
-        if (err) throw err
+      pgclient.query(querystring).then(res => {
+        
         if (res.rows[0]) {
           resolve(res.rows[0]['nftdata'])
         } else {
           resolve(null)
           w.log.error('SQL error - row was empty')//is this needed or will the if (err) throw err prevent this?
-        }
-      })//end query
-    } catch {
-      w.log.error('error getting that nft data: ' + err)
+        
+      }
+        
+        
+        
+      }).catch(e => {
+      w.log.error('error getting that nft data: ' + e)
       resolve(null)//if there was an error getting NFT data return null to be handled by the calling function
-    }
+    })
   })//end promise
 }; module.exports.getNFTdata = getNFTdata
 
