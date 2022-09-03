@@ -59,8 +59,15 @@ async function getremoteMEtokendetails(mintaddress) {
 			// The whole response has been received.
 			resp.on('end', () => {
 				var thistoken = JSON.parse(data)
-				resolve(thistoken)//return the recieved tokendetails
+				if (thistoken.mintAddress) {
+				resolve(thistoken)//return the recieved token details
+				} else {
+				  w.log.error("Got a response from ME but no mint address in the data (probably a 500 server error. NFT burned?")
+				  resolve(null)
+				} 
 			})
-		}).on("error", (err) => { w.log.info("Error: " + err.message) })
+		}).on("error", (err) => { 
+		  w.log.error("General http error when getting token details from ME. Error: " + err.message)
+		  resolve(null)})
 	}) //end promise
 }; module.exports.getTokenDetails = getremoteMEtokendetails

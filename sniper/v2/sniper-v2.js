@@ -69,11 +69,13 @@ async function startsniper() {
             //actions if token address and price match (i.e. we've seen this one before)
           } else {
             //actions if token address or price does not match one we have seen before
-            w.log.info('SniperV2: New/updated ' + collections[k]['meslug'] + ' entry ' + thislistings[i].tokenAddress + ' at price ' + thislistings[i].price)
+            w.log.info('SniperV2: New/updated ' + collections[k]['meslug'] + ' entry ' + thislistings[i].tokenMint + ' at price ' + thislistings[i].price)
             rebuildarrary.unshift(thislistings[i])//add the new entry to the start of the rebuild arrary so we can remember this one if we see it later
 
             var thisprice = pround(thislistings[i].price, 6)//set price of this lisitng
             var recievedtoken = await magiceden.getTokenDetails(thislistings[i].tokenMint)
+            
+            if (recievedtoken) {
 
             var thistoken = recievedtoken
             var thisname = thistoken.name
@@ -128,6 +130,7 @@ async function startsniper() {
             } else {
               w.log.error('error getting nft data')
             }//end else if get nft data failed
+            } else {w.log.error('error getting listing at magic Eden for this snipe test')}
           }//end else for a token we havnt seen before
         }//end for loop of each listing recieved
 
