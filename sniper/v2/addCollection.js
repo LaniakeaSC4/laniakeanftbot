@@ -84,11 +84,17 @@ async function calculateTraitPercentages(creatoraddress) {
     try {
       if (metaplexdata.data[i].json) {
         for (var j = 0; j < metaplexdata.data[i].json.attributes.length; j++) { //for each attribute of this NFT
-          var maintype = metaplexdata.data[i].json.attributes[j].trait_type.toString().replace(/[^0-9a-z]/gi, '')//clean the key
+          //var maintype = metaplexdata.data[i].json.attributes[j].trait_type.toString().replace(/[^0-9a-z]/gi, '')//clean the key
+          var maintype = metaplexdata.data[i].json.attributes[j].trait_type.toString()
 
-          var subtype = ''
+          /*var subtype = ''
           if (metaplexdata.data[i].json.attributes[j].value.toString().replace(/[^0-9a-z]/gi, '')) {
             subtype = metaplexdata.data[i].json.attributes[j].value.toString().replace(/[^0-9a-z]/gi, '')//clean the key
+          } else { subtype = 'none' }*/
+          
+          var subtype = ''
+          if (metaplexdata.data[i].json.attributes[j].value.toString()) {
+            subtype = metaplexdata.data[i].json.attributes[j].value.toString()
           } else { subtype = 'none' }
 
           if (maintype in traitPercentages) {//if maintype is already a key in the object
@@ -170,13 +176,19 @@ async function combineTraitRarity(creatoraddress) {
 
           try {
             if (nftdata.data[i].json.attributes[j]) {
-              var maintype = nftdata.data[i].json.attributes[j].trait_type.toString().replace(/[^0-9a-z]/gi, '')
-              //var subtype = nftdata.data[i].json.attributes[j].value.toString().replace(/[^0-9a-z]/gi, '')
+              /*var maintype = nftdata.data[i].json.attributes[j].trait_type.toString().replace(/[^0-9a-z]/gi, '')
 
               var subtype = ''
               if (nftdata.data[i].json.attributes[j].value.toString().replace(/[^0-9a-z]/gi, '')) {
                 subtype = nftdata.data[i].json.attributes[j].value.toString().replace(/[^0-9a-z]/gi, '')//clean the key
-              } else { subtype = 'none' }
+              } else { subtype = 'none' }*/
+              
+              var maintype = nftdata.data[i].json.attributes[j].trait_type.toString()
+
+              var subtype = ''
+              if (nftdata.data[i].json.attributes[j].value.toString()) {
+                subtype = nftdata.data[i].json.attributes[j].value.toString()
+              } else { subtype = 'none' } 
 
               var thispercentage = traitdata[maintype][subtype]['percentage']
               thesepercentages.push(thispercentage)
