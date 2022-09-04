@@ -232,8 +232,8 @@ async function combineTraitRarity(creatoraddress) {
         var thisnftid = 0
         var regex = /(\d+)(?!.*\d)/
         var matchid = nftdata.data[i].json.name.match(regex)
-        w.log.info('matchid is: ' + matchid)
-        thisnftid = parseFloat(matchid)
+        w.log.info('matchid[0] is: ' + matchid[0])
+        thisnftid = parseFloat(matchid[0])
 
         //now store the NFT with this info into out output object
         output.data[i] = {
