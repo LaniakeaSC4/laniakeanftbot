@@ -147,7 +147,7 @@ async function startsniper() {
 
       })//end then after getting 
     }, thisinterval, value)//end recheck listing loop
-  w.log.info('thisintervalid: ' + thisnftid)
+  w.log.info('thisintervalid: ' + thisintervalid)
   })//end snipersequencer values
   )//end promise.all
 }//end startsniper
