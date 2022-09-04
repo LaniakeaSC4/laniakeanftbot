@@ -49,6 +49,8 @@ const initaliseSniperCollections = async () => {
 }//end initaliseSniperCollections
 module.exports.initialise = initaliseSniperCollections
 
+var runningintervals = []
+
 //main sniper function
 async function startsniper() {
   w.log.info('SniperV2: starting main function')
@@ -56,7 +58,7 @@ async function startsniper() {
     var thisinterval = the_interval + (value * 1100)//interval for each collection is 1.1 seconds longer to avoid more than 2 ME API requests per second
     //w.log.info('SniperV2: Initialising recheckloop for collection: ' + collections[value].collectionkey + '. Setting interval for this collection to: ' + thisinterval)
 
-    await setInterval(async function (k) {//do this every X minutes
+    var thisintervalid = await setInterval(async function (k) {//do this every X minutes
       await magiceden.getNewListings(collections[k]['meslug'], refreshget).then(async thislistings => {//get latest X listings from Magic Eden
         /* heartbeat logging - enable if you want update each minute for each collection */
         //w.log.info("I am doing my " + minutes + " minute check for " + sniperCollections[k][0] + '. I have this many in my history at start: ' + sniperCollections[k][1].length)
@@ -147,6 +149,9 @@ async function startsniper() {
 
       })//end then after getting 
     }, thisinterval, value)//end recheck listing loop
+  w.log.debug('pushing thisintervalid to runningintervals: ' + thisintervalid)
+  runningintervals.push(thisintervalid)
+  W.log.debug('runningintervals is: ' + runningintervals)
   })//end snipersequencer values
   )//end promise.all
 }//end startsniper

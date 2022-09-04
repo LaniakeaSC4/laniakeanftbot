@@ -280,6 +280,7 @@ async function rankNFTs(creatoraddress, meslug) {
   output.data = []//clear just the data part (so we keep the other data)
   output.data = sorted//set the NFT data equal to the sorted data.
 
+  /*
   w.log.info('Metaplex: first is')
   w.log.info(sorted[0])
   w.log.info('Metaplex: second is')
@@ -288,6 +289,7 @@ async function rankNFTs(creatoraddress, meslug) {
   w.log.info(sorted[2])
   w.log.info('Metaplex: forth is')
   w.log.info(sorted[3])
+  */
 
   w.log.info('Metaplex: Storing final object with ' + output.data.length + ' NFTs')
   sql.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "finaldata", output)
