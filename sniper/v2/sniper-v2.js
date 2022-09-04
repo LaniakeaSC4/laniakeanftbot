@@ -172,7 +172,7 @@ async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisrarit
     client.guilds.cache.get(server).channels.cache.get(snipeschannel).send({
       embeds: [
         {
-          "title": hotness + ' Snipe Opportunity\n' + nftname,
+          "title": hotness + ' Snipe Opportunity\n\n' + nftname,
           "color": embedcolour,
           "fields": [
             {
@@ -191,8 +191,8 @@ async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisrarit
               "inline": false
             },
             {
-              "name": "Buy " + nftname,
-              "value": '[On Magic Eden]('+listinglink+')',
+              "name": nftname,
+              "value": '[Buy on Magic Eden]('+listinglink+')',
               "inline": false
             }, 
             {
