@@ -217,6 +217,7 @@ async function combineTraitRarity(creatoraddress) {
         try { if (nftdata.data[i].metadataAddress) { metadataAddress = nftdata.data[i].metadataAddress } } catch { metadataAddress = 'not found' }
 
         //get nft ID from name
+        /*
         var thisnftid = 0
         let namearr = nftdata.data[i].json.name.split(' ')
         for (var m = 0; m < namearr.length; m++) {
@@ -226,6 +227,8 @@ async function combineTraitRarity(creatoraddress) {
             thisnftid = parseFloat(checkthis.substring(1, nlength))
           }//end if
         }//end for
+        */
+        thisnftid = parseFloat(nftdata.data[i].json.name.match(/(\d+)(?=[^\d]+$)/g))
 
         //now store the NFT with this info into out output object
         output.data[i] = {
