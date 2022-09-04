@@ -110,7 +110,7 @@ async function startsniper() {
                 var thisserverid = ''
                 var thissnipechannel = ''
 
-                w.log.info('SniperV2: we have a ' + hotness + ' ' + collections[k]['meslug'] + ' snipe!')
+                w.log.info('SniperV2: we have a ' +  collections[k]['meslug'] + ' snipe!')
 
                 for (i = 0; i < supportedservers.length; i++) {
 

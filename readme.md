@@ -1,5 +1,12 @@
 # Laniakea Bot Version 2.1 - 01/09/2022
 
+## Ideas and Features
+
+* can only add collections which have #123 nft id in the name. Need a better way to get the nft ids. Need to check what data comes back from metaplex. If there is a nft id in there, then I can pull from my databse with that as a reference? Could test with `https://magiceden.io/marketplace/adagio_tvs` as the name format dosent have #
+* need to be able to restart bot or update collections after new one is added. For that, need to be able to break the interval loops which are running and initialise again. SetInterval should give back an id to break it, but my current setintetval setup is weird in a Promise.all loop. Can that be simplified?
+* delete trait rarity from database. Don't think we need them
+* Roll a new VM using instructions below to split sql databse onto another drive
+
 ## npm packages (package.json)
 
 After migrating to GCP these are the installed npm packages:
@@ -40,24 +47,24 @@ After migrating to GCP these are the installed npm packages:
       * https://www.npmjs.com/package/winston
 
 
-# Linux setup
+## Linux setup
 
-## VM
+### VM
 
 Google Cloud Compute Engine e2-micro (0.25 vcpu, 1GB ram)
 
-## Installed packages
+### Installed packages
 
-### node
+#### node
 
 `sudo apt update`
 `sudo apt install nodejs`
 
-### npm
+#### npm
 
 should come with node, check version
 
-### postgresql
+#### postgresql
 
 Had some problems with this as I was originaly on a debian 10 VM. Changed to ubuntu VM and followed this guide 
 
@@ -77,7 +84,7 @@ if I can ever seperate disks, then this might be useful.
 
 https://www.digitalocean.com/community/tutorials/how-to-move-a-postgresql-data-directory-to-a-new-location-on-ubuntu-16-04
 
-### forever
+#### forever
 
 `https://www.npmjs.com/package/forever`
 
@@ -85,7 +92,7 @@ as global npm package: install: `sudo npm install forever -g`
 
 I'm starting/restarting in my bot start bash script with `forever restart -f bot.js|| forever start -a -f --uid "discord" bot.js`
 
-### logrotate
+#### logrotate
 
 Installed version 3.19.0
 
