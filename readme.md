@@ -40,4 +40,26 @@ After migrating to GCP these are the installed npm packages:
       * https://www.npmjs.com/package/winston
 
 
-Linux setup
+# Linux setup
+
+## VM
+
+Google Cloud Compute Engine e2-micro (0.25 vcpu, 1GB ram)
+
+## Installed packages
+
+*node
+  * `sudo apt update`
+  * `sudo apt install nodejs`
+*npm
+  * should come with node, check version
+* postgresql
+  * ```sudo apt update && sudo apt upgrade
+  * sudo apt -y install gnupg2 wget vim
+  * sudo apt-cache search postgresql | grep postgresql
+  * sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+  * wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+  * sudo apt -y update
+  * sudo apt install postgresql-14```
+*forever
+*logrotate
