@@ -9,8 +9,4 @@ cd /home/abwglv/nftbot/ &
 wait
 #start bot
 echo starting/restarting bot
-forever restart -f bot.js|| forever start -a -f --uid "discord" bot.js &
-wait
-#delete the logs from last instance of process
-echo deleting logs
-forever cleanlogs
+forever restart -f bot.js|| forever start -a -f --uid "discord" bot.js

@@ -59,7 +59,7 @@ should come with node, check version
 
 ### postgresql
 
-had some problems with this as I was originaly on a debian 10 VM. Changed to ubuntu VM and followed this guide 
+Had some problems with this as I was originaly on a debian 10 VM. Changed to ubuntu VM and followed this guide 
 
 `https://computingforgeeks.com/how-to-install-postgresql-14-on-debian/`
 
@@ -71,5 +71,43 @@ had some problems with this as I was originaly on a debian 10 VM. Changed to ubu
 * `sudo apt -y update`
 * `sudo apt install postgresql-14`
 
-*forever
-*logrotate
+postgresql is on same disk as boot. Would have been better to store databse on seperate disk and attach to VM so I can take snapshots of the host VM without needing to snapshot the postgres data. Can't shrink a gcp VM though (at least not easily) so gave up on this for now.
+
+if I can ever seperate disks, then this might be useful.
+
+https://www.digitalocean.com/community/tutorials/how-to-move-a-postgresql-data-directory-to-a-new-location-on-ubuntu-16-04
+
+### forever
+
+`https://www.npmjs.com/package/forever`
+
+as global npm package: install: `sudo npm install forever -g`
+
+I'm starting/restarting in my bot start bash script with `forever restart -f bot.js|| forever start -a -f --uid "discord" bot.js`
+
+### logrotate
+
+Installed version 3.19.0
+
+`sudo apt update`
+`sudo apt install logrotate`
+
+made a new file `discord` in `/etc/logrotate.d` with contents
+
+```
+/home/abwglv/.forever/discord.log {
+  daily
+  missingok
+  rotate 7
+  compress
+  notifempty
+  #create 664 abwglv
+  copytruncate
+}
+```
+
+forever log will always be discord.log as we specified uid discord in our forever start script
+
+`forever start -a -f --uid "discord" bot.js`
+
+Logrotate automatically runs daily once installed and will pick up config added to `/etc/logrotate.d`
