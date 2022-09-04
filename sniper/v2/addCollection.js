@@ -307,5 +307,7 @@ async function cleanupDatabase(creatoraddress) {
   await sql.deleteColumnData("solanametaplex", "creatoraddress", creatoraddress, "withjson")
   w.log.info('Metaplex: clearing unranked data with rarity')
   await sql.deleteColumnData("solanametaplex", "creatoraddress", creatoraddress, "withrarity")
+  w.log.info('Metaplex: clearing trait rarity')
+  await sql.deleteColumnData("solanametaplex", "creatoraddress", creatoraddress, "traitrarity")
 
 }; module.exports.cleanupDatabase = cleanupDatabase
