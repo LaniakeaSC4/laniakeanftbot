@@ -1,6 +1,6 @@
-# npm packages
+# Laniakea Bot Version 2.1 - 01/09/2022
 
-## Version 2.1 - 01/09/2022
+## npm packages (package.json)
 
 After migrating to GCP these are the installed npm packages:
 
