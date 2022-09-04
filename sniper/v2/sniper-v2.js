@@ -151,7 +151,7 @@ async function startsniper() {
     }, thisinterval, value)//end recheck listing loop
   w.log.debug('pushing thisintervalid to runningintervals: ' + thisintervalid)
   runningintervals.push(thisintervalid)
-  W.log.debug('runningintervals is: ' + runningintervals)
+  w.log.debug('runningintervals is: ' + runningintervals)
   })//end snipersequencer values
   )//end promise.all
 }//end startsniper
