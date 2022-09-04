@@ -228,7 +228,8 @@ async function combineTraitRarity(creatoraddress) {
           }//end if
         }//end for
         */
-        var matchid = nftdata.data[i].json.name.match(/(\d+)(?=[^\d]+$)/g)
+        var regex = /(\d+)(?=[^\d]+$)/g
+        var matchid = nftdata.data[i].json.name.match(regex)
         w.log.info(matchid)
         thisnftid = parseFloat(matchid[0])
 
@@ -248,7 +249,7 @@ async function combineTraitRarity(creatoraddress) {
         }//end output data load for this NFT
       } else { jsonerrors = jsonerrors + 1 }
     } catch (err) {
-
+w.log.info(err)
     }
   }//end for each NFT
   w.log.info('Metaplex: ' + jsonerrors + '/' + nftdata.data.length + ' gave JSON errors')
