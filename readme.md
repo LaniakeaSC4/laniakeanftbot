@@ -63,13 +63,13 @@ had some problems with this as I was originaly on a debian 10 VM. Changed to ubu
 
 `https://computingforgeeks.com/how-to-install-postgresql-14-on-debian/`
 
-> `sudo apt update && sudo apt upgrade`
-> `sudo apt -y install gnupg2 wget vim`
-> `sudo apt-cache search postgresql | grep postgresql`
-> `sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'`
-> `wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -`
-> `sudo apt -y update`
-> `sudo apt install postgresql-14`
+* `sudo apt update && sudo apt upgrade`
+* `sudo apt -y install gnupg2 wget vim`
+* `sudo apt-cache search postgresql | grep postgresql`
+* `sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'`
+* `wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -`
+* `sudo apt -y update`
+* `sudo apt install postgresql-14`
 
 *forever
 *logrotate
