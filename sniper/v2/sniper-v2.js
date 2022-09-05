@@ -27,7 +27,9 @@ var rarelimit = 1.25
 var supportedservers = []
 
 const initaliseSniperCollections = async () => {
-  collections = {}
+  //reset globals incase this is a restart
+  supportedservers = [];sniperSequencer = [];collections = {}
+  
   collections = await sql.getSupportedCollections()
 
   var currentcollections = ""
@@ -43,7 +45,6 @@ const initaliseSniperCollections = async () => {
     await wait(2000)//add delay between API requests
   }//for seq of sniperSequencer
 
-  supportedservers = []
   //get servers and load into supported servers var
   supportedservers = await sql.getSupportedServers()
   
