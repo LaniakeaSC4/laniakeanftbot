@@ -49,9 +49,9 @@ module.exports = {
 			if (action === 'addstep5') { await metaplex.cleanupDatabase(data) }
 			
 			if (action === 'restart') { 
+			  await interaction.reply({ content: "Sniper Bot restarted", ephemeral: true })
 			  await sniper.stop()
 			  await sniper.initialise()
-			  await interaction.reply({ content: "Sniper Bot restarted", ephemeral: true })
 			}
 
 		}//end if user is laniakea
