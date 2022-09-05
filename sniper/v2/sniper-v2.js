@@ -27,6 +27,7 @@ var rarelimit = 1.25
 var supportedservers = []
 
 const initaliseSniperCollections = async () => {
+  collections = {}
   collections = await sql.getSupportedCollections()
 
   var currentcollections = ""
@@ -42,12 +43,16 @@ const initaliseSniperCollections = async () => {
     await wait(2000)//add delay between API requests
   }//for seq of sniperSequencer
 
+  supportedservers = []
   //get servers and load into supported servers var
   supportedservers = await sql.getSupportedServers()
   
   startsniper()
 }//end initaliseSniperCollections
 module.exports.initialise = initaliseSniperCollections
+
+//store the setInterval ids for the sniper recheck loops we start so we can retrieve and kill them later.
+var currentloops = []
 
 //main sniper function
 async function startsniper() {
@@ -147,7 +152,9 @@ async function startsniper() {
 
       })//end then after getting 
     }, thisinterval, value)//end recheck listing loop
-  w.log.info('thisintervalid: ' + thisintervalid)
+  //w.log.info('thisintervalid: ' + thisintervalid)
+  currentloops.push(thisintervalid)
+  w.log.info('current loops is: ' + currentloops)
   })//end snipersequencer values
   )//end promise.all
 }//end startsniper
@@ -234,3 +241,10 @@ async function testifsnipe(raritydescription, thisprice, floorprice) {
     }//end if hotrarities
   }) //end promise
 }//end testifsnipe function
+
+async function stopsniper(loops){
+  w.log.info('stopping sniper bot with clearinterval')
+  for (var i = 0;i < currentloops.length;i++){
+    clearInterval(currentloops[i])
+  }
+} module.exports.stop = stopsniper

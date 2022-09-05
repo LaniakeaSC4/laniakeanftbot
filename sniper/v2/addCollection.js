@@ -5,6 +5,7 @@ const { Metaplex, keypairIdentity, bundlrStorage } = require("@metaplex-foundati
 const { Connection, clusterApiUrl, Keypair, PublicKey } = require("@solana/web3.js")
 const sql = require('../../tools/commonSQL.js')//common sql related commands are in here
 const w = require('../../tools/winston.js')
+const sniper = require('./sniper-v2.js')
 
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -13,9 +14,11 @@ async function addNewNFT(creatoraddress, meslug) {
 
   await getMetaplexData(creatoraddress)
   await calculateTraitPercentages(creatoraddress)
-  await combineTraitRarity(creatoraddress)
-  await rankNFTs(creatoraddress, meslug)
+  await combineTraitRarity(creatoraddress, meslug)
+  await rankNFTs(creatoraddress)
   await cleanupDatabase(creatoraddress)
+  await sniper.stop()
+  await sniper.initialise()
 
 }; module.exports.addNewNFT = addNewNFT
 
@@ -134,7 +137,7 @@ async function calculateTraitPercentages(creatoraddress) {
 }; module.exports.calculateTraitPercentages = calculateTraitPercentages
 
 //addstep3 - get the nft and trait % data from SQL (added with getMetaplexData) and calculate the statistical rarity of each nft
-async function combineTraitRarity(creatoraddress) {
+async function combineTraitRarity(creatoraddress,meslug) {
 
   w.log.info('Metaplex: Building final object with statistical rarity')
   var traitdata = {}; var nftdata = {}//establish objects
@@ -228,11 +231,10 @@ async function combineTraitRarity(creatoraddress) {
           }//end if
         }//end for
         */
-        w.log.info('this name is: ' + nftdata.data[i].json.name)
+        
         var thisnftid = 0
         var regex = /(\d+)(?!.*\d)/
         var matchid = nftdata.data[i].json.name.match(regex)
-        w.log.info('matchid[0] is: ' + matchid[0])
         thisnftid = parseFloat(matchid[0])
 
         //now store the NFT with this info into out output object
@@ -260,12 +262,14 @@ w.log.info(err)
   await sql.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "withrarity", output)
   w.log.info('Metaplex: storing collection count of: ' + parseFloat(output.data.length))
   await sql.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "collectioncount", parseFloat(output.data.length))
-  w.log.info('Metaplex: storing collection key: ' + nftdata.data[10].json.name.substring(0, (nftdata.data[0].name.indexOf('#') - 1)).toString().replace(/[^0-9a-z]/gi, '').toLowerCase())
-  await sql.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "collectionkey", nftdata.data[10].json.name.substring(0, (nftdata.data[0].name.indexOf('#') - 1)).toString().replace(/[^0-9a-z]/gi, '').toLowerCase())
+  w.log.info('Metaplex: storing collection key: ' +  meslug.replace(/[^0-9a-z]/gi, '').toLowerCase())
+  await sql.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "collectionkey", meslug.replace(/[^0-9a-z]/gi, '').toLowerCase())
+  w.log.info('Metaplex: storing meslug: ' +  meslug)
+  sql.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "meslug", meslug)
 }; module.exports.combineTraitRarity = combineTraitRarity
 
 //addstep4 - get the unranked NFTs with statistical rarity and rank them for the final data
-async function rankNFTs(creatoraddress, meslug) {
+async function rankNFTs(creatoraddress) {
 
   w.log.info('Metaplex: Ranking NFTs')
   //get data from DB
@@ -301,7 +305,6 @@ async function rankNFTs(creatoraddress, meslug) {
 
   w.log.info('Metaplex: Storing final object with ' + output.data.length + ' NFTs')
   sql.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "finaldata", output)
-  sql.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "meslug", meslug)
 
 }; module.exports.rankNFTs = rankNFTs
 
