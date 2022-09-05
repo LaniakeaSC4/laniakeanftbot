@@ -247,4 +247,5 @@ async function stopsniper(loops){
   for (var i = 0;i < currentloops.length;i++){
     clearInterval(currentloops[i])
   }
+  currentloops = []//reset it
 } module.exports.stop = stopsniper
