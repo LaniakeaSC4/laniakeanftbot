@@ -177,7 +177,7 @@ async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisrarit
           "fields": [
             {
               "name": "🎯 - Snipe Details",
-              "value": "**Rarity**: " + thisrarity + ' - ' + raritydescription + "\n**List price**: " + pround(parseFloat(thisprice), 3) + ' SOL\n**Floor price**: ' + pround(parseFloat(floorprice), 3) + ' SOL\[Buy on Magic Eden]('+listinglink+')' ,
+              "value": "**Rarity**: " + thisrarity + ' - ' + raritydescription + "\n**List price**: " + pround(parseFloat(thisprice), 3) + ' SOL\n**Floor price**: ' + pround(parseFloat(floorprice), 3) + ' SOL\nBuy on Magic Eden]('+listinglink+')' ,
               "inline": false
             },
             {
