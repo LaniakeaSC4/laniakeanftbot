@@ -78,6 +78,7 @@ client.on('interactionCreate', async interaction => {
               .setRequired(true),
           ),
         ]);
+  }//end if button is 'beginsetup'
 
       await interaction.showModal(modal);
     
@@ -90,6 +91,5 @@ client.on('interactionCreate', async interaction => {
   }
   
     //var setupstatus = await setuphomechannel(interaction)//
-  }//end if button is 'beginsetup'
 
 })//end on interactionCreate 
