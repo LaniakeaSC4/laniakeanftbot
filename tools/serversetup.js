@@ -16,7 +16,7 @@ async function start(interaction) {
 	for (var i = 0; i < supportedservers.length; i++) {
 		if (supportedservers[i].serverid === guildid) {
 			validserver = true
-			w.log.info('matched server in our database: ' + guildid)
+			w.log.info('matched server in our database during installation: ' + guildid)
 			break
 		}//end if
 	}//end for
@@ -157,7 +157,7 @@ async function setuphomechannel(interaction) {
 	for (var i = 0; i < supportedservers.length; i++) {
 		if (supportedservers[i].serverid === guildid) {
 			validserver = true
-			w.log.info('matched server in our database: ' + guildid)
+			w.log.info('matched server in our database during homechannel setup: ' + guildid)
 			break
 		}//end if
 	}//end for
@@ -175,7 +175,7 @@ async function setuphomechannel(interaction) {
 		//
 		//
 		w.log.info('log exisiting channels')
-		w.log.info(existingchannels)
+		//w.log.info(existingchannels)//winston error? 
 
 		var channelcheck = {
 			"snipecategory": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "LANIAKEA SNIPER BOT", "servercolumn": "snipecategory" },
