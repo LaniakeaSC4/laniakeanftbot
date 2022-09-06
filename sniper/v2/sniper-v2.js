@@ -163,10 +163,10 @@ async function startsniper() {
 module.exports.start = startsniper
 
 async function snipeHotness(thisprice, floorprice, thislimit) {
-  var blazinglimit = ((thislimit - floorprice) * 0.2); //w.log.info('blazing limit is: ' + blazinglimit)
-  var redhotlimit = ((thislimit - floorprice) * 0.4); //w.log.info('redhotlimit limit is: ' + redhotlimit)
-  var hotlimit = ((thislimit - floorprice) * 0.6); //w.log.info('hotlimit limit is: ' + hotlimit)
-  var warmlimit = ((thislimit - floorprice) * 0.8); //w.log.info('warmlimit limit is: ' + warmlimit)
+  var blazinglimit = floorprice+((thislimit - floorprice) * 0.2); //w.log.info('blazing limit is: ' + blazinglimit)
+  var redhotlimit = floorprice+((thislimit - floorprice) * 0.4); //w.log.info('redhotlimit limit is: ' + redhotlimit)
+  var hotlimit = floorprice+((thislimit - floorprice) * 0.6); //w.log.info('hotlimit limit is: ' + hotlimit)
+  var warmlimit = floorprice+((thislimit - floorprice) * 0.8); //w.log.info('warmlimit limit is: ' + warmlimit)
   var coollimit = thislimit; //w.log.info('coollimit limit is: ' + coollimit)
 
   if (thisprice <= blazinglimit) { return '🔥🔥🔥🔥🔥\n__Blazing Hot' }
