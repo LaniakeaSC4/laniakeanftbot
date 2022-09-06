@@ -174,6 +174,7 @@ async function setuphomechannel(interaction) {
 		//
 		//
 		//
+		/*
 		w.log.info('log exisiting channels')
 		//w.log.info(existingchannels)//winston error? 
 
@@ -289,6 +290,6 @@ async function setuphomechannel(interaction) {
 				}
 			})
 
-		return 'complete'
+		return 'complete'*/
 	} else { return null }//end if valid server
 } module.exports.setuphomechannel = setuphomechannel
