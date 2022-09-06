@@ -1,7 +1,7 @@
 require('dotenv').config()//import process environment vars into app engine nodejs environment using dotenv
 var discord = require('./clients/discordclient.js')
 const client = discord.getClient()
-const { Collection } = require('discord.js')
+const { Collection, Modal Builder } = require('discord.js')
 
 const fs = require('node:fs')
 const path = require('node:path')
