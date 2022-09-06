@@ -185,17 +185,17 @@ async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisrarit
           "color": embedcolour,
           "fields": [
             {
-              "name": "🎯 ▪ __Snipe Details__",
+              "name": "🎯 __Snipe Details__",
               "value": "**Rarity**: " + thisrarity + ' - ' + raritydescription + "\n**List price**: " + pround(parseFloat(thisprice), 3) + ' SOL\n**Floor price**: ' + pround(parseFloat(floorprice), 3) + ' SOL\n[Buy on Magic Eden](' + listinglink + ')\n',
               "inline": false
             },
             {
-              "name": "⚡ ▪ __Snipe Price Info__",
+              "name": "⚡ __Snipe Price Info__",
               "value": 'For ' + raritydescription + ' NFTs, any price less than ' + parseFloat(thislimit) + 'x the floor price of ' + pround(parseFloat(floorprice), 3) + ' SOL is a snipe (i.e. less than ' + pround(parseFloat(thissnipeprice), 3) + ' SOL)',
               "inline": true
             },
             {
-              "name": "🐍 ▪ __Laniakea Bot v2.1__",
+              "name": "🐍 __Laniakea Bot v2.1__",
               "value": "Hand crafted by Laniakea#3683 and brought to you by the Secret Snake Society. Visit us [on Discord](https://discord.gg/Dr2Vb7Rt6u).",
               "inline": false
             }
