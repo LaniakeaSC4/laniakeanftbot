@@ -20,7 +20,13 @@ module.exports = {
         .addComponents(
           new ButtonBuilder()
             .setCustomId('beginsetup')
-            .setLabel('Let\'s do it')
+            .setLabel('Setup Server')
+            .setStyle(ButtonStyle.Primary),
+        )
+        .addComponents(
+          new ButtonBuilder()
+            .setCustomId('singlemodesetup')
+            .setLabel('Enable Single Mode')
             .setStyle(ButtonStyle.Primary),
         )//end add components
 

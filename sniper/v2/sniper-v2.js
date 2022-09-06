@@ -60,7 +60,7 @@ async function startsniper() {
   w.log.info('SniperV2: starting main function')
   await Promise.all(sniperSequencer.map(async value => {//this was added to make sure to sequentially initiate the sniper loops. Not sure its working as intended, but loops are spread out
     var thisinterval = the_interval + (value * 1100)//interval for each collection is 1.1 seconds longer to avoid more than 2 ME API requests per second
-    w.log.info('SniperV2: Initialising recheckloop for collection: ' + collections[value].collectionkey + '. Setting interval for this collection to: ' + thisinterval)
+    //w.log.info('SniperV2: Initialising recheckloop for collection: ' + collections[value].collectionkey + '. Setting interval for this collection to: ' + thisinterval)
 
    var thisintervalid = await setInterval(async function (k) {//do this every X minutes
       await magiceden.getNewListings(collections[k]['meslug'], refreshget).then(async thislistings => {//get latest X listings from Magic Eden
@@ -153,9 +153,8 @@ async function startsniper() {
 
       })//end then after getting 
     }, thisinterval, value)//end recheck listing loop
-  //w.log.info('thisintervalid: ' + thisintervalid)
+  //save this interval id so we can kill it in a restart
   currentloops.push(thisintervalid)
-  w.log.info('current loops is: ' + currentloops)
   })//end snipersequencer values
   )//end promise.all
 }//end startsniper
