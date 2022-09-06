@@ -126,10 +126,10 @@ async function startsniper() {
                   if (raritydescription === 'Epic') { thissnipechannel = supportedservers[i].epicsnipes }
                   if (raritydescription === 'Legendary') { thissnipechannel = supportedservers[i].legendarysnipes }
                   if (raritydescription === 'Mythic') { thissnipechannel = supportedservers[i].mythicsnipes }
-
+if (thissnipechannel){//filters out servers which are in pg but not setup yet
                   //send snipes
                   sendsnipes(thisserverid, thissnipechannel, thisname, thisembedcolour, NFTdata.rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
-
+}//end if snipe channel.
                 }//for each supported server (from SQL)                
 
               } else { /* w.log.info('this was not a snipe') */ } //end if not false
