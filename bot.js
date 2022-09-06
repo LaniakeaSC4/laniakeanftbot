@@ -59,7 +59,7 @@ client.on('interactionCreate', async interaction => {
   if (!interaction.isButton()) return;
   if (interaction.customId === 'beginsetup') {
     var setupstatus = await setup.start(interaction)//creates category and 4 sniper channels if the ones in database dont already exist.
-    if (setupstatus) { w.log.info('setup status was sucessful') }
+    if (setupstatus) { w.log.info('setup status was sucessful') } else {w.log.info('there was an error during a setup attempt')}
   }//end if button is 'beginsetup'
 
   if (interaction.customId === 'singlemodesetup') {

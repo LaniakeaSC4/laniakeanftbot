@@ -26,7 +26,7 @@ module.exports = {
         .addComponents(
           new ButtonBuilder()
             .setCustomId('singlemodesetup')
-            .setLabel('Enable Single Mode')
+            .setLabel('Setup Single Mode [inactive]')
             .setStyle(ButtonStyle.Primary),
         )//end add components
 
