@@ -62,8 +62,34 @@ client.on('interactionCreate', async interaction => {
     if (setupstatus) { w.log.info('setup status was sucessful') } else {w.log.info('there was an error during a setup attempt')}
   }//end if button is 'beginsetup'
 
-  if (interaction.customId === 'singlemodesetup') {
-    var setupstatus = await setup.start(interaction)//creates category and 4 sniper channels if the ones in database dont already exist.
+  if (interaction.customId === 'homechannelsetup') {
+    const modal = new ModalBuilder()
+        .setCustomId('verification-modal')
+        .setTitle('Verify yourself')
+        .addComponents([
+          new ActionRowBuilder().addComponents(
+            new TextInputBuilder()
+              .setCustomId('verification-input')
+              .setLabel('Answer')
+              .setStyle(TextInputStyle.Short)
+              .setMinLength(4)
+              .setMaxLength(12)
+              .setPlaceholder('ABCDEF')
+              .setRequired(true),
+          ),
+        ]);
+
+      await interaction.showModal(modal);
+    
+    if (interaction.type === InteractionType.ModalSubmit) {
+    if (interaction.customId === 'verification-modal') {
+      const response =
+        interaction.fields.getTextInputValue('verification-input');
+      interaction.reply(`Yay, your answer is submitted: "${response}"`);
+    }
+  }
+  
+    //var setupstatus = await setuphomechannel(interaction)//
   }//end if button is 'beginsetup'
 
 })//end on interactionCreate 

@@ -25,7 +25,7 @@ module.exports = {
         )
         .addComponents(
           new ButtonBuilder()
-            .setCustomId('singlemodesetup')
+            .setCustomId('homechannelsetup')
             .setLabel('Setup Single Mode [inactive]')
             .setStyle(ButtonStyle.Primary),
         )//end add components
