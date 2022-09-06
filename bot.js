@@ -58,7 +58,12 @@ const setup = require('./tools/serversetup.js')
 client.on('interactionCreate', async interaction => {
   if (!interaction.isButton()) return;
   if (interaction.customId === 'beginsetup') {
-    var setupstatus = await setup.start(interaction)
+    var setupstatus = await setup.start(interaction)//creates category and 4 sniper channels if the ones in database dont already exist.
     if (setupstatus) { w.log.info('setup status was sucessful') }
   }//end if button is 'beginsetup'
+
+  if (interaction.customId === 'singlemodesetup') {
+    var setupstatus = await setup.start(interaction)//creates category and 4 sniper channels if the ones in database dont already exist.
+  }//end if button is 'beginsetup'
+
 })//end on interactionCreate 
