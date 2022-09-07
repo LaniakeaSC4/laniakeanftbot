@@ -323,7 +323,7 @@ async function homechannelsetup1(interaction) {
 async function homechannelsetup2(interaction) {
 	const modal = new ModalBuilder()
 		.setCustomId('homechannelsetup-modal')
-		.setTitle('Verify yourself')
+		.setTitle('Magic Eden Link')
 		.addComponents([
 			new ActionRowBuilder().addComponents(
 				new TextInputBuilder()
@@ -332,7 +332,7 @@ async function homechannelsetup2(interaction) {
 					.setStyle(TextInputStyle.Short)
 					.setMinLength(2)
 					.setMaxLength(30)
-					.setPlaceholder('enter collection ID')
+					.setPlaceholder('Please enter ME link to your collection')
 					.setRequired(true),
 			),
 		])
@@ -341,5 +341,7 @@ async function homechannelsetup2(interaction) {
 
 async function homechannelsetup3(interaction) {
 	const response = interaction.fields.getTextInputValue('collection-input')
-	interaction.reply({ content: "Yay, your answer is submitted: " + response, ephemeral: true })
+	var meslug = response.substring(response.indexOf('magiceden.io/marketplace/') + 1).replace(/[^0-9a-z]/gi, '')
+	
+	interaction.reply({ content: "Yay, your answer is submitted: " + meslug, ephemeral: true })
 } module.exports.homechannelsetup3 = homechannelsetup3
