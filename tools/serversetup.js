@@ -338,6 +338,6 @@ var homecollections = { "enabled" : [] }
 async function homechannelsetup3(interaction) {
 	const response = interaction.fields.getTextInputValue('collection-input')
 	var meslug = response.substring(response.lastIndexOf('magiceden.io/marketplace/') + 25).replace(/[^0-9a-z]/gi, '')
-	homecollections[enabled].push(meslug)
-	interaction.edit({ content: "Adding: " + homecollections[enabled].toString(), ephemeral: true })
+	homecollections.enabled.push(meslug)
+	interaction.edit({ content: "Adding: " + homecollections.enabled.toString(), ephemeral: true })
 } module.exports.homechannelsetup3 = homechannelsetup3
