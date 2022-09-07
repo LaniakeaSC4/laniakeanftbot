@@ -319,7 +319,7 @@ async function homechannelsetup1(interaction) {
 	
 } module.exports.homechannelsetup1 = homechannelsetup1
 
-const supportedcollections = {}
+var supportedcollections = {}
 
 async function homechannelsetup2(interaction) {
 	const modal = new ModalBuilder()
