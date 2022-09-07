@@ -331,7 +331,7 @@ async function homechannelsetup2(interaction) {
 					.setLabel('Collection ID')
 					.setStyle(TextInputStyle.Short)
 					.setMinLength(2)
-					.setMaxLength(30)
+					.setMaxLength(120)
 					.setPlaceholder('Please enter ME link to your collection')
 					.setRequired(true),
 			),
