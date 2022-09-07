@@ -312,7 +312,14 @@ async function homechannelsetup1(interaction) {
 
 	//send the reply (including button row)
 	await interaction.reply({ content: "Adding: ", components: [row], ephemeral: true })
+	//get collections and populate global var
+	supportedcollections = {}
+	supportedcollections = await sql.getOurMetaplexCollections()//set from sql
+    //sort alphabetically
+	
 } module.exports.homechannelsetup1 = homechannelsetup1
+
+const supportedcollections = {}
 
 async function homechannelsetup2(interaction) {
 	const modal = new ModalBuilder()
@@ -338,6 +345,20 @@ var homecollections = { "enabled" : [] }
 async function homechannelsetup3(interaction) {
 	const response = interaction.fields.getTextInputValue('collection-input')
 	var meslug = response.substring(response.lastIndexOf('magiceden.io/marketplace/') + 25).replace(/[^0-9a-z]/gi, '')
-	homecollections.enabled.push(meslug)
+	
+	var found = false
+	for (var i = 0; i < collections.length; i++) {
+	  if (collections[i].collectionkey === meslug) {
+	    found = true
+homecollections.enabled.push(meslug)
 	interaction.update({ content: "Adding: " + homecollections.enabled.toString(), ephemeral: true })
+	  break
+	  }
+    }//end for
+    
+    if (!found) {
+      const replyMessage = await interaction.reply({content:'Collection ' + meslug + 'was not found in our supported collections'});
+  setTimeout(() => interaction.deleteReply(), 3000);
+    }
+	
 } module.exports.homechannelsetup3 = homechannelsetup3
