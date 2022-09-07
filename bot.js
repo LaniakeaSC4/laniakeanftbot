@@ -97,17 +97,17 @@ replystring = replystring + '```' //close the codeblock
 
   if (interaction.customId === 'homechannelsetup2') {
     const modal = new ModalBuilder()
-        .setCustomId('verification-modal')
+        .setCustomId('homechannelsetup-modal')
         .setTitle('Verify yourself')
         .addComponents([
           new ActionRowBuilder().addComponents(
             new TextInputBuilder()
-              .setCustomId('verification-input')
-              .setLabel('Answer')
+              .setCustomId('collection-input')
+              .setLabel('Collection ID')
               .setStyle(TextInputStyle.Short)
-              .setMinLength(4)
-              .setMaxLength(12)
-              .setPlaceholder('ABCDEF')
+              .setMinLength(2)
+              .setMaxLength(30)
+              .setPlaceholder('enter collection ID')
               .setRequired(true),
           ),
         ])
@@ -119,8 +119,8 @@ replystring = replystring + '```' //close the codeblock
     if (interaction.type === InteractionType.ModalSubmit) {
     if (interaction.customId === 'verification-modal') {
       const response =
-        interaction.fields.getTextInputValue('verification-input');
-      interaction.reply(`Yay, your answer is submitted: "${response}"`);
+        interaction.fields.getTextInputValue('collection-input');
+      interaction.reply({content:"Yay, your answer is submitted: " + response, ephemeral: true} );
     }
   }
   
