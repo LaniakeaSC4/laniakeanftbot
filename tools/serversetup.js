@@ -347,8 +347,8 @@ async function homechannelsetup3(interaction) {
 	var meslug = response.substring(response.lastIndexOf('magiceden.io/marketplace/') + 25).replace(/[^0-9a-z]/gi, '')
 	
 	var found = false
-	for (var i = 0; i < collections.length; i++) {
-	  if (collections[i].collectionkey === meslug) {
+	for (var i = 0; i < supportedcollections.length; i++) {
+	  if (supportedcollections[i].collectionkey === meslug) {
 	    found = true
 homecollections.enabled.push(meslug)
 	interaction.update({ content: "Adding: " + homecollections.enabled.toString(), ephemeral: true })
