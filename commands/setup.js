@@ -19,14 +19,14 @@ module.exports = {
       const row = new ActionRowBuilder()
         .addComponents(
           new ButtonBuilder()
-            .setCustomId('beginsetup')
+            .setCustomId('beginsetup-button')
             .setLabel('Setup Server')
             .setStyle(ButtonStyle.Primary),
         )
         .addComponents(
           new ButtonBuilder()
-            .setCustomId('homechannelsetup')
-            .setLabel('Setup Single Mode [inactive]')
+            .setCustomId('homechannelsetup1-button')
+            .setLabel('Setup Single Mode [in development]')
             .setStyle(ButtonStyle.Primary),
         )//end add components
 

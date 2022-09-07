@@ -1,6 +1,9 @@
 var discord = require('../clients/discordclient.js')
 const client = discord.getClient()
-const { ChannelType, PermissionFlagsBits, PermissionsBitField } = require('discord.js')
+const { ChannelType, PermissionFlagsBits, PermissionsBitField,
+	ModalBuilder, ActionRowBuilder, TextInputBuilder,
+	TextInputStyle, ChannelType, PermissionFlagsBits,
+	ButtonBuilder, ButtonStyle } = require('discord.js')
 
 const w = require('./winston.js')
 const sql = require('./commonSQL.js')//common sql related commands are in here
@@ -119,7 +122,6 @@ async function start(interaction) {
 					w.log.info('Category channel already existed')
 					createchildren()
 				}
-
 
 				async function createchildren() {
 					//get the category channel object so we can add children
@@ -293,3 +295,52 @@ async function setuphomechannel(interaction) {
 		return 'complete'*/
 	} else { return null }//end if valid server
 } module.exports.setuphomechannel = setuphomechannel
+
+async function homechannelsetup1(interaction) {
+	//build a new button row for the command reply
+	const row = new ActionRowBuilder()
+		.addComponents(
+			new ButtonBuilder()
+				.setCustomId('homechannelsetup2-button')
+				.setLabel('enter collection')
+				.setStyle(ButtonStyle.Primary),
+		)
+
+	var unsortedcollections = await sql.getOurMetaplexCollections() //set from sql
+	//sort alphabetically
+	var collections = unsortedcollections.sort((a, b) => (a.collectionkey > b.collectionkey) ? 1 : ((b.collectionkey > a.collectionkey) ? -1 : 0))
+	//start reply with codeblock markdown and first sorted element
+	var replystring = '```' + collections[0].collectionkey
+	for (var i = 1; i < collections.length; i++) { //from second element to the end
+		//add each collection and a comma
+		replystring = replystring + ', ' + collections[i].collectionkey
+	} //end for
+	replystring = replystring + '```' //close the codeblock
+
+	//send the reply (including button row)
+	await interaction.reply({ content: replystring, components: [row], ephemeral: true })
+} module.exports.homechannelsetup1 = homechannelsetup1
+
+async function homechannelsetup2(interaction) {
+	const modal = new ModalBuilder()
+		.setCustomId('homechannelsetup-modal')
+		.setTitle('Verify yourself')
+		.addComponents([
+			new ActionRowBuilder().addComponents(
+				new TextInputBuilder()
+					.setCustomId('collection-input')
+					.setLabel('Collection ID')
+					.setStyle(TextInputStyle.Short)
+					.setMinLength(2)
+					.setMaxLength(30)
+					.setPlaceholder('enter collection ID')
+					.setRequired(true),
+			),
+		])
+	await interaction.showModal(modal)
+} module.exports.homechannelsetup2 = homechannelsetup2
+
+async function homechannelsetup3(interaction) {
+	const response = interaction.fields.getTextInputValue('collection-input')
+	interaction.reply({ content: "Yay, your answer is submitted: " + response, ephemeral: true })
+} module.exports.homechannelsetup3 = homechannelsetup3

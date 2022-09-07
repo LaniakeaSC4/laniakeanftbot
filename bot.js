@@ -1,7 +1,7 @@
 require('dotenv').config()//import process environment vars into app engine nodejs environment using dotenv
 var discord = require('./clients/discordclient.js')
 const client = discord.getClient()
-const { Collection, ModalBuilder, ActionRowBuilder, TextInputBuilder, TextInputStyle, InteractionType, ChannelType, PermissionFlagsBits, PermissionsBitField, ButtonBuilder, ButtonStyle} = require('discord.js')
+const { Collection, PermissionsBitField } = require('discord.js')
 
 const fs = require('node:fs')
 const path = require('node:path')
@@ -53,77 +53,31 @@ client.on('interactionCreate', async interaction => {
   }//end catch
 })//end on interactionCreate
 
-//can these move file? 
-//button interactions
 const setup = require('./tools/serversetup.js')
-const sql = require('./tools/commonSQL.js')
-
-
+//server setup
 client.on('interactionCreate', async interaction => {
-  
-  if (interaction.customId === 'beginsetup') {
+  const permissionerror = { content: 'Sorry, you do not have permissions to run this command (Manage Channels/Admin required)', ephemeral: true }
+
+  if (interaction.customId === 'beginsetup-button') {
     var setupstatus = await setup.start(interaction)//creates category and 4 sniper channels if the ones in database dont already exist.
-    if (setupstatus) { w.log.info('setup status was sucessful') } else {w.log.info('there was an error during a setup attempt')}
-  }//end if button is 'beginsetup'
+    if (setupstatus) { w.log.info('setup status was sucessful') } else { w.log.info('there was an error during a setup attempt') }
+  }//end if button is 'beginsetup-button'
 
- if (interaction.customId === 'homechannelsetup') {
-   if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
+  if (interaction.customId === 'homechannelsetup1-button') {
+    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
+      setup.homechannelsetup1(interaction)
+    } else { await interaction.reply(permissionerror) }
+  }//end if button is 'homechannelsetup1-button'
 
-      //build a new button row for the command reply
-      const row = new ActionRowBuilder()
-        .addComponents(
-          new ButtonBuilder()
-            .setCustomId('homechannelsetup2')
-            .setLabel('enter collection')
-            .setStyle(ButtonStyle.Primary),
-        )
+  if (interaction.customId === 'homechannelsetup2-button') {
+    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
+      setup.homechannelsetup2(interaction)
+    } else { await interaction.reply(permissionerror) }
+  }//end if button is 'homechannelsetup2-button'
 
-var unsortedcollections = await sql.getOurMetaplexCollections() //set from sql
-//sort alphabetically
-var collections = unsortedcollections.sort((a, b) => (a.collectionkey > b.collectionkey) ? 1 : ((b.collectionkey > a.collectionkey) ? -1 : 0))
-//start reply with codeblock markdown and first sorted element
-var replystring = '```' + collections[0].collectionkey
-for (var i = 1; i < collections.length; i++) { //from second element to the end
-  //add each collection and a comma
-  replystring = replystring + ', ' + collections[i].collectionkey
-} //end for
-replystring = replystring + '```' //close the codeblock
-
-      //send the reply (including button row)
-      await interaction.reply({ content: replystring, components: [row], ephemeral: true })
-    } else { await interaction.reply({ content: 'Sorry, you do not have permissions to run this command (Manage Channels/Admin required)', ephemeral: true }) }//end if user has manage channels
-  
- } 
-
-  if (interaction.customId === 'homechannelsetup2') {
-    const modal = new ModalBuilder()
-        .setCustomId('homechannelsetup-modal')
-        .setTitle('Verify yourself')
-        .addComponents([
-          new ActionRowBuilder().addComponents(
-            new TextInputBuilder()
-              .setCustomId('collection-input')
-              .setLabel('Collection ID')
-              .setStyle(TextInputStyle.Short)
-              .setMinLength(2)
-              .setMaxLength(30)
-              .setPlaceholder('enter collection ID')
-              .setRequired(true),
-          ),
-        ])
-        await interaction.showModal(modal); 
-  }//end if button is 'beginsetup'
-
-      
-    
-    if (interaction.type === InteractionType.ModalSubmit) {
-    if (interaction.customId === 'verification-modal') {
-      const response =
-        interaction.fields.getTextInputValue('collection-input');
-      interaction.reply({content:"Yay, your answer is submitted: " + response, ephemeral: true} );
-    }
-  }
-  
-    //var setupstatus = await setuphomechannel(interaction)//
-
+  if (interaction.customId === 'homechannelsetup-modal') {
+    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
+      setup.homechannelsetup3(interaction)
+    } else { await interaction.reply(permissionerror) }
+  }//end if button is 'homechannelsetup-modal'
 })//end on interactionCreate 
