@@ -110,10 +110,11 @@ replystring = replystring + '```' //close the codeblock
               .setPlaceholder('ABCDEF')
               .setRequired(true),
           ),
-        ]);
+        ])
+        await interaction.showModal(modal); 
   }//end if button is 'beginsetup'
 
-      await interaction.showModal(modal);
+      
     
     if (interaction.type === InteractionType.ModalSubmit) {
     if (interaction.customId === 'verification-modal') {
