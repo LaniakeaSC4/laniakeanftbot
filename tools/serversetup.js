@@ -147,7 +147,7 @@ async function start(interaction) {
 
 		return 'complete'
 	} else { return null }//end if valid server
-} //module.exports.start = start
+} module.exports.start = start
 
 async function setuphomechannel(interaction) {
 	//check if this server is in the table
@@ -292,49 +292,4 @@ async function setuphomechannel(interaction) {
 
 		return 'complete'*/
 	} else { return null }//end if valid server
-} //module.exports.setuphomechannel = setuphomechannel
-
-var discord = require('../clients/discordclient.js')
-const client = discord.getClient()
-const { ModalBuilder, ActionRowBuilder, TextInputBuilder, TextInputStyle, InteractionType } = require('discord.js')
-
-//server setup
-//const setup = require('./tools/serversetup.js')
-client.on('interactionCreate', async interaction => {
-  if (!interaction.isButton()) return;
-  if (interaction.customId === 'beginsetup') {
-    var setupstatus = await start(interaction)//creates category and 4 sniper channels if the ones in database dont already exist.
-    if (setupstatus) { w.log.info('setup status was sucessful') } else {w.log.info('there was an error during a setup attempt')}
-  }//end if button is 'beginsetup'
-
-  if (interaction.customId === 'homechannelsetup') {
-    const modal = new ModalBuilder()
-        .setCustomId('verification-modal')
-        .setTitle('Verify yourself')
-        .addComponents([
-          new ActionRowBuilder().addComponents(
-            new TextInputBuilder()
-              .setCustomId('verification-input')
-              .setLabel('Answer')
-              .setStyle(TextInputStyle.Short)
-              .setMinLength(4)
-              .setMaxLength(12)
-              .setPlaceholder('ABCDEF')
-              .setRequired(true),
-          ),
-        ]);
-  }//end if button is 'beginsetup'
-
-      await interaction.showModal(modal);
-    
-    if (interaction.type === InteractionType.ModalSubmit) {
-    if (interaction.customId === 'verification-modal') {
-      const response =
-        interaction.fields.getTextInputValue('verification-input');
-      interaction.reply(`Yay, your answer is submitted: "${response}"`);
-    }
-  }
-  
-    //var setupstatus = await setuphomechannel(interaction)//
-
-})//end on interactionCreate 
+} module.exports.setuphomechannel = setuphomechannel

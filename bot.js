@@ -1,7 +1,7 @@
 require('dotenv').config()//import process environment vars into app engine nodejs environment using dotenv
 var discord = require('./clients/discordclient.js')
 const client = discord.getClient()
-const { Collection, ModalBuilder, ActionRowBuilder, TextInputBuilder, TextInputStyle, InteractionType } = require('discord.js')
+const { Collection, ModalBuilder, ActionRowBuilder, TextInputBuilder, TextInputStyle, InteractionType, ChannelType, PermissionFlagsBits, PermissionsBitField } = require('discord.js')
 
 const fs = require('node:fs')
 const path = require('node:path')
@@ -52,9 +52,13 @@ client.on('interactionCreate', async interaction => {
     await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
   }//end catch
 })//end on interactionCreate
-/*
+
+//can these move file? 
 //button interactions
 const setup = require('./tools/serversetup.js')
+const sql = require('./tools/commonSQL.js')
+
+
 client.on('interactionCreate', async interaction => {
   if (!interaction.isButton()) return;
   if (interaction.customId === 'beginsetup') {
@@ -62,7 +66,36 @@ client.on('interactionCreate', async interaction => {
     if (setupstatus) { w.log.info('setup status was sucessful') } else {w.log.info('there was an error during a setup attempt')}
   }//end if button is 'beginsetup'
 
-  if (interaction.customId === 'homechannelsetup') {
+ if (interaction.customId === 'homechannelsetup') {
+   if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
+
+      //build a new button row for the command reply
+      const row = new ActionRowBuilder()
+        .addComponents(
+          new ButtonBuilder()
+            .setCustomId('homechannelsetup2')
+            .setLabel('enter collection')
+            .setStyle(ButtonStyle.Primary),
+        )
+
+var unsortedcollections = await sql.getOurMetaplexCollections() //set from sql
+//sort alphabetically
+var collections = unsortedcollections.sort((a, b) => (a.collectionkey > b.collectionkey) ? 1 : ((b.collectionkey > a.collectionkey) ? -1 : 0))
+//start reply with codeblock markdown and first sorted element
+var replystring = '```' + collections[0].collectionkey
+for (var i = 1; i < collections.length; i++) { //from second element to the end
+  //add each collection and a comma
+  replystring = replystring + ', ' + collections[i].collectionkey
+} //end for
+replystring = replystring + '```' //close the codeblock
+
+      //send the reply (including button row)
+      await interaction.reply({ content: replystring, components: [row], ephemeral: true })
+    } else { await interaction.reply({ content: 'Sorry, you do not have permissions to run this command (Manage Channels/Admin required)', ephemeral: true }) }//end if user has manage channels
+  
+ } 
+
+  if (interaction.customId === 'homechannelsetup2') {
     const modal = new ModalBuilder()
         .setCustomId('verification-modal')
         .setTitle('Verify yourself')
@@ -93,4 +126,3 @@ client.on('interactionCreate', async interaction => {
     //var setupstatus = await setuphomechannel(interaction)//
 
 })//end on interactionCreate 
-*/
