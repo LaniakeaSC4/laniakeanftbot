@@ -301,23 +301,17 @@ async function homechannelsetup1(interaction) {
 		.addComponents(
 			new ButtonBuilder()
 				.setCustomId('homechannelsetup2-button')
-				.setLabel('enter collection')
+				.setLabel('Add Collection')
 				.setStyle(ButtonStyle.Primary),
+		).addComponents(
+			new ButtonBuilder()
+				.setCustomId('done-button')
+				.setLabel('Done')
+				.setStyle(ButtonStyle.Secondary),
 		)
 
-	var unsortedcollections = await sql.getOurMetaplexCollections() //set from sql
-	//sort alphabetically
-	var collections = unsortedcollections.sort((a, b) => (a.collectionkey > b.collectionkey) ? 1 : ((b.collectionkey > a.collectionkey) ? -1 : 0))
-	//start reply with codeblock markdown and first sorted element
-	var replystring = '```' + collections[0].collectionkey
-	for (var i = 1; i < collections.length; i++) { //from second element to the end
-		//add each collection and a comma
-		replystring = replystring + ', ' + collections[i].collectionkey
-	} //end for
-	replystring = replystring + '```' //close the codeblock
-
 	//send the reply (including button row)
-	await interaction.reply({ content: replystring, components: [row], ephemeral: true })
+	await interaction.reply({ content: "Adding: ", components: [row], ephemeral: true })
 } module.exports.homechannelsetup1 = homechannelsetup1
 
 async function homechannelsetup2(interaction) {
@@ -336,12 +330,14 @@ async function homechannelsetup2(interaction) {
 					.setRequired(true),
 			),
 		])
-	await interaction.showModal(modal)
+	await interaction.showModal(modal) 
 } module.exports.homechannelsetup2 = homechannelsetup2
+
+var homecollections = { "enabled" : [] }
 
 async function homechannelsetup3(interaction) {
 	const response = interaction.fields.getTextInputValue('collection-input')
 	var meslug = response.substring(response.lastIndexOf('magiceden.io/marketplace/') + 25).replace(/[^0-9a-z]/gi, '')
-	
-	interaction.reply({ content: "Yay, your answer is submitted: " + meslug, ephemeral: true })
+	homecollections[enabled].push(meslug)
+	interaction.edit({ content: "Adding: " + homecollections[enabled].toString(), ephemeral: true })
 } module.exports.homechannelsetup3 = homechannelsetup3
