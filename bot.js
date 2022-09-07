@@ -1,7 +1,7 @@
 require('dotenv').config()//import process environment vars into app engine nodejs environment using dotenv
 var discord = require('./clients/discordclient.js')
 const client = discord.getClient()
-const { Collection, ModalBuilder, ActionRowBuilder, TextInputBuilder, TextInputStyle } = require('discord.js')
+const { Collection, ModalBuilder, ActionRowBuilder, TextInputBuilder, TextInputStyle, InteractionType } = require('discord.js')
 
 const fs = require('node:fs')
 const path = require('node:path')
@@ -52,7 +52,7 @@ client.on('interactionCreate', async interaction => {
     await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
   }//end catch
 })//end on interactionCreate
-
+/*
 //button interactions
 const setup = require('./tools/serversetup.js')
 client.on('interactionCreate', async interaction => {
@@ -93,3 +93,4 @@ client.on('interactionCreate', async interaction => {
     //var setupstatus = await setuphomechannel(interaction)//
 
 })//end on interactionCreate 
+*/
