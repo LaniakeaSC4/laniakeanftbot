@@ -2,7 +2,7 @@ var discord = require('../clients/discordclient.js')
 const client = discord.getClient()
 const { ChannelType, PermissionFlagsBits, PermissionsBitField,
 	ModalBuilder, ActionRowBuilder, TextInputBuilder,
-	TextInputStyle, ChannelType, PermissionFlagsBits,
+	TextInputStyle, PermissionFlagsBits,
 	ButtonBuilder, ButtonStyle } = require('discord.js')
 
 const w = require('./winston.js')
