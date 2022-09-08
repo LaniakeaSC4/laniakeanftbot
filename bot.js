@@ -80,4 +80,11 @@ client.on('interactionCreate', async interaction => {
       setup.homechannelsetup3(interaction)
     } else { await interaction.reply(permissionerror) }
   }//end if button is 'homechannelsetup-modal'
+  
+  if (interaction.customId === 'done-button') {
+    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
+      setup.homechanneldone(interaction)
+    } else { await interaction.reply(permissionerror) }
+  }//end if button is 'homechannelsetup2-button'
+  
 })//end on interactionCreate 

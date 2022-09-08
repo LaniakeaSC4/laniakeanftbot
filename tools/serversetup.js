@@ -175,23 +175,17 @@ async function setuphomechannel(interaction) {
 		//
 		//
 		//
-		/*
+		
 		w.log.info('log exisiting channels')
 		//w.log.info(existingchannels)//winston error? 
 
 		var channelcheck = {
 			"snipecategory": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "LANIAKEA SNIPER BOT", "servercolumn": "snipecategory" },
-			"raresnipes": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "Rare Snipes", "servercolumn": "raresnipes" },
-			"epicsnipes": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "Epic Snipes", "servercolumn": "epicsnipes" },
-			"legendarysnipes": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "Legendary Snipes", "servercolumn": "legendarysnipes" },
-			"mythicsnipes": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "Mythic Snipes", "servercolumn": "mythicsnipes" }
+			"homechannel": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "Home Channel", "servercolumn": "homechannel_id" }
 		}
 
 		if (existingchannels[0].snipecategory) { channelcheck.snipecategory.dbfound = true; channelcheck.snipecategory.db_cid = existingchannels[0].snipecategory }
-		if (existingchannels[0].raresnipes) { channelcheck.raresnipes.dbfound = true; channelcheck.raresnipes.db_cid = existingchannels[0].raresnipes }
-		if (existingchannels[0].epicsnipes) { channelcheck.epicsnipes.dbfound = true; channelcheck.epicsnipes.db_cid = existingchannels[0].epicsnipes }
-		if (existingchannels[0].legendarysnipes) { channelcheck.legendarysnipes.dbfound = true; channelcheck.legendarysnipes.db_cid = existingchannels[0].legendarysnipes }
-		if (existingchannels[0].mythicsnipes) { channelcheck.mythicsnipes.dbfound = true; channelcheck.mythicsnipes.db_cid = existingchannels[0].mythicsnipes }
+		if (existingchannels[0].homechannel_id) { channelcheck.homechannel.dbfound = true; channelcheck.homechannel.db_cid = existingchannels[0].homechannel_id }
 
 		//get the guild channels to see if our saved ones still exist
 		await guild.channels.fetch()
@@ -205,35 +199,17 @@ async function setuphomechannel(interaction) {
 						channelcheck.snipecategory.server_cid = channel.id
 						channelcheck.snipecategory.verified = true
 					}
-					if (channel.id === channelcheck.raresnipes.db_cid) {
-						w.log.info('Found the saved raresnipes channel')
-						channelcheck.raresnipes.serverfound = true
-						channelcheck.raresnipes.server_cid = channel.id
-						channelcheck.raresnipes.verified = true
-					}
-					if (channel.id === channelcheck.epicsnipes.db_cid) {
-						w.log.info('Found the saved epicsnipes channel')
-						channelcheck.epicsnipes.serverfound = true
-						channelcheck.epicsnipes.server_cid = channel.id
-						channelcheck.epicsnipes.verified = true
-					}
-					if (channel.id === channelcheck.legendarysnipes.db_cid) {
-						w.log.info('Found the saved legendarysnipes channel')
-						channelcheck.legendarysnipes.serverfound = true
-						channelcheck.legendarysnipes.server_cid = channel.id
-						channelcheck.legendarysnipes.verified = true
-					}
-					if (channel.id === channelcheck.mythicsnipes.db_cid) {
-						w.log.info('Found the saved mythicsnipes channel')
-						channelcheck.mythicsnipes.serverfound = true
-						channelcheck.mythicsnipes.server_cid = channel.id
-						channelcheck.mythicsnipes.verified = true
+					if (channel.id === channelcheck.homechannel.db_cid) {
+						w.log.info('Found the saved homechannel channel')
+						channelcheck.homechannel.serverfound = true
+						channelcheck.homechannel.server_cid = channel.id
+						channelcheck.homechannel.verified = true
 					}
 
 				})
 
-				w.log.info('log final channelcheck')
-				w.log.info(channelcheck)
+				//w.log.info('log final channelcheck')
+				//w.log.info(channelcheck)
 
 				//first check and create the category channel
 				if (channelcheck.snipecategory.verified === false) {
@@ -291,7 +267,7 @@ async function setuphomechannel(interaction) {
 				}
 			})
 
-		return 'complete'*/
+		return 'complete'
 	} else { return null }//end if valid server
 } module.exports.setuphomechannel = setuphomechannel
 
@@ -358,7 +334,22 @@ homecollections.enabled.push(meslug)
     
     if (!found) {
       const replyMessage = await interaction.reply({content:'Collection ' + meslug + 'was not found in our supported collections'});
-  setTimeout(() => interaction.deleteReply(), 3000);
+  setTimeout(() => interaction.deleteReply(), 5000);
     }
 	
 } module.exports.homechannelsetup3 = homechannelsetup3
+
+async function homechanneldone(interaction) {
+if (homecollections.enabled.length != 0) {
+
+//create channel
+setuphomechannel(interaction)
+
+//save supported collections
+await sql.updateTableColumn('servers', 'serverid', interaction.message.guildId, homechannel_collections, homecollections)
+await interaction.reply({ content:  "No collections added. No changes made", ephemeral: true })
+
+} else {
+  await interaction.reply({ content:  "Changes saved", ephemeral: true })
+} 
+} module.exports.homechanneldone = homechanneldone
