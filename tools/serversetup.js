@@ -346,7 +346,7 @@ if (homecollections.enabled.length != 0) {
 setuphomechannel(interaction)
 
 //save supported collections
-await sql.updateTableColumn('servers', 'serverid', interaction.message.guildId, homechannel_collections, homecollections)
+await sql.updateTableColumn('servers', 'serverid', interaction.message.guildId, 'homechannel_collections', homecollections)
 await interaction.reply({ content:  "No collections added. No changes made", ephemeral: true })
 
 } else {
