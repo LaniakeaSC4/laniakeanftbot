@@ -88,6 +88,7 @@ async function startsniper() {
               var thisimage = thistoken.image
               var thislistinglink = 'https://magiceden.io/item-details/' + thistoken.mintAddress
 
+              /*
               //get nft from nane
               var thisnftid = ''
 
@@ -99,6 +100,12 @@ async function startsniper() {
                   thisnftid = checkthis.substring(1, nlength)
                 }//end if
               }//end for
+              */
+
+              var thisnftid = 0
+              var regex = /(\d+)(?!.*\d)/
+              var matchid = thistoken.name.match(regex)
+              thisnftid = parseFloat(matchid[0])
 
               var NFTdata = await sql.getNFTdata(collections[k]['collectionkey'], thisnftid)
               if (NFTdata) {
@@ -109,14 +116,16 @@ async function startsniper() {
                 var thisfloorprice = pround(parseFloat(floorprice), 6)
                 var snipe = await testifsnipe(raritydescription, parseFloat(thisprice), parseFloat(thisfloorprice))
 
-                if (snipe != "false") {
+                if (snipe) {
                   var thissnipeprice = parseFloat(snipe[1])
                   var thislimit = parseFloat(snipe[2])
                   var hotness = await snipeHotness(parseFloat(thisprice), thisfloorprice, parseFloat(thissnipeprice))
-                  var thisserverid = ''
-                  var thissnipechannel = ''
 
                   w.log.info('SniperV2: we have a ' + collections[k]['meslug'] + ' snipe!')
+
+                  var thisserverid = ''
+                  var thissnipechannel = ''
+                
 
                   for (i = 0; i < supportedservers.length; i++) {
 
@@ -235,7 +244,7 @@ async function testifsnipe(raritydescription, thisprice, floorprice) {
       } else if ((raritydescription === 'Rare') && (thisprice <= raresnipe)) {
         resolve([raritydescription, raresnipe, rarelimit])
       } else {
-        resolve('false')
+        resolve(null)
       }
     }//end if hotrarities
   }) //end promise
