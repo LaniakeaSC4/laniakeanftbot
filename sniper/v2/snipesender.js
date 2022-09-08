@@ -2,6 +2,7 @@ const sql = require('../../tools/commonSQL.js')//sql related commands are in her
 const w = require('../../tools/winston.js')
 var discord = require('../../clients/discordclient.js')
 const client = discord.getClient()
+const pround = (number, decimalPlaces) => Number(Math.round(Number(number + "e" + decimalPlaces)) + "e" + decimalPlaces * -1)
 
 //initialise servers
 var supportedservers = []
