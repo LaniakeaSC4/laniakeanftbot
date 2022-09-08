@@ -349,9 +349,9 @@ setuphomechannel(interaction)
 await sql.updateTableColumn('servers', 'serverid', interaction.message.guildId, 'homechannel_collections', homecollections)
 //enable homechannel mode
 await sql.updateTableColumn('servers', 'serverid', interaction.message.guildId, 'homechannel_enabled', true)
-await interaction.reply({ content:  "No collections added. No changes made", ephemeral: true })
+await interaction.reply({ content:  "Changes saved", ephemeral: true })
 
 } else {
-  await interaction.reply({ content:  "Changes saved", ephemeral: true })
+  await interaction.reply({ content:  "No collections added. No changes made", ephemeral: true })
 } 
 } module.exports.homechanneldone = homechanneldone
