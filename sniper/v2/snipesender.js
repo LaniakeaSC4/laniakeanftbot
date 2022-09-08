@@ -1,4 +1,5 @@
 const sql = require('../../tools/commonSQL.js')//sql related commands are in here
+const w = require('../../tools/winston.js')
 
 //initialise servers
 var supportedservers = []
