@@ -1,5 +1,7 @@
 const sql = require('../../tools/commonSQL.js')//sql related commands are in here
 const w = require('../../tools/winston.js')
+var discord = require('../../clients/discordclient.js')
+const client = discord.getClient()
 
 //initialise servers
 var supportedservers = []
