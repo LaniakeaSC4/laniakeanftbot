@@ -25,16 +25,13 @@ async function start(interaction) {
 
 	if (validserver) {
 
-		//check if bot has manage channels on this server and if not return
-
 		w.log.info('setting up guild ' + guildid)
-		const guild = client.guilds.cache.get(guildid)
+		const guild = client.guilds.cache.get(guildid)//get guild from discord
 
 		//get saved sniper channels (if any)
 		const existingchannels = await sql.getSniperChannels(guildid)
-		w.log.info('log exisiting channels')
-		w.log.info(existingchannels)
 
+		//temporty checking object to mark off what was found or what needs created
 		var channelcheck = {
 			"snipecategory": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "LANIAKEA SNIPER BOT", "servercolumn": "snipecategory" },
 			"raresnipes": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "Rare Snipes", "servercolumn": "raresnipes" },
@@ -43,6 +40,7 @@ async function start(interaction) {
 			"mythicsnipes": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "Mythic Snipes", "servercolumn": "mythicsnipes" }
 		}
 
+		//if any of the channels are found in SQL, update channelcheck to say we have found them
 		if (existingchannels[0].snipecategory) { channelcheck.snipecategory.dbfound = true; channelcheck.snipecategory.db_cid = existingchannels[0].snipecategory }
 		if (existingchannels[0].raresnipes) { channelcheck.raresnipes.dbfound = true; channelcheck.raresnipes.db_cid = existingchannels[0].raresnipes }
 		if (existingchannels[0].epicsnipes) { channelcheck.epicsnipes.dbfound = true; channelcheck.epicsnipes.db_cid = existingchannels[0].epicsnipes }
@@ -54,7 +52,8 @@ async function start(interaction) {
 			.then(async channels => {
 				channels.forEach(channel => {
 
-					//check for the channels in server
+					//check for the channels in server. If channel wasnt found db_cid would be null. Incorrect or null means serverfound wont get updated to true.
+					//verified gets set true if both server and SQL are found and matched. If not, we will recreate
 					if (channel.id === channelcheck.snipecategory.db_cid) {
 						w.log.info('Found the saved category channel')
 						channelcheck.snipecategory.serverfound = true
@@ -85,11 +84,7 @@ async function start(interaction) {
 						channelcheck.mythicsnipes.server_cid = channel.id
 						channelcheck.mythicsnipes.verified = true
 					}
-
-				})
-
-				w.log.info('log final channelcheck')
-				w.log.info(channelcheck)
+				})//end channels for each
 
 				//first check and create the category channel
 				if (channelcheck.snipecategory.verified === false) {
@@ -140,11 +135,12 @@ async function start(interaction) {
 									await sql.updateTableColumn('servers', 'serverid', guildid, channelcheck[key].servercolumn, newchannel.id)
 								})
 
-							}
-						}
-					}
-				}
-			})
+							}//end if verified was false
+						}//end if key isnt snipecategory
+					}//end for each key in channelcheck
+				}//end createchildren
+				
+			})//end then after get channels
 
 		return 'complete'
 	} else { return null }//end if valid server
@@ -169,13 +165,7 @@ async function setuphomechannel(interaction) {
 
 		//get saved sniper channels (if any)
 		const existingchannels = await sql.getSniperChannels(guildid)//need to add the home channel to the sql function
-		//
-		//
-		//
-		//
-		//
-		//
-		
+
 		w.log.info('log exisiting channels')
 		//w.log.info(existingchannels)//winston error? 
 
@@ -208,9 +198,6 @@ async function setuphomechannel(interaction) {
 
 				})
 
-				//w.log.info('log final channelcheck')
-				//w.log.info(channelcheck)
-
 				//first check and create the category channel
 				if (channelcheck.snipecategory.verified === false) {
 					w.log.info('Category channel was not found - creating it')
@@ -242,7 +229,6 @@ async function setuphomechannel(interaction) {
 					createchildren()
 				}
 
-
 				async function createchildren() {
 					//get the category channel object so we can add children
 					w.log.info('fetching category channel')
@@ -271,6 +257,10 @@ async function setuphomechannel(interaction) {
 	} else { return null }//end if valid server
 } module.exports.setuphomechannel = setuphomechannel
 
+//global var to hold supported collections. Populated in homechannelsetup1. Accessed in homechannelsetup3
+var supportedcollections = {}
+
+//Main /setup message has a "set up home channel" button. When pressed, send this setup panel
 async function homechannelsetup1(interaction) {
 	//build a new button row for the command reply
 	const row = new ActionRowBuilder()
@@ -285,22 +275,15 @@ async function homechannelsetup1(interaction) {
 				.setLabel('Done')
 				.setStyle(ButtonStyle.Secondary),
 		)
-
 	//send the reply (including button row)
-	await interaction.reply({ content: "Adding: ", components: [row], ephemeral: true })
-	//get collections and populate global var
-	supportedcollections = {}
-	supportedcollections = await sql.getOurMetaplexCollections()//set from sql
-    //sort alphabetically
-	
+	await interaction.reply({ content: "Press \"Add collection\" below and enter the Magic Eden link to the collection you would like to add to your home channel. When you have added all the collections you wish to be in your homechannel, press Done.\n\nAdding: ", components: [row], ephemeral: true })
 } module.exports.homechannelsetup1 = homechannelsetup1
 
-var supportedcollections = {}
-
+//when "Add Collection" is pressed, show a modal to capture the ME address
 async function homechannelsetup2(interaction) {
 	const modal = new ModalBuilder()
 		.setCustomId('homechannelsetup-modal')
-		.setTitle('Magic Eden Link')
+		.setTitle('Enter Magic Eden Link to collection')
 		.addComponents([
 			new ActionRowBuilder().addComponents(
 				new TextInputBuilder()
@@ -309,49 +292,56 @@ async function homechannelsetup2(interaction) {
 					.setStyle(TextInputStyle.Short)
 					.setMinLength(2)
 					.setMaxLength(120)
-					.setPlaceholder('Please enter ME link to your collection')
+					.setPlaceholder('e.g. https://magiceden.io/marketplace/**{your-collection}**')
 					.setRequired(true),
-			),
-		])
-	await interaction.showModal(modal) 
+			),//end actionrow add components
+		])//end modal add components
+	await interaction.showModal(modal)
 } module.exports.homechannelsetup2 = homechannelsetup2
 
-var homecollections = { "enabled" : [] }
+//Global var to hold valid/supported collections user is adding to this homechannel
+var homecollections = { "enabled": [] }
 
+//function to process the input from the modal sent in homechannelsetup2
 async function homechannelsetup3(interaction) {
-	const response = interaction.fields.getTextInputValue('collection-input')
-	var meslug = response.substring(response.lastIndexOf('magiceden.io/marketplace/') + 25).replace(/[^0-9a-z]/gi, '')
-	
-	var found = false
-	for (var i = 0; i < supportedcollections.length; i++) {
-	  if (supportedcollections[i].collectionkey === meslug) {
-	    found = true
-homecollections.enabled.push(meslug)
-	interaction.update({ content: "Adding: " + homecollections.enabled.toString(), ephemeral: true })
-	  break
-	  }
-    }//end for
-    
-    if (!found) {
-      const replyMessage = await interaction.reply({content:'Collection ' + meslug + 'was not found in our supported collections'});
-  setTimeout(() => interaction.deleteReply(), 5000);
-    }
-	
+	const response = interaction.fields.getTextInputValue('collection-input')//get modal input text
+	var meslug = response.substring(response.lastIndexOf('magiceden.io/marketplace/') + 25).replace(/[^0-9a-z]/gi, '')//find the end slug and clean it (same process as cleaning to colleciton key in SQL)
+
+	//get collections and populate global var
+	supportedcollections = {}//clear and repopulate in case collections have changed since last time command was run
+	supportedcollections = await sql.getOurMetaplexCollections()//set from sql
+
+	var found = false//start as false
+	for (var i = 0; i < supportedcollections.length; i++) {//loop supported collections recieved from SQL
+		if (supportedcollections[i].collectionkey === meslug) {//if collection entered by user is found in our supported collections
+			found = true
+			homecollections.enabled.push(meslug)//push it to the homecollections. We will gather them up here while the user enters them.
+			//update interaction to list the ones they have added so far
+			interaction.update({ content: "Press \"Add collection\" below and enter the Magic Eden link to the collection you would like to add to your home channel. When you have added all the collections you wish to be in your homechannel, press Done.\n\nAdding: " + homecollections.enabled.toString(), ephemeral: true })
+			break//if we have found it, dont need to loop more
+		}//end if
+	}//end for
+
+	if (!found) {
+		await interaction.reply({ content: 'Collection ' + meslug + 'was not found in our supported collections' });
+		setTimeout(() => interaction.deleteReply(), 5000)//delete it after 5s
+	}//end if !found
 } module.exports.homechannelsetup3 = homechannelsetup3
 
 async function homechanneldone(interaction) {
-if (homecollections.enabled.length != 0) {
+	if (homecollections.enabled.length != 0) {
 
-//create channel
-setuphomechannel(interaction)
+		//create home channel if not already existing
+		setuphomechannel(interaction)
 
-//save supported collections
-await sql.updateTableColumn('servers', 'serverid', interaction.message.guildId, 'homechannel_collections', homecollections)
-//enable homechannel mode
-await sql.updateTableColumn('servers', 'serverid', interaction.message.guildId, 'homechannel_enabled', true)
-await interaction.reply({ content:  "Changes saved", ephemeral: true })
+		//save validated supported collections gathered from user
+		await sql.updateTableColumn('servers', 'serverid', interaction.message.guildId, 'homechannel_collections', homecollections)
+		//enable homechannel mode
+		await sql.updateTableColumn('servers', 'serverid', interaction.message.guildId, 'homechannel_enabled', true)
 
-} else {
-  await interaction.reply({ content:  "No collections added. No changes made", ephemeral: true })
-} 
+		await interaction.reply({ content: "Changes saved", ephemeral: true })
+
+	} else {
+		await interaction.reply({ content: "No collections added. No changes made", ephemeral: true })
+	}
 } module.exports.homechanneldone = homechanneldone
