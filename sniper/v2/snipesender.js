@@ -8,7 +8,7 @@ async function initaliseServers() {
 }; module.exports.initaliseServers = initaliseServers
 
 //work out where to send them
-async function sendFilter(thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness) {
+async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness) {
 
 	var thisserverid = ''
 	var channel = ''
@@ -20,10 +20,20 @@ async function sendFilter(thisname, thisembedcolour, rarityRank, raritydescripti
 
 			//check if this snipe needs to do into a home channel
 			var foundhome = false
+			for (var j = 0; j < supportedservers[i].homecollections.enabled.length; j++) {
+				if (supportedservers[i].homecollections.enabled[j] == thiscollection) {
+					foundhome = true
+					thisserverid = supportedservers[i].serverid
+					channel = supportedservers[i].homechannel_id
+					break
+				}
+			}
 
 			//if yes, send it to home channel
 			if (foundhome) {
-
+				if (channel) {//filters out servers which are in pg but not setup yet by checking if the snipe channel is valid for this server
+					sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
+				}//end if snipe channel.
 			} else {
 
 				//if homechannel enabled, but not for this collection, send it through the normal process
@@ -40,7 +50,7 @@ async function sendFilter(thisname, thisembedcolour, rarityRank, raritydescripti
 				}//end if snipe channel.
 			}
 
-		} else {
+		} else {//if homechannel is not enabled - send normally
 
 			//get the snipes channel id to send the snipe to
 			thisserverid = supportedservers[i].serverid

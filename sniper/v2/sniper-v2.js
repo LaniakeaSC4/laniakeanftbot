@@ -4,6 +4,7 @@ const w = require('../../tools/winston.js')
 const magiceden = require('../magicedenRPC.js')//Magic Eden related commands are in here
 const nfttools = require('../../tools/nfttools.js')//generic nft tools like get rarity description from rank in here
 const sql = require('../../tools/commonSQL.js')//sql related commands are in here
+const snipersender = require('./snipersender.js')
 
 const pround = (number, decimalPlaces) => Number(Math.round(Number(number + "e" + decimalPlaces)) + "e" + decimalPlaces * -1)
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
@@ -54,6 +55,7 @@ module.exports.initialise = initaliseSniperCollections
 
 //store the setInterval ids for the sniper recheck loops we start so we can retrieve and kill them later.
 var currentloops = []
+var serversinitalized = false
 
 //main sniper function
 async function startsniper() {
@@ -121,8 +123,14 @@ async function startsniper() {
                   var thislimit = parseFloat(snipe[2])
                   var hotness = await snipeHotness(parseFloat(thisprice), thisfloorprice, parseFloat(thissnipeprice))
 
-                  w.log.info('SniperV2: we have a ' + collections[k]['meslug'] + ' snipe!')
+                  w.log.info('SniperV2: we have a ' + collections[k]['collectionkey'] + ' snipe!')
 
+                  //initialise servers if not already - may need to do this periodically in future
+                  if (!serversinitalized) {snipersender.initaliseServers();serversinitalized = true}
+
+                  snipersender.sendFilter(thisname, collections[k]['collectionkey'], thisembedcolour, NFTdata.rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
+
+                  /*
                   var thisserverid = ''
                   var thissnipechannel = ''
                 
@@ -141,7 +149,8 @@ async function startsniper() {
                       sendsnipes(thisserverid, thissnipechannel, thisname, thisembedcolour, NFTdata.rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
                     }//end if snipe channel.
 
-                  }//for each supported server (from SQL)                
+                  }//for each supported server (from SQL)
+                  */                
 
                 } else { /* w.log.info('this was not a snipe') */ } //end if not false
               } else {
