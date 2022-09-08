@@ -9,7 +9,7 @@ async function initaliseServers() {
 
 //work out where to send them
 async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness) {
-
+w.log.info('starting sendFilter')
 	var thisserverid = ''
 	var channel = ''
 
@@ -20,11 +20,12 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 
 			//check if this snipe needs to do into a home channel
 			var foundhome = false
-			for (var j = 0; j < supportedservers[i].homecollections.enabled.length; j++) {
-				if (supportedservers[i].homecollections.enabled[j] == thiscollection) {
+			for (var j = 0; j < supportedservers[i].homechannel_collections.enabled.length; j++) {
+				if (supportedservers[i].homechannel_collections.enabled[j] == thiscollection) {
 					foundhome = true
 					thisserverid = supportedservers[i].serverid
 					channel = supportedservers[i].homechannel_id
+					w.log.info('matched this snipe to a home collection for server: ' + supportedservers[i].homechannel_id)
 					break
 				}
 			}
