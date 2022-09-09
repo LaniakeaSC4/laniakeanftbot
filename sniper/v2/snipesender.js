@@ -40,7 +40,7 @@ w.log.info('starting sendFilter')
 			if (foundhome) {
 				//w.log.info('Foundhome was true sending snipe to homechannel')
 				if (channel) {//filters out servers which are in pg but not setup yet by checking if the snipe channel is valid for this server
-				if (supportedservers[i].premium != true) {await wait(300000)}
+				//if (supportedservers[i].premium != true) {await wait(300000)}
 					sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
 				}//end if snipe channel.
 			} else {
@@ -55,7 +55,7 @@ w.log.info('starting sendFilter')
 
 				if (channel) {//filters out servers which are in pg but not setup yet by checking if the snipe channel is valid for this server
 					//send snipes
-					if (supportedservers[i].premium != true) {await wait(300000)}
+					//if (supportedservers[i].premium != true) {await wait(300000)}
 					sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
 				}//end if snipe channel.
 			}
@@ -71,7 +71,7 @@ w.log.info('starting sendFilter')
 
 			if (channel) {//filters out servers which are in pg but not setup yet by checking if the snipe channel is valid for this server
 				//send snipes
-				if (supportedservers[i].premium != true) {await wait(300000)}
+				//if (supportedservers[i].premium != true) {await wait(300000)}
 				sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
 			}//end if snipe channel.
 
