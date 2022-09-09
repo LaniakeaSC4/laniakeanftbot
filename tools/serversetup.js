@@ -34,10 +34,10 @@ async function start(interaction) {
 		//temporty checking object to mark off what was found or what needs created
 		var channelcheck = {
 			"snipecategory": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "LANIAKEA SNIPER BOT", "servercolumn": "snipecategory" },
-			"raresnipes": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "Rare Snipes", "servercolumn": "raresnipes" },
-			"epicsnipes": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "Epic Snipes", "servercolumn": "epicsnipes" },
-			"legendarysnipes": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "Legendary Snipes", "servercolumn": "legendarysnipes" },
-			"mythicsnipes": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "Mythic Snipes", "servercolumn": "mythicsnipes" }
+			"raresnipes": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "Rare Snipes", "servercolumn": "raresnipes", "premium" : false},
+			"epicsnipes": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "Epic Snipes", "servercolumn": "epicsnipes", "premium" : false },
+			"legendarysnipes": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "Legendary Snipes", "servercolumn": "legendarysnipes", "premium" : true },
+			"mythicsnipes": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "Mythic Snipes", "servercolumn": "mythicsnipes", "premium" : true }
 		}
 
 		//if any of the channels are found in SQL, update channelcheck to say we have found them
@@ -121,10 +121,14 @@ async function start(interaction) {
 					//get the category channel object so we can add children
 					w.log.info('fetching category channel')
 					const laniakeacategory = await client.channels.fetch(channelcheck.snipecategory.server_cid)
+					
+					
+					
 					for (const key in channelcheck) {
 						if (key != 'snipecategory') {//we have created the category already
 							if (channelcheck[key].verified === false) {//if this one isnt verified as present
-
+							//only create premium channels if premium server
+if (supportedservers[guildid].premium === true && channelcheck[key].premium === true){
 								guild.channels.create({
 									name: channelcheck[key].name,
 									type: ChannelType.GuildText,
@@ -134,6 +138,7 @@ async function start(interaction) {
 									channelcheck.snipecategory.server_cid = newchannel.id//save category channel ID to we can add children
 									await sql.updateTableColumn('servers', 'serverid', guildid, channelcheck[key].servercolumn, newchannel.id)
 								})
+}
 
 							}//end if verified was false
 						}//end if key isnt snipecategory

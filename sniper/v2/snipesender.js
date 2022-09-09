@@ -5,6 +5,8 @@ const client = discord.getClient()
 const pround = (number, decimalPlaces) => Number(Math.round(Number(number + "e" + decimalPlaces)) + "e" + decimalPlaces * -1)
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
+var nonPremiumDelay = 300000
+
 //initialise servers
 var supportedservers = []
 async function initaliseServers() {
@@ -43,7 +45,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 
 					if (supportedservers[i].premium != true) {
 						w.log.info(thisserverid + ' is not premium waiting...')
-						await wait(180000)
+						await wait(nonPremiumDelay)
 						w.log.info(thisserverid + ' done waiting...')
 						sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
 					} else {
@@ -64,7 +66,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 					//send snipes
 					if (supportedservers[i].premium != true) {
 						w.log.info(thisserverid + ' is not premium waiting...')
-						await wait(180000)
+						await wait(nonPremiumDelay)
 						w.log.info(thisserverid + ' done waiting...')
 						sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
 					} else {
@@ -86,18 +88,14 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 				//send snipes
 				if (supportedservers[i].premium != true) {
 					w.log.info(thisserverid + ' is not premium waiting...')
-					await wait(180000)
+					await wait(nonPremiumDelay)
 					w.log.info(thisserverid + ' done waiting...')
 					sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
 				} else {
 					sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
 				}
 			}//end if snipe channel.
-
 		}
-
-
-
 	}//for each supported server (from SQL)   
 
 }; module.exports.sendFilter = sendFilter
