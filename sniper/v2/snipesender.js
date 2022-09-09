@@ -3,6 +3,7 @@ const w = require('../../tools/winston.js')
 var discord = require('../../clients/discordclient.js')
 const client = discord.getClient()
 const pround = (number, decimalPlaces) => Number(Math.round(Number(number + "e" + decimalPlaces)) + "e" + decimalPlaces * -1)
+const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
 //initialise servers
 var supportedservers = []
@@ -21,7 +22,7 @@ w.log.info('starting sendFilter')
 
 		//check if this snipe should be sent to a homechannel
 		if (supportedservers[i].homechannel_enabled) {
-			w.log.info('homechannel was enabled for ' + supportedservers[i].serverid)
+			//w.log.info('homechannel was enabled for ' + supportedservers[i].serverid)
 			//check if this snipe needs to do into a home channel
 			var foundhome = false
 			for (var j = 0; j < supportedservers[i].homechannel_collections.enabled.length; j++) {
@@ -29,19 +30,21 @@ w.log.info('starting sendFilter')
 					foundhome = true
 					thisserverid = supportedservers[i].serverid
 					channel = supportedservers[i].homechannel_id
-					w.log.info('matched this snipe to a home collection for server: ' + supportedservers[i].homechannel_id)
+					//w.log.info('matched this snipe to a home collection for server: ' + supportedservers[i].homechannel_id)
 					break
-				} else {w.log.info('No homechannel match for this collection on this server')}
+				} else {//w.log.info('No homechannel match for this collection on this server')
+				}
 			}
 
 			//if yes, send it to home channel
 			if (foundhome) {
-				w.log.info('Foundhome was true sending snipe to homechannel')
+				//w.log.info('Foundhome was true sending snipe to homechannel')
 				if (channel) {//filters out servers which are in pg but not setup yet by checking if the snipe channel is valid for this server
+				if (supportedservers[i].premium != true) {await wait(300000)}
 					sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
 				}//end if snipe channel.
 			} else {
-				w.log.info('Although homechannel was enabled for ' + supportedservers[i].serverid + 'this collection was not found. Sending the normal way')
+				//w.log.info('Although homechannel was enabled for ' + supportedservers[i].serverid + 'this collection was not found. Sending the normal way')
 				//if homechannel enabled, but not for this collection, send it through the normal process
 				//get the snipes channel id to send the snipe to
 				thisserverid = supportedservers[i].serverid
@@ -52,12 +55,13 @@ w.log.info('starting sendFilter')
 
 				if (channel) {//filters out servers which are in pg but not setup yet by checking if the snipe channel is valid for this server
 					//send snipes
+					if (supportedservers[i].premium != true) {await wait(300000)}
 					sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
 				}//end if snipe channel.
 			}
 
 		} else {//if homechannel is not enabled - send normally
-			w.log.info('Homechannels not enabled for ' + supportedservers[i].serverid + ' sending the old fashioned way')
+			//w.log.info('Homechannels not enabled for ' + supportedservers[i].serverid + ' sending the old fashioned way')
 			//get the snipes channel id to send the snipe to
 			thisserverid = supportedservers[i].serverid
 			if (raritydescription === 'Rare') { channel = supportedservers[i].raresnipes }
@@ -67,6 +71,7 @@ w.log.info('starting sendFilter')
 
 			if (channel) {//filters out servers which are in pg but not setup yet by checking if the snipe channel is valid for this server
 				//send snipes
+				if (supportedservers[i].premium != true) {await wait(300000)}
 				sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
 			}//end if snipe channel.
 
