@@ -77,7 +77,7 @@ async function startsniper() {
             //actions if token address and price match (i.e. we've seen this one before)
           } else {
             //actions if token address or price does not match one we have seen before
-            w.log.info('SniperV2: New/updated ' + collections[k]['meslug'] + ' entry ' + thislistings[i].tokenMint + ' at price ' + thislistings[i].price)
+            //w.log.info('SniperV2: New/updated ' + collections[k]['meslug'] + ' entry ' + thislistings[i].tokenMint + ' at price ' + thislistings[i].price)
             rebuildarrary.unshift(thislistings[i])//add the new entry to the start of the rebuild arrary so we can remember this one if we see it later
 
             var thisprice = pround(thislistings[i].price, 6)//set price of this lisitng
@@ -123,7 +123,7 @@ async function startsniper() {
                   var thislimit = parseFloat(snipe[2])
                   var hotness = await snipeHotness(parseFloat(thisprice), thisfloorprice, parseFloat(thissnipeprice))
 
-                  w.log.info('SniperV2: we have a ' + collections[k]['collectionkey'] + ' snipe!')
+                  w.log.info('SniperV2: we have a ' + collections[k]['collectionkey'] + ' snipe! '+ thislistings[i].tokenMint + ' at price ' + thislistings[i].price)
 
                   //initialise servers if not already - may need to do this periodically in future
                   if (!serversinitalized) {snipersender.initaliseServers();serversinitalized = true}
