@@ -42,9 +42,9 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 				if (channel) {//filters out servers which are in pg but not setup yet by checking if the snipe channel is valid for this server
 
 					if (supportedservers[i].premium != true) {
-						w.log.info(supportedservers[i].serverid + ' is not premium waiting...')
+						w.log.info(thisserverid + ' is not premium waiting...')
 						await wait(180000)
-						w.log.info(supportedservers[i].serverid + ' done waiting...')
+						w.log.info(thisserverid + ' done waiting...')
 						sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
 					} else {
 						sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
@@ -63,9 +63,9 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 				if (channel) {//filters out servers which are in pg but not setup yet by checking if the snipe channel is valid for this server
 					//send snipes
 					if (supportedservers[i].premium != true) {
-						w.log.info(supportedservers[i].serverid + ' is not premium waiting...')
+						w.log.info(thisserverid + ' is not premium waiting...')
 						await wait(180000)
-						w.log.info(supportedservers[i].serverid + ' done waiting...')
+						w.log.info(thisserverid + ' done waiting...')
 						sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
 					} else {
 						sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
@@ -85,9 +85,9 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 			if (channel) {//filters out servers which are in pg but not setup yet by checking if the snipe channel is valid for this server
 				//send snipes
 				if (supportedservers[i].premium != true) {
-					w.log.info(supportedservers[i].serverid + ' is not premium waiting...')
+					w.log.info(thisserverid + ' is not premium waiting...')
 					await wait(180000)
-					w.log.info(supportedservers[i].serverid + ' done waiting...')
+					w.log.info(thisserverid + ' done waiting...')
 					sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
 				} else {
 					sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
