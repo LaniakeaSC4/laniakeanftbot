@@ -14,7 +14,7 @@ async function initaliseServers() {
 
 //work out where to send them
 async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness) {
-w.log.info('starting sendFilter')
+	w.log.info('starting sendFilter')
 	var thisserverid = ''
 	var channel = ''
 
@@ -41,12 +41,14 @@ w.log.info('starting sendFilter')
 				//w.log.info('Foundhome was true sending snipe to homechannel')
 				if (channel) {//filters out servers which are in pg but not setup yet by checking if the snipe channel is valid for this server
 
-				if (supportedservers[i].premium != true) {
-					w.log.info(supportedservers[i].serverid + ' is not premium waiting...')
-					await wait(180000)
-					w.log.info(supportedservers[i].serverid + ' done waiting...')
-				}
-					sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
+					if (supportedservers[i].premium != true) {
+						w.log.info(supportedservers[i].serverid + ' is not premium waiting...')
+						await wait(180000)
+						w.log.info(supportedservers[i].serverid + ' done waiting...')
+						sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
+					} else {
+						sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
+					}
 				}//end if snipe channel.
 			} else {
 				//w.log.info('Although homechannel was enabled for ' + supportedservers[i].serverid + 'this collection was not found. Sending the normal way')
@@ -64,8 +66,10 @@ w.log.info('starting sendFilter')
 						w.log.info(supportedservers[i].serverid + ' is not premium waiting...')
 						await wait(180000)
 						w.log.info(supportedservers[i].serverid + ' done waiting...')
+						sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
+					} else {
+						sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
 					}
-					sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
 				}//end if snipe channel.
 			}
 
@@ -84,8 +88,10 @@ w.log.info('starting sendFilter')
 					w.log.info(supportedservers[i].serverid + ' is not premium waiting...')
 					await wait(180000)
 					w.log.info(supportedservers[i].serverid + ' done waiting...')
+					sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
+				} else {
+					sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
 				}
-				sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
 			}//end if snipe channel.
 
 		}
