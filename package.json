@@ -4,7 +4,7 @@
 
   "description": "NFT Sniper and rarity checker bot",
 
-  "version": "2.1.0",
+  "version": "2.3.0",
 
   "main": "bot.js",
 
@@ -18,15 +18,13 @@
 
   "engines": {
 
-    "node": "18.8.0",
+    "node": "18.9.0",
 
-    "npm": "8.18.0"
+    "npm": "8.19.1"
 
   },
 
   "dependencies": {
-
-    "@google-cloud/logging-winston": "^5.1.4",
 
     "@metaplex-foundation/js": "0.15.0",
 
@@ -36,9 +34,9 @@
 
     "dotenv": "*",
 
-    "pg": "8.7.3",
+    "pg": "8.8.0",
 
-    "winston": "^3.8.1", 
+    "winston": "3.8.2", 
     
     "winston-papertrail-v2" : "1.0.5"
 

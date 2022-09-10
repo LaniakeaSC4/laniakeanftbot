@@ -127,7 +127,7 @@ async function sendsnipes(server, channel, nftname, embedcolour, thisrarity, rar
 							"inline": true
 						},
 						{
-							"name": "🐍 __Laniakea Bot v2.1__",
+							"name": "🐍 __Laniakea Bot v2.3__",
 							"value": "Hand crafted by Laniakea#3683 and brought to you by the Secret Snake Society. Visit us [on Discord](https://discord.gg/Dr2Vb7Rt6u).",
 							"inline": false
 						}
