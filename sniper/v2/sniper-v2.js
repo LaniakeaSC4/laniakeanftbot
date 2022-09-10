@@ -128,7 +128,7 @@ async function startsniper() {
                   //initialise servers if not already - may need to do this periodically in future
                   if (!serversinitalized) {snipersender.initaliseServers();serversinitalized = true}
 
-                  snipersender.sendFilter(thisname, collections[k]['collectionkey'], thisembedcolour, NFTdata.rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
+                  snipersender.sendFilter(thisname, collections[k]['collectionkey'], thisembedcolour, NFTdata.rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
 
                   /*
                   var thisserverid = ''

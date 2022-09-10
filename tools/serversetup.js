@@ -158,9 +158,11 @@ async function setuphomechannel(interaction) {
 	var validserver = false
 	for (var i = 0; i < supportedservers.length; i++) {
 		if (supportedservers[i].serverid === guildid) {
+			if (supportedservers[i].premium === true) {
 			validserver = true
-			w.log.info('matched server in our database during homechannel setup: ' + guildid)
+			w.log.info('matched premium server in our database during homechannel setup: ' + guildid)
 			break
+			} 
 		}//end if
 	}//end for
 

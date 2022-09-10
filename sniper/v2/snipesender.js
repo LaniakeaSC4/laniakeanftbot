@@ -15,7 +15,7 @@ async function initaliseServers() {
 }; module.exports.initaliseServers = initaliseServers
 
 //work out where to send them
-async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness) {
+async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize) {
 	w.log.info('starting sendFilter')
 	var thisserverid = ''
 	var channel = ''
@@ -47,9 +47,9 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 						w.log.info(thisserverid + ' is not premium waiting...')
 						await wait(nonPremiumDelay)
 						w.log.info(thisserverid + ' done waiting...')
-						sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
+						sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
 					} else {
-						sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
+						sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
 					}
 				}//end if snipe channel.
 			} else {
@@ -68,9 +68,9 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 						w.log.info(thisserverid + ' is not premium waiting...')
 						await wait(nonPremiumDelay)
 						w.log.info(thisserverid + ' done waiting...')
-						sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
+						sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
 					} else {
-						sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
+						sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
 					}
 				}//end if snipe channel.
 			}
@@ -90,9 +90,9 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 					w.log.info(thisserverid + ' is not premium waiting...')
 					await wait(nonPremiumDelay)
 					w.log.info(thisserverid + ' done waiting...')
-					sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
+					sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
 				} else {
-					sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
+					sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
 				}
 			}//end if snipe channel.
 		}
@@ -100,7 +100,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 
 }; module.exports.sendFilter = sendFilter
 
-async function sendsnipes(server, channel, nftname, embedcolour, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage, listinglink, hotness) {
+async function sendsnipes(server, channel, nftname, embedcolour, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage, listinglink, hotness, collectionSize) {
 	return new Promise((resolve, reject) => {
 		client.guilds.cache.get(server).channels.cache.get(channel).send({
 			embeds: [
@@ -110,7 +110,7 @@ async function sendsnipes(server, channel, nftname, embedcolour, thisrarity, rar
 					"fields": [
 						{
 							"name": "🎯 __Snipe Details__",
-							"value": "**Rarity**: " + thisrarity + ' - ' + raritydescription + "\n**List price**: " + pround(parseFloat(thisprice), 3) + ' SOL\n**Floor price**: ' + pround(parseFloat(floorprice), 3) + ' SOL\n[Buy on Magic Eden](' + listinglink + ')\n',
+							"value": "**Rarity**: " + thisrarity + "/" + collectionSize + ' - ' + raritydescription + "\n**List price**: " + pround(parseFloat(thisprice), 3) + ' SOL\n**Floor price**: ' + pround(parseFloat(floorprice), 3) + ' SOL\n[Buy on Magic Eden](' + listinglink + ')\n',
 							"inline": false
 						},
 						{
