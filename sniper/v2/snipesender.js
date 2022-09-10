@@ -45,11 +45,11 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 
 					if (supportedservers[i].premium != true) {
 					  if (raritydescription == 'Rare' || raritydescription == 'Epic'){
-						w.log.info(thisserverid + ' is not premium waiting...')
-						await wait(nonPremiumDelay)
-						w.log.info(thisserverid + ' done waiting...')
+					w.log.info(thisserverid + ' is not premium waiting before sending ' + thisname + '...')
+					await wait(nonPremiumDelay)
+					w.log.info(thisserverid + ' done waiting...' + 'now sending ' + thisname)
 						sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
-					  } else {w.log.info('hit the else 1')}
+					  } else {w.log.info('hit the else 1 for '+ thisname)}
 					} else {
 						sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
 					}
@@ -68,11 +68,11 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 					//send snipes
 					if (supportedservers[i].premium != true) {
 					  if (raritydescription == 'Rare' || raritydescription == 'Epic'){
-						w.log.info(thisserverid + ' is not premium waiting...')
-						await wait(nonPremiumDelay)
-						w.log.info(thisserverid + ' done waiting...')
+					w.log.info(thisserverid + ' is not premium waiting before sending ' + thisname + '...')
+					await wait(nonPremiumDelay)
+					w.log.info(thisserverid + ' done waiting...' + 'now sending ' + thisname)
 						sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
-					  } else {w.log.info('hit the else 2')} 
+					  } else {w.log.info('hit the else 2 for' + thisname)} 
 					} else {
 						sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
 					}
@@ -93,11 +93,11 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 				//send snipes
 				if (supportedservers[i].premium != true) {
 				  if (raritydescription == 'Rare' || raritydescription == 'Epic'){
-					w.log.info(thisserverid + ' is not premium waiting...')
+					w.log.info(thisserverid + ' is not premium waiting before sending ' + thisname + '...')
 					await wait(nonPremiumDelay)
-					w.log.info(thisserverid + ' done waiting...')
+					w.log.info(thisserverid + ' done waiting...' + 'now sending ' + thisname)
 					sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
-				  } else {w.log.info('hit the else 3')} 
+				  } else {w.log.info('hit the else 3 for ' + thisname)} 
 				} else {
 					sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
 				}
@@ -109,6 +109,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 
 async function sendsnipes(server, channel, nftname, embedcolour, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage, listinglink, hotness, collectionSize) {
 	return new Promise((resolve, reject) => {
+	  try {
 		client.guilds.cache.get(server).channels.cache.get(channel).send({
 			embeds: [
 				{
@@ -139,5 +140,6 @@ async function sendsnipes(server, channel, nftname, embedcolour, thisrarity, rar
 				}
 			]//end embed
 		})//end message send
+	  } catch (err) {w.log.error('there was an nft sending error. Perhaps channel deleted? Error was: ' + err)} 
 	}) //end promise
 }//end sendsnipes function
