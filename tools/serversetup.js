@@ -128,7 +128,7 @@ async function start(interaction) {
 						if (key != 'snipecategory') {//we have created the category already
 							if (channelcheck[key].verified === false) {//if this one isnt verified as present
 							//only create premium channels if premium server
-if (supportedservers[guildid].premium === true && channelcheck[key].premium === true){
+if (supportedservers[guildid].premium === true || channelcheck[key].premium === false){
 								guild.channels.create({
 									name: channelcheck[key].name,
 									type: ChannelType.GuildText,
