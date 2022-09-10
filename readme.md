@@ -6,6 +6,7 @@
 * need to be able to restart bot or update collections after new one is added. For that, need to be able to break the interval loops which are running and initialise again. SetInterval should give back an id to break it, but my current setintetval setup is weird in a Promise.all loop. Can that be simplified?
 * delete trait rarity from database. Don't think we need them
 * Roll a new VM using instructions below to split sql databse onto another drive
+* allow servers to set a low/high limit of what snipes they would like to see.
 
 ## npm packages (package.json)
 

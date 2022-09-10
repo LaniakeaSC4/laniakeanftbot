@@ -14,9 +14,9 @@ var collections = {}
 //build array of [0,1,2,etc] for each collection we have. These integers can be used to key access to sniperCollections arrary to loop other functions through all supported collections
 var sniperSequencer = []
 
-var initialget = 20//how many listings will sniper get initially (max 20)
+var initialget = 15//how many listings will sniper get initially (max 20)
 var refreshget = 10//how many will sniper get on each check (max 20) - should be less then initial get or extras will count as new
-var maxlength = 50//how many records history will we keep for each collection
+var maxlength = 40//how many records history will we keep for each collection
 var minutes = 2.5, the_interval = minutes * 60 * 1000//refresh interval for sniper bot
 
 //set multipliers above floor price at which listings become snipes
