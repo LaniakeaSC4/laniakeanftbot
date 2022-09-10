@@ -49,7 +49,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 						await wait(nonPremiumDelay)
 						w.log.info(thisserverid + ' done waiting...')
 						sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
-					  } else {w.log.info('hit the else')
+					  } else {w.log.info('hit the else')}
 					} else {
 						sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
 					}
@@ -72,7 +72,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 						await wait(nonPremiumDelay)
 						w.log.info(thisserverid + ' done waiting...')
 						sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
-					  } else {w.log.info('hit the else') 
+					  } else {w.log.info('hit the else')} 
 					} else {
 						sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
 					}
@@ -97,7 +97,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 					await wait(nonPremiumDelay)
 					w.log.info(thisserverid + ' done waiting...')
 					sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
-				  } else {w.log.info('hit the else') 
+				  } else {w.log.info('hit the else')} 
 				} else {
 					sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
 				}
