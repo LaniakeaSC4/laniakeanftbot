@@ -44,7 +44,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 				if (channel) {//filters out servers which are in pg but not setup yet by checking if the snipe channel is valid for this server
 
 					if (supportedservers[i].premium != true) {
-					  if (raritydescription == 'rare' || raritydescription == 'epic'){
+					  if (raritydescription == 'Rare' || raritydescription == 'Epic'){
 						w.log.info(thisserverid + ' is not premium waiting...')
 						await wait(nonPremiumDelay)
 						w.log.info(thisserverid + ' done waiting...')
@@ -67,7 +67,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 				if (channel) {//filters out servers which are in pg but not setup yet by checking if the snipe channel is valid for this server
 					//send snipes
 					if (supportedservers[i].premium != true) {
-					  if (raritydescription == 'rare' || raritydescription == 'epic'){
+					  if (raritydescription == 'Rare' || raritydescription == 'Epic'){
 						w.log.info(thisserverid + ' is not premium waiting...')
 						await wait(nonPremiumDelay)
 						w.log.info(thisserverid + ' done waiting...')
@@ -92,7 +92,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 			if (channel) {//filters out servers which are in pg but not setup yet by checking if the snipe channel is valid for this server
 				//send snipes
 				if (supportedservers[i].premium != true) {
-				  if (raritydescription == 'rare' || raritydescription == 'epic'){
+				  if (raritydescription == 'Rare' || raritydescription == 'Epic'){
 					w.log.info(thisserverid + ' is not premium waiting...')
 					await wait(nonPremiumDelay)
 					w.log.info(thisserverid + ' done waiting...')
