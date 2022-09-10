@@ -90,21 +90,9 @@ async function startsniper() {
               var thisimage = thistoken.image
               var thislistinglink = 'https://magiceden.io/item-details/' + thistoken.mintAddress
 
-              /*
-              //get nft from nane
-              var thisnftid = ''
-
-              let namearr = thistoken.name.split(' ')
-              for (var i = 0; i < namearr.length; i++) {
-                let checkthis = namearr[i]
-                if (checkthis.includes('#')) {
-                  var nlength = checkthis.length
-                  thisnftid = checkthis.substring(1, nlength)
-                }//end if
-              }//end for
-              */
-
+              //get nft ID from name
               var thisnftid = 0
+              //regex last number in string
               var regex = /(\d+)(?!.*\d)/
               var matchid = thistoken.name.match(regex)
               thisnftid = parseFloat(matchid[0])
@@ -129,28 +117,6 @@ async function startsniper() {
                   if (!serversinitalized) {snipersender.initaliseServers();serversinitalized = true}
 
                   snipersender.sendFilter(thisname, collections[k]['collectionkey'], thisembedcolour, NFTdata.rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
-
-                  /*
-                  var thisserverid = ''
-                  var thissnipechannel = ''
-                
-
-                  for (i = 0; i < supportedservers.length; i++) {
-
-                    //get the snipes channel id to send the snipe to
-                    thisserverid = supportedservers[i].serverid
-                    if (raritydescription === 'Rare') { thissnipechannel = supportedservers[i].raresnipes }
-                    if (raritydescription === 'Epic') { thissnipechannel = supportedservers[i].epicsnipes }
-                    if (raritydescription === 'Legendary') { thissnipechannel = supportedservers[i].legendarysnipes }
-                    if (raritydescription === 'Mythic') { thissnipechannel = supportedservers[i].mythicsnipes }
-
-                    if (thissnipechannel) {//filters out servers which are in pg but not setup yet by checking if the snipe channel is valid for this server
-                      //send snipes
-                      sendsnipes(thisserverid, thissnipechannel, thisname, thisembedcolour, NFTdata.rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness)
-                    }//end if snipe channel.
-
-                  }//for each supported server (from SQL)
-                  */                
 
                 } else { /* w.log.info('this was not a snipe') */ } //end if not false
               } else {
@@ -194,6 +160,7 @@ async function snipeHotness(thisprice, floorprice, thislimit) {
   if (thisprice <= coollimit && thisprice > warmlimit) { return '🔥\n__Cool' }
 }//end fnction snipeHotness
 
+/*
 async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage, listinglink, hotness) {
   return new Promise((resolve, reject) => {
     client.guilds.cache.get(server).channels.cache.get(snipeschannel).send({
@@ -228,6 +195,7 @@ async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisrarit
     })//end message send
   }) //end promise
 }//end sendsnipes function
+*/
 
 //returns rarity description (i.e. "Mythic" if its a snipe, else returns 'false') also returns 
 async function testifsnipe(raritydescription, thisprice, floorprice) {

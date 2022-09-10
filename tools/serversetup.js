@@ -299,7 +299,7 @@ async function homechannelsetup2(interaction) {
 					.setStyle(TextInputStyle.Short)
 					.setMinLength(2)
 					.setMaxLength(120)
-					.setPlaceholder('e.g. https://magiceden.io/marketplace/**{your-collection}**')
+					.setPlaceholder('e.g. https://magiceden.io/marketplace/{your-collection}')
 					.setRequired(true),
 			),//end actionrow add components
 		])//end modal add components
@@ -330,7 +330,7 @@ async function homechannelsetup3(interaction) {
 	}//end for
 
 	if (!found) {
-		await interaction.reply({ content: 'Collection ' + meslug + 'was not found in our supported collections' });
+		await interaction.reply({ content: 'Collection ' + meslug + 'was not found in our supported collections. This message will delete in 5 seconds' });
 		setTimeout(() => interaction.deleteReply(), 5000)//delete it after 5s
 	}//end if !found
 } module.exports.homechannelsetup3 = homechannelsetup3
@@ -346,9 +346,9 @@ async function homechanneldone(interaction) {
 		//enable homechannel mode
 		await sql.updateTableColumn('servers', 'serverid', interaction.message.guildId, 'homechannel_enabled', true)
 
-		await interaction.reply({ content: "Changes saved", ephemeral: true })
+		await interaction.reply({ content: "Changes saved. All snipes for the collections you added will now redirect to your Home Channel", ephemeral: true })
 
 	} else {
-		await interaction.reply({ content: "No collections added. No changes made", ephemeral: true })
+		await interaction.reply({ content: "As you did not identify any collections, no changes have been made to your Home Channel setup.", ephemeral: true })
 	}
 } module.exports.homechanneldone = homechanneldone
