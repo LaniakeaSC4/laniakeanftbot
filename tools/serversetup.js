@@ -10,7 +10,8 @@ const sql = require('./commonSQL.js')//common sql related commands are in here
 async function start(interaction) {
 	//check if user has managechannels (or is admin)
 	if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) { w.log.info('user didnt have manage channel permissions'); return null }
-
+  
+  var thisserver
 	//check if this server is in the table
 	const guildid = interaction.message.guildId
 	supportedservers = await sql.getSupportedServers()
@@ -18,6 +19,7 @@ async function start(interaction) {
 	for (var i = 0; i < supportedservers.length; i++) {
 		if (supportedservers[i].serverid === guildid) {
 			validserver = true
+			thisserver = supportedservers[i]
 			w.log.info('matched server in our database during installation: ' + guildid)
 			break
 		}//end if
@@ -128,7 +130,7 @@ async function start(interaction) {
 						if (key != 'snipecategory') {//we have created the category already
 							if (channelcheck[key].verified === false) {//if this one isnt verified as present
 							//only create premium channels if premium server
-if (supportedservers[guildid].premium === true || channelcheck[key].premium === false){
+if (thisserver.premium === true || channelcheck[key].premium === false){
 								guild.channels.create({
 									name: channelcheck[key].name,
 									type: ChannelType.GuildText,
