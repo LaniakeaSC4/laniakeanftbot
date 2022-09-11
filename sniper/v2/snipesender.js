@@ -127,8 +127,8 @@ async function sendsnipes(server, channel, nftname, embedcolour, thisrarity, rar
 							"inline": true
 						},
 						{
-							"name": "🐍 __Laniakea Bot v2.3 (beta) __",
-							"value": "Hand crafted by Laniakea#368. If your seeing this, your server is part of our beta test. Any and all feedback welcome by DM to Laniakea#3683",
+							"name": "🐍 __Laniakea Sniper v2.3 (beta) __",
+							"value": "Hand crafted by Laniakea#3683. If your seeing this, your server is part of our beta test. Any and all feedback welcome by DM to Laniakea#3683",
 							"inline": false
 						}
 					],

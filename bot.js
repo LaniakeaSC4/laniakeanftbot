@@ -63,10 +63,10 @@ client.on('interactionCreate', async interaction => {
     var setupstatus = await setup.start(interaction)//creates category and 4 sniper channels if the ones in database dont already exist.
     if (setupstatus) { 
       w.log.info('setup status was sucessful') 
-      interaction.reply('Setup complete')
+      interaction.reply({content: 'Setup complete. Your snipe channels will now start receiving snipes!', ephemeral: true })
     } else { 
       w.log.info('there was an error during a setup attempt') 
-      interaction.reply('There was a setup error')
+      interaction.reply({ content : 'There was a setup error', ephemeral: true})
     }
   }//end if button is 'beginsetup-button'
 
@@ -76,26 +76,26 @@ client.on('interactionCreate', async interaction => {
     var serverconfig = await sql.getServerRow(interaction.message.guildId)
     if (serverconfig[0].premium === true) {
     setup.homechannelsetup1(interaction)
-    } else {interaction.reply('this server is not premium')}
-    } else { await interaction.reply(permissionerror) }
+    } else {interaction.reply({content : 'Home Channel is a premium feature. This server is not premium. For more details on premium please contact @Laniakea#3683', ephemeral: true})}
+    } else { await interaction.reply({content : permissionerror, ephemeral: true} ) }
   }//end if button is 'homechannelsetup1-button'
 
   if (interaction.customId === 'homechannelsetup2-button') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
       setup.homechannelsetup2(interaction)
-    } else { await interaction.reply(permissionerror) }
+    } else {  await interaction.reply({content : permissionerror, ephemeral: true} ) }
   }//end if button is 'homechannelsetup2-button'
 
   if (interaction.customId === 'homechannelsetup-modal') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
       setup.homechannelsetup3(interaction)
-    } else { await interaction.reply(permissionerror) }
+    } else {  await interaction.reply({content : permissionerror, ephemeral: true} ) }
   }//end if button is 'homechannelsetup-modal'
   
   if (interaction.customId === 'done-button') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
       setup.homechanneldone(interaction)
-    } else { await interaction.reply(permissionerror) }
+    } else {  await interaction.reply({content : permissionerror, ephemeral: true} ) }
   }//end if button is 'homechannelsetup2-button'
   
 })//end on interactionCreate 
