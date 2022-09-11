@@ -6,6 +6,7 @@ const { Collection, PermissionsBitField } = require('discord.js')
 const fs = require('node:fs')
 const path = require('node:path')
 const w = require('./tools/winston.js')
+const sql = require('./tools/commonSQL.js')
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
 const sniperv2 = require('./sniper/v2/sniper-v2.js')
@@ -72,11 +73,10 @@ client.on('interactionCreate', async interaction => {
   if (interaction.customId === 'homechannelsetup1-button') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
     //if server is premium
-    
-    
-    
-    
-      setup.homechannelsetup1(interaction)
+    var serverconfig = await sql.getServerRow(interaction.message.guildId)
+    if (serverconfig[0].premium === true) {
+    setup.homechannelsetup1(interaction)
+    } else {interaction.reply('this server is not premium')}
     } else { await interaction.reply(permissionerror) }
   }//end if button is 'homechannelsetup1-button'
 
