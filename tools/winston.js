@@ -1,9 +1,5 @@
 const winston = require('winston');
 
-// Imports the Google Cloud client library for Winston
-const {LoggingWinston} = require('@google-cloud/logging-winston');
-const loggingWinston = new LoggingWinston()
-
 //import papertrail logger
 const { PapertrailConnection, PapertrailTransport } = require('winston-papertrail-v2');
 
@@ -19,13 +15,11 @@ const logger = winston.createLogger({
   transports: [
     new winston.transports.Console(),
     // Add Cloud Logging
-    loggingWinston,
     new PapertrailTransport(papertrailConnection)
   ],
   exceptionHandlers: [
     new winston.transports.Console(),
     // Add Cloud Logging
-    loggingWinston,
     new PapertrailTransport(papertrailConnection)
   ]
 });
