@@ -149,7 +149,7 @@ if (thisserver.premium === true || channelcheck[key].premium === false){
 				
 			})//end then after get channels
 
-		return 'complete'
+		return true
 	} else { return null }//end if valid server
 } module.exports.start = start
 

@@ -7,6 +7,7 @@
 * delete trait rarity from database. Don't think we need them
 * Roll a new VM using instructions below to split sql databse onto another drive
 * allow servers to set a low/high limit of what snipes they would like to see.
+* trait specific snipe channels
 
 ## npm packages (package.json)
 

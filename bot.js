@@ -60,7 +60,13 @@ client.on('interactionCreate', async interaction => {
 
   if (interaction.customId === 'beginsetup-button') {
     var setupstatus = await setup.start(interaction)//creates category and 4 sniper channels if the ones in database dont already exist.
-    if (setupstatus) { w.log.info('setup status was sucessful') } else { w.log.info('there was an error during a setup attempt') }
+    if (setupstatus) { 
+      w.log.info('setup status was sucessful') 
+      interaction.reply('Setup complete')
+    } else { 
+      w.log.info('there was an error during a setup attempt') 
+      interaction.reply('There was a setup error')
+    }
   }//end if button is 'beginsetup-button'
 
   if (interaction.customId === 'homechannelsetup1-button') {
