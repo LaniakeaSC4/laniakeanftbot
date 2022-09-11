@@ -71,6 +71,11 @@ client.on('interactionCreate', async interaction => {
 
   if (interaction.customId === 'homechannelsetup1-button') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
+    //if server is premium
+    
+    
+    
+    
       setup.homechannelsetup1(interaction)
     } else { await interaction.reply(permissionerror) }
   }//end if button is 'homechannelsetup1-button'

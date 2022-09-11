@@ -31,7 +31,7 @@ async function start(interaction) {
 		const guild = client.guilds.cache.get(guildid)//get guild from discord
 
 		//get saved sniper channels (if any)
-		const existingchannels = await sql.getSniperChannels(guildid)
+		const existingchannels = await sql.getServerRow(guildid)
 
 		//temporty checking object to mark off what was found or what needs created
 		var channelcheck = {
@@ -173,7 +173,7 @@ async function setuphomechannel(interaction) {
 		const guild = client.guilds.cache.get(guildid)
 
 		//get saved sniper channels (if any)
-		const existingchannels = await sql.getSniperChannels(guildid)//need to add the home channel to the sql function
+		const existingchannels = await sql.getServerRow(guildid)//need to add the home channel to the sql function
 
 		w.log.info('log exisiting channels')
 		//w.log.info(existingchannels)//winston error? 

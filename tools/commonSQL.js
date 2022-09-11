@@ -184,18 +184,18 @@ async function getNFTdata(collectionKey, nftid) {
 }; module.exports.getNFTdata = getNFTdata
 
 //get sniper channels for a particualr server ID - needs error handling like getNFTdata
-async function getSniperChannels(serverid) {
+async function getServerRow(serverid) {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
 
-    var querystring = "SELECT snipecategory,raresnipes,epicsnipes,legendarysnipes,mythicsnipes, homechannel_id FROM servers WHERE serverid = '" + serverid + "'"
+    var querystring = "SELECT * FROM servers WHERE serverid = '" + serverid + "'"
 
     pgclient.query(querystring, (err, res) => {
       if (err) throw err
       resolve(res.rows)
     })//end query
   })//end promise
-}; module.exports.getSniperChannels = getSniperChannels
+}; module.exports.getServerRow = getServerRow
 
 //get supported servers - needs error handling like getNFTdata
 async function getSupportedServers() {
