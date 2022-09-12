@@ -1,13 +1,13 @@
 require('dotenv').config()//import process environment vars into app engine nodejs environment using dotenv
-var discord = require('./clients/discordclient.js')
+var discord = require('./clients/discordclient.js');
 const client = discord.getClient()
-const { Collection, PermissionsBitField } = require('discord.js')
+const { Collection, PermissionsBitField } = require('discord.js');
 
-const fs = require('node:fs')
-const path = require('node:path')
-const w = require('./tools/winston.js')
-const deploy = require('./deploycommands.js')
-const sql = require('./tools/commonSQL.js')
+const fs = require('node:fs');
+const path = require('node:path');
+const w = require('./tools/winston.js');
+const deploy = require('./deploycommands.js');
+const sql = require('./tools/commonSQL.js');
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
 const sniper = require('./sniper/sniper-main.js')
