@@ -102,36 +102,38 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 }; module.exports.sendFilter = sendFilter
 
 async function sendsnipes(server, channel, nftname, embedcolour, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage, listinglink, hotness, collectionSize) {
-	try {
-		await client.guilds.cache.get(server).channels.cache.get(channel).send({
-			embeds: [
-				{
-					"title": hotness + ' Snipe Opportunity__\n' + nftname,
-					"color": embedcolour,
-					"fields": [
-						{
-							"name": "🎯 __Snipe Details__",
-							"value": "**Rarity**: " + thisrarity + "/" + collectionSize + ' - ' + raritydescription + "\n**List price**: " + pround(parseFloat(thisprice), 3) + ' SOL\n**Floor price**: ' + pround(parseFloat(floorprice), 3) + ' SOL\n[Buy on Magic Eden](' + listinglink + ')\n',
-							"inline": false
-						},
-						{
-							"name": "⚡ __Snipe Price Info__",
-							"value": 'For ' + raritydescription + ' NFTs, any price less than ' + parseFloat(thislimit) + 'x the floor price of ' + pround(parseFloat(floorprice), 3) + ' SOL is a snipe (i.e. less than ' + pround(parseFloat(thissnipeprice), 3) + ' SOL)',
-							"inline": true
-						},
-						{
-							"name": "🐍 __Laniakea Sniper v2.3 (beta) __",
-							"value": "Hand crafted by Laniakea#3683. If your seeing this, your server is part of our beta test. Any and all feedback welcome by DM to Laniakea#3683",
-							"inline": false
+	return new Promise((resolve, reject) => {
+		try {
+			client.guilds.cache.get(server).channels.cache.get(channel).send({
+				embeds: [
+					{
+						"title": hotness + ' Snipe Opportunity__\n' + nftname,
+						"color": embedcolour,
+						"fields": [
+							{
+								"name": "🎯 __Snipe Details__",
+								"value": "**Rarity**: " + thisrarity + "/" + collectionSize + ' - ' + raritydescription + "\n**List price**: " + pround(parseFloat(thisprice), 3) + ' SOL\n**Floor price**: ' + pround(parseFloat(floorprice), 3) + ' SOL\n[Buy on Magic Eden](' + listinglink + ')\n',
+								"inline": false
+							},
+							{
+								"name": "⚡ __Snipe Price Info__",
+								"value": 'For ' + raritydescription + ' NFTs, any price less than ' + parseFloat(thislimit) + 'x the floor price of ' + pround(parseFloat(floorprice), 3) + ' SOL is a snipe (i.e. less than ' + pround(parseFloat(thissnipeprice), 3) + ' SOL)',
+								"inline": true
+							},
+							{
+								"name": "🐍 __Laniakea Sniper v2.3 (beta) __",
+								"value": "Hand crafted by Laniakea#3683. If your seeing this, your server is part of our beta test. Any and all feedback welcome by DM to Laniakea#3683",
+								"inline": false
+							}
+						],
+						"thumbnail": {
+							"url": thisimage,
+							"height": 75,
+							"width": 75
 						}
-					],
-					"thumbnail": {
-						"url": thisimage,
-						"height": 75,
-						"width": 75
 					}
-				}
-			]//end embed
-		})//end message send
-	} catch (err) { w.log.error('there was an nft sending error. Perhaps channel deleted? Error was: ' + err) }
+				]//end embed
+			}).catch((err) => {w.log.error('there was a message send error: ' + err)})//end message send
+		} catch (err) { w.log.error('there was an nft sending error. Perhaps channel deleted? Error was: ' + err) }
+	}) //end promise
 }//end sendsnipes function
