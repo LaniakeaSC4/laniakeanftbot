@@ -12,7 +12,7 @@ const metaplex = require('../sniper/v2/addCollection.js')
 const sql = require('../tools/commonSQL.js')
 
 //import sniper so we can restart it
-const sniper = require('../sniper/v2/sniper-v2.js')
+const sniper = require('../sniper/v2/sniper-main.js')
 
 //build the slash command
 module.exports = {

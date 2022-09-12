@@ -2,12 +2,24 @@
 
 ## Ideas and Features
 
-* can only add collections which have #123 nft id in the name. Need a better way to get the nft ids. Need to check what data comes back from metaplex. If there is a nft id in there, then I can pull from my databse with that as a reference? Could test with `https://magiceden.io/marketplace/adagio_tvs` as the name format dosent have #
-* need to be able to restart bot or update collections after new one is added. For that, need to be able to break the interval loops which are running and initialise again. SetInterval should give back an id to break it, but my current setintetval setup is weird in a Promise.all loop. Can that be simplified?
-* delete trait rarity from database. Don't think we need them
+* Setup a dev environment
 * Roll a new VM using instructions below to split sql databse onto another drive
 * allow servers to set a low/high limit of what snipes they would like to see.
 * trait specific snipe channels
+
+### Crypto Coral Tribe Ideas
+
+* Master filter for all collections in a server only allow added collections through to the main channels
+* Multiple 'home channels' - then users can do reaction roles to get access to them
+* allow other admins or all users to add collections (other admins at first?)
+* server specific controls on the snipelimits
+* allow particular server to use howrare.is ranking for a particular collection
+
+## done
+
+* can only add collections which have #123 nft id in the name. Need a better way to get the nft ids. Need to check what data comes back from metaplex. If there is a nft id in there, then I can pull from my databse with that as a reference? Could test with `https://magiceden.io/marketplace/adagio_tvs` as the name format dosent have #
+* need to be able to restart bot or update collections after new one is added. For that, need to be able to break the interval loops which are running and initialise again. SetInterval should give back an id to break it, but my current setintetval setup is weird in a Promise.all loop. Can that be simplified?
+* delete trait rarity from database. Don't think we need them
 
 ## npm packages (package.json)
 

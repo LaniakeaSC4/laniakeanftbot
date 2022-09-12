@@ -9,7 +9,7 @@ const w = require('./tools/winston.js')
 const sql = require('./tools/commonSQL.js')
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
-const sniperv2 = require('./sniper/v2/sniper-v2.js')
+const sniperv2 = require('./sniper/v2/sniper-main.js')
 
 //start services
 client.on('ready', async () => {

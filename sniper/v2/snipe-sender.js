@@ -20,6 +20,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 	var thisserverid = ''
 	var channel = ''
 
+	//this for loop is getting halted by the waits for non premium. need to fire through for loop sending commands off to another function which can wait.
 	for (i = 0; i < supportedservers.length; i++) {
 		w.log.info('supportedservers[i].premium is: ' + supportedservers[i].premium + ' for server ' + supportedservers[i].serverid)
 
