@@ -54,5 +54,5 @@ commandfiles()//build commands from paths
   }//end for
 })//end then
 }//end start
-start()//run function when npm starts script
+//start()//run function when npm starts script
 module.exports.startsetup = startsetup()
