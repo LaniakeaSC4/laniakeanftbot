@@ -19,8 +19,11 @@ client.on('ready', async () => {
   w.log.info('Warp drive activated');
   sniper.initialise()
   
-  await wait(5000)
-  restarted = false
+  await wait(5000).then(result => {
+    w.log.info('done waiting 5 on startup. Setting restarted to false')
+    restarted = false
+  })
+  
 
 })//end client.on Ready
 
