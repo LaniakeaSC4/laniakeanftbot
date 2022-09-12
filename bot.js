@@ -6,7 +6,7 @@ const { Collection, PermissionsBitField } = require('discord.js')
 const fs = require('node:fs')
 const path = require('node:path')
 const w = require('./tools/winston.js')
-const deploycommands = require('./deploycommands.js' )
+const deploy = require('./deploycommands.js')
 const sql = require('./tools/commonSQL.js')
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -45,7 +45,7 @@ client.on("guildCreate", async guild => {
     await sql.createTableRow("servers", "serverid", guild.id, "inserver" , true)
     }
     try {
-    await deploycommands.setupOne(guild.id)
+    await deploy.setupOne(guild.id)
     } catch (err) {w.log.error(err)}
   } else {w.log.info('not adding commands. Within 5 seconds of restart')}
 })
