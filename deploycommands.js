@@ -69,4 +69,4 @@ commandfiles()//build commands from paths
    w.log.error('Error adding: ' + guildid + '. Code: ' + err.error.code)
   } 
 }//end setupOne
-module.exports.setupOne = setupOne()
+module.exports.setupOne = setupOne
