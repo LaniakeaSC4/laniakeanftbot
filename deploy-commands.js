@@ -11,11 +11,18 @@ const { Routes } = require('discord.js')//discord API stuff
 const w = require('./tools/winston.js')//for logging
 const sql = require('./tools/commonSQL.js')//to get supported servers
 
+/*
 //get servers from our SQL
 const getservers = async () => {
   const servers = await sql.getRowsForColumn('servers', 'serverid')
   return servers
 }//end getservers
+*/
+
+var activeServers = []//to store active servers
+async function getActiveServers() {
+activeServers = await sql.getBotActiveStatus()
+ } 
 
 const clientId = '996170261353222219'//our bot ID - this is what we will be registering commands for
 const commands = []//start empty
@@ -33,7 +40,7 @@ for (const file of commandFiles) {//for each file
 const rest = new REST({ version: '10' }).setToken(process.env.BOTTOKEN)//login to REST API
 
 async function start() {
-getservers().then(async servers => {//get supported servers
+getActiveServers().then(async servers => {//get supported servers
 commandfiles()//build commands from paths
   for (var i = 0; i < servers.length; i++) {//for each server, register commands
   try {
