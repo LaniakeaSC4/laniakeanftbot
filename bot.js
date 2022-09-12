@@ -11,17 +11,22 @@ const sql = require('./tools/commonSQL.js')
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
 const sniper = require('./sniper/sniper-main.js')
+var restarted = true
 
 //start services
 client.on('ready', async () => {
 
   w.log.info('Warp drive activated');
   sniper.initialise()
+  
+  await wait(5000)
+  restarted = false
 
 })//end client.on Ready
 
 //joined a server
 client.on("guildCreate", async guild => {
+  if (!restarted) {
     w.log.info("Bot joined a new guild: " + guild.id)
     var serverlist = await sql.getBotActiveStatus()
     var serverfound = false
@@ -40,8 +45,9 @@ client.on("guildCreate", async guild => {
     await sql.createTableRow("servers", "serverid", guild.id, "inserver" , true)
     }
     try {
-    await deploycommands.startsetup()
+    await deploycommands.setupOne(guild.id)
     } catch (err) {w.log.error(err)}
+  } else {w.log.info('not adding commands. Within 5 seconds of restart')}
 })
 
 //left a server

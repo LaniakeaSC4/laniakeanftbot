@@ -58,3 +58,15 @@ commandfiles()//build commands from paths
 }//end start
 //start()//run function when npm starts script
 module.exports.startsetup = startsetup()
+
+async function setupOne(guildid) {
+commandfiles()//build commands from paths
+  try {
+    rest.put(Routes.applicationGuildCommands(clientId, guildid), { body: commands })
+      .then(() => w.log.info('Successfully registered application command'))
+     .catch(console.error)
+  } catch (err) {
+   w.log.error('Error adding: ' + guildid + '. Code: ' + err.error.code)
+  } 
+}//end setupOne
+module.exports.setupOne = setupOne()
