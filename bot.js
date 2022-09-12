@@ -27,7 +27,7 @@ client.on("guildCreate", async guild => {
     for (var i = 0;i < serverlist.length;i++){
       if (serverlist[i].serverid === guild.id) {
         serverfound = true
-        updateTableColumn("servers", "serverid", guild.id, "inserver", true)
+        await updateTableColumn("servers", "serverid", guild.id, "inserver", true)
         break
       }
     }
@@ -41,7 +41,7 @@ client.on("guildCreate", async guild => {
 //left a server
 client.on("guildDelete", async guild => {
     w.log.info("Bot left guild: " + guild.id)
-    await sql.createTableRow("servers", "serverid", guild.id, "inserver" , false) 
+    await updateTableColumn("servers", "serverid", guild.id, "inserver", false)
 })
 
 //======================
