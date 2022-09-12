@@ -18,12 +18,12 @@ client.on('ready', async () => {
 
   w.log.info('Warp drive activated');
   sniper.initialise()
-  
+
   await wait(5000).then(result => {
     w.log.info('done waiting 5 on startup. Setting restarted to false')
     restarted = false
   })
-  
+
 
 })//end client.on Ready
 
@@ -33,7 +33,7 @@ client.on("guildCreate", async guild => {
     w.log.info("Bot joined a new guild: " + guild.id)
     var serverlist = await sql.getBotActiveStatus()
     var serverfound = false
-    for (var i = 0;i < serverlist.length;i++){
+    for (var i = 0; i < serverlist.length; i++) {
       if (serverlist[i].serverid === guild.id) {
         w.log.info('This server was already in database. Reactivating')
         serverfound = true
@@ -41,22 +41,22 @@ client.on("guildCreate", async guild => {
         break
       }
     }
-    
+
     //if server wasn't found, create it
     if (!serverfound) {
       w.log.info('We have not seen this server before. Creating new database entry')
-    await sql.createTableRow("servers", "serverid", guild.id, "inserver" , true)
+      await sql.createTableRow("servers", "serverid", guild.id, "inserver", true)
     }
     try {
-    await deploy.setupOne(guild.id)
-    } catch (err) {w.log.error(err)}
-  } else {w.log.info('not adding commands. Within 5 seconds of restart')}
+      await deploy.setupOne(guild.id)
+    } catch (err) { w.log.error(err) }
+  } else { w.log.info('not adding commands. Within 5 seconds of restart') }
 })
 
 //left a server
 client.on("guildDelete", async guild => {
-    w.log.info("Bot left guild: " + guild.id)
-    await sql.updateTableColumn("servers", "serverid", guild.id, "inserver", false)
+  w.log.info("Bot left guild: " + guild.id)
+  await sql.updateTableColumn("servers", "serverid", guild.id, "inserver", false)
 })
 
 //======================
@@ -101,41 +101,41 @@ client.on('interactionCreate', async interaction => {
 
   if (interaction.customId === 'beginsetup-button') {
     var setupstatus = await setup.start(interaction)//creates category and 4 sniper channels if the ones in database dont already exist.
-    if (setupstatus) { 
-      w.log.info('setup status was sucessful') 
-      interaction.reply({content: 'Setup complete. Your snipe channels will now start receiving snipes!', ephemeral: true })
-    } else { 
-      w.log.info('there was an error during a setup attempt') 
-      interaction.reply({ content : 'There was a setup error', ephemeral: true})
+    if (setupstatus) {
+      w.log.info('setup status was sucessful')
+      interaction.reply({ content: 'Setup complete. Your snipe channels will now start receiving snipes!', ephemeral: true })
+    } else {
+      w.log.info('there was an error during a setup attempt')
+      interaction.reply({ content: 'There was a setup error', ephemeral: true })
     }
   }//end if button is 'beginsetup-button'
 
   if (interaction.customId === 'homechannelsetup1-button') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
-    //if server is premium
-    var serverconfig = await sql.getServerRow(interaction.message.guildId)
-    if (serverconfig[0].premium === true) {
-    setup.homechannelsetup1(interaction)
-    } else {interaction.reply({content : 'Home Channel is a premium feature. This server is not premium. For more details on premium please contact @Laniakea#3683', ephemeral: true})}
-    } else { await interaction.reply({content : permissionerror, ephemeral: true} ) }
+      //if server is premium
+      var serverconfig = await sql.getServerRow(interaction.message.guildId)
+      if (serverconfig[0].premium === true) {
+        setup.homechannelsetup1(interaction)
+      } else { interaction.reply({ content: 'Home Channel is a premium feature. This server is not premium. For more details on premium please contact @Laniakea#3683', ephemeral: true }) }
+    } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
   }//end if button is 'homechannelsetup1-button'
 
   if (interaction.customId === 'homechannelsetup2-button') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
       setup.homechannelsetup2(interaction)
-    } else {  await interaction.reply({content : permissionerror, ephemeral: true} ) }
+    } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
   }//end if button is 'homechannelsetup2-button'
 
   if (interaction.customId === 'homechannelsetup-modal') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
       setup.homechannelsetup3(interaction)
-    } else {  await interaction.reply({content : permissionerror, ephemeral: true} ) }
+    } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
   }//end if button is 'homechannelsetup-modal'
-  
+
   if (interaction.customId === 'done-button') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
       setup.homechanneldone(interaction)
-    } else {  await interaction.reply({content : permissionerror, ephemeral: true} ) }
+    } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
   }//end if button is 'homechannelsetup2-button'
-  
+
 })//end on interactionCreate 
