@@ -10,6 +10,7 @@ const { REST } = require('@discordjs/rest')//discord API stuff
 const { Routes } = require('discord.js')//discord API stuff
 const w = require('./tools/winston.js')//for logging
 const sql = require('./tools/commonSQL.js')//to get supported servers
+const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
 /*
 //get servers from our SQL
@@ -51,6 +52,7 @@ commandfiles()//build commands from paths
   } catch (err) {
    w.log.error('Error adding: ' + servers[i].serverid+ '. Code: ' + err.error.code)
   } 
+  await wait(1000)
   }//end for
 })//end then
 }//end start
