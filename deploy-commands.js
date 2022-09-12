@@ -22,18 +22,25 @@ const commands = []//start empty
 const commandsPath = path.join(__dirname, 'commands')//find path to folder
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'))//join all .js files in that folder
 
+function commandfiles() {
 for (const file of commandFiles) {//for each file
   const filePath = path.join(commandsPath, file)//join all the filepaths
   const command = require(filePath)//require them as command
   commands.push(command.data.toJSON())//push all commands into commands arrary
 }//end for
+}//end function commandfiles
 
 const rest = new REST({ version: '10' }).setToken(process.env.BOTTOKEN)//login to REST API
 
-getservers().then(servers => {//get supported servers
+async function start() {
+getservers().then(async servers => {//get supported servers
+commandfiles()//build commands from paths
   for (var i = 0; i < servers.length; i++) {//for each server, register commands
     rest.put(Routes.applicationGuildCommands(clientId, servers[i].serverid), { body: commands })
       .then(() => w.log.info('Successfully registered application commands'))
       .catch(console.error);
   }//end for
 })//end then
+}//end start
+start()//run function when npm starts script
+module.exports.start = start()
