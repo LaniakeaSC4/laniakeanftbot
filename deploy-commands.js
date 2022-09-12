@@ -36,9 +36,12 @@ async function start() {
 getservers().then(async servers => {//get supported servers
 commandfiles()//build commands from paths
   for (var i = 0; i < servers.length; i++) {//for each server, register commands
+  try {
     rest.put(Routes.applicationGuildCommands(clientId, servers[i].serverid), { body: commands })
       .then(() => w.log.info('Successfully registered application commands'))
-      .catch(console.error);
+  } catch (err) {
+    w.log.error('Error adding: ' + servers[i].serverid+ ' ' + err)
+  } 
   }//end for
 })//end then
 }//end start
