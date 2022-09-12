@@ -22,13 +22,13 @@ client.on('ready', async () => {
 //joined a server
 client.on("guildCreate", async guild => {
     w.log.info("Bot joined a new guild: " + guild.id)
-    var serverlist = await getBotActiveStatus()
+    var serverlist = await sql.getBotActiveStatus()
     var serverfound = false
     for (var i = 0;i < serverlist.length;i++){
       if (serverlist[i].serverid === guild.id) {
         w.log.info('This server was already in database. Reactivating')
         serverfound = true
-        await updateTableColumn("servers", "serverid", guild.id, "inserver", true)
+        await sql.updateTableColumn("servers", "serverid", guild.id, "inserver", true)
         break
       }
     }
@@ -43,7 +43,7 @@ client.on("guildCreate", async guild => {
 //left a server
 client.on("guildDelete", async guild => {
     w.log.info("Bot left guild: " + guild.id)
-    await updateTableColumn("servers", "serverid", guild.id, "inserver", false)
+    await sql.updateTableColumn("servers", "serverid", guild.id, "inserver", false)
 })
 
 //======================
