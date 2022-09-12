@@ -206,3 +206,31 @@ async function getSupportedServers() {
     })//end query
   })//end promise
 }; module.exports.getSupportedServers = getSupportedServers
+
+//get list of servers with status of bot (is it in our out) - needs error handling like getNFTdata
+async function getBotActiveStatus() {
+  return new Promise((resolve, reject) => {
+    var pgclient = db.getClient()
+
+    var querystring = "SELECT serverid,inserver FROM servers"
+
+    pgclient.query(querystring, (err, res) => {
+      if (err) throw err
+      resolve(res.rows)
+    })//end query
+  })//end promise
+}; module.exports.getBotActiveStatus = getBotActiveStatus
+
+//get servers where not is active - needs error handling like getNFTdata
+async function getBotActiveServers() {
+  return new Promise((resolve, reject) => {
+    var pgclient = db.getClient()
+
+    var querystring = "SELECT serverid FROM servers WHERE inserver = true"
+
+    pgclient.query(querystring, (err, res) => {
+      if (err) throw err
+      resolve(res.rows)
+    })//end query
+  })//end promise
+}; module.exports.getBotActiveServers = getBotActiveServers

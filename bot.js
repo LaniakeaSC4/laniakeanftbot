@@ -20,8 +20,28 @@ client.on('ready', async () => {
 })//end client.on Ready
 
 //joined a server
-client.on("guildCreate", guild => {
-    w.log.info("Joined a new guild: " + guild.id)
+client.on("guildCreate", async guild => {
+    w.log.info("Bot joined a new guild: " + guild.id)
+    var serverlist = await getBotActiveStatus()
+    var serverfound = false
+    for (var i = 0;i < serverlist.length;i++){
+      if (serverlist[i].serverid === guild.id) {
+        serverfound = true
+        updateTableColumn("servers", "serverid", guild.id, "inserver", true)
+        break
+      }
+    }
+    
+    //if server wasn't found, create it
+    if (!serverfound) {
+    await sql.createTableRow("servers", "serverid", guild.id, "inserver" , true)
+    }
+})
+
+//left a server
+client.on("guildDelete", async guild => {
+    w.log.info("Bot left guild: " + guild.id)
+    await sql.createTableRow("servers", "serverid", guild.id, "inserver" , false) 
 })
 
 //======================
