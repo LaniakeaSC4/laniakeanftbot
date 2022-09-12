@@ -9,13 +9,13 @@ const w = require('./tools/winston.js')
 const sql = require('./tools/commonSQL.js')
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
-const sniperv2 = require('./sniper/v2/sniper-main.js')
+const sniper = require('./sniper/sniper-main.js')
 
 //start services
 client.on('ready', async () => {
 
   w.log.info('Warp drive activated');
-  sniperv2.initialise()
+  sniper.initialise()
 
 })//end client.on Ready
 

@@ -7,12 +7,12 @@
 const { SlashCommandBuilder } = require('discord.js');
 
 //import metaplex RPC - add database functionality
-const metaplex = require('../sniper/v2/addCollection.js')
+const metaplex = require('../sniper/addCollection.js')
 //import common SQL commands
 const sql = require('../tools/commonSQL.js')
 
 //import sniper so we can restart it
-const sniper = require('../sniper/v2/sniper-main.js')
+const sniper = require('../sniper/sniper-main.js')
 
 //build the slash command
 module.exports = {

@@ -1,9 +1,9 @@
-var discord = require('../../clients/discordclient.js')
+var discord = require('../clients/discordclient.js')
 const client = discord.getClient()
-const w = require('../../tools/winston.js')
-const magiceden = require('../../tools/magicedenRPC.js')//Magic Eden related commands are in here
-const nfttools = require('../../tools/nfttools.js')//generic nft tools like get rarity description from rank in here
-const sql = require('../../tools/commonSQL.js')//sql related commands are in here
+const w = require('../tools/winston.js')
+const magiceden = require('../tools/magicedenRPC.js')//Magic Eden related commands are in here
+const nfttools = require('../tools/nfttools.js')//generic nft tools like get rarity description from rank in here
+const sql = require('../tools/commonSQL.js')//sql related commands are in here
 const snipersender = require('./snipe-sender.js')
 
 const pround = (number, decimalPlaces) => Number(Math.round(Number(number + "e" + decimalPlaces)) + "e" + decimalPlaces * -1)

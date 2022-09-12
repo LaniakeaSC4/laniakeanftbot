@@ -1,6 +1,6 @@
-const sql = require('../../tools/commonSQL.js')//sql related commands are in here
-const w = require('../../tools/winston.js')
-var discord = require('../../clients/discordclient.js')
+const sql = require('../tools/commonSQL.js')//sql related commands are in here
+const w = require('../tools/winston.js')
+var discord = require('../clients/discordclient.js')
 const client = discord.getClient()
 const pround = (number, decimalPlaces) => Number(Math.round(Number(number + "e" + decimalPlaces)) + "e" + decimalPlaces * -1)
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
