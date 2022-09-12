@@ -40,7 +40,7 @@ commandfiles()//build commands from paths
     rest.put(Routes.applicationGuildCommands(clientId, servers[i].serverid), { body: commands })
       .then(() => w.log.info('Successfully registered application commands'))
   } catch (err) {
-    w.log.error('Error adding: ' + servers[i].serverid+ ' ' + err)
+    w.log.error('Error adding: ' + servers[i].serverid+ '. Code: ' + err.error.code)
   } 
   }//end for
 })//end then
