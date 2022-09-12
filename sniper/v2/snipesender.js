@@ -44,7 +44,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 				if (channel) {//filters out servers which are in pg but not setup yet by checking if the snipe channel is valid for this server
 					if (supportedservers[i].premium != true) {//if this isnt a premium server. Send after wait
 						if (raritydescription == 'Rare' || raritydescription == 'Epic') {//as this inst a premium server, send only rare or epic snipes
-							//w.log.info(thisserverid + ' is not premium waiting before sending ' + thisname + '...')
+							w.log.info(thisserverid + ' is not premium waiting before sending ' + thisname + '...')
 							await wait(nonPremiumDelay)
 							//w.log.info(thisserverid + ' done waiting...' + 'now sending ' + thisname)
 							sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
@@ -65,7 +65,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 					//send snipes
 					if (supportedservers[i].premium != true) {//if this isnt a premium server. Send after wait
 						if (raritydescription == 'Rare' || raritydescription == 'Epic') {//as this inst a premium server, send only rare or epic snipes
-							//w.log.info(thisserverid + ' is not premium waiting before sending ' + thisname + '...')
+							w.log.info(thisserverid + ' is not premium waiting before sending ' + thisname + '...')
 							await wait(nonPremiumDelay)
 							//w.log.info(thisserverid + ' done waiting...' + 'now sending ' + thisname)
 							sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
@@ -88,7 +88,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 				//send snipes
 				if (supportedservers[i].premium != true) {//if this isnt a premium server. Send after wait
 					if (raritydescription == 'Rare' || raritydescription == 'Epic') {//as this inst a premium server, send only rare or epic snipes
-						//w.log.info(thisserverid + ' is not premium waiting before sending ' + thisname + '...')
+						w.log.info(thisserverid + ' is not premium waiting before sending ' + thisname + '...')
 						await wait(nonPremiumDelay)
 						//w.log.info(thisserverid + ' done waiting...' + 'now sending ' + thisname)
 						sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
