@@ -40,7 +40,7 @@ client.on("guildCreate", async guild => {
     await sql.createTableRow("servers", "serverid", guild.id, "inserver" , true)
     }
     
-    await deploycommands.start()
+    await deploycommands.startsetup()
 })
 
 //left a server

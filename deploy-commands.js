@@ -40,7 +40,7 @@ for (const file of commandFiles) {//for each file
 
 const rest = new REST({ version: '10' }).setToken(process.env.BOTTOKEN)//login to REST API
 
-async function start() {
+async function startsetup() {
 getActiveServers().then(async servers => {//get supported servers
 commandfiles()//build commands from paths
   for (var i = 0; i < servers.length; i++) {//for each server, register commands
@@ -55,4 +55,4 @@ commandfiles()//build commands from paths
 })//end then
 }//end start
 start()//run function when npm starts script
-module.exports.start = start()
+module.exports.startsetup = startsetup()
