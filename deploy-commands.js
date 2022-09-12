@@ -22,6 +22,7 @@ const getservers = async () => {
 var activeServers = []//to store active servers
 async function getActiveServers() {
 activeServers = await sql.getBotActiveStatus()
+return activeServers
  } 
 
 const clientId = '996170261353222219'//our bot ID - this is what we will be registering commands for
