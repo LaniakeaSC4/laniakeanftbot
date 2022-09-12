@@ -21,6 +21,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 	var channel = ''
 
 	for (i = 0; i < supportedservers.length; i++) {
+		w.log.info('supportedservers[i].premium is: ' + supportedservers[i].premium + ' for server ' + supportedservers[i].serverid)
 
 		//check if this snipe should be sent to a homechannel
 		if (supportedservers[i].homechannel_enabled) {
