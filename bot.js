@@ -6,7 +6,7 @@ const { Collection, PermissionsBitField } = require('discord.js')
 const fs = require('node:fs')
 const path = require('node:path')
 const w = require('./tools/winston.js')
-const deploycommands = require('./deploy-commands.js')
+const deploycommands = require('./deploy-commands.js' )
 const sql = require('./tools/commonSQL.js')
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -39,8 +39,9 @@ client.on("guildCreate", async guild => {
       w.log.info('We have not seen this server before. Creating new database entry')
     await sql.createTableRow("servers", "serverid", guild.id, "inserver" , true)
     }
-    
+    try {
     await deploycommands.startsetup()
+    } catch (err) {w.log.error(err)}
 })
 
 //left a server

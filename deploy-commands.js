@@ -20,9 +20,8 @@ const getservers = async () => {
 }//end getservers
 */
 
-var activeServers = []//to store active servers
 async function getActiveServers() {
-activeServers = await sql.getBotActiveStatus()
+var activeServers = await sql.getBotActiveStatus()
 return activeServers
  } 
 
