@@ -114,7 +114,7 @@ async function startsniper() {
                   w.log.info('SniperV2: we have a ' + collections[k]['collectionkey'] + ' snipe! '+ thislistings[i].tokenMint + ' at price ' + thislistings[i].price)
 
                   //initialise servers if not already - may need to do this periodically in future
-                  if (!serversinitalized) {snipersender.initaliseServers();serversinitalized = true}
+                  if (!serversinitalized) {await snipersender.initaliseServers();serversinitalized = true}
 
                   snipersender.sendFilter(thisname, collections[k]['collectionkey'], thisembedcolour, NFTdata.rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
 
