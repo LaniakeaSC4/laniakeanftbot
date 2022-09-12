@@ -19,6 +19,11 @@ client.on('ready', async () => {
 
 })//end client.on Ready
 
+//joined a server
+client.on("guildCreate", guild => {
+    w.log.info("Joined a new guild: " + guild.id)
+})
+
 //======================
 //==== Command Setup  ===
 //======================
