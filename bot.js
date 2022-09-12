@@ -26,6 +26,7 @@ client.on("guildCreate", async guild => {
     var serverfound = false
     for (var i = 0;i < serverlist.length;i++){
       if (serverlist[i].serverid === guild.id) {
+        w.log.info('This server was already in database. Reactivating')
         serverfound = true
         await updateTableColumn("servers", "serverid", guild.id, "inserver", true)
         break
@@ -34,6 +35,7 @@ client.on("guildCreate", async guild => {
     
     //if server wasn't found, create it
     if (!serverfound) {
+      w.log.info('We have not seen this server before. Creating new database entry')
     await sql.createTableRow("servers", "serverid", guild.id, "inserver" , true)
     }
 })
