@@ -42,21 +42,18 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 			if (foundhome) {
 				//w.log.info('Foundhome was true sending snipe to homechannel')
 				if (channel) {//filters out servers which are in pg but not setup yet by checking if the snipe channel is valid for this server
-
-					if (supportedservers[i].premium != true) {
-					  if (raritydescription == 'Rare' || raritydescription == 'Epic'){
-					w.log.info(thisserverid + ' is not premium waiting before sending ' + thisname + '...')
-					await wait(nonPremiumDelay)
-					w.log.info(thisserverid + ' done waiting...' + 'now sending ' + thisname)
+					if (supportedservers[i].premium != true) {//if this isnt a premium server. Send after wait
+						if (raritydescription == 'Rare' || raritydescription == 'Epic') {//as this inst a premium server, send only rare or epic snipes
+							//w.log.info(thisserverid + ' is not premium waiting before sending ' + thisname + '...')
+							await wait(nonPremiumDelay)
+							//w.log.info(thisserverid + ' done waiting...' + 'now sending ' + thisname)
+							sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
+						} else { w.log.info('hit the else 1 for ' + thisname) }//this shouldnt trigger as we have covered all the snipe scenarios
+					} else {//if this is a premium server, just send it
 						sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
-					  } else {w.log.info('hit the else 1 for '+ thisname)}
-					} else {
-						sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
-					}
-				}//end if snipe channel.
-			} else {
-				//w.log.info('Although homechannel was enabled for ' + supportedservers[i].serverid + 'this collection was not found. Sending the normal way')
-				//if homechannel enabled, but not for this collection, send it through the normal process
+					}//end else
+				}//end if snipe there is a valid snipe channel
+			} else {//if homechannel enabled, but not for this collection, send it through the normal process
 				//get the snipes channel id to send the snipe to
 				thisserverid = supportedservers[i].serverid
 				if (raritydescription === 'Rare') { channel = supportedservers[i].raresnipes }
@@ -66,22 +63,20 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 
 				if (channel) {//filters out servers which are in pg but not setup yet by checking if the snipe channel is valid for this server
 					//send snipes
-					if (supportedservers[i].premium != true) {
-					  if (raritydescription == 'Rare' || raritydescription == 'Epic'){
-					w.log.info(thisserverid + ' is not premium waiting before sending ' + thisname + '...')
-					await wait(nonPremiumDelay)
-					w.log.info(thisserverid + ' done waiting...' + 'now sending ' + thisname)
+					if (supportedservers[i].premium != true) {//if this isnt a premium server. Send after wait
+						if (raritydescription == 'Rare' || raritydescription == 'Epic') {//as this inst a premium server, send only rare or epic snipes
+							//w.log.info(thisserverid + ' is not premium waiting before sending ' + thisname + '...')
+							await wait(nonPremiumDelay)
+							//w.log.info(thisserverid + ' done waiting...' + 'now sending ' + thisname)
+							sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
+						} else { w.log.info('hit the else 2 for' + thisname) }//this shouldnt trigger as we have covered all the snipe scenarios
+					} else {//if this is a premium server, just send it
 						sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
-					  } else {w.log.info('hit the else 2 for' + thisname)} 
-					} else {
-						sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
-					}
-					
-				}//end if snipe channel.
-			}
+					}//end else
+				}//end if snipe there is a valid snipe channel
+			}//end else - a home channel was found, but not for this collection
 
 		} else {//if homechannel is not enabled - send normally
-			//w.log.info('Homechannels not enabled for ' + supportedservers[i].serverid + ' sending the old fashioned way')
 			//get the snipes channel id to send the snipe to
 			thisserverid = supportedservers[i].serverid
 			if (raritydescription === 'Rare') { channel = supportedservers[i].raresnipes }
@@ -91,26 +86,24 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 
 			if (channel) {//filters out servers which are in pg but not setup yet by checking if the snipe channel is valid for this server
 				//send snipes
-				if (supportedservers[i].premium != true) {
-				  if (raritydescription == 'Rare' || raritydescription == 'Epic'){
-					w.log.info(thisserverid + ' is not premium waiting before sending ' + thisname + '...')
-					await wait(nonPremiumDelay)
-					w.log.info(thisserverid + ' done waiting...' + 'now sending ' + thisname)
+				if (supportedservers[i].premium != true) {//if this isnt a premium server. Send after wait
+					if (raritydescription == 'Rare' || raritydescription == 'Epic') {//as this inst a premium server, send only rare or epic snipes
+						//w.log.info(thisserverid + ' is not premium waiting before sending ' + thisname + '...')
+						await wait(nonPremiumDelay)
+						//w.log.info(thisserverid + ' done waiting...' + 'now sending ' + thisname)
+						sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
+					} else { w.log.info('NFT: ' + thisname + ' was better than rare or epic, not posting to this server') }
+				} else {//if this is a premium server, just send it
 					sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
-				  } else {w.log.info('hit the else 3 for ' + thisname)} 
-				} else {
-					sendsnipes(thisserverid, channel, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
-				}
+				}//end else
 			}//end if snipe channel.
-		}
+		}//end else if homechannel was not enabled - send normally
 	}//for each supported server (from SQL)   
-
 }; module.exports.sendFilter = sendFilter
 
 async function sendsnipes(server, channel, nftname, embedcolour, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage, listinglink, hotness, collectionSize) {
-	return new Promise((resolve, reject) => {
-	  try {
-		client.guilds.cache.get(server).channels.cache.get(channel).send({
+	try {
+		await client.guilds.cache.get(server).channels.cache.get(channel).send({
 			embeds: [
 				{
 					"title": hotness + ' Snipe Opportunity__\n' + nftname,
@@ -140,6 +133,5 @@ async function sendsnipes(server, channel, nftname, embedcolour, thisrarity, rar
 				}
 			]//end embed
 		})//end message send
-	  } catch (err) {w.log.error('there was an nft sending error. Perhaps channel deleted? Error was: ' + err)} 
-	}) //end promise
+	} catch (err) { w.log.error('there was an nft sending error. Perhaps channel deleted? Error was: ' + err) }
 }//end sendsnipes function

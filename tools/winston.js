@@ -6,7 +6,7 @@ const { PapertrailConnection, PapertrailTransport } = require('winston-papertrai
 const papertrailConnection = new PapertrailConnection({
   host: 'logs.papertrailapp.com',
   port: 23324
-}) 
+})
 
 // Create a Winston logger that streams to Cloud Logging
 // Logs will be written to: "projects/YOUR_PROJECT_ID/logs/winston_log"
