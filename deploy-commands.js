@@ -45,6 +45,7 @@ async function startsetup() {
 getActiveServers().then(async servers => {//get supported servers
 commandfiles()//build commands from paths
   for (var i = 0; i < servers.length; i++) {//for each server, register commands
+    await wait(1500)//rate limit
   try {
     rest.put(Routes.applicationGuildCommands(clientId, servers[i].serverid), { body: commands })
       .then(() => w.log.info('Successfully registered application commands'))
@@ -52,7 +53,7 @@ commandfiles()//build commands from paths
   } catch (err) {
    w.log.error('Error adding: ' + servers[i].serverid+ '. Code: ' + err.error.code)
   } 
-  await wait(1000)
+
   }//end for
 })//end then
 }//end start
