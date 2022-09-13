@@ -27,6 +27,7 @@ client.on('ready', async () => {
 
 })//end client.on Ready
 
+const snipersender = require('./sniper/snipe-sender.js')
 //joined a server
 client.on("guildCreate", async guild => {
   if (restarted != true) {
@@ -49,6 +50,7 @@ client.on("guildCreate", async guild => {
     }
     try {
       await deploy.setupOne(guild.id)
+      snipersender.initaliseServers()
     } catch (err) { w.log.error(err) }
   } else { w.log.info('not adding commands. Within 5 seconds of restart') }
 })
@@ -103,7 +105,7 @@ client.on('interactionCreate', async interaction => {
     var setupstatus = await setup.start(interaction)//creates category and 4 sniper channels if the ones in database dont already exist.
     if (setupstatus) {
       w.log.info('setup status was sucessful')
-      interaction.reply({ content: 'Setup complete. Your snipe channels will now start receiving snipes!', ephemeral: true })
+      interaction.reply({ content: 'Setup complete. Your snipe channels will now start receiving snipes! Default permissions are deny @\'everyone, please now configure access to the snipe channels for your users. Please also confirm the bot has send permissions on the snipe channels', ephemeral: true })
     } else {
       w.log.info('there was an error during a setup attempt')
       interaction.reply({ content: 'There was a setup error', ephemeral: true })
