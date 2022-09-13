@@ -103,12 +103,13 @@ client.on('interactionCreate', async interaction => {
   const permissionerror = { content: 'Sorry, you do not have permissions to run this command (Manage Channels/Admin required)', ephemeral: true }
 
   if (interaction.customId === 'beginsetup-button') {
+    interaction.deferReply({ephemeral: true })
     var setupstatus = await setup.start(interaction)//creates category and 4 sniper channels if the ones in database dont already exist.
     if (setupstatus) {
       w.log.info('setup status was sucessful')
       await wait(5000)//give time for channels to be created
        snipersender.initaliseServers()
-      interaction.reply({ content: 'Setup complete. Your snipe channels will now start receiving snipes! Default permissions are deny @\'everyone, please now configure access to the snipe channels for your users. Please also confirm the bot has send permissions on the snipe channels', ephemeral: true })
+      interaction.editReply({ content: 'Setup complete. Your snipe channels will now start receiving snipes! Default permissions are deny @\'everyone, please now configure access to the snipe channels for your users. Please also confirm the bot has send permissions on the snipe channels', ephemeral: true })
     } else {
       w.log.info('there was an error during a setup attempt')
       interaction.reply({ content: 'There was a setup error', ephemeral: true })
