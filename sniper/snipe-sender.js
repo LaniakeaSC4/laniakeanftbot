@@ -22,19 +22,20 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 
 	//this for loop is getting halted by the waits for non premium. need to fire through for loop sending commands off to another function which can wait.
 	for (i = 0; i < supportedservers.length; i++) {
-		w.log.info('supportedservers[i].premium is: ' + supportedservers[i].premium + ' for server ' + supportedservers[i].serverid)
+		var thisserver = supportedservers[i]
+		w.log.info('thisserver.premium is: ' + thisserver.premium + ' for server ' + thisserver.serverid)
 
 		//check if this snipe should be sent to a homechannel
 		var foundhome = false
-		if (supportedservers[i].homechannel_enabled === true) {
-			//w.log.info('homechannel was enabled for ' + supportedservers[i].serverid)
+		if (thisserver.homechannel_enabled === true) {
+			//w.log.info('homechannel was enabled for ' + thisserver.serverid)
 			//check if this snipe needs to do into a home channel
-			for (var j = 0; j < supportedservers[i].homechannel_collections.enabled.length; j++) {
-				if (supportedservers[i].homechannel_collections.enabled[j] == thiscollection) {
+			for (var j = 0; j < thisserver.homechannel_collections.enabled.length; j++) {
+				if (thisserver.homechannel_collections.enabled[j] == thiscollection) {
 					foundhome = true
-					thisserverid = supportedservers[i].serverid
-					channel = supportedservers[i].homechannel_id
-					//w.log.info('matched this snipe to a home collection for server: ' + supportedservers[i].homechannel_id)
+					thisserverid = thisserver.serverid
+					channel = thisserver.homechannel_id
+					//w.log.info('matched this snipe to a home collection for server: ' + thisserver.homechannel_id)
 					break
 				} else {//w.log.info('No homechannel match for this collection on this server')
 				}
@@ -44,7 +45,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 			if (foundhome) {
 				//w.log.info('Foundhome was true sending snipe to homechannel')
 				if (channel) {//filters out servers which are in pg but not setup yet by checking if the snipe channel is valid for this server
-					if (supportedservers[i].premium != true) {//if this isnt a premium server. Send after wait
+					if (thisserver.premium === false) {//if this isnt a premium server. Send after wait
 						if (raritydescription == 'Rare' || raritydescription == 'Epic') {//as this inst a premium server, send only rare or epic snipes
 							w.log.info(thisserverid + ' is not premium waiting before sending ' + thisname + '...')
 							//w.log.info(thisserverid + ' done waiting...' + 'now sending ' + thisname)
@@ -56,15 +57,15 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 				}//end if snipe there is a valid snipe channel
 			} else {//if homechannel enabled, but not for this collection, send it through the normal process
 				//get the snipes channel id to send the snipe to
-				thisserverid = supportedservers[i].serverid
-				if (raritydescription === 'Rare') { channel = supportedservers[i].raresnipes }
-				if (raritydescription === 'Epic') { channel = supportedservers[i].epicsnipes }
-				if (raritydescription === 'Legendary') { channel = supportedservers[i].legendarysnipes }
-				if (raritydescription === 'Mythic') { channel = supportedservers[i].mythicsnipes }
+				thisserverid = thisserver.serverid
+				if (raritydescription === 'Rare') { channel = thisserver.raresnipes }
+				if (raritydescription === 'Epic') { channel = thisserver.epicsnipes }
+				if (raritydescription === 'Legendary') { channel = thisserver.legendarysnipes }
+				if (raritydescription === 'Mythic') { channel = thisserver.mythicsnipes }
 
 				if (channel) {//filters out servers which are in pg but not setup yet by checking if the snipe channel is valid for this server
 					//send snipes
-					if (supportedservers[i].premium != true) {//if this isnt a premium server. Send after wait
+					if (thisserver.premium === false) {//if this isnt a premium server. Send after wait
 						if (raritydescription == 'Rare' || raritydescription == 'Epic') {//as this inst a premium server, send only rare or epic snipes
 							w.log.info(thisserverid + ' is not premium waiting before sending ' + thisname + '...')
 							//w.log.info(thisserverid + ' done waiting...' + 'now sending ' + thisname)
@@ -78,15 +79,15 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 
 		} else {//if homechannel is not enabled - send normally
 			//get the snipes channel id to send the snipe to
-			thisserverid = supportedservers[i].serverid
-			if (raritydescription === 'Rare') { channel = supportedservers[i].raresnipes }
-			if (raritydescription === 'Epic') { channel = supportedservers[i].epicsnipes }
-			if (raritydescription === 'Legendary') { channel = supportedservers[i].legendarysnipes }
-			if (raritydescription === 'Mythic') { channel = supportedservers[i].mythicsnipes }
+			thisserverid = thisserver.serverid
+			if (raritydescription === 'Rare') { channel = thisserver.raresnipes }
+			if (raritydescription === 'Epic') { channel = thisserver.epicsnipes }
+			if (raritydescription === 'Legendary') { channel = thisserver.legendarysnipes }
+			if (raritydescription === 'Mythic') { channel = thisserver.mythicsnipes }
 
 			if (channel) {//filters out servers which are in pg but not setup yet by checking if the snipe channel is valid for this server
 				//send snipes
-				if (supportedservers[i].premium != true) {//if this isnt a premium server. Send after wait
+				if (thisserver.premium === false) {//if this isnt a premium server. Send after wait
 					if (raritydescription == 'Rare' || raritydescription == 'Epic') {//as this inst a premium server, send only rare or epic snipes
 						w.log.info(thisserverid + ' is not premium waiting before sending ' + thisname + '...')
 						//w.log.info(thisserverid + ' done waiting...' + 'now sending ' + thisname)
