@@ -25,10 +25,10 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 		w.log.info('supportedservers[i].premium is: ' + supportedservers[i].premium + ' for server ' + supportedservers[i].serverid)
 
 		//check if this snipe should be sent to a homechannel
-		if (supportedservers[i].homechannel_enabled) {
+		var foundhome = false
+		if (supportedservers[i].homechannel_enabled === true) {
 			//w.log.info('homechannel was enabled for ' + supportedservers[i].serverid)
 			//check if this snipe needs to do into a home channel
-			var foundhome = false
 			for (var j = 0; j < supportedservers[i].homechannel_collections.enabled.length; j++) {
 				if (supportedservers[i].homechannel_collections.enabled[j] == thiscollection) {
 					foundhome = true
