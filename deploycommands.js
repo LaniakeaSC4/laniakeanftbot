@@ -57,7 +57,7 @@ commandfiles()//build commands from paths
 })//end then
 }//end start
 //start()//run function when npm starts script
-module.exports.startsetup = startsetup()
+module.exports.startsetup = startsetup
 
 async function setupOne(guildid) {
 commandfiles()//build commands from paths
