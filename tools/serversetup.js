@@ -52,7 +52,7 @@ async function start(interaction) {
 		//get the guild channels to see if our saved ones still exist
 		await guild.channels.fetch()
 			.then(async channels => {
-				channels.forEach(channel => {
+				channels.forEach(async channel => {
 
 					//check for the channels in server. If channel wasnt found db_cid would be null. Incorrect or null means serverfound wont get updated to true.
 					//verified gets set true if both server and SQL are found and matched. If not, we will recreate
