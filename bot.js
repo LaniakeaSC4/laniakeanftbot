@@ -29,7 +29,7 @@ client.on('ready', async () => {
 
 //joined a server
 client.on("guildCreate", async guild => {
-  if (!restarted) {
+  if (restarted != true) {
     w.log.info("Bot joined a new guild: " + guild.id)
     var serverlist = await sql.getBotActiveStatus()
     var serverfound = false
