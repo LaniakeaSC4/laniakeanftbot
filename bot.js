@@ -59,6 +59,7 @@ client.on("guildCreate", async guild => {
 client.on("guildDelete", async guild => {
   w.log.info("Bot left guild: " + guild.id)
   await sql.updateTableColumn("servers", "serverid", guild.id, "inserver", false)
+  snipersender.initaliseServers()
 })
 
 //======================
