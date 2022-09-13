@@ -110,12 +110,12 @@ async function start(interaction) {
 						channelcheck.snipecategory.server_cid = newchannel.id//save category channel ID to we can add children
 						await sql.updateTableColumn('servers', 'serverid', guildid, 'snipecategory', newchannel.id)
 					}).then(async result => {
-						createchildren()
+						await createchildren()
 					})
 				} else {
 					w.log.info('Category channel already existed')
-					createchildren()
-				}
+					await createchildren()
+				} 
 
 				async function createchildren() {
 					//get the category channel object so we can add children
