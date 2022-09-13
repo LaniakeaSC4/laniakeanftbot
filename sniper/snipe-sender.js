@@ -18,7 +18,10 @@ async function initaliseServers() {
 //work out where to send them
 async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize) {
 	w.log.info('starting sendFilter')
-	w.log.info('supported servers is: ' + supportedservers.toString())
+	w.log.info('supported servers is:')
+	for (var o = 0;o < supportedservers.length;o++){
+	  w.log.info(supportedservers[o])
+	}
 
 
 	//this for loop is getting halted by the waits for non premium. need to fire through for loop sending commands off to another function which can wait.
