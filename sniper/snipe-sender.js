@@ -20,7 +20,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 	w.log.info('starting sendFilter')
 	w.log.info('supported servers is:')
 	for (var o = 0;o < supportedservers.length;o++){
-	  w.log.info(supportedservers[o])
+	  w.log.info(JSON.stringify(supportedservers[o]))
 	}
 
 
