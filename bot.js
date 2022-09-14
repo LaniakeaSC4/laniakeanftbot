@@ -47,6 +47,7 @@ client.on("guildCreate", async guild => {
     if (!serverfound) {
       w.log.info('We have not seen this server before. Creating new database entry')
       await sql.createTableRow("servers", "serverid", guild.id, "inserver", true)
+      await sql.updateTableColumn("servers", "serverid", guild.id, "servername", guild.name)
     }
     try {
       await deploy.setupOne(guild.id)
@@ -59,6 +60,7 @@ client.on("guildCreate", async guild => {
 client.on("guildDelete", async guild => {
   w.log.info("Bot left guild: " + guild.id)
   await sql.updateTableColumn("servers", "serverid", guild.id, "inserver", false)
+  await sql.updateTableColumn("servers", "serverid", guild.id, "servername", guild.name)
   snipersender.initaliseServers()
 })
 
