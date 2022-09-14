@@ -17,12 +17,13 @@ async function initaliseServers() {
 
 //work out where to send them
 async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize) {
+  /*
 	w.log.info('starting sendFilter')
 	w.log.info('supported servers is:')
 	for (var o = 0;o < supportedservers.length;o++){
 	  w.log.info(JSON.stringify(supportedservers[o]))
 	}
-
+*/
 
 	//this for loop is getting halted by the waits for non premium. need to fire through for loop sending commands off to another function which can wait.
 	for (i = 0; i < supportedservers.length; i++) {
@@ -31,7 +32,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 		var thisserverid = ''
 		var channel = ''
 
-		w.log.info('thisserver.premium is: ' + thisserver.premium + ' for server ' + thisserver.serverid)
+		//w.log.info('thisserver.premium is: ' + thisserver.premium + ' for server ' + thisserver.serverid)
 
 		//check if this snipe should be sent to a homechannel
 		var foundhome = false
@@ -55,7 +56,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 				if (channel) {//filters out servers which are in pg but not setup yet by checking if the snipe channel is valid for this server
 					if (thisserver.premium === false) {//if this isnt a premium server. Send after wait
 						if (raritydescription == 'Rare' || raritydescription == 'Epic') {//as this inst a premium server, send only rare or epic snipes
-							w.log.info(thisserverid + ' is not premium waiting before sending ' + thisname + '...')
+							//w.log.info(thisserverid + ' is not premium waiting before sending ' + thisname + '...')
 							//w.log.info(thisserverid + ' done waiting...' + 'now sending ' + thisname)
 							sendsnipes(thisserverid, channel, nonPremiumDelay, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
 						} else { w.log.info('hit the else 1 for ' + thisname) }//this shouldnt trigger as we have covered all the snipe scenarios
@@ -75,7 +76,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 					//send snipes
 					if (thisserver.premium === false) {//if this isnt a premium server. Send after wait
 						if (raritydescription == 'Rare' || raritydescription == 'Epic') {//as this inst a premium server, send only rare or epic snipes
-							w.log.info(thisserverid + ' is not premium waiting before sending ' + thisname + '...')
+							//w.log.info(thisserverid + ' is not premium waiting before sending ' + thisname + '...')
 							//w.log.info(thisserverid + ' done waiting...' + 'now sending ' + thisname)
 							sendsnipes(thisserverid, channel, nonPremiumDelay, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
 						} else { w.log.info('hit the else 2 for' + thisname) }//this shouldnt trigger as we have covered all the snipe scenarios
@@ -97,10 +98,10 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 				//send snipes
 				if (thisserver.premium === false) {//if this isnt a premium server. Send after wait
 					if (raritydescription == 'Rare' || raritydescription == 'Epic') {//as this inst a premium server, send only rare or epic snipes
-						w.log.info(thisserverid + ' is not premium waiting before sending ' + thisname + '...')
+						//w.log.info(thisserverid + ' is not premium waiting before sending ' + thisname + '...')
 						//w.log.info(thisserverid + ' done waiting...' + 'now sending ' + thisname)
 						sendsnipes(thisserverid, channel, nonPremiumDelay, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
-					} else { w.log.info('NFT: ' + thisname + ' was better than rare or epic, not posting to this server') }
+					} else { w.log.info('NFT: ' + thisname + ' was better than rare or epic, not posting to ' + thisserverid) }
 				} else {//if this is a premium server, just send it
 					sendsnipes(thisserverid, channel, null, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
 				}//end else
@@ -110,7 +111,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 }; module.exports.sendFilter = sendFilter
 
 async function sendsnipes(server, channel, delay, nftname, embedcolour, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage, listinglink, hotness, collectionSize) {
-	if (delay) {w.log.info('server: ' + server + ' is not premium. Waiting to send ' + nftname);await wait(delay);w.log.info('Done waiting. Now sending ' + nftname + ' to ' + server)}
+	if (delay) {w.log.info('server: ' + server + ' is not premium. Waiting to send ' + nftname + ' ' + raritydescription);await wait(delay);w.log.info('Done waiting. Now sending ' + nftname + ' to ' + server)} else {w.log.info('Sending ' + nftname + ' ' + raritydescription + ' immediately to premium server ' + server)}
 	try {
 		client.guilds.cache.get(server).channels.cache.get(channel).send({
 			embeds: [
