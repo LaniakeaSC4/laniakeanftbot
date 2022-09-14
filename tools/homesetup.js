@@ -7,7 +7,96 @@ const { ChannelType, PermissionFlagsBits, PermissionsBitField,
 const w = require('./winston.js')
 const sql = require('./commonSQL.js')//common sql related commands are in here
 
-async function setupchannels(interaction) {
+//global var to hold supported collections. Populated in homechannelsetup1. Accessed in homechannelsetup3
+var supportedcollections = {}
+
+//Main /setup message has a "set up home channel" button. When pressed, send this setup panel
+async function whichCollections(interaction) {
+	//build a new button row for the command reply
+	const row = new ActionRowBuilder()
+		.addComponents(
+			new ButtonBuilder()
+				.setCustomId('addCollection-button')
+				.setLabel('Add Collection')
+				.setStyle(ButtonStyle.Primary),
+		).addComponents(
+			new ButtonBuilder()
+				.setCustomId('done-button')
+				.setLabel('Done')
+				.setStyle(ButtonStyle.Secondary),
+		)
+	//send the reply (including button row)
+	await interaction.reply({ content: "Press \"Add collection\" below and enter the Magic Eden link to the collection you would like to add to your home channel. When you have added all the collections you wish to be in your homechannel, press Done.\n\nAdding: ", components: [row], ephemeral: true })
+} module.exports.whichCollections = whichCollections
+
+//when "Add Collection" is pressed, show a modal to capture the ME address
+async function sendModal(interaction) {
+	const modal = new ModalBuilder()
+		.setCustomId('submit-modal')
+		.setTitle('Enter Magic Eden Link to collection')
+		.addComponents([
+			new ActionRowBuilder().addComponents(
+				new TextInputBuilder()
+					.setCustomId('collection-input')
+					.setLabel('Collection ID')
+					.setStyle(TextInputStyle.Short)
+					.setMinLength(2)
+					.setMaxLength(120)
+					.setPlaceholder('e.g. https://magiceden.io/marketplace/{your-collection}')
+					.setRequired(true),
+			),//end actionrow add components
+		])//end modal add components
+	await interaction.showModal(modal)
+} module.exports.sendModal = sendModal
+
+//Global var to hold valid/supported collections user is adding to this homechannel
+var homecollections = { "enabled": [] }
+
+//function to process the input from the modal sent in homechannelsetup2
+async function validateCollection(interaction) {
+	const response = interaction.fields.getTextInputValue('collection-input')//get modal input text
+	var meslug = response.substring(response.lastIndexOf('magiceden.io/marketplace/') + 25).replace(/[^0-9a-z]/gi, '')//find the end slug and clean it (same process as cleaning to colleciton key in SQL)
+
+	//get collections and populate global var
+	supportedcollections = {}//clear and repopulate in case collections have changed since last time command was run
+	supportedcollections = await sql.getOurMetaplexCollections()//set from sql
+
+	var found = false//start as false
+	for (var i = 0; i < supportedcollections.length; i++) {//loop supported collections recieved from SQL
+		if (supportedcollections[i].collectionkey === meslug) {//if collection entered by user is found in our supported collections
+			found = true
+			homecollections.enabled.push(meslug)//push it to the homecollections. We will gather them up here while the user enters them.
+			//update interaction to list the ones they have added so far
+			interaction.update({ content: "Press \"Add collection\" below and enter the Magic Eden link to the collection you would like to add to your home channel. When you have added all the collections you wish to be in your homechannel, press Done.\n\nAdding: " + homecollections.enabled.toString(), ephemeral: true })
+			break//if we have found it, dont need to loop more
+		}//end if
+	}//end for
+
+	if (!found) {
+		await interaction.reply({ content: 'Collection ' + meslug + 'was not found in our supported collections. This message will delete in 5 seconds' });
+		setTimeout(() => interaction.deleteReply(), 5000)//delete it after 5s
+	}//end if !found
+} module.exports.validateCollection = validateCollection
+
+async function done(interaction) {
+	if (homecollections.enabled.length != 0) {
+
+		//create home channel if not already existing
+		setupchannel(interaction)
+
+		//save validated supported collections gathered from user
+		await sql.updateTableColumn('servers', 'serverid', interaction.message.guildId, 'homechannel_collections', homecollections)
+		//enable homechannel mode
+		await sql.updateTableColumn('servers', 'serverid', interaction.message.guildId, 'homechannel_enabled', true)
+		//reply success message
+		await interaction.reply({ content: "Changes saved. All snipes for the collections you added will now redirect to your Home Channel", ephemeral: true })
+
+	} else {
+		await interaction.reply({ content: "As you did not identify any collections, no changes have been made to your Home Channel setup.", ephemeral: true })
+	}
+} module.exports.done = done
+
+async function setupchannel(interaction) {
 	//check if this server is in the table
 	const guildid = interaction.message.guildId
 	supportedservers = await sql.getSupportedServers()
@@ -108,93 +197,4 @@ async function setupchannels(interaction) {
 			})//end then for fetched channels
 		return 'complete'
 	} else { return null }//end if valid server
-} module.exports.setupchannels = setupchannels
-
-//global var to hold supported collections. Populated in homechannelsetup1. Accessed in homechannelsetup3
-var supportedcollections = {}
-
-//Main /setup message has a "set up home channel" button. When pressed, send this setup panel
-async function whichCollections(interaction) {
-	//build a new button row for the command reply
-	const row = new ActionRowBuilder()
-		.addComponents(
-			new ButtonBuilder()
-				.setCustomId('addCollection-button')
-				.setLabel('Add Collection')
-				.setStyle(ButtonStyle.Primary),
-		).addComponents(
-			new ButtonBuilder()
-				.setCustomId('done-button')
-				.setLabel('Done')
-				.setStyle(ButtonStyle.Secondary),
-		)
-	//send the reply (including button row)
-	await interaction.reply({ content: "Press \"Add collection\" below and enter the Magic Eden link to the collection you would like to add to your home channel. When you have added all the collections you wish to be in your homechannel, press Done.\n\nAdding: ", components: [row], ephemeral: true })
-} module.exports.whichCollections = whichCollections
-
-//when "Add Collection" is pressed, show a modal to capture the ME address
-async function sendModal(interaction) {
-	const modal = new ModalBuilder()
-		.setCustomId('submit-modal')
-		.setTitle('Enter Magic Eden Link to collection')
-		.addComponents([
-			new ActionRowBuilder().addComponents(
-				new TextInputBuilder()
-					.setCustomId('collection-input')
-					.setLabel('Collection ID')
-					.setStyle(TextInputStyle.Short)
-					.setMinLength(2)
-					.setMaxLength(120)
-					.setPlaceholder('e.g. https://magiceden.io/marketplace/{your-collection}')
-					.setRequired(true),
-			),//end actionrow add components
-		])//end modal add components
-	await interaction.showModal(modal)
-} module.exports.sendModal = sendModal
-
-//Global var to hold valid/supported collections user is adding to this homechannel
-var homecollections = { "enabled": [] }
-
-//function to process the input from the modal sent in homechannelsetup2
-async function validateCollection(interaction) {
-	const response = interaction.fields.getTextInputValue('collection-input')//get modal input text
-	var meslug = response.substring(response.lastIndexOf('magiceden.io/marketplace/') + 25).replace(/[^0-9a-z]/gi, '')//find the end slug and clean it (same process as cleaning to colleciton key in SQL)
-
-	//get collections and populate global var
-	supportedcollections = {}//clear and repopulate in case collections have changed since last time command was run
-	supportedcollections = await sql.getOurMetaplexCollections()//set from sql
-
-	var found = false//start as false
-	for (var i = 0; i < supportedcollections.length; i++) {//loop supported collections recieved from SQL
-		if (supportedcollections[i].collectionkey === meslug) {//if collection entered by user is found in our supported collections
-			found = true
-			homecollections.enabled.push(meslug)//push it to the homecollections. We will gather them up here while the user enters them.
-			//update interaction to list the ones they have added so far
-			interaction.update({ content: "Press \"Add collection\" below and enter the Magic Eden link to the collection you would like to add to your home channel. When you have added all the collections you wish to be in your homechannel, press Done.\n\nAdding: " + homecollections.enabled.toString(), ephemeral: true })
-			break//if we have found it, dont need to loop more
-		}//end if
-	}//end for
-
-	if (!found) {
-		await interaction.reply({ content: 'Collection ' + meslug + 'was not found in our supported collections. This message will delete in 5 seconds' });
-		setTimeout(() => interaction.deleteReply(), 5000)//delete it after 5s
-	}//end if !found
-} module.exports.validateCollection = validateCollection
-
-async function done(interaction) {
-	if (homecollections.enabled.length != 0) {
-
-		//create home channel if not already existing
-		setuphomechannel(interaction)
-
-		//save validated supported collections gathered from user
-		await sql.updateTableColumn('servers', 'serverid', interaction.message.guildId, 'homechannel_collections', homecollections)
-		//enable homechannel mode
-		await sql.updateTableColumn('servers', 'serverid', interaction.message.guildId, 'homechannel_enabled', true)
-		//reply success message
-		await interaction.reply({ content: "Changes saved. All snipes for the collections you added will now redirect to your Home Channel", ephemeral: true })
-
-	} else {
-		await interaction.reply({ content: "As you did not identify any collections, no changes have been made to your Home Channel setup.", ephemeral: true })
-	}
-} module.exports.done = done
+}
