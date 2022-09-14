@@ -27,7 +27,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 
 	//this for loop is getting halted by the waits for non premium. need to fire through for loop sending commands off to another function which can wait.
 	for (i = 0; i < supportedservers.length; i++) {
-		
+		if (supportedservers[i].inserver === true) {
 		var thisserver = supportedservers[i]
 		var thisserverid = ''
 		var channel = ''
@@ -107,6 +107,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 				}//end else
 			}//end if snipe channel.
 		}//end else if homechannel was not enabled - send normally
+		}//if bot is active in this server
 	}//for each supported server (from SQL)   
 }; module.exports.sendFilter = sendFilter
 
