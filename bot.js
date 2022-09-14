@@ -120,7 +120,7 @@ client.on('interactionCreate', async interaction => {
 
 const homesetup = require('./tools/homesetup.js')
 client.on('interactionCreate', async interaction => {
-  if (interaction.customId === 'starthomesetu-button') {
+  if (interaction.customId === 'starthomesetup-button') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
       //if server is premium
       var serverconfig = await sql.getServerRow(interaction.message.guildId)
@@ -128,7 +128,7 @@ client.on('interactionCreate', async interaction => {
         homesetup.whichCollections(interaction)
       } else { interaction.reply({ content: 'Home Channel is a premium feature. This server is not premium. For more details on premium please contact @Laniakea#3683', ephemeral: true }) }
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
-  }//end if button is 'starthomesetup-button'
+  }//end if button is 'starthomesetu-button'
 
   if (interaction.customId === 'addCollection-button') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
