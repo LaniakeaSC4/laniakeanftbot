@@ -19,13 +19,13 @@ module.exports = {
       const row = new ActionRowBuilder()
         .addComponents(
           new ButtonBuilder()
-            .setCustomId('beginsetup-button')
-            .setLabel('Setup Server')
+            .setCustomId('feedsetup-button')
+            .setLabel('Setup Snipe Feed')
             .setStyle(ButtonStyle.Primary),
         )
         .addComponents(
           new ButtonBuilder()
-            .setCustomId('homechannelsetup1-button')
+            .setCustomId('starthomesetup-button')
             .setLabel('🌟 Setup Home Channel')
             .setStyle(ButtonStyle.Primary),
         )//end add components
