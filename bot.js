@@ -99,6 +99,7 @@ client.on('interactionCreate', async interaction => {
   }//end catch
 })//end on interactionCreate
 
+//feed setup
 const feedsetup = require('./tools/feedsetup.js')
 client.on('interactionCreate', async interaction => {
   const permissionerror = { content: 'Sorry, you do not have permissions to run this command (Manage Channels/Admin required)', ephemeral: true }
@@ -118,6 +119,7 @@ client.on('interactionCreate', async interaction => {
   }//end if button is 'beginsetup-button'
 })//end on interactionCreate
 
+//home setup
 const homesetup = require('./tools/homesetup.js')
 client.on('interactionCreate', async interaction => {
   if (interaction.customId === 'starthomesetup-button') {
@@ -130,21 +132,31 @@ client.on('interactionCreate', async interaction => {
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
   }//end if button is 'starthomesetu-button'
 
-  if (interaction.customId === 'addCollection-button') {
+  if (interaction.customId === 'addHomeCollection-button') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
       homesetup.sendModal(interaction)
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
   }//end if button is 'addCollection-button'
 
-  if (interaction.customId === 'submit-modal') {
+  if (interaction.customId === 'submithome-modal') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
       homesetup.validateCollection(interaction)
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
   }//end if button is 'submit-modal'
 
-  if (interaction.customId === 'done-button') {
+  if (interaction.customId === 'donehome-button') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
       homesetup.done(interaction)
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
   }//end if button is 'done-button'
 })//end on interactionCreate 
+
+//alpha setup
+client.on('interactionCreate', async interaction => {
+
+  if (interaction.customId === 'startalphasetup-button') {
+    if (interaction.member.user.id === "684896787655557216") {
+      
+    } else {interaction.reply('Feature in development. This command is disabled.')}//if not laniakea
+  }
+})//end on interactionCreate

@@ -7,32 +7,36 @@ const { ChannelType, PermissionFlagsBits, PermissionsBitField,
 const w = require('./winston.js')
 const sql = require('./commonSQL.js')//common sql related commands are in here
 
-//global var to hold supported collections. Populated in homechannelsetup1. Accessed in homechannelsetup3
-var supportedcollections = {}
-
-//Main /setup message has a "set up home channel" button. When pressed, send this setup panel
-async function whichCollections(interaction) {
+//Main setup
+async function mainSetup(interaction) {
 	//build a new button row for the command reply
 	const row = new ActionRowBuilder()
 		.addComponents(
 			new ButtonBuilder()
-				.setCustomId('addHomeCollection-button')
+				.setCustomId('modifyAlpha-button')
 				.setLabel('Add Collection')
 				.setStyle(ButtonStyle.Primary),
 		).addComponents(
 			new ButtonBuilder()
-				.setCustomId('donehome-button')
+				.setCustomId('doneAlpha-button')
 				.setLabel('Done')
 				.setStyle(ButtonStyle.Secondary),
 		)
 	//send the reply (including button row)
-	await interaction.reply({ content: "Press \"Add collection\" below and enter the Magic Eden link to the collection you would like to add to your home channel. When you have added all the collections you wish to be in your homechannel, press Done.\n\nAdding: ", components: [row], ephemeral: true })
-} module.exports.whichCollections = whichCollections
+	await interaction.reply({ content: "Your current alpha channels are:\n```[channels] ```\nPress \"Modify\" below to make changes.", components: [row], ephemeral: true })
+} module.exports.mainSetup = mainSetup
+
+
+
+
+
+
+
 
 //when "Add Collection" is pressed, show a modal to capture the ME address
 async function sendModal(interaction) {
 	const modal = new ModalBuilder()
-		.setCustomId('submit-modal')
+		.setCustomId('submithome-modal')
 		.setTitle('Enter Magic Eden Link to collection')
 		.addComponents([
 			new ActionRowBuilder().addComponents(
