@@ -27,33 +27,35 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 
 			//check if this snipe should be sent to a homechannel
 			var foundhome = false
-			if (thisserver.homechannel_enabled === true) {
+			if (thisserver.homechannel_enabled === true && thisserver.premium === true) {
 				//w.log.info('homechannel was enabled for ' + thisserver.serverid)
 				//check if this snipe needs to go into a home channel
 				for (var j = 0; j < thisserver.homechannel_collections.enabled.length; j++) {
 					if (thisserver.homechannel_collections.enabled[j] == thiscollection) {
-						foundhome = true
-						thisserverid = thisserver.serverid
-						channel = thisserver.homechannel_id
+						if (thisserver.homechannel_id) {
+							thisserverid = thisserver.serverid
+							channel = thisserver.homechannel_id
+							foundhome = true
+						}
 						//w.log.info('matched this snipe to a home collection for server: ' + thisserver.homechannel_id)
 						break
 					} else {/*w.log.info('No homechannel match for this collection on this server')*/ }
 				}//end loop through saved home channels
 
-				//if yes, send it to home channel
-				if (foundhome) {
-					//w.log.info('Foundhome was true sending snipe to homechannel')
+				//if foundhome is true (will only be if server is still premium, homechannel is enabled and this collection was found as a homechannel collection)
+				if (foundhome === true) {
+					/*//w.log.info('Foundhome was true sending snipe to homechannel')
 					if (channel) {//filters out servers which are in pg but not setup yet by checking if the snipe channel is valid for this server
 						if (thisserver.premium === false) {//if this isnt a premium server. Send after wait
 							if (raritydescription == 'Rare' || raritydescription == 'Epic') {//as this inst a premium server, send only rare or epic snipes
 								//w.log.info(thisserverid + ' is not premium waiting before sending ' + thisname + '...')
 								//w.log.info(thisserverid + ' done waiting...' + 'now sending ' + thisname)
 								sendsnipes(thisserverid, channel, nonPremiumDelay, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
-							} else { w.log.info('hit the else 1 for ' + thisname) }//this shouldnt trigger as we have covered all the snipe scenarios
-						} else {//if this is a premium server, just send it
-							sendsnipes(thisserverid, channel, null, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
-						}//end else
-					}//end if snipe there is a valid snipe channel
+							/*} else { w.log.info('hit the else 1 for ' + thisname) }//this shouldnt trigger as we have covered all the snipe scenarios
+						} else {//if this is a premium server, just send it*/
+					sendsnipes(thisserverid, channel, null, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
+					/*}//end else
+						*/}/*//end if snipe there is a valid snipe channel
 				} else {//if homechannel enabled, but not for this collection, send it through the normal process
 					//get the snipes channel id to send the snipe to
 					thisserverid = thisserver.serverid
@@ -74,9 +76,9 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 							sendsnipes(thisserverid, channel, null, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
 						}//end else
 					}//end if snipe there is a valid snipe channel
-				}//end else - a home channel was found, but not for this collection
+				}//end else - a home channel was found, but not for this collection*/
 
-			} else {//if homechannel is not enabled - send normally
+			} else {//if valid homechannel was not found enter normal send filter process
 				//get the snipes channel id to send the snipe to
 				thisserverid = thisserver.serverid
 				if (raritydescription === 'Rare') { channel = thisserver.raresnipes }
