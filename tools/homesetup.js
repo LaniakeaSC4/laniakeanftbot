@@ -31,7 +31,7 @@ async function whichCollections(interaction) {
 //when "Add Collection" is pressed, show a modal to capture the ME address
 async function sendModal(interaction) {
 	const modal = new ModalBuilder()
-		.setCustomId('submit-modal')
+		.setCustomId('submithome-modal')
 		.setTitle('Enter Magic Eden Link to collection')
 		.addComponents([
 			new ActionRowBuilder().addComponents(
