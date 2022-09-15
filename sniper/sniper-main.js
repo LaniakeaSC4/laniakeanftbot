@@ -25,6 +25,7 @@ var legendarylimit = 7.5
 var epiclimit = 2.5
 var rarelimit = 1.25
 
+//initaliseSniperCollections fills this with serverid,raresnipes,epicsnipes,legendarysnipes,mythicsnipes,homechannel_enabled,homechannel_id,homechannel_collections,premium,inserver FROM servers
 var supportedservers = []
 
 const initaliseSniperCollections = async () => {
@@ -111,10 +112,10 @@ async function startsniper() {
                   var thislimit = parseFloat(snipe[2])
                   var hotness = await snipeHotness(parseFloat(thisprice), thisfloorprice, parseFloat(thissnipeprice))
 
-                  w.log.info('SniperV2: we have a ' + collections[k]['collectionkey'] + ' snipe! '+ thislistings[i].tokenMint + ' at price ' + thislistings[i].price)
+                  w.log.info('SniperV2: we have a ' + collections[k]['collectionkey'] + ' snipe! ' + thislistings[i].tokenMint + ' at price ' + thislistings[i].price)
 
                   //initialise servers if not already - may need to do this periodically in future
-                  if (!serversinitalized) {await snipersender.initaliseServers();serversinitalized = true}
+                  if (!serversinitalized) { await snipersender.initaliseServers(); serversinitalized = true }
 
                   snipersender.sendFilter(thisname, collections[k]['collectionkey'], thisembedcolour, NFTdata.rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
 
@@ -147,10 +148,10 @@ async function startsniper() {
 module.exports.start = startsniper
 
 async function snipeHotness(thisprice, floorprice, thislimit) {
-  var blazinglimit = floorprice+((thislimit - floorprice) * 0.2); //w.log.info('blazing limit is: ' + blazinglimit)
-  var redhotlimit = floorprice+((thislimit - floorprice) * 0.4); //w.log.info('redhotlimit limit is: ' + redhotlimit)
-  var hotlimit = floorprice+((thislimit - floorprice) * 0.6); //w.log.info('hotlimit limit is: ' + hotlimit)
-  var warmlimit = floorprice+((thislimit - floorprice) * 0.8); //w.log.info('warmlimit limit is: ' + warmlimit)
+  var blazinglimit = floorprice + ((thislimit - floorprice) * 0.2); //w.log.info('blazing limit is: ' + blazinglimit)
+  var redhotlimit = floorprice + ((thislimit - floorprice) * 0.4); //w.log.info('redhotlimit limit is: ' + redhotlimit)
+  var hotlimit = floorprice + ((thislimit - floorprice) * 0.6); //w.log.info('hotlimit limit is: ' + hotlimit)
+  var warmlimit = floorprice + ((thislimit - floorprice) * 0.8); //w.log.info('warmlimit limit is: ' + warmlimit)
   var coollimit = thislimit; //w.log.info('coollimit limit is: ' + coollimit)
 
   if (thisprice <= blazinglimit) { return '🔥🔥🔥🔥🔥\n__Blazing Hot' }
@@ -159,43 +160,6 @@ async function snipeHotness(thisprice, floorprice, thislimit) {
   if (thisprice <= warmlimit && thisprice > hotlimit) { return '🔥🔥\n__Warm' }
   if (thisprice <= coollimit && thisprice > warmlimit) { return '🔥\n__Cool' }
 }//end fnction snipeHotness
-
-/*
-async function sendsnipes(server, snipeschannel, nftname, embedcolour, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage, listinglink, hotness) {
-  return new Promise((resolve, reject) => {
-    client.guilds.cache.get(server).channels.cache.get(snipeschannel).send({
-      embeds: [
-        {
-          "title": hotness + ' Snipe Opportunity__\n' + nftname,
-          "color": embedcolour,
-          "fields": [
-            {
-              "name": "🎯 __Snipe Details__",
-              "value": "**Rarity**: " + thisrarity + ' - ' + raritydescription + "\n**List price**: " + pround(parseFloat(thisprice), 3) + ' SOL\n**Floor price**: ' + pround(parseFloat(floorprice), 3) + ' SOL\n[Buy on Magic Eden](' + listinglink + ')\n',
-              "inline": false
-            },
-            {
-              "name": "⚡ __Snipe Price Info__",
-              "value": 'For ' + raritydescription + ' NFTs, any price less than ' + parseFloat(thislimit) + 'x the floor price of ' + pround(parseFloat(floorprice), 3) + ' SOL is a snipe (i.e. less than ' + pround(parseFloat(thissnipeprice), 3) + ' SOL)',
-              "inline": true
-            },
-            {
-              "name": "🐍 __Laniakea Bot v2.1__",
-              "value": "Hand crafted by Laniakea#3683 and brought to you by the Secret Snake Society. Visit us [on Discord](https://discord.gg/Dr2Vb7Rt6u).",
-              "inline": false
-            }
-          ],
-          "thumbnail": {
-            "url": thisimage,
-            "height": 75,
-            "width": 75
-          }
-        }
-      ]//end embed
-    })//end message send
-  }) //end promise
-}//end sendsnipes function
-*/
 
 //returns rarity description (i.e. "Mythic" if its a snipe, else returns 'false') also returns 
 async function testifsnipe(raritydescription, thisprice, floorprice) {
@@ -227,7 +191,7 @@ async function testifsnipe(raritydescription, thisprice, floorprice) {
   }) //end promise
 }//end testifsnipe function
 
-async function stopsniper(loops) {
+async function stopsniper() {
   w.log.info('stopping sniper bot with clearinterval')
   for (var i = 0; i < currentloops.length; i++) {
     clearInterval(currentloops[i])

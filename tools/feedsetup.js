@@ -115,7 +115,7 @@ async function start(interaction) {
 				} else {
 					w.log.info('Category channel already existed')
 					await createchildren()
-				} 
+				}
 
 				async function createchildren() {
 					//get the category channel object so we can add children

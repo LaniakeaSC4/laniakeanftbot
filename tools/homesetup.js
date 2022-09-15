@@ -3,7 +3,6 @@ const client = discord.getClient()
 const { ChannelType, PermissionFlagsBits, PermissionsBitField,
 	ModalBuilder, ActionRowBuilder, TextInputBuilder,
 	TextInputStyle, ButtonBuilder, ButtonStyle } = require('discord.js')
-
 const w = require('./winston.js')
 const sql = require('./commonSQL.js')//common sql related commands are in here
 
@@ -197,4 +196,4 @@ async function setupchannel(interaction) {
 			})//end then for fetched channels
 		return 'complete'
 	} else { return null }//end if valid server
-}
+}//end setupchannel

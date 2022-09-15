@@ -51,7 +51,7 @@ client.on("guildCreate", async guild => {
     }
     try {
       await deploy.setupOne(guild.id)
-     
+
     } catch (err) { w.log.error(err) }
   } else { w.log.info('not adding commands. Within 5 seconds of restart') }
 })
@@ -105,12 +105,12 @@ client.on('interactionCreate', async interaction => {
   const permissionerror = { content: 'Sorry, you do not have permissions to run this command (Manage Channels/Admin required)', ephemeral: true }
 
   if (interaction.customId === 'feedsetup-button') {
-    interaction.deferReply({ephemeral: true })
+    interaction.deferReply({ ephemeral: true })
     var setupstatus = await feedsetup.start(interaction)//creates category and 4 sniper channels if the ones in database dont already exist.
     if (setupstatus) {
       w.log.info('setup status was sucessful')
       await wait(5000)//give time for channels to be created
-       snipersender.initaliseServers()
+      snipersender.initaliseServers()
       interaction.editReply({ content: 'Setup complete. Your snipe channels will now start receiving snipes! Default permissions are deny @\'everyone, please now configure access to the snipe channels for your users. Please also confirm the bot has send permissions on the snipe channels', ephemeral: true })
     } else {
       w.log.info('there was an error during a setup attempt')
@@ -122,6 +122,7 @@ client.on('interactionCreate', async interaction => {
 //home setup
 const homesetup = require('./tools/homesetup.js')
 client.on('interactionCreate', async interaction => {
+
   if (interaction.customId === 'starthomesetup-button') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
       //if server is premium
@@ -130,33 +131,43 @@ client.on('interactionCreate', async interaction => {
         homesetup.whichCollections(interaction)
       } else { interaction.reply({ content: 'Home Channel is a premium feature. This server is not premium. For more details on premium please contact @Laniakea#3683', ephemeral: true }) }
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
-  }//end if button is 'starthomesetu-button'
+  }//end if button is 'starthomesetup-button'
 
   if (interaction.customId === 'addHomeCollection-button') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
       homesetup.sendModal(interaction)
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
-  }//end if button is 'addCollection-button'
+  }//end if button is 'addHomeCollection-button'
 
   if (interaction.customId === 'submithome-modal') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
       homesetup.validateCollection(interaction)
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
-  }//end if button is 'submit-modal'
+  }//end if button is 'submithome-modal'
 
   if (interaction.customId === 'donehome-button') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
       homesetup.done(interaction)
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
-  }//end if button is 'done-button'
+  }//end if button is 'donehome-button'
 })//end on interactionCreate 
 
 //alpha setup
+const alphasetup = require('./tools/alphasetup.js')
 client.on('interactionCreate', async interaction => {
 
+  //show the main setup dialogue for alpha setup
   if (interaction.customId === 'startalphasetup-button') {
     if (interaction.member.user.id === "684896787655557216") {
-      
-    } else {interaction.reply('Feature in development. This command is disabled.')}//if not laniakea
-  }
+      alphasetup.replyMainSetup(interaction)
+    } else { interaction.reply('Feature in development. This command is disabled.') }//if not laniakea
+  }//end if startalphasetup-button
+
+    //show modify alpha panel
+    if (interaction.customId === 'modifyAlpha-button') {
+      if (interaction.member.user.id === "684896787655557216") {
+        alphasetup.replyModifyAlpha(interaction)
+      } else { interaction.reply('Feature in development. This command is disabled.') }//if not laniakea
+    }//end if startalphasetup-button
+
 })//end on interactionCreate

@@ -44,14 +44,14 @@ module.exports = {
 			if (action === 'fulladd') { await metaplex.addNewNFT(data, meslug) }
 			if (action === 'addstep1') { await metaplex.getMetaplexData(data) }
 			if (action === 'addstep2') { await metaplex.calculateTraitPercentages(data) }
-			if (action === 'addstep3') { await metaplex.combineTraitRarity(data,meslug) }
+			if (action === 'addstep3') { await metaplex.combineTraitRarity(data, meslug) }
 			if (action === 'addstep4') { await metaplex.rankNFTs(data) }
 			if (action === 'addstep5') { await metaplex.cleanupDatabase(data) }
-			
-			if (action === 'restart') { 
-			  await interaction.reply({ content: "Sniper Bot restarted", ephemeral: true })
-			  await sniper.stop()
-			  await sniper.initialise()
+
+			if (action === 'restart') {
+				await interaction.reply({ content: "Sniper Bot restarted", ephemeral: true })
+				await sniper.stop()
+				await sniper.initialise()
 			}
 
 		}//end if user is laniakea

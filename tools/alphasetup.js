@@ -8,7 +8,7 @@ const w = require('./winston.js')
 const sql = require('./commonSQL.js')//common sql related commands are in here
 
 //Main setup
-async function mainSetup(interaction) {
+async function replyMainSetup(interaction) {
 	//build a new button row for the command reply
 	const row = new ActionRowBuilder()
 		.addComponents(
@@ -24,9 +24,31 @@ async function mainSetup(interaction) {
 		)
 	//send the reply (including button row)
 	await interaction.reply({ content: "Your current alpha channels are:\n```[channels] ```\nPress \"Modify\" below to make changes.", components: [row], ephemeral: true })
-} module.exports.mainSetup = mainSetup
+} module.exports.replyMainSetup = replyMainSetup
 
-
+//Main setup
+async function replyModifyAlpha(interaction) {
+	//build a new button row for the command reply
+	const row = new ActionRowBuilder()
+		.addComponents(
+			new ButtonBuilder()
+				.setCustomId('createNewAlpha-button')
+				.setLabel('Add an Alpha Channel')
+				.setStyle(ButtonStyle.Primary),
+		).addComponents(
+			new ButtonBuilder()
+				.setCustomId('removeAlpha-button')
+				.setLabel('Remove an Alpha Channel')
+				.setStyle(ButtonStyle.Primary),
+		).addComponents(
+			new ButtonBuilder()
+				.setCustomId('doneModifyAlpha-button')
+				.setLabel('Done')
+				.setStyle(ButtonStyle.Secondary),
+		)
+	//send the reply (including button row)
+	await interaction.reply({ content: "Your current alpha channels are:\n```[channels] ```\nPress \"Add\", or \"Remove\" below to make changes.", components: [row], ephemeral: true })
+} module.exports.replyModifyAlpha = replyModifyAlpha
 
 
 
