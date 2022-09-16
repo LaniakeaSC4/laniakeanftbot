@@ -119,9 +119,6 @@ async function validateCollection(interaction) {
 	}//end for
 	if (found === false) { return null }//if this collection wasn't supported
 
-	//check alpha channel config to see if it is active already (and the channel is still present etc)
-	//do this next
-
 } module.exports.validateCollection = validateCollection
 
 //if collection was validated, save in sql and make a new channel ready to recieve snipes
@@ -132,9 +129,30 @@ async function createAlpha(interaction, collectionkey) {
 	//if there was an existing config in SQL send it to the setupchannel function to be modified
 	if (serverdetails[0].alpha_channels != null) {
 		w.log.info('there was exisiting alpha channels. Calling setupchannel')
+			//check alpha channel config to see if it is active already (and the channel is still present etc)
+			const guild = client.guilds.cache.get(interaction.message.guildId)
+			var foundalpha = false
+			await guild.channels.fetch()
+			.then(async channels => {
+				channels.forEach(async channel => {
+			for (var i = 0; i < serverdetails[0].alpha_channels.enabled.length; i++) {
+				if (serverdetails[0].alpha_channels.enabled[i]['channelid'] === channel.id) {
+					foundalpha = true
+					break
+				}//end if we have found a setup matching the current collectionkey
+			}//end for each alpha channel config object
+
+				}) 
+			})
+			
+			if (foundalpha === false) {
 		await setupchannel(interaction, collectionkey, serverdetails[0].alpha_channels).then(async newchannelid => {
 			interaction.reply({ content: "New channel <#" + newchannelid + "> created" })
 		})//end then
+			} else {//if there were alpha channels and this one was found.
+			  interaction.reply({ content: "This alpha channel is already active in your server"})
+			}
+			
 	} else {//if no existing config
 		w.log.info('there was NOT exisiting alpha channels. Calling setupchannel')
 		await setupchannel(interaction, collectionkey, null).then(async newchannelid => {
@@ -184,7 +202,7 @@ async function setupchannel(interaction, collectionkey, alphaconfig) {
 		//get the guild channels to see if our saved ones still exist (not deleted)
 		await guild.channels.fetch()
 			.then(async channels => {
-				channels.forEach(channel => {
+				channels.forEach(async channel => {
 					//check for the channels in server
 					if (channel.id === channelcheck.snipecategory.db_cid) {
 						w.log.info('Found the saved category channel in server')
