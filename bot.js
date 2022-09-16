@@ -185,7 +185,7 @@ client.on('interactionCreate', async interaction => {
     }//end show add alpha modal
 
     //validate and if valid create alpha channel
-    if (interaction.customId === 'submitAddAlpha-modal') {
+    if (interaction.customId === 'addAlpha-modal') {
       if (interaction.member.user.id === "684896787655557216") {
         w.log.info('addAlpha-modal activated')
         alphasetup.validateCollection(interaction)
