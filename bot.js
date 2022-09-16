@@ -178,7 +178,7 @@ client.on('interactionCreate', async interaction => {
   }//end show add alpha modal
 
     //show add alpha modal
-    if (interaction.customId === 'submitRemoveAlpha-modal') {
+    if (interaction.customId === 'removeAlpha-modal') {
       if (interaction.member.user.id === "684896787655557216") {
         alphasetup.sendRemoveModal(interaction)
       } else { interaction.reply('Feature in development. This command is disabled.') }//if not laniakea
@@ -187,7 +187,7 @@ client.on('interactionCreate', async interaction => {
     //validate and if valid create alpha channel
     if (interaction.customId === 'submitAddAlpha-modal') {
       if (interaction.member.user.id === "684896787655557216") {
-        w.log.info('submitAddAlpha-modal activated')
+        w.log.info('addAlpha-modal activated')
         alphasetup.validateCollection(interaction)
       } else { interaction.reply('Feature in development. This command is disabled.') }//if not laniakea
     }//end if button is 'submitAddAlpha-modal'
