@@ -179,7 +179,7 @@ async function getNFTdata(collectionKey, nftid) {
   })//end promise
 }; module.exports.getNFTdata = getNFTdata
 
-//get sniper channels for a particualr server ID - needs error handling like getNFTdata
+//get entire server settings row - needs error handling like getNFTdata
 async function getServerRow(serverid) {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()

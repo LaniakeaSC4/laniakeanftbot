@@ -133,7 +133,6 @@ async function start(interaction) {
 										parent: laniakeacategory
 									}).then(async newchannel => {
 										w.log.info('created new channel ' + newchannel.name + ' it\'s ID is: ' + newchannel.id)
-										channelcheck.snipecategory.server_cid = newchannel.id//save category channel ID to we can add children
 										await sql.updateTableColumn('servers', 'serverid', guildid, channelcheck[key].servercolumn, newchannel.id)
 									})//end then
 								}//end if premium

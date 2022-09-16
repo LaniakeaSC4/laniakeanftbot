@@ -32,7 +32,7 @@ async function replyModifyAlpha(interaction) {
 	const row = new ActionRowBuilder()
 		.addComponents(
 			new ButtonBuilder()
-				.setCustomId('createNewAlpha-button')
+				.setCustomId('addAlpha-button')
 				.setLabel('Add an Alpha Channel')
 				.setStyle(ButtonStyle.Primary),
 		).addComponents(
@@ -46,20 +46,24 @@ async function replyModifyAlpha(interaction) {
 				.setLabel('Done')
 				.setStyle(ButtonStyle.Secondary),
 		)
+		//get current alpha channels from sql here and display then
+		var replytext = ''
+		var alphachannels = await sql.getData("servers", "serverid", interaction.message.guildId, "alpha_channels")
+		//if there was an existing config
+		if (alphachannels) {
+		  
+		} else {//if no existing config
+		  
+		}
 	//send the reply (including button row)
-	await interaction.reply({ content: "Your current alpha channels are:\n```[channels] ```\nPress \"Add\", or \"Remove\" below to make changes.", components: [row], ephemeral: true })
+	await interaction.reply({ content: "Your current alpha channels are:\n```" + replytext + "```\nPress \"Add\", or \"Remove\" below to make changes.", components: [row], ephemeral: true })
 } module.exports.replyModifyAlpha = replyModifyAlpha
 
-
-
-
-
-
-//when "Add Collection" is pressed, show a modal to capture the ME address
-async function sendModal(interaction) {
+//when "Add Alpha Channel" is pressed, show a modal to capture the ME address
+async function sendAddModal(interaction) {
 	const modal = new ModalBuilder()
-		.setCustomId('submithome-modal')
-		.setTitle('Enter Magic Eden Link to collection')
+		.setCustomId('submitAddAlpha-modal')
+		.setTitle('Enter Magic Eden Link to collection you wish to add')
 		.addComponents([
 			new ActionRowBuilder().addComponents(
 				new TextInputBuilder()
@@ -73,12 +77,29 @@ async function sendModal(interaction) {
 			),//end actionrow add components
 		])//end modal add components
 	await interaction.showModal(modal)
-} module.exports.sendModal = sendModal
+} module.exports.sendAddModal = sendAddModal
 
-//Global var to hold valid/supported collections user is adding to this homechannel
-var homecollections = { "enabled": [] }
+//when "Remove Alpha Channel" is pressed, show a modal to capture the ME address
+async function sendRemoveModal(interaction) {
+	const modal = new ModalBuilder()
+		.setCustomId('submitAddAlpha-modal')
+		.setTitle('Enter Magic Eden Link to collection you wish to remove')
+		.addComponents([
+			new ActionRowBuilder().addComponents(
+				new TextInputBuilder()
+					.setCustomId('collection-input')
+					.setLabel('Collection ID')
+					.setStyle(TextInputStyle.Short)
+					.setMinLength(2)
+					.setMaxLength(120)
+					.setPlaceholder('e.g. https://magiceden.io/marketplace/{your-collection}')
+					.setRequired(true),
+			),//end actionrow add components
+		])//end modal add components
+	await interaction.showModal(modal)
+} module.exports.sendRemoveModal = sendRemoveModal
 
-//function to process the input from the modal sent in homechannelsetup2
+//function to process the input from sendAddModal. Do we support this collection? 
 async function validateCollection(interaction) {
 	const response = interaction.fields.getTextInputValue('collection-input')//get modal input text
 	var meslug = response.substring(response.lastIndexOf('magiceden.io/marketplace/') + 25).replace(/[^0-9a-z]/gi, '')//find the end slug and clean it (same process as cleaning to colleciton key in SQL)
@@ -90,40 +111,31 @@ async function validateCollection(interaction) {
 	var found = false//start as false
 	for (var i = 0; i < supportedcollections.length; i++) {//loop supported collections recieved from SQL
 		if (supportedcollections[i].collectionkey === meslug) {//if collection entered by user is found in our supported collections
-			found = true
-			homecollections.enabled.push(meslug)//push it to the homecollections. We will gather them up here while the user enters them.
-			//update interaction to list the ones they have added so far
-			interaction.update({ content: "Press \"Add collection\" below and enter the Magic Eden link to the collection you would like to add to your home channel. When you have added all the collections you wish to be in your homechannel, press Done.\n\nAdding: " + homecollections.enabled.toString(), ephemeral: true })
-			break//if we have found it, dont need to loop more
+			return meslug
 		}//end if
 	}//end for
 
-	if (!found) {
-		await interaction.reply({ content: 'Collection ' + meslug + 'was not found in our supported collections. This message will delete in 5 seconds' });
-		setTimeout(() => interaction.deleteReply(), 5000)//delete it after 5s
-	}//end if !found
+	if (found === false) { return null }//if this collection wasn't supported
+	
 } module.exports.validateCollection = validateCollection
 
-async function done(interaction) {
-	if (homecollections.enabled.length != 0) {
+//if collection was validated, save in sql and make a new channel ready to recieve snipes
+async function createAlpha(interaction, meslug) {
+  //get any existing config
+  var serverdetails = await sql.getServerRow(interaction.message.guildId)
+		//if there was an existing config
+		if (serverdetails.alpha_channels) {
+		  
+		} else {//if no existing config
+		  var config = {"enabled" : []}
+		  await setupchannel(interaction, meslug, serverdetails)
+		} 
+		
+		
+} module.exports.createAlpha = createAlpha
 
-		//create home channel if not already existing
-		setupchannel(interaction)
-
-		//save validated supported collections gathered from user
-		await sql.updateTableColumn('servers', 'serverid', interaction.message.guildId, 'homechannel_collections', homecollections)
-		//enable homechannel mode
-		await sql.updateTableColumn('servers', 'serverid', interaction.message.guildId, 'homechannel_enabled', true)
-		//reply success message
-		await interaction.reply({ content: "Changes saved. All snipes for the collections you added will now redirect to your Home Channel", ephemeral: true })
-
-	} else {
-		await interaction.reply({ content: "As you did not identify any collections, no changes have been made to your Home Channel setup.", ephemeral: true })
-	}
-} module.exports.done = done
-
-async function setupchannel(interaction) {
-	//check if this server is in the table
+async function setupchannel(interaction, meslug, serverdetails) {
+	//check if this server is in the table and premium 
 	const guildid = interaction.message.guildId
 	supportedservers = await sql.getSupportedServers()
 	var validserver = false
@@ -131,26 +143,33 @@ async function setupchannel(interaction) {
 		if (supportedservers[i].serverid === guildid) {
 			if (supportedservers[i].premium === true) {//home channel is always premium
 				validserver = true
-				w.log.info('matched premium server in our database during homechannel setup: ' + guildid)
+				w.log.info('matched premium server in our database during alpha setup: ' + guildid)
 				break
 			}//end if premium
 		}//end if
 	}//end for
 
-	if (validserver) {
-		w.log.info('setting up home channel for guild ' + guildid)
+	if (validserver === true) {
+		w.log.info('setting up alpha channel for guild ' + guildid)
 		const guild = client.guilds.cache.get(guildid)
 
 		//get saved sniper channels (if any)
 		const existingchannels = await sql.getServerRow(guildid)//need to add the home channel to the sql function
 		var channelcheck = {
 			"snipecategory": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "LANIAKEA SNIPER BOT", "servercolumn": "snipecategory" },
-			"homechannel": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "Home Channel", "servercolumn": "homechannel_id" }
+			"alphachannel": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "Alpha Channel " + meslug, "servercolumn": "homechannel_id" }
 		}
 
 		//if any of the channels are found in SQL, update channelcheck to say we have found them
 		if (existingchannels[0].snipecategory) { channelcheck.snipecategory.dbfound = true; channelcheck.snipecategory.db_cid = existingchannels[0].snipecategory }
-		if (existingchannels[0].homechannel_id) { channelcheck.homechannel.dbfound = true; channelcheck.homechannel.db_cid = existingchannels[0].homechannel_id }
+		
+		if (existingchannels[0].alpha_channels) {
+		  for (var i = 0;i < existingchannels[0].alpha_channels.enabled.length;i++) {
+		    if (existingchannels[0].alpha_channels.enabled[i]['meslug'] === meslug) {
+		      channelcheck.alphachannel.dbfound = true; channelcheck.alphachannel.db_cid = existingchannels[0].alpha_channels.enabled[i]['channelid']
+		    } 
+		  }
+		   }
 
 		//get the guild channels to see if our saved ones still exist
 		await guild.channels.fetch()
@@ -158,13 +177,13 @@ async function setupchannel(interaction) {
 				channels.forEach(channel => {
 					//check for the channels in server
 					if (channel.id === channelcheck.snipecategory.db_cid) {
-						w.log.info('Found the saved category channel')
+						w.log.info('Found the saved category channel in server')
 						channelcheck.snipecategory.serverfound = true
 						channelcheck.snipecategory.server_cid = channel.id
 						channelcheck.snipecategory.verified = true
 					}
-					if (channel.id === channelcheck.homechannel.db_cid) {
-						w.log.info('Found the saved homechannel channel')
+					if (channel.id === channelcheck.alphachannel.db_cid) {
+						w.log.info('Found the saved alphachannel channel in server')
 						channelcheck.homechannel.serverfound = true
 						channelcheck.homechannel.server_cid = channel.id
 						channelcheck.homechannel.verified = true
@@ -213,14 +232,39 @@ async function setupchannel(interaction) {
 									parent: laniakeacategory
 								}).then(async newchannel => {
 									w.log.info('created new channel ' + newchannel.name + ' it\'s ID is: ' + newchannel.id)
-									channelcheck.snipecategory.server_cid = newchannel.id//save category channel ID to we can add children
-									await sql.updateTableColumn('servers', 'serverid', guildid, channelcheck[key].servercolumn, newchannel.id)
+									//get alpha config
+									var oldconfig = serverdetails.alpha_channels
+									var newconfig = oldconfig.enabled.push({"meslug" : meslug, "channelid" : newchannel.id})
+									
+									//add one 
+									await sql.updateTableColumn('servers', 'serverid', guildid, "alpha_channels", newconfig)
 								})
 							}//end if not verified as present
 						}//end if not sniper category
 					}//end for key in channelcheck
+					return true
 				}//end createchildren function
 			})//end then for fetched channels
-		return 'complete'
 	} else { return null }//end if valid server
 }
+
+
+
+
+async function done(interaction) {
+	if (homecollections.enabled.length != 0) {
+
+		//create home channel if not already existing
+		setupchannel(interaction)
+
+		//save validated supported collections gathered from user
+		await sql.updateTableColumn('servers', 'serverid', interaction.message.guildId, 'homechannel_collections', homecollections)
+		//enable homechannel mode
+		await sql.updateTableColumn('servers', 'serverid', interaction.message.guildId, 'homechannel_enabled', true)
+		//reply success message
+		await interaction.reply({ content: "Changes saved. All snipes for the collections you added will now redirect to your Home Channel", ephemeral: true })
+
+	} else {
+		await interaction.reply({ content: "As you did not identify any collections, no changes have been made to your Home Channel setup.", ephemeral: true })
+	}
+} module.exports.done = done
