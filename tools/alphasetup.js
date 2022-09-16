@@ -129,7 +129,7 @@ async function createAlpha(interaction, meslug) {
 	
 	if (serverdetails[0].alpha_channels != null) {
 		w.log.info('there was exisiting alpha channels. Calling setupchannel')
-		await setupchannel(interaction, meslug, serverdetails[0].alpha_channel)
+		await setupchannel(interaction, meslug, serverdetails[0].alpha_channels)
 
 	} else {//if no existing config
 		w.log.info('there was NOT exisiting alpha channels. Calling setupchannel')
