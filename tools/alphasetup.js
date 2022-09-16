@@ -245,7 +245,7 @@ async function setupchannel(interaction, meslug, alphaconfig) {
 										w.log.info('updated config : ' + JSON.stringify(updatedconfig))
 										await sql.updateTableColumn('servers', 'serverid', guildid, "alpha_channels", updatedconfig)
 									} else {//if no existing config, create and store it
-										w.log.info('no exisiting config, adding a new one'
+										w.log.info('no exisiting config, adding a new one')
 										var newconfig = { "enabled": [{ "meslug": meslug, "channelid": newchannel.id }] }
 										await sql.updateTableColumn('servers', 'serverid', guildid, "alpha_channels", newconfig)
 									}
