@@ -63,7 +63,7 @@ async function replyModifyAlpha(interaction) {
 async function sendAddModal(interaction) {
 	const modal = new ModalBuilder()
 		.setCustomId('submitAddAlpha-modal')
-		.setTitle('Enter Magic Eden Link to collection you wish to add')
+		.setTitle('Enter Magic Eden Link to collection')
 		.addComponents([
 			new ActionRowBuilder().addComponents(
 				new TextInputBuilder()
@@ -83,7 +83,7 @@ async function sendAddModal(interaction) {
 async function sendRemoveModal(interaction) {
 	const modal = new ModalBuilder()
 		.setCustomId('submitRemoveAlpha-modal')
-		.setTitle('Enter Magic Eden Link to collection you wish to remove')
+		.setTitle('Enter Magic Eden Link to collection')
 		.addComponents([
 			new ActionRowBuilder().addComponents(
 				new TextInputBuilder()
