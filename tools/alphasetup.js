@@ -46,15 +46,15 @@ async function replyModifyAlpha(interaction) {
 				.setLabel('Done')
 				.setStyle(ButtonStyle.Secondary),
 		)
-		//get current alpha channels from sql here and display then
-		var replytext = ''
-		var alphachannels = await sql.getData("servers", "serverid", interaction.message.guildId, "alpha_channels")
-		//if there was an existing config
-		if (alphachannels) {
-		  
-		} else {//if no existing config
-		  
-		}
+	//get current alpha channels from sql here and display then
+	var replytext = ''
+	var alphachannels = await sql.getData("servers", "serverid", interaction.message.guildId, "alpha_channels")
+	//if there was an existing config
+	if (alphachannels) {
+
+	} else {//if no existing config
+
+	}
 	//send the reply (including button row)
 	await interaction.reply({ content: "Your current alpha channels are:\n```" + replytext + "```\nPress \"Add\", or \"Remove\" below to make changes.", components: [row], ephemeral: true })
 } module.exports.replyModifyAlpha = replyModifyAlpha
@@ -82,7 +82,7 @@ async function sendAddModal(interaction) {
 //when "Remove Alpha Channel" is pressed, show a modal to capture the ME address
 async function sendRemoveModal(interaction) {
 	const modal = new ModalBuilder()
-		.setCustomId('submitAddAlpha-modal')
+		.setCustomId('submitRemoveAlpha-modal')
 		.setTitle('Enter Magic Eden Link to collection you wish to remove')
 		.addComponents([
 			new ActionRowBuilder().addComponents(
@@ -111,30 +111,32 @@ async function validateCollection(interaction) {
 	var found = false//start as false
 	for (var i = 0; i < supportedcollections.length; i++) {//loop supported collections recieved from SQL
 		if (supportedcollections[i].collectionkey === meslug) {//if collection entered by user is found in our supported collections
-			return meslug
+			return createAlpha(interaction, meslug)
 		}//end if
 	}//end for
 
 	if (found === false) { return null }//if this collection wasn't supported
-	
+
 } module.exports.validateCollection = validateCollection
 
 //if collection was validated, save in sql and make a new channel ready to recieve snipes
 async function createAlpha(interaction, meslug) {
-  //get any existing config
-  var serverdetails = await sql.getServerRow(interaction.message.guildId)
-		//if there was an existing config
-		if (serverdetails.alpha_channels) {
-		  
-		} else {//if no existing config
-		  var config = {"enabled" : []}
-		  await setupchannel(interaction, meslug, serverdetails)
-		} 
-		
-		
-} module.exports.createAlpha = createAlpha
+	//get any existing config
+	var serverdetails = await sql.getServerRow(interaction.message.guildId)
+	//if there was an existing config
+	if (serverdetails.alpha_channels) {
 
-async function setupchannel(interaction, meslug, serverdetails) {
+		await setupchannel(interaction, meslug, serverdetails.alpha_channel)
+
+	} else {//if no existing config
+
+		await setupchannel(interaction, meslug, null)
+	}
+
+
+}
+
+async function setupchannel(interaction, meslug, alphaconfig) {
 	//check if this server is in the table and premium 
 	const guildid = interaction.message.guildId
 	supportedservers = await sql.getSupportedServers()
@@ -162,14 +164,14 @@ async function setupchannel(interaction, meslug, serverdetails) {
 
 		//if any of the channels are found in SQL, update channelcheck to say we have found them
 		if (existingchannels[0].snipecategory) { channelcheck.snipecategory.dbfound = true; channelcheck.snipecategory.db_cid = existingchannels[0].snipecategory }
-		
+
 		if (existingchannels[0].alpha_channels) {
-		  for (var i = 0;i < existingchannels[0].alpha_channels.enabled.length;i++) {
-		    if (existingchannels[0].alpha_channels.enabled[i]['meslug'] === meslug) {
-		      channelcheck.alphachannel.dbfound = true; channelcheck.alphachannel.db_cid = existingchannels[0].alpha_channels.enabled[i]['channelid']
-		    } 
-		  }
-		   }
+			for (var i = 0; i < existingchannels[0].alpha_channels.enabled.length; i++) {
+				if (existingchannels[0].alpha_channels.enabled[i]['meslug'] === meslug) {
+					channelcheck.alphachannel.dbfound = true; channelcheck.alphachannel.db_cid = existingchannels[0].alpha_channels.enabled[i]['channelid']
+				}
+			}
+		}
 
 		//get the guild channels to see if our saved ones still exist
 		await guild.channels.fetch()
@@ -232,12 +234,15 @@ async function setupchannel(interaction, meslug, serverdetails) {
 									parent: laniakeacategory
 								}).then(async newchannel => {
 									w.log.info('created new channel ' + newchannel.name + ' it\'s ID is: ' + newchannel.id)
-									//get alpha config
-									var oldconfig = serverdetails.alpha_channels
-									var newconfig = oldconfig.enabled.push({"meslug" : meslug, "channelid" : newchannel.id})
-									
-									//add one 
-									await sql.updateTableColumn('servers', 'serverid', guildid, "alpha_channels", newconfig)
+
+									if (alphaconfig) {//if existing config, add to it
+										var oldconfig = alphaconfig
+										var updateconfig = oldconfig.enabled.push({ "meslug": meslug, "channelid": newchannel.id })
+										await sql.updateTableColumn('servers', 'serverid', guildid, "alpha_channels", updateconfig)
+									} else {//if no existing config, create and store it
+										var newconfig = { "enabled": [{ "meslug": meslug, "channelid": newchannel.id }] }
+										await sql.updateTableColumn('servers', 'serverid', guildid, "alpha_channels", newconfig)
+									}
 								})
 							}//end if not verified as present
 						}//end if not sniper category
