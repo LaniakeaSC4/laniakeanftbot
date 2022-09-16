@@ -146,7 +146,7 @@ async function setupchannel(interaction, meslug, alphaconfig) {
 	var validserver = false
 	for (var i = 0; i < supportedservers.length; i++) {
 		if (supportedservers[i].serverid === guildid) {
-			if (supportedservers[i].premium === true) {//home channel is always premium
+			if (supportedservers[i].premium === true) {//alpha channel is always premium
 				validserver = true
 				w.log.info('matched premium server in our database during alpha setup: ' + guildid)
 				break
@@ -159,10 +159,10 @@ async function setupchannel(interaction, meslug, alphaconfig) {
 		const guild = client.guilds.cache.get(guildid)
 
 		//get saved sniper channels (if any)
-		const existingchannels = await sql.getServerRow(guildid)//need to add the home channel to the sql function
+		const existingchannels = await sql.getServerRow(guildid)//need to add the alpha channel to the sql function
 		var channelcheck = {
 			"snipecategory": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "LANIAKEA SNIPER BOT", "servercolumn": "snipecategory" },
-			"alphachannel": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "Alpha Channel " + meslug, "servercolumn": "homechannel_id" }
+			"alphachannel": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "Alpha Channel " + meslug }
 		}
 
 		//if any of the channels are found in SQL, update channelcheck to say we have found them
@@ -189,9 +189,9 @@ async function setupchannel(interaction, meslug, alphaconfig) {
 					}
 					if (channel.id === channelcheck.alphachannel.db_cid) {
 						w.log.info('Found the saved alphachannel channel in server')
-						channelcheck.homechannel.serverfound = true
-						channelcheck.homechannel.server_cid = channel.id
-						channelcheck.homechannel.verified = true
+						channelcheck.alphachannel.serverfound = true
+						channelcheck.alphachannel.server_cid = channel.id
+						channelcheck.alphachannel.verified = true
 					}
 				})//end forEach
 
