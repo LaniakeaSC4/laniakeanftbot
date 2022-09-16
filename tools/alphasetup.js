@@ -108,10 +108,12 @@ async function validateCollection(interaction) {
 	supportedcollections = {}//clear and repopulate in case collections have changed since last time command was run
 	supportedcollections = await sql.getOurMetaplexCollections()//set from sql
 
+	w.log.info('validating collection')
 	var found = false//start as false
 	for (var i = 0; i < supportedcollections.length; i++) {//loop supported collections recieved from SQL
 		if (supportedcollections[i].collectionkey === meslug) {//if collection entered by user is found in our supported collections
-			return createAlpha(interaction, meslug)
+			w.log.info('validated collection. Caling createAlpha')
+			createAlpha(interaction, meslug)
 		}//end if
 	}//end for
 
@@ -125,11 +127,11 @@ async function createAlpha(interaction, meslug) {
 	var serverdetails = await sql.getServerRow(interaction.message.guildId)
 	//if there was an existing config
 	if (serverdetails.alpha_channels) {
-
+		w.log.info('there was exisiting alpha channels. Calling setupchannel')
 		await setupchannel(interaction, meslug, serverdetails.alpha_channel)
 
 	} else {//if no existing config
-
+		w.log.info('there was NOT exisiting alpha channels. Calling setupchannel')
 		await setupchannel(interaction, meslug, null)
 	}
 
