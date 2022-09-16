@@ -126,10 +126,10 @@ async function createAlpha(interaction, meslug) {
 	//get any existing config
 	var serverdetails = await sql.getServerRow(interaction.message.guildId)
 	//if there was an existing config
-	w.log.info('serverdetails is: ' + JSON.stringify(serverdetails))
-	if (serverdetails.alpha_channels != null) {
+	
+	if (serverdetails[0].alpha_channels != null) {
 		w.log.info('there was exisiting alpha channels. Calling setupchannel')
-		await setupchannel(interaction, meslug, serverdetails.alpha_channel)
+		await setupchannel(interaction, meslug, serverdetails[0].alpha_channel)
 
 	} else {//if no existing config
 		w.log.info('there was NOT exisiting alpha channels. Calling setupchannel')
