@@ -63,11 +63,13 @@ async function validateCollection(interaction) {
 	var found = false//start as false
 	for (var i = 0; i < supportedcollections.length; i++) {//loop supported collections recieved from SQL
 		if (supportedcollections[i].collectionkey === meslug) {//if collection entered by user is found in our supported collections
+			if (!homecollections.enabled.includes(meslug)){//only if we haven't already added this one
 			found = true
 			homecollections.enabled.push(meslug)//push it to the homecollections. We will gather them up here while the user enters them.
 			//update interaction to list the ones they have added so far
 			interaction.update({ content: "Press \"Add collection\" below and enter the Magic Eden link to the collection you would like to add to your home channel. When you have added all the collections you wish to be in your homechannel, press Done.\n\nAdding: " + homecollections.enabled.toString(), ephemeral: true })
 			break//if we have found it, dont need to loop more
+			}
 		}//end if
 	}//end for
 
