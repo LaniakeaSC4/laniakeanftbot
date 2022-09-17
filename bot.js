@@ -228,7 +228,7 @@ if (channel.id === serverdetails[0].legendarysnipes) { w.log.info('legendarysnip
   await sql.updateTableColumn('servers', 'serverid', channel.guildId, "legendarysnipes", null)
   snipersender.initaliseServers()
 }
-if (channel.id === serverdetails[0].mythicsnipes) { w.log.info('mythicsnipes channel was deleted from server ' + serverdetailst[0].servername + '. Nulling it in our database')
+if (channel.id === serverdetails[0].mythicsnipes) { w.log.info('mythicsnipes channel was deleted from server ' + serverdetails[0].servername + '. Nulling it in our database')
   await sql.updateTableColumn('servers', 'serverid', channel.guildId, "mythicsnipes", null)
   snipersender.initaliseServers()
 }
