@@ -208,9 +208,9 @@ for (var i = 0; i < serverdetails[0].alpha_channels.enabled.length; i++) {
 				  
 				  w.log.info('old config was: ' + JSON.stringify(serverdetails[0].alpha_channels.enabled))
 				  
-					var newconfig = serverdetails[0].alpha_channels.enabled.splice(i,1)
+					var newconfig = {"enabled" : serverdetails[0].alpha_channels.enabled.splice(i,1)}
 					
-					w.log.info('old config was: ' + JSON.stringify(newconfig))
+					w.log.info('new config is: ' + JSON.stringify(newconfig))
 					
 					await sql.updateTableColumn('servers', 'serverid', channel.guildId, "alpha_channels", newconfig)
 					break
