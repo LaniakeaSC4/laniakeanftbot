@@ -233,4 +233,11 @@ if (channel.id === serverdetails[0].mythicsnipes) { w.log.info('mythicsnipes cha
   snipersender.initaliseServers()
 }
 
+if (channel.id === serverdetails[0].homechannel_id) { w.log.info('homechannel was deleted from server ' + serverdetails[0].servername + '. Nulling id in our database, deleting config and disabling')
+  await sql.updateTableColumn('servers', 'serverid', channel.guildId, "homechannel_id", null)
+  await sql.updateTableColumn('servers', 'serverid', channel.guildId, "homechannel_collections", null)
+  await sql.updateTableColumn('servers', 'serverid', channel.guildId, "homechannel_enabled", false)
+  snipersender.initaliseServers()
+}
+
 })
