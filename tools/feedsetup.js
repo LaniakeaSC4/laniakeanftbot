@@ -28,7 +28,7 @@ async function start(interaction) {
 	if (validserver) {
 
 		w.log.info('setting up guild ' + guildid)
-		const guild = client.guilds.cache.get(guildid)//get guild from discord
+		const guild = await client.guilds.fetch(guildid)
 
 		//get saved sniper channels (if any)
 		const existingchannels = await sql.getServerRow(guildid)
