@@ -25,7 +25,7 @@ async function whichCollections(interaction) {
 				.setStyle(ButtonStyle.Secondary),
 		)
 	//send the reply (including button row)
-	await interaction.reply({ content: "Press \"Add collection\" below and enter the Magic Eden link to the collection you would like to add to your home channel. When you have added all the collections you wish to be in your homechannel, press Done.\n\nAdding: ", components: [row], ephemeral: true })
+	await interaction.reply({ content: "__**Home Channel Setup**__\n\nHome Channel allows you to select multiple collections (e.g. Collections for your NFT project) for which snipes of **any rarity** will go into a dedicated \'Home channel\'. If you have Snipe Feed enabled, collections you add to your home channel will be redirected from the snipe feed into your home channel. You can add multiple collections, but you may only have one home channel.\n\nPress \"Add collection\" below and enter the Magic Eden link to the collection you would like to add to your home channel. When you have added all the collections you wish to be in your homechannel, press Done.\n\nAdding: ", components: [row], ephemeral: true })
 } module.exports.whichCollections = whichCollections
 
 //when "Add Collection" is pressed, show a modal to capture the ME address
