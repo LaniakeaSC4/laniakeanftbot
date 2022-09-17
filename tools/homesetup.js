@@ -71,9 +71,9 @@ async function validateCollection(interaction) {
 				found = true
 				homecollections.enabled[interaction.message.guildId].push(meslug)//push it to the homecollections. We will gather them up here while the user enters them.
 				//update interaction to list the ones they have added so far
-				interaction.update({ content: "Press \"Add collection\" below and enter the Magic Eden link to the collection you would like to add to your home channel. When you have added all the collections you wish to be in your homechannel, press Done.\n\nAdding: " + homecollections.enabled[interaction.message.guildId].toString(), ephemeral: true })
+				interaction.update({ content: "__**Home Channel Setup**__\n\nHome Channel allows you to select multiple collections (e.g. Collections for your NFT project) for which snipes of **any rarity** will go into a dedicated \'Home channel\'. If you have Snipe Feed enabled, collections you add to your home channel will be redirected from the snipe feed into your home channel. You can add multiple collections, but you may only have one home channel.\n\nPress \"Add collection\" below and enter the Magic Eden link to the collection you would like to add to your home channel. When you have added all the collections you wish to be in your homechannel, press Done.\n\nAdding: " + homecollections.enabled[interaction.message.guildId].toString(), ephemeral: true })
 				break//if we have found it, dont need to loop more
-			} else { found = true; interaction.update({ content: "Press \"Add collection\" below and enter the Magic Eden link to the collection you would like to add to your home channel. When you have added all the collections you wish to be in your homechannel, press Done.\n\nAdding: " + homecollections.enabled[interaction.message.guildId].toString(), ephemeral: true }) }//set found to true as it was found, just a duplicate. Avoids not found error.
+			} else { found = true; interaction.update({ content: "__**Home Channel Setup**__\n\nHome Channel allows you to select multiple collections (e.g. Collections for your NFT project) for which snipes of **any rarity** will go into a dedicated \'Home channel\'. If you have Snipe Feed enabled, collections you add to your home channel will be redirected from the snipe feed into your home channel. You can add multiple collections, but you may only have one home channel.\n\nPress \"Add collection\" below and enter the Magic Eden link to the collection you would like to add to your home channel. When you have added all the collections you wish to be in your homechannel, press Done.\n\nAdding: " + homecollections.enabled[interaction.message.guildId].toString(), ephemeral: true }) }//set found to true as it was found, just a duplicate. Avoids not found error.
 		}//end if
 	}//end for
 
@@ -84,6 +84,7 @@ async function validateCollection(interaction) {
 } module.exports.validateCollection = validateCollection
 
 async function done(interaction) {
+  interaction.message.delete()//delete the add collections interaction.
 	if (homecollections.enabled[interaction.message.guildId].length != 0) {
 
 		//create home channel if not already existing
@@ -95,10 +96,12 @@ async function done(interaction) {
 		//enable homechannel mode
 		await sql.updateTableColumn('servers', 'serverid', interaction.message.guildId, 'homechannel_enabled', true)
 		//reply success message
-		await interaction.reply({ content: "Changes saved. All snipes for the collections you added will now redirect to your Home Channel", ephemeral: true })
+		await interaction.reply({ content: "Changes saved. All snipes for the collections you added will now redirect to your Home Channel. This message will delete in 5 seconds.", ephemeral: true })
+		setTimeout(() => interaction.deleteReply(), 5000)//delete it after 5s
 
 	} else {
-		await interaction.reply({ content: "As you did not identify any collections, no changes have been made to your Home Channel setup.", ephemeral: true })
+		await interaction.reply({ content: "As you did not identify any collections, no changes have been made to your Home Channel setup. This message will delete in 5 seconds", ephemeral: true })
+		setTimeout(() => interaction.deleteReply(), 5000)//delete it after 5s
 	}
 } module.exports.done = done
 
