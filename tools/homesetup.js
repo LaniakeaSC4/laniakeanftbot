@@ -87,6 +87,8 @@ async function done(interaction) {
 
 		//save validated supported collections gathered from user
 		await sql.updateTableColumn('servers', 'serverid', interaction.message.guildId, 'homechannel_collections', homecollections)
+		//reset homechannel config var
+		homecollections = { "enabled": [] }//WARNING - THIS IS GLOBAL, TWO SETUPS COULD COLLIDE - NEED TO FIX
 		//enable homechannel mode
 		await sql.updateTableColumn('servers', 'serverid', interaction.message.guildId, 'homechannel_enabled', true)
 		//reply success message
