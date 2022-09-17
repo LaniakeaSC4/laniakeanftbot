@@ -205,7 +205,13 @@ for (var i = 0; i < serverdetails[0].alpha_channels.enabled.length; i++) {
 				if (serverdetails[0].alpha_channels.enabled[i]['channelid'] === channel.id) {
 				  w.log.info('matched the deleted channel to an alpha channel. Deleting that from the config')
 				  alphafound = true
+				  
+				  w.log.info('old config was: ' + JSON.stringify(serverdetails[0].alpha_channels.enabled))
+				  
 					var newconfig = serverdetails[0].alpha_channels.enabled.splice(i,1)
+					
+					w.log.info('old config was: ' + JSON.stringify(newconfig))
+					
 					await sql.updateTableColumn('servers', 'serverid', channel.guildId, "alpha_channels", newconfig)
 					break
 				}//end if we have found a setup matching the current collectionkey
