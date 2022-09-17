@@ -49,12 +49,14 @@ async function sendModal(interaction) {
 } module.exports.sendModal = sendModal
 
 //Global var to hold valid/supported collections user is adding to this homechannel
-var homecollections = { "enabled": [] }
+var homecollections = { "enabled": {} }
 
 //function to process the input from the modal sent in homechannelsetup2
 async function validateCollection(interaction) {
 	const response = interaction.fields.getTextInputValue('collection-input')//get modal input text
 	var meslug = response.substring(response.lastIndexOf('magiceden.io/marketplace/') + 25).replace(/[^0-9a-z]/gi, '')//find the end slug and clean it (same process as cleaning to colleciton key in SQL)
+	
+	homecollections.enabled[interaction.message.guildId] = []
 
 	//get collections and populate global var
 	supportedcollections = {}//clear and repopulate in case collections have changed since last time command was run
@@ -63,13 +65,13 @@ async function validateCollection(interaction) {
 	var found = false//start as false
 	for (var i = 0; i < supportedcollections.length; i++) {//loop supported collections recieved from SQL
 		if (supportedcollections[i].collectionkey === meslug) {//if collection entered by user is found in our supported collections
-			if (!homecollections.enabled.includes(meslug)) {//only if we haven't already added this one
+			if (!homecollections.enabled[interaction.message.guildId].includes(meslug)) {//only if we haven't already added this one
 				found = true
-				homecollections.enabled.push(meslug)//push it to the homecollections. We will gather them up here while the user enters them.
+				homecollections.enabled[interaction.message.guildId].push(meslug)//push it to the homecollections. We will gather them up here while the user enters them.
 				//update interaction to list the ones they have added so far
-				interaction.update({ content: "Press \"Add collection\" below and enter the Magic Eden link to the collection you would like to add to your home channel. When you have added all the collections you wish to be in your homechannel, press Done.\n\nAdding: " + homecollections.enabled.toString(), ephemeral: true })
+				interaction.update({ content: "Press \"Add collection\" below and enter the Magic Eden link to the collection you would like to add to your home channel. When you have added all the collections you wish to be in your homechannel, press Done.\n\nAdding: " + homecollections.enabled[interaction.message.guildId].toString(), ephemeral: true })
 				break//if we have found it, dont need to loop more
-			} else { found = true; interaction.update({ content: "Press \"Add collection\" below and enter the Magic Eden link to the collection you would like to add to your home channel. When you have added all the collections you wish to be in your homechannel, press Done.\n\nAdding: " + homecollections.enabled.toString(), ephemeral: true }) }//set found to true as it was found, just a duplicate. Avoids not found error.
+			} else { found = true; interaction.update({ content: "Press \"Add collection\" below and enter the Magic Eden link to the collection you would like to add to your home channel. When you have added all the collections you wish to be in your homechannel, press Done.\n\nAdding: " + homecollections.enabled[interaction.message.guildId].toString(), ephemeral: true }) }//set found to true as it was found, just a duplicate. Avoids not found error.
 		}//end if
 	}//end for
 
@@ -80,15 +82,14 @@ async function validateCollection(interaction) {
 } module.exports.validateCollection = validateCollection
 
 async function done(interaction) {
-	if (homecollections.enabled.length != 0) {
+	if (homecollections.enabled[interaction.message.guildId].length != 0) {
 
 		//create home channel if not already existing
 		setupchannel(interaction)
 
+		var storecollections = { "enabled": homecollections.enabled[interaction.message.guildId]  }
 		//save validated supported collections gathered from user
-		await sql.updateTableColumn('servers', 'serverid', interaction.message.guildId, 'homechannel_collections', homecollections)
-		//reset homechannel config var
-		homecollections = { "enabled": [] }//WARNING - THIS IS GLOBAL, TWO SETUPS COULD COLLIDE - NEED TO FIX
+		await sql.updateTableColumn('servers', 'serverid', interaction.message.guildId, 'homechannel_collections', storecollections)
 		//enable homechannel mode
 		await sql.updateTableColumn('servers', 'serverid', interaction.message.guildId, 'homechannel_enabled', true)
 		//reply success message
