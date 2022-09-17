@@ -25,7 +25,7 @@ client.on('ready', async () => {
   })
 
 //update server reference object used by sniper functions every minute.
-setInterval(snipersender.initaliseServers(),60000)
+setInterval(snipersender.initaliseServers,60000)
 
 })//end client.on Ready
 
