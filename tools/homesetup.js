@@ -96,12 +96,10 @@ async function done(interaction) {
 		//enable homechannel mode
 		await sql.updateTableColumn('servers', 'serverid', interaction.message.guildId, 'homechannel_enabled', true)
 		//reply success message
-		await interaction.reply({ content: "Changes saved. All snipes for the collections you added will now redirect to your Home Channel. This message will delete in 5 seconds.", ephemeral: true })
-		setTimeout(() => interaction.deleteReply(), 5000)//delete it after 5s
+		await interaction.reply({ content: "Changes saved. All snipes for the collections you added will now redirect to your Home Channel. You can now dismiss this message.", ephemeral: true })
 
 	} else {
-		await interaction.reply({ content: "As you did not identify any collections, no changes have been made to your Home Channel setup. This message will delete in 5 seconds", ephemeral: true })
-		setTimeout(() => interaction.deleteReply(), 5000)//delete it after 5s
+		await interaction.reply({ content: "As you did not identify any collections, no changes have been made to your Home Channel setup. You can now dismiss this message.", ephemeral: true })
 	}
 } module.exports.done = done
 
