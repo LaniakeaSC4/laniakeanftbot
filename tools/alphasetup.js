@@ -136,7 +136,7 @@ async function createAlpha(interaction, collectionkey) {
 			.then(async channels => {
 				channels.forEach(async channel => {
 			for (var i = 0; i < serverdetails[0].alpha_channels.enabled.length; i++) {
-				if (serverdetails[0].alpha_channels.enabled[i]['channelid'] === channel.id) {
+				if (serverdetails[0].alpha_channels.enabled[i]['channelid'] === channel.id && serverdetails[0].alpha_channels.enabled[i]['meslug'] === collectionkey) {
 					foundalpha = true
 					break
 				}//end if we have found a setup matching the current collectionkey
