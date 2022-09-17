@@ -208,7 +208,7 @@ for (var i = 0; i < serverdetails[0].alpha_channels.enabled.length; i++) {
 				  
 				  w.log.info('old config was: ' + JSON.stringify(serverdetails[0].alpha_channels.enabled))
 				  
-					var newconfig = {"enabled" : serverdetails[0].alpha_channels.enabled.splice(i,1)}
+					var newconfig = {"enabled" : serverdetails[0].alpha_channels.enabled.slice(i,i+1)}
 					
 					w.log.info('new config is: ' + JSON.stringify(newconfig))
 					
