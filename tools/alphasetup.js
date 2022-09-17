@@ -11,12 +11,12 @@ const sql = require('./commonSQL.js')//common sql related commands are in here
 async function replyMainSetup(interaction) {
 	//build a new button row for the command reply
 	const row = new ActionRowBuilder()
-				.addComponents(
-				  new ButtonBuilder()
-				  .setCustomId('addAlpha-button')
-				  .setLabel('Add an Alpha Channel')
-				  .setStyle(ButtonStyle.Primary),
-				).addComponents(
+		.addComponents(
+			new ButtonBuilder()
+				.setCustomId('addAlpha-button')
+				.setLabel('Add an Alpha Channel')
+				.setStyle(ButtonStyle.Primary),
+		).addComponents(
 			new ButtonBuilder()
 				.setCustomId('doneAlpha-button')
 				.setLabel('Done')
@@ -127,38 +127,38 @@ async function validateCollection(interaction) {
 async function createAlpha(interaction, collectionkey) {
 	//get any existing config
 	var serverdetails = await sql.getServerRow(interaction.message.guildId)
-	
+
 	//if there was an existing config in SQL send it to the setupchannel function to be modified
 	if (serverdetails[0].alpha_channels != null) {
 		w.log.info('there was exisiting alpha channels. Calling setupchannel')
-			//check alpha channel config to see if it is active already (and the channel is still present etc)
-			const guild = client.guilds.cache.get(interaction.message.guildId)
-			var foundalpha = false
-			await guild.channels.fetch()
+		//check alpha channel config to see if it is active already (and the channel is still present etc)
+		const guild = client.guilds.cache.get(interaction.message.guildId)
+		var foundalpha = false
+		await guild.channels.fetch()
 			.then(async channels => {
 				channels.forEach(async channel => {
-			for (var i = 0; i < serverdetails[0].alpha_channels.enabled.length; i++) {
-				if (serverdetails[0].alpha_channels.enabled[i]['channelid'] === channel.id && serverdetails[0].alpha_channels.enabled[i]['meslug'] === collectionkey) {
-					foundalpha = true
-					break
-				}//end if we have found a setup matching the current collectionkey
-			}//end for each alpha channel config object
+					for (var i = 0; i < serverdetails[0].alpha_channels.enabled.length; i++) {
+						if (serverdetails[0].alpha_channels.enabled[i]['channelid'] === channel.id && serverdetails[0].alpha_channels.enabled[i]['meslug'] === collectionkey) {
+							foundalpha = true
+							break
+						}//end if we have found a setup matching the current collectionkey
+					}//end for each alpha channel config object
 
-				}) 
+				})
 			})
-			
-			if (foundalpha === false) {
-		await setupchannel(interaction, collectionkey, serverdetails[0].alpha_channels).then(async newchannelid => {
-			interaction.reply({ content: "New channel <#" + newchannelid + "> created" })
-		})//end then
-			} else {//if there were alpha channels and this one was found.
-			  interaction.reply({ content: "This alpha channel is already active in your server", ephemeral:true})
-			}
-			
+
+		if (foundalpha === false) {
+			await setupchannel(interaction, collectionkey, serverdetails[0].alpha_channels).then(async newchannelid => {
+				interaction.reply({ content: "New channel <#" + newchannelid + "> created" })
+			})//end then
+		} else {//if there were alpha channels and this one was found.
+			interaction.reply({ content: "This alpha channel is already active in your server", ephemeral: true })
+		}
+
 	} else {//if no existing config
 		w.log.info('there was NOT exisiting alpha channels. Calling setupchannel')
 		await setupchannel(interaction, collectionkey, null).then(async newchannelid => {
-			interaction.reply({ content: "New channel <#" + newchannelid + "> created", ephemeral:true })
+			interaction.reply({ content: "New channel <#" + newchannelid + "> created", ephemeral: true })
 		})//end then
 	}//end else
 }//end function createAlpha
@@ -180,7 +180,7 @@ async function setupchannel(interaction, collectionkey, alphaconfig) {
 
 	if (validserver === true) {
 		w.log.info('setting up alpha channel for guild ' + guildid)
-		const guild = client.guilds.cache.get(guildid)
+		const guild = await client.guilds.fetch(guildid)
 
 		//set up object to run through checks for exisiting channels
 		const existingchannels = await sql.getServerRow(guildid)//need to add the alpha channel to the sql function
@@ -205,18 +205,20 @@ async function setupchannel(interaction, collectionkey, alphaconfig) {
 		await guild.channels.fetch()
 			.then(async channels => {
 				channels.forEach(async channel => {
-					//check for the channels in server
-					if (channel.id === channelcheck.snipecategory.db_cid) {
-						w.log.info('Found the saved category channel in server')
-						channelcheck.snipecategory.serverfound = true
-						channelcheck.snipecategory.server_cid = channel.id
-						channelcheck.snipecategory.verified = true
-					}
-					if (channel.id === channelcheck.alphachannel.db_cid) {
-						w.log.info('Found the saved alphachannel channel in server')
-						channelcheck.alphachannel.serverfound = true
-						channelcheck.alphachannel.server_cid = channel.id
-						channelcheck.alphachannel.verified = true
+					if (channel) {
+						//check for the channels in server
+						if (channel.id === channelcheck.snipecategory.db_cid) {
+							w.log.info('Found the saved category channel in server')
+							channelcheck.snipecategory.serverfound = true
+							channelcheck.snipecategory.server_cid = channel.id
+							channelcheck.snipecategory.verified = true
+						}
+						if (channel.id === channelcheck.alphachannel.db_cid) {
+							w.log.info('Found the saved alphachannel channel in server')
+							channelcheck.alphachannel.serverfound = true
+							channelcheck.alphachannel.server_cid = channel.id
+							channelcheck.alphachannel.verified = true
+						}
 					}
 				})//end forEach
 

@@ -63,13 +63,13 @@ async function validateCollection(interaction) {
 	var found = false//start as false
 	for (var i = 0; i < supportedcollections.length; i++) {//loop supported collections recieved from SQL
 		if (supportedcollections[i].collectionkey === meslug) {//if collection entered by user is found in our supported collections
-			if (!homecollections.enabled.includes(meslug)){//only if we haven't already added this one
-			found = true
-			homecollections.enabled.push(meslug)//push it to the homecollections. We will gather them up here while the user enters them.
-			//update interaction to list the ones they have added so far
-			interaction.update({ content: "Press \"Add collection\" below and enter the Magic Eden link to the collection you would like to add to your home channel. When you have added all the collections you wish to be in your homechannel, press Done.\n\nAdding: " + homecollections.enabled.toString(), ephemeral: true })
-			break//if we have found it, dont need to loop more
-			} else {found = true;	interaction.update({ content: "Press \"Add collection\" below and enter the Magic Eden link to the collection you would like to add to your home channel. When you have added all the collections you wish to be in your homechannel, press Done.\n\nAdding: " + homecollections.enabled.toString(), ephemeral: true }) }//set found to true as it was found, just a duplicate. Avoids not found error.
+			if (!homecollections.enabled.includes(meslug)) {//only if we haven't already added this one
+				found = true
+				homecollections.enabled.push(meslug)//push it to the homecollections. We will gather them up here while the user enters them.
+				//update interaction to list the ones they have added so far
+				interaction.update({ content: "Press \"Add collection\" below and enter the Magic Eden link to the collection you would like to add to your home channel. When you have added all the collections you wish to be in your homechannel, press Done.\n\nAdding: " + homecollections.enabled.toString(), ephemeral: true })
+				break//if we have found it, dont need to loop more
+			} else { found = true; interaction.update({ content: "Press \"Add collection\" below and enter the Magic Eden link to the collection you would like to add to your home channel. When you have added all the collections you wish to be in your homechannel, press Done.\n\nAdding: " + homecollections.enabled.toString(), ephemeral: true }) }//set found to true as it was found, just a duplicate. Avoids not found error.
 		}//end if
 	}//end for
 
@@ -131,18 +131,20 @@ async function setupchannel(interaction) {
 		await guild.channels.fetch()
 			.then(async channels => {
 				channels.forEach(async channel => {
-					//check for the channels in server
-					if (channel.id === channelcheck.snipecategory.db_cid) {
-						w.log.info('Found the saved category channel')
-						channelcheck.snipecategory.serverfound = true
-						channelcheck.snipecategory.server_cid = channel.id
-						channelcheck.snipecategory.verified = true
-					}
-					if (channel.id === channelcheck.homechannel.db_cid) {
-						w.log.info('Found the saved homechannel channel')
-						channelcheck.homechannel.serverfound = true
-						channelcheck.homechannel.server_cid = channel.id
-						channelcheck.homechannel.verified = true
+					if (channel) {
+						//check for the channels in server
+						if (channel.id === channelcheck.snipecategory.db_cid) {
+							w.log.info('Found the saved category channel')
+							channelcheck.snipecategory.serverfound = true
+							channelcheck.snipecategory.server_cid = channel.id
+							channelcheck.snipecategory.verified = true
+						}
+						if (channel.id === channelcheck.homechannel.db_cid) {
+							w.log.info('Found the saved homechannel channel')
+							channelcheck.homechannel.serverfound = true
+							channelcheck.homechannel.server_cid = channel.id
+							channelcheck.homechannel.verified = true
+						}
 					}
 				})//end forEach
 

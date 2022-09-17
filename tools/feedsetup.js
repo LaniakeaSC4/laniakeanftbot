@@ -53,38 +53,39 @@ async function start(interaction) {
 		await guild.channels.fetch()
 			.then(async channels => {
 				channels.forEach(async channel => {
-
-					//check for the channels in server. If channel wasnt found db_cid would be null. Incorrect or null means serverfound wont get updated to true.
-					//verified gets set true if both server and SQL are found and matched. If not, we will recreate
-					if (channel.id === channelcheck.snipecategory.db_cid) {
-						w.log.info('Found the saved category channel')
-						channelcheck.snipecategory.serverfound = true
-						channelcheck.snipecategory.server_cid = channel.id
-						channelcheck.snipecategory.verified = true
-					}
-					if (channel.id === channelcheck.raresnipes.db_cid) {
-						w.log.info('Found the saved raresnipes channel')
-						channelcheck.raresnipes.serverfound = true
-						channelcheck.raresnipes.server_cid = channel.id
-						channelcheck.raresnipes.verified = true
-					}
-					if (channel.id === channelcheck.epicsnipes.db_cid) {
-						w.log.info('Found the saved epicsnipes channel')
-						channelcheck.epicsnipes.serverfound = true
-						channelcheck.epicsnipes.server_cid = channel.id
-						channelcheck.epicsnipes.verified = true
-					}
-					if (channel.id === channelcheck.legendarysnipes.db_cid) {
-						w.log.info('Found the saved legendarysnipes channel')
-						channelcheck.legendarysnipes.serverfound = true
-						channelcheck.legendarysnipes.server_cid = channel.id
-						channelcheck.legendarysnipes.verified = true
-					}
-					if (channel.id === channelcheck.mythicsnipes.db_cid) {
-						w.log.info('Found the saved mythicsnipes channel')
-						channelcheck.mythicsnipes.serverfound = true
-						channelcheck.mythicsnipes.server_cid = channel.id
-						channelcheck.mythicsnipes.verified = true
+					if (channel) {
+						//check for the channels in server. If channel wasnt found db_cid would be null. Incorrect or null means serverfound wont get updated to true.
+						//verified gets set true if both server and SQL are found and matched. If not, we will recreate
+						if (channel.id === channelcheck.snipecategory.db_cid) {
+							w.log.info('Found the saved category channel')
+							channelcheck.snipecategory.serverfound = true
+							channelcheck.snipecategory.server_cid = channel.id
+							channelcheck.snipecategory.verified = true
+						}
+						if (channel.id === channelcheck.raresnipes.db_cid) {
+							w.log.info('Found the saved raresnipes channel')
+							channelcheck.raresnipes.serverfound = true
+							channelcheck.raresnipes.server_cid = channel.id
+							channelcheck.raresnipes.verified = true
+						}
+						if (channel.id === channelcheck.epicsnipes.db_cid) {
+							w.log.info('Found the saved epicsnipes channel')
+							channelcheck.epicsnipes.serverfound = true
+							channelcheck.epicsnipes.server_cid = channel.id
+							channelcheck.epicsnipes.verified = true
+						}
+						if (channel.id === channelcheck.legendarysnipes.db_cid) {
+							w.log.info('Found the saved legendarysnipes channel')
+							channelcheck.legendarysnipes.serverfound = true
+							channelcheck.legendarysnipes.server_cid = channel.id
+							channelcheck.legendarysnipes.verified = true
+						}
+						if (channel.id === channelcheck.mythicsnipes.db_cid) {
+							w.log.info('Found the saved mythicsnipes channel')
+							channelcheck.mythicsnipes.serverfound = true
+							channelcheck.mythicsnipes.server_cid = channel.id
+							channelcheck.mythicsnipes.verified = true
+						}
 					}
 				})//end channels for each
 
