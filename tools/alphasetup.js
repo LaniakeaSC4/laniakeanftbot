@@ -11,12 +11,12 @@ const sql = require('./commonSQL.js')//common sql related commands are in here
 async function replyMainSetup(interaction) {
 	//build a new button row for the command reply
 	const row = new ActionRowBuilder()
-		.addComponents(
-			new ButtonBuilder()
-				.setCustomId('modifyAlpha-button')
-				.setLabel('Modify Alpha Channel Settings')
-				.setStyle(ButtonStyle.Primary),
-		).addComponents(
+				.addComponents(
+				  new ButtonBuilder()
+				  .setCustomId('addAlpha-button')
+				  .setLabel('Add an Alpha Channel')
+				  .setStyle(ButtonStyle.Primary),
+				).addComponents(
 			new ButtonBuilder()
 				.setCustomId('doneAlpha-button')
 				.setLabel('Done')
@@ -35,6 +35,7 @@ async function replyMainSetup(interaction) {
 	await interaction.reply({ content: "Your current alpha channels are:\n```[" + replytext + "]```", components: [row], ephemeral: true })
 } module.exports.replyMainSetup = replyMainSetup
 
+/*
 //Main setup
 async function replyModifyAlpha(interaction) {
 	//build a new button row for the command reply
@@ -58,6 +59,7 @@ async function replyModifyAlpha(interaction) {
 	//send the reply (including button row)
 	await interaction.reply({ content: "What would you like to do?", components: [row], ephemeral: true })
 } module.exports.replyModifyAlpha = replyModifyAlpha
+*/
 
 //when "Add Alpha Channel" is pressed, show a modal to capture the ME address
 async function sendAddModal(interaction) {

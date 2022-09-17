@@ -162,14 +162,14 @@ client.on('interactionCreate', async interaction => {
       alphasetup.replyMainSetup(interaction)
     } else { interaction.reply('Feature in development. This command is disabled.') }//if not laniakea
   }//end if startalphasetup-button
-
+/*
   //show modify alpha panel
   if (interaction.customId === 'modifyAlpha-button') {
     if (interaction.member.user.id === "684896787655557216") {
       alphasetup.replyModifyAlpha(interaction)
     } else { interaction.reply('Feature in development. This command is disabled.') }//if not laniakea
   }//end if startalphasetup-button
-
+*/
   //show add alpha modal
   if (interaction.customId === 'addAlpha-button') {
     if (interaction.member.user.id === "684896787655557216") {
