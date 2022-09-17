@@ -75,7 +75,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 							//w.log.info(thisserverid + ' is not premium waiting before sending ' + thisname + '...')
 							//w.log.info(thisserverid + ' done waiting...' + 'now sending ' + thisname)
 							sendsnipes(thisserverid, feedchannel, nonPremiumDelay, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
-						} else { w.log.info('NFT: ' + thisname + ' was better than rare or epic, not posting to ' + thisserverid) }
+						} else { /*w.log.info('NFT: ' + thisname + ' was better than rare or epic, not posting to ' + thisserverid)*/ }
 					} else {//if this is a premium server, just send it
 						sendsnipes(thisserverid, feedchannel, null, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
 					}//end else
@@ -89,9 +89,9 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 async function sendsnipes(server, channel, delay, nftname, embedcolour, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage, listinglink, hotness, collectionSize) {
 	//if senddelay isnt null
 	if (delay) {
-		w.log.info('server: ' + server + ' is not premium. Waiting to send ' + nftname + ' ' + raritydescription)
+		//w.log.info('server: ' + server + ' is not premium. Waiting to send ' + nftname + ' ' + raritydescription)
 		await wait(delay); w.log.info('Done waiting. Now sending ' + nftname + ' to ' + server)
-	} else { w.log.info('Sending ' + nftname + ' ' + raritydescription + ' immediately to premium server ' + server) }
+	} else { /*w.log.info('Sending ' + nftname + ' ' + raritydescription + ' immediately to premium server ' + server)*/ }
 	//try sending
 	try {
 		client.guilds.cache.get(server).channels.cache.get(channel).send({
