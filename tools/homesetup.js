@@ -130,7 +130,7 @@ async function setupchannel(interaction) {
 		//get the guild channels to see if our saved ones still exist
 		await guild.channels.fetch()
 			.then(async channels => {
-				channels.forEach(channel => {
+				channels.forEach(async channel => {
 					//check for the channels in server
 					if (channel.id === channelcheck.snipecategory.db_cid) {
 						w.log.info('Found the saved category channel')

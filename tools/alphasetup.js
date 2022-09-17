@@ -152,13 +152,13 @@ async function createAlpha(interaction, collectionkey) {
 			interaction.reply({ content: "New channel <#" + newchannelid + "> created" })
 		})//end then
 			} else {//if there were alpha channels and this one was found.
-			  interaction.reply({ content: "This alpha channel is already active in your server"})
+			  interaction.reply({ content: "This alpha channel is already active in your server", ephemeral:true})
 			}
 			
 	} else {//if no existing config
 		w.log.info('there was NOT exisiting alpha channels. Calling setupchannel')
 		await setupchannel(interaction, collectionkey, null).then(async newchannelid => {
-			interaction.reply({ content: "New channel <#" + newchannelid + "> created" })
+			interaction.reply({ content: "New channel <#" + newchannelid + "> created", ephemeral:true })
 		})//end then
 	}//end else
 }//end function createAlpha
