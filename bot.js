@@ -193,3 +193,36 @@ client.on('interactionCreate', async interaction => {
     }//end if button is 'submitAddAlpha-modal'
 
 })//end on interactionCreate
+
+client.on('channelDelete', async channel => {
+w.log.info('Channel deleted in guild ' + channel.guildId + ' checking to see if its one of ours')
+var serverdetails = await sql.getServerRow(channel.guildId)
+
+//check if it was an alpha channel
+var alphafound = false
+for (var i = 0; i < serverdetails[0].alpha_channels.enabled.length; i++) {
+				if (serverdetails[0].alpha_channels.enabled[i]['channelid'] === channel.id) {
+				  w.log.info('matched the deleted channel to an alpha channel. Deleting that from the config')
+				  alphafound = true
+					var newconfig = serverdetails[0].alpha_channels.enabled.splice(i,1)
+					await sql.updateTableColumn('servers', 'serverid', guildid, "alpha_channels", newconfig)
+					break
+				}//end if we have found a setup matching the current collectionkey
+			}//end for each alpha channel config object
+			
+if (alphafound === false) {w.log.info('deleted channel didn\'t match an alpha channel')}
+
+//check if it was any of the main snipe channels
+if (channel.id === serverdetails[0].raresnipes) {
+  w.log.info('Raresnipes channel was deleted from server ' + serverdetailst[0].servername + '. Nulling it in our database')
+  await sql.updateTableColumn('servers', 'serverid', channel.guildId, "raresnipes", null)}
+if (channel.id === serverdetails[0].epicsnipes) {
+   w.log.info('Epicsnipes channel was deleted from server ' + serverdetailst[0].servername + '. Nulling it in our database')
+  await sql.updateTableColumn('servers', 'serverid', channel.guildId, "epicsnipes", null)
+}
+if (channel.id === serverdetails[0].legendarysnipes) { w.log.info('legendarysnipes channel was deleted from server ' + serverdetailst[0].servername + '. Nulling it in our database')
+  await sql.updateTableColumn('servers', 'serverid', channel.guildId, "legendarysnipes", null)}
+if (channel.id === serverdetails[0].mythicsnipes) { w.log.info('mythicsnipes channel was deleted from server ' + serverdetailst[0].servername + '. Nulling it in our database')
+  await sql.updateTableColumn('servers', 'serverid', channel.guildId, "mythicsnipes", null)}
+
+})
