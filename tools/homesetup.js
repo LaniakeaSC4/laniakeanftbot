@@ -114,7 +114,7 @@ async function setupchannel(interaction) {
 
 	if (validserver) {
 		w.log.info('setting up home channel for guild ' + guildid)
-		const guild = client.guilds.cache.get(guildid)
+		const guild = await client.guilds.fetch(guildid)
 
 		//get saved sniper channels (if any)
 		const existingchannels = await sql.getServerRow(guildid)//need to add the home channel to the sql function
