@@ -56,7 +56,9 @@ async function validateCollection(interaction) {
 	const response = interaction.fields.getTextInputValue('collection-input')//get modal input text
 	var meslug = response.substring(response.lastIndexOf('magiceden.io/marketplace/') + 25).replace(/[^0-9a-z]/gi, '')//find the end slug and clean it (same process as cleaning to colleciton key in SQL)
 	
+	if (!homecollections.enabled[interaction.message.guildId]) {
 	homecollections.enabled[interaction.message.guildId] = []
+	}
 
 	//get collections and populate global var
 	supportedcollections = {}//clear and repopulate in case collections have changed since last time command was run
