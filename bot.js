@@ -200,6 +200,7 @@ var serverdetails = await sql.getServerRow(channel.guildId)
 
 //check if it was an alpha channel
 var alphafound = false
+if (serverdetails[0].alpha_channels) {
 for (var i = 0; i < serverdetails[0].alpha_channels.enabled.length; i++) {
 				if (serverdetails[0].alpha_channels.enabled[i]['channelid'] === channel.id) {
 				  w.log.info('matched the deleted channel to an alpha channel. Deleting that from the config')
@@ -209,7 +210,7 @@ for (var i = 0; i < serverdetails[0].alpha_channels.enabled.length; i++) {
 					break
 				}//end if we have found a setup matching the current collectionkey
 			}//end for each alpha channel config object
-			
+} 		
 if (alphafound === false) {w.log.info('deleted channel didn\'t match an alpha channel')}
 
 //check if it was any of the main snipe channels
