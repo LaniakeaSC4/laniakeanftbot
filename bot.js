@@ -215,14 +215,21 @@ if (alphafound === false) {w.log.info('deleted channel didn\'t match an alpha ch
 //check if it was any of the main snipe channels
 if (channel.id === serverdetails[0].raresnipes) {
   w.log.info('Raresnipes channel was deleted from server ' + serverdetailst[0].servername + '. Nulling it in our database')
-  await sql.updateTableColumn('servers', 'serverid', channel.guildId, "raresnipes", null)}
+  await sql.updateTableColumn('servers', 'serverid', channel.guildId, "raresnipes", null)
+  snipersender.initaliseServers()
+}
 if (channel.id === serverdetails[0].epicsnipes) {
    w.log.info('Epicsnipes channel was deleted from server ' + serverdetailst[0].servername + '. Nulling it in our database')
   await sql.updateTableColumn('servers', 'serverid', channel.guildId, "epicsnipes", null)
+  snipersender.initaliseServers()
 }
 if (channel.id === serverdetails[0].legendarysnipes) { w.log.info('legendarysnipes channel was deleted from server ' + serverdetailst[0].servername + '. Nulling it in our database')
-  await sql.updateTableColumn('servers', 'serverid', channel.guildId, "legendarysnipes", null)}
+  await sql.updateTableColumn('servers', 'serverid', channel.guildId, "legendarysnipes", null)
+  snipersender.initaliseServers()
+}
 if (channel.id === serverdetails[0].mythicsnipes) { w.log.info('mythicsnipes channel was deleted from server ' + serverdetailst[0].servername + '. Nulling it in our database')
-  await sql.updateTableColumn('servers', 'serverid', channel.guildId, "mythicsnipes", null)}
+  await sql.updateTableColumn('servers', 'serverid', channel.guildId, "mythicsnipes", null)
+  snipersender.initaliseServers()
+}
 
 })
