@@ -206,13 +206,15 @@ for (var i = 0; i < serverdetails[0].alpha_channels.enabled.length; i++) {
 				  w.log.info('matched the deleted channel to an alpha channel. Deleting that from the config')
 				  alphafound = true
 				  
-				  w.log.info('old config was: ' + JSON.stringify(serverdetails[0].alpha_channels.enabled))
+				  w.log.info('old config was: ' + JSON.stringify(serverdetails[0].alpha_channels))
 				  
-					var newconfig = {"enabled" : serverdetails[0].alpha_channels.enabled.slice(i,i+1)}
+				  serverdetails[0].alpha_channels.enabled.splice(i,1)
+				  
+					//var newconfig = {"enabled" : serverdetails[0].alpha_channels.enabled}
 					
-					w.log.info('new config is: ' + JSON.stringify(newconfig))
+					w.log.info('new config is: ' + JSON.stringify(serverdetails[0].alpha_channels))
 					
-					await sql.updateTableColumn('servers', 'serverid', channel.guildId, "alpha_channels", newconfig)
+					await sql.updateTableColumn('servers', 'serverid', channel.guildId, "alpha_channels", serverdetails[0].alpha_channels)
 					break
 				}//end if we have found a setup matching the current collectionkey
 			}//end for each alpha channel config object
