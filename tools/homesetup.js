@@ -69,7 +69,7 @@ async function validateCollection(interaction) {
 			//update interaction to list the ones they have added so far
 			interaction.update({ content: "Press \"Add collection\" below and enter the Magic Eden link to the collection you would like to add to your home channel. When you have added all the collections you wish to be in your homechannel, press Done.\n\nAdding: " + homecollections.enabled.toString(), ephemeral: true })
 			break//if we have found it, dont need to loop more
-			}
+			} else {found = true}//set found to true as it was found, just a duplicate. Avoids not found error.
 		}//end if
 	}//end for
 
