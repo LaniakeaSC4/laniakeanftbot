@@ -132,7 +132,7 @@ client.on('interactionCreate', async interaction => {
       var serverconfig = await sql.getServerRow(interaction.message.guildId)
       if (serverconfig[0].premium === true) {
         homesetup.whichCollections(interaction)
-      } else { interaction.reply({ content: 'Home Channel is a premium feature. This server is not premium. For more details on premium please contact @Laniakea#3683', ephemeral: true }) }
+      } else { interaction.reply({ content: 'Home Channel is a premium feature. This server is not premium. For more details on premium please contact @Laniakea#3683.', ephemeral: true }) }
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
   }//end if button is 'starthomesetup-button'
 
@@ -163,7 +163,11 @@ client.on('interactionCreate', async interaction => {
   if (interaction.customId === 'startalphasetup-button') {
         if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) { //only if you have manage channels
             //if server is premium
+                 //if server is premium
+      var serverconfig = await sql.getServerRow(interaction.message.guildId)
+      if (serverconfig[0].premium === true) {
       alphasetup.replyMainSetup(interaction)
+      } else { interaction.reply({ content: 'Alpha Channels are a premium feature. This server is not premium. For more details on premium please contact @Laniakea#3683.', ephemeral: true }) }
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }//if not laniakea
   }//end if startalphasetup-button
 

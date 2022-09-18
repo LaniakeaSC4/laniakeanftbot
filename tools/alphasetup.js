@@ -27,7 +27,7 @@ async function replyMainSetup(interaction) {
 	//if replytext is still blank, reply no current channels. If we added channels, drop that last comma space
 	if (replytext === '') {replytext = 'No current alpha channels.'} else {replytext = replytext + "\n\n"}
 	//send the replpy (including button row)
-	await interaction.reply({ content: "Alpha Channels allow you to dedicate a channel to snipes for particular collections. Snipes for these collections will always be delivered to these decicated Alpha Channels regardless of any settings or filters on your Snipe Feed or Home Channel. Your current alpha channels are:\n" + replytext + "Add new Alpha Channels with the button below (you'll need the Magic Eden link to the collection and the collection must be supported by Laniakea Sniper). \n\nDismiss this message when you finished.", components: [row], ephemeral: true })
+	await interaction.reply({ content: "__**Alpha Channel Setup**__\n\nAlpha Channels allow you to dedicate a channel to snipes for particular collections. Snipes for these collections will always be delivered to these dedicated Alpha Channels regardless of any settings or filters on your Snipe Feed or Home Channel. Your current alpha channels are:\n" + replytext + "Add new Alpha Channels with the button below (you'll need the Magic Eden link to the collection and the collection must be supported by Laniakea Sniper). \n\nDismiss this message when you finished.", components: [row], ephemeral: true })
 } module.exports.replyMainSetup = replyMainSetup
 
 //when "Add Alpha Channel" is pressed, show a modal to capture the ME address
