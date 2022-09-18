@@ -68,7 +68,12 @@ async function validateCollection(interaction) {
 			await createAlpha(interaction, meslug)
 		}//end if
 	}//end for
-	if (found === false) { return null }//if this collection wasn't supported
+	
+	
+	if (found === false) {
+		await interaction.reply({ content: 'Collection ' + meslug + 'was not found in our supported collections. View all supported collections with /supportedcollections. This message will delete in 5 seconds' });
+		setTimeout(() => interaction.deleteReply(), 5000)//delete it after 5s
+	}//end if !found
 
 } module.exports.validateCollection = validateCollection
 
