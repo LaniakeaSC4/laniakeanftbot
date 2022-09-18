@@ -94,11 +94,12 @@ async function sendsnipes(server, channel, delay, nftname, embedcolour, thisrari
 	//if senddelay isnt null
 	if (delay) {
 		//w.log.info('server: ' + server + ' is not premium. Waiting to send ' + nftname + ' ' + raritydescription)
-		await wait(delay); w.log.info('Done waiting. Now sending ' + nftname + ' to ' + server)
+		await wait(delay); /*w.log.info('Done waiting. Now sending ' + nftname + ' to ' + server)*/
 	} else { /*w.log.info('Sending ' + nftname + ' ' + raritydescription + ' immediately to premium server ' + server)*/ }
 	//try sending
+	const guild = await client.guilds.fetch(server)
 	try {
-		client.guilds.cache.get(server).channels.cache.get(channel).send({
+	guild.channels.cache.get(channel).send({
 			embeds: [
 				{
 					"title": hotness + ' Snipe Opportunity__\n' + nftname,
