@@ -27,34 +27,8 @@ async function replyMainSetup(interaction) {
 	//if replytext is still blank, reply no current channels. If we added channels, drop that last comma space
 	if (replytext === '') {replytext = 'No current alpha channels.'} else {replytext = replytext.slice(0,-2)}
 	//send the reply (including button row)
-	await interaction.reply({ content: "Alpha Channels allow you to dedicate a channel to snipes for particular collections. Your current alpha channels are:\n```[" + replytext + "]```Add Alpha Channels with the button below or dismiss this message when you finished.", components: [row], ephemeral: true })
+	await interaction.reply({ content: "Alpha Channels allow you to dedicate a channel to snipes for particular collections. Your current alpha channels are:\n```[" + replytext + "]```Add new Alpha Channels with the button below (you'll need the Magic Eden link to the collection and the collection must be supported by Laniakea Sniper). Dismiss this message when you finished.", components: [row], ephemeral: true })
 } module.exports.replyMainSetup = replyMainSetup
-
-/*
-//Main setup
-async function replyModifyAlpha(interaction) {
-	//build a new button row for the command reply
-	const row = new ActionRowBuilder()
-		.addComponents(
-			new ButtonBuilder()
-				.setCustomId('addAlpha-button')
-				.setLabel('Add an Alpha Channel')
-				.setStyle(ButtonStyle.Primary),
-		).addComponents(
-			new ButtonBuilder()
-				.setCustomId('removeAlpha-button')
-				.setLabel('Remove an Alpha Channel')
-				.setStyle(ButtonStyle.Primary),
-		).addComponents(
-			new ButtonBuilder()
-				.setCustomId('doneModifyAlpha-button')
-				.setLabel('Done')
-				.setStyle(ButtonStyle.Secondary),
-		)
-	//send the reply (including button row)
-	await interaction.reply({ content: "What would you like to do?", components: [row], ephemeral: true })
-} module.exports.replyModifyAlpha = replyModifyAlpha
-*/
 
 //when "Add Alpha Channel" is pressed, show a modal to capture the ME address
 async function sendAddModal(interaction) {
@@ -92,18 +66,6 @@ async function validateCollection(interaction) {
 		if (supportedcollections[i].collectionkey === meslug) {//if collection entered by user is found in our supported collections
 			w.log.info('validated collection. Caling createAlpha')
 			await createAlpha(interaction, meslug)
-			//once new channel has been created, requery sql for collections and update post.
-				//get current alpha channels from sql here and display then
-	var replytext = ''
-	var alphachannels = await sql.getData("servers", "serverid", interaction.message.guildId, "alpha_channels")
-	//get exisiting collections to show to user 
-	for (var i = 0;i < alphachannels.enabled.length;i++){
-	  replytext = replytext + alphachannels.enabled[i].meslug + ', '
-	}
-	//if replytext is still blank, reply no current channels. If we added channels, drop that last comma space
-	if (replytext === '') {replytext = 'No current alpha channels.'} else {replytext = replytext.slice(0,-2)}
-	//send the reply (including button row)
-	interaction.update({ content: "Alpha Channels allow you to dedicate a channel to snipes for particular collections. Your current alpha channels are:\n```[" + replytext + "]```Add Alpha Channels with the button below or dismiss this message when you finished.", ephemeral: true })
 		}//end if
 	}//end for
 	if (found === false) { return null }//if this collection wasn't supported

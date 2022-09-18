@@ -101,10 +101,11 @@ client.on('interactionCreate', async interaction => {
   }//end catch
 })//end on interactionCreate
 
+const permissionerror = { content: 'Sorry, you do not have permissions to run this command (Manage Channels/Admin required)', ephemeral: true } 
+
 //feed setup
 const feedsetup = require('./tools/feedsetup.js')
 client.on('interactionCreate', async interaction => {
-  const permissionerror = { content: 'Sorry, you do not have permissions to run this command (Manage Channels/Admin required)', ephemeral: true }
 
   if (interaction.customId === 'feedsetup-button') {
     interaction.deferReply({ ephemeral: true })
@@ -160,31 +161,35 @@ client.on('interactionCreate', async interaction => {
 
   //show the main setup dialogue for alpha setup
   if (interaction.customId === 'startalphasetup-button') {
-    if (interaction.member.user.id === "684896787655557216") {
+        if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) { //only if you have manage channels
+            //if server is premium
       alphasetup.replyMainSetup(interaction)
-    } else { interaction.reply('Feature in development. This command is disabled.') }//if not laniakea
+    } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }//if not laniakea
   }//end if startalphasetup-button
 
   //show add alpha modal
   if (interaction.customId === 'addAlpha-button') {
-    if (interaction.member.user.id === "684896787655557216") {
+    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) { //only if you have manage channels
+            //if server is premium
       alphasetup.sendAddModal(interaction)
-    } else { interaction.reply('Feature in development. This command is disabled.') }//if not laniakea
+    } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }//if not laniakea
   }//end show add alpha modal
 
     //show add alpha modal
     if (interaction.customId === 'removeAlpha-modal') {
-      if (interaction.member.user.id === "684896787655557216") {
+    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) { //only if you have manage channels
+              //if server is premium
         alphasetup.sendRemoveModal(interaction)
-      } else { interaction.reply('Feature in development. This command is disabled.') }//if not laniakea
+      } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }//if not laniakea
     }//end show add alpha modal
 
     //validate and if valid create alpha channel
     if (interaction.customId === 'addAlpha-modal') {
-      if (interaction.member.user.id === "684896787655557216") {
+    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) { //only if you have manage channels
+              //if server is premium
         w.log.info('addAlpha-modal activated')
         alphasetup.validateCollection(interaction)
-      } else { interaction.reply('Feature in development. This command is disabled.') }//if not laniakea
+      } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }//if not laniakea
     }//end if button is 'submitAddAlpha-modal'
 
 })//end on interactionCreate
