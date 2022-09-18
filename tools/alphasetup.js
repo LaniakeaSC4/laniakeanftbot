@@ -16,28 +16,18 @@ async function replyMainSetup(interaction) {
 				.setCustomId('addAlpha-button')
 				.setLabel('Add an Alpha Channel')
 				.setStyle(ButtonStyle.Primary),
-		).addComponents(
-			new ButtonBuilder()
-				.setCustomId('doneAlpha-button')
-				.setLabel('Done')
-				.setStyle(ButtonStyle.Secondary),
 		)
 	//get current alpha channels from sql here and display then
 	var replytext = ''
 	var alphachannels = await sql.getData("servers", "serverid", interaction.message.guildId, "alpha_channels")
-	w.log.info(JSON.stringify(alphachannels))
 	//get exisiting collections to show to user 
 	for (var i = 0;i < alphachannels.enabled.length;i++){
 	  replytext = replytext + alphachannels.enabled[i].meslug + ', '
 	}
-	//if there was an existing config
-	if (alphachannels) {
-
-	} else {//if no existing config
-
-	}
+	//if replytext is still blank, reply no current channels. If we added channels, drop that last comma space
+	if (replytext === '') {replytext = 'No current alpha channels.'} else {replytext = replytext.slice(0,-2)}
 	//send the reply (including button row)
-	await interaction.reply({ content: "Your current alpha channels are:\n```[" + replytext + "]```", components: [row], ephemeral: true })
+	await interaction.reply({ content: "Alpha Channels allow you to dedicate a channel to snipes for particular collections. Your current alpha channels are:\n```[" + replytext + "]```Add Alpha Channels with the button below or dismiss this message when you finished.", components: [row], ephemeral: true })
 } module.exports.replyMainSetup = replyMainSetup
 
 /*
@@ -85,26 +75,6 @@ async function sendAddModal(interaction) {
 		])//end modal add components
 	await interaction.showModal(modal)
 } module.exports.sendAddModal = sendAddModal
-
-//when "Remove Alpha Channel" is pressed, show a modal to capture the ME address
-async function sendRemoveModal(interaction) {
-	const modal = new ModalBuilder()
-		.setCustomId('removeAlpha-modal')
-		.setTitle('Enter Magic Eden Link to collection')
-		.addComponents([
-			new ActionRowBuilder().addComponents(
-				new TextInputBuilder()
-					.setCustomId('collection-input')
-					.setLabel('Collection ID')
-					.setStyle(TextInputStyle.Short)
-					.setMinLength(2)
-					.setMaxLength(120)
-					.setPlaceholder('e.g. https://magiceden.io/marketplace/{your-collection}')
-					.setRequired(true),
-			),//end actionrow add components
-		])//end modal add components
-	await interaction.showModal(modal)
-} module.exports.sendRemoveModal = sendRemoveModal
 
 //function to process the input from sendAddModal. Do we support this collection? 
 async function validateCollection(interaction) {
@@ -154,7 +124,7 @@ async function createAlpha(interaction, collectionkey) {
 
 		if (foundalpha === false) {
 			await setupchannel(interaction, collectionkey, serverdetails[0].alpha_channels).then(async newchannelid => {
-				interaction.reply({ content: "New channel <#" + newchannelid + "> created" })
+				interaction.reply({ content: "New channel for " + collectionkey + " created" })
 			})//end then
 		} else {//if there were alpha channels and this one was found.
 			interaction.reply({ content: "This alpha channel is already active in your server", ephemeral: true })
