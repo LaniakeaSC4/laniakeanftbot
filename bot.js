@@ -6,7 +6,7 @@ const { Collection, PermissionsBitField } = require('discord.js');
 const fs = require('node:fs');
 const path = require('node:path');
 const w = require('./tools/winston.js');
-const deploy = require('./deploycommands.js');
+const deploy = require('../tools/deployonecommand.js');
 const sql = require('./tools/commonSQL.js');
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -113,10 +113,10 @@ client.on('interactionCreate', async interaction => {
       w.log.info('setup status was sucessful')
       await wait(5000)//give time for channels to be created
       snipersender.initaliseServers()
-      interaction.editReply({ content: 'Setup complete. Your snipe channels will now start receiving snipes! Default permissions are deny @\'everyone, please now configure access to the snipe channels for your users. Please also confirm the bot has send permissions on the snipe channels', ephemeral: true })
+      interaction.editReply({ content: 'Setup complete. Your Snipe Feed channels will now start receiving snipes! Default permissions are deny @\'everyone, please now configure access to the Snipe Feed channels for your users. Please also confirm the bot has send permissions on the Snipe Feed channels.', ephemeral: true })
     } else {
       w.log.info('there was an error during a setup attempt')
-      interaction.reply({ content: 'There was a setup error', ephemeral: true })
+      interaction.reply({ content: 'There was a setup error. If your seeing this please contact Laniakea#3683 with the time the error occurred.', ephemeral: true })
     }
   }//end if button is 'beginsetup-button'
 })//end on interactionCreate
@@ -164,14 +164,7 @@ client.on('interactionCreate', async interaction => {
       alphasetup.replyMainSetup(interaction)
     } else { interaction.reply('Feature in development. This command is disabled.') }//if not laniakea
   }//end if startalphasetup-button
-/*
-  //show modify alpha panel
-  if (interaction.customId === 'modifyAlpha-button') {
-    if (interaction.member.user.id === "684896787655557216") {
-      alphasetup.replyModifyAlpha(interaction)
-    } else { interaction.reply('Feature in development. This command is disabled.') }//if not laniakea
-  }//end if startalphasetup-button
-*/
+
   //show add alpha modal
   if (interaction.customId === 'addAlpha-button') {
     if (interaction.member.user.id === "684896787655557216") {
@@ -207,20 +200,15 @@ for (var i = 0; i < serverdetails[0].alpha_channels.enabled.length; i++) {
 				if (serverdetails[0].alpha_channels.enabled[i]['channelid'] === channel.id) {
 				  w.log.info('matched the deleted channel to an alpha channel. Deleting that from the config')
 				  alphafound = true
-				  
-				  w.log.info('old config was: ' + JSON.stringify(serverdetails[0].alpha_channels))
-				  
+				  //splice out the deleted channel from the config
 				  serverdetails[0].alpha_channels.enabled.splice(i,1)
-				  
-					//var newconfig = {"enabled" : serverdetails[0].alpha_channels.enabled}
-					
-					w.log.info('new config is: ' + JSON.stringify(serverdetails[0].alpha_channels))
-					
+				  //save updates config in sql
 					await sql.updateTableColumn('servers', 'serverid', channel.guildId, "alpha_channels", serverdetails[0].alpha_channels)
 					break
 				}//end if we have found a setup matching the current collectionkey
 			}//end for each alpha channel config object
-} 		
+}//end if there is an exisiting config
+
 if (alphafound === false) {w.log.info('deleted channel didn\'t match an alpha channel')}
 
 //check if it was any of the main snipe channels
@@ -243,11 +231,11 @@ if (channel.id === serverdetails[0].mythicsnipes) { w.log.info('mythicsnipes cha
   snipersender.initaliseServers()
 }
 
+//check if it was the home channel
 if (channel.id === serverdetails[0].homechannel_id) { w.log.info('homechannel was deleted from server ' + serverdetails[0].servername + '. Nulling id in our database, deleting config and disabling')
   await sql.updateTableColumn('servers', 'serverid', channel.guildId, "homechannel_id", null)
   await sql.updateTableColumn('servers', 'serverid', channel.guildId, "homechannel_collections", null)
   await sql.updateTableColumn('servers', 'serverid', channel.guildId, "homechannel_enabled", false)
   snipersender.initaliseServers()
 }
-
-})
+})//end on channelDelete event

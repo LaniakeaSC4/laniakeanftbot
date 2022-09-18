@@ -9,7 +9,7 @@ const { SlashCommandBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle, Permi
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('setup')
-    .setDescription('Setup this server for Laniakea Sniper Bot'),
+    .setDescription('Setup this server for Laniakea NFT Sniper Bot'),
 
   //when command is triggered, do this
   async execute(interaction) {
@@ -32,7 +32,7 @@ module.exports = {
         .addComponents(
           new ButtonBuilder()
             .setCustomId('startalphasetup-button')
-            .setLabel('🌟 Setup Alpha Channels [inactive]')
+            .setLabel('🌟 Setup Alpha Channels')
             .setStyle(ButtonStyle.Primary),
         )//end add components
 

@@ -1,4 +1,4 @@
-/* deploys application commands to supported servers in our SQL database */
+/* deploys application commands to one server. Called from exported command. */
 
 require('dotenv').config()//import process environment vars into app engine nodejs environment using dotenv
 const fs = require('node:fs')//to read command files
@@ -29,21 +29,14 @@ function commandfiles() {
 
 const rest = new REST({ version: '10' }).setToken(process.env.BOTTOKEN)//login to REST API
 
-//not sure this is needed any more? I think I am only calling setupOne on event guildCreate, so servers are set up one at a time
-async function startsetup() {
-  getActiveServers().then(async servers => {//get supported servers
-    commandfiles()//build commands from paths
-    for (var i = 0; i < servers.length; i++) {//for each server, register commands
-      await wait(1500)//rate limit
-      try {
-        rest.put(Routes.applicationGuildCommands(clientId, servers[i].serverid), { body: commands })
-          .then(() => w.log.info('Successfully registered application commands'))
-          .catch(console.error)
-      } catch (err) {
-        w.log.error('Error adding: ' + servers[i].serverid + '. Code: ' + err.error.code)
-      }
-
-    }//end for
-  })//end then
-}//end start
-startsetup()//run function when npm starts script. Sets up all servers
+async function setupOne(guildid) {
+  commandfiles()//build commands from paths
+  try {
+    rest.put(Routes.applicationGuildCommands(clientId, guildid), { body: commands })
+      .then(() => w.log.info('Successfully registered application command'))
+      .catch(console.error)
+  } catch (err) {
+    w.log.error('Error adding: ' + guildid + '. Code: ' + err.error.code)
+  }
+}//end setupOne
+module.exports.setupOne = setupOne
