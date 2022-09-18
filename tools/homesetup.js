@@ -84,7 +84,7 @@ async function validateCollection(interaction) {
 } module.exports.validateCollection = validateCollection
 
 async function done(interaction) {
-  interaction.message.delete()//delete the add collections interaction.
+  //interaction.message.delete()//delete the add collections interaction.
 	if (homecollections.enabled[interaction.message.guildId].length != 0) {
 
 		//create home channel if not already existing
