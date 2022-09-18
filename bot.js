@@ -6,7 +6,7 @@ const { Collection, PermissionsBitField } = require('discord.js');
 const fs = require('node:fs');
 const path = require('node:path');
 const w = require('./tools/winston.js');
-const deploy = require('../tools/deployonecommand.js');
+const deploy = require('./tools/deployonecommand.js');
 const sql = require('./tools/commonSQL.js');
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
