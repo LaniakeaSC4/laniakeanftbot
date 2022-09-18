@@ -41,7 +41,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 						break
 					} else {/*w.log.info('No homechannel match for this collection on this server')*/ }
 				}//end loop through saved home channels
-			} 
+			}//end if homechannel is enabled and server is premium
 			
 			var foundalpha = false
 			var alphachannelid = ''
@@ -54,11 +54,12 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 				    break
 				  }//end if match this collection
 				}//end for enabled alpha channels 
-			}
+			}//end if this server is premium and has an alpha config
 			
+			//if alpha channel is matched, send straight away.
 			if (foundalpha === true) {
 				sendsnipes(thisserverid, alphachannelid, null, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
-			}
+			}//end if alpha
 
 			//if foundhome is true (will only be if server is still premium, homechannel is enabled and this collection was found as a homechannel collection)
 			//finding a homechannel will filter a message out of the snipe feed and into the home channel
@@ -90,16 +91,17 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 	}//for each supported server (from SQL)   
 }; module.exports.sendFilter = sendFilter
 
-async function sendsnipes(server, channel, delay, nftname, embedcolour, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage, listinglink, hotness, collectionSize) {
+async function sendsnipes(server, thischannel, delay, nftname, embedcolour, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage, listinglink, hotness, collectionSize) {
 	//if senddelay isnt null
 	if (delay) {
 		//w.log.info('server: ' + server + ' is not premium. Waiting to send ' + nftname + ' ' + raritydescription)
 		await wait(delay); /*w.log.info('Done waiting. Now sending ' + nftname + ' to ' + server)*/
 	} else { /*w.log.info('Sending ' + nftname + ' ' + raritydescription + ' immediately to premium server ' + server)*/ }
-	//try sending
-	const guild = await client.guilds.fetch(server)
+	//try sending. Fetch server if not cached
 	try {
-	guild.channels.cache.get(channel).send({
+	const guild = await client.guilds.fetch(server)
+	const channel = await guild.channels.fetch(thischannel)
+	channel.send({
 			embeds: [
 				{
 					"title": hotness + ' Snipe Opportunity__\n' + nftname,
