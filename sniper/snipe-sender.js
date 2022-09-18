@@ -55,6 +55,10 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 				  }//end if match this collection
 				}//end for enabled alpha channels 
 			}
+			
+			if (foundalpha === true) {
+				sendsnipes(thisserverid, alphachannelid, null, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
+			}
 
 			//if foundhome is true (will only be if server is still premium, homechannel is enabled and this collection was found as a homechannel collection)
 			//finding a homechannel will filter a message out of the snipe feed and into the home channel
