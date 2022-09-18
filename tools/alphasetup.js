@@ -91,7 +91,19 @@ async function validateCollection(interaction) {
 	for (var i = 0; i < supportedcollections.length; i++) {//loop supported collections recieved from SQL
 		if (supportedcollections[i].collectionkey === meslug) {//if collection entered by user is found in our supported collections
 			w.log.info('validated collection. Caling createAlpha')
-			createAlpha(interaction, meslug)
+			await createAlpha(interaction, meslug)
+			//once new channel has been created, requery sql for collections and update post.
+				//get current alpha channels from sql here and display then
+	var replytext = ''
+	var alphachannels = await sql.getData("servers", "serverid", interaction.message.guildId, "alpha_channels")
+	//get exisiting collections to show to user 
+	for (var i = 0;i < alphachannels.enabled.length;i++){
+	  replytext = replytext + alphachannels.enabled[i].meslug + ', '
+	}
+	//if replytext is still blank, reply no current channels. If we added channels, drop that last comma space
+	if (replytext === '') {replytext = 'No current alpha channels.'} else {replytext = replytext.slice(0,-2)}
+	//send the reply (including button row)
+	await interaction.update({ content: "Alpha Channels allow you to dedicate a channel to snipes for particular collections. Your current alpha channels are:\n```[" + replytext + "]```Add Alpha Channels with the button below or dismiss this message when you finished.", components: [row], ephemeral: true })
 		}//end if
 	}//end for
 	if (found === false) { return null }//if this collection wasn't supported
@@ -124,7 +136,7 @@ async function createAlpha(interaction, collectionkey) {
 
 		if (foundalpha === false) {
 			await setupchannel(interaction, collectionkey, serverdetails[0].alpha_channels).then(async newchannelid => {
-				interaction.reply({ content: "New channel for " + collectionkey + " created" })
+				interaction.reply({ content: "New channel for " + collectionkey + " created", ephemeral: true })
 			})//end then
 		} else {//if there were alpha channels and this one was found.
 			interaction.reply({ content: "This alpha channel is already active in your server. You can dismiss this message.", ephemeral: true })
@@ -133,7 +145,7 @@ async function createAlpha(interaction, collectionkey) {
 	} else {//if no existing config
 		w.log.info('there was NOT exisiting alpha channels. Calling setupchannel')
 		await setupchannel(interaction, collectionkey, null).then(async newchannelid => {
-			interaction.reply({ content: "New channel <#" + newchannelid + "> created", ephemeral: true })
+			interaction.reply({ content: "New channel for " + collectionkey + " created", ephemeral: true })
 		})//end then
 	}//end else
 }//end function createAlpha
