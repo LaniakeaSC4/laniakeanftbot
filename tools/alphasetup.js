@@ -25,6 +25,7 @@ async function replyMainSetup(interaction) {
 	//get current alpha channels from sql here and display then
 	var replytext = ''
 	var alphachannels = await sql.getData("servers", "serverid", interaction.message.guildId, "alpha_channels")
+	w.log.info(JSON.stringify(alphachannels))
 	//get exisiting collections to show to user 
 	for (var i = 0;i < alphachannels.enabled.length;i++){
 	  replytext = replytext + alphachannels.enabled[i].meslug + ', '
