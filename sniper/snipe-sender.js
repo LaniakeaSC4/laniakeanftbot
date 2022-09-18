@@ -99,8 +99,8 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 	} else { /*w.log.info('Sending ' + nftname + ' ' + raritydescription + ' immediately to premium server ' + server)*/ }
 	//try sending. Fetch server if not cached
 	try {
-	const guild = await client.guilds.fetch(server)
-	const channel = await guild.client.channels.fetch(thischannel)
+	//const guild = await client.guilds.fetch(server)
+	const channel = await client.channels.fetch(thischannel)
 	channel.send({
 			embeds: [
 				{
