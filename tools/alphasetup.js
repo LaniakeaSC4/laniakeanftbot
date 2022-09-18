@@ -127,7 +127,7 @@ async function createAlpha(interaction, collectionkey) {
 				interaction.reply({ content: "New channel for " + collectionkey + " created" })
 			})//end then
 		} else {//if there were alpha channels and this one was found.
-			interaction.reply({ content: "This alpha channel is already active in your server", ephemeral: true })
+			interaction.reply({ content: "This alpha channel is already active in your server. You can dismiss this message.", ephemeral: true })
 		}
 
 	} else {//if no existing config
