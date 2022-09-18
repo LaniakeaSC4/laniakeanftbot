@@ -103,7 +103,7 @@ async function validateCollection(interaction) {
 	//if replytext is still blank, reply no current channels. If we added channels, drop that last comma space
 	if (replytext === '') {replytext = 'No current alpha channels.'} else {replytext = replytext.slice(0,-2)}
 	//send the reply (including button row)
-	await interaction.update({ content: "Alpha Channels allow you to dedicate a channel to snipes for particular collections. Your current alpha channels are:\n```[" + replytext + "]```Add Alpha Channels with the button below or dismiss this message when you finished.", ephemeral: true })
+	await interaction.editReply({ content: "Alpha Channels allow you to dedicate a channel to snipes for particular collections. Your current alpha channels are:\n```[" + replytext + "]```Add Alpha Channels with the button below or dismiss this message when you finished.", ephemeral: true })
 		}//end if
 	}//end for
 	if (found === false) { return null }//if this collection wasn't supported
