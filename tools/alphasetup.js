@@ -22,12 +22,12 @@ async function replyMainSetup(interaction) {
 	var alphachannels = await sql.getData("servers", "serverid", interaction.message.guildId, "alpha_channels")
 	//get exisiting collections to show to user 
 	for (var i = 0;i < alphachannels.enabled.length;i++){
-	  replytext = replytext + alphachannels.enabled[i].meslug + ', '
+	  replytext = replytext + "\n<#" +alphachannels.enabled[i].channelid + '>'
 	}
 	//if replytext is still blank, reply no current channels. If we added channels, drop that last comma space
-	if (replytext === '') {replytext = 'No current alpha channels.'} else {replytext = replytext.slice(0,-2)}
-	//send the reply (including button row)
-	await interaction.reply({ content: "Alpha Channels allow you to dedicate a channel to snipes for particular collections. Your current alpha channels are:\n```[" + replytext + "]```Add new Alpha Channels with the button below (you'll need the Magic Eden link to the collection and the collection must be supported by Laniakea Sniper). Dismiss this message when you finished.", components: [row], ephemeral: true })
+	if (replytext === '') {replytext = 'No current alpha channels.'} else {replytext = replytext + "\n"}
+	//send the replpy (including button row)
+	await interaction.reply({ content: "Alpha Channels allow you to dedicate a channel to snipes for particular collections. Your current alpha channels are:\n" + replytext + "Add new Alpha Channels with the button below (you'll need the Magic Eden link to the collection and the collection must be supported by Laniakea Sniper). Dismiss this message when you finished.", components: [row], ephemeral: true })
 } module.exports.replyMainSetup = replyMainSetup
 
 //when "Add Alpha Channel" is pressed, show a modal to capture the ME address
