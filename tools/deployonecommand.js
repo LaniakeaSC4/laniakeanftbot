@@ -16,7 +16,7 @@ async function getActiveServers() {
 
 const clientId = '996170261353222219'//our bot ID - this is what we will be registering commands for
 const commands = []//start empty
-const commandsPath = path.join(__dirname, 'commands')//find path to folder
+const commandsPath = path.join(__dirname, '../commands')//find path to folder
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'))//join all .js files in that folder
 
 function commandfiles() {
