@@ -26,8 +26,8 @@ async function replyMainSetup(interaction) {
 	var replytext = ''
 	var alphachannels = await sql.getData("servers", "serverid", interaction.message.guildId, "alpha_channels")
 	//get exisiting collections to show to user 
-	for (var i = 0;i < alpha_channels.enabled.length;i++){
-	  replytext = replytext + alpha_channels.enabled[i].meslug + ', '
+	for (var i = 0;i < alphachannels.enabled.length;i++){
+	  replytext = replytext + alphachannels.enabled[i].meslug + ', '
 	}
 	//if there was an existing config
 	if (alphachannels) {
