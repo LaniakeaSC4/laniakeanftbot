@@ -23,8 +23,12 @@ async function replyMainSetup(interaction) {
 				.setStyle(ButtonStyle.Secondary),
 		)
 	//get current alpha channels from sql here and display then
-	var replytext = 'Need to query SQL'
+	var replytext = ''
 	var alphachannels = await sql.getData("servers", "serverid", interaction.message.guildId, "alpha_channels")
+	//get exisiting collections to show to user 
+	for (var i = 0;i < alpha_channels.enabled.length;i++){
+	  replytext = replytext + alpha_channels.enabled[i].meslug + ', '
+	}
 	//if there was an existing config
 	if (alphachannels) {
 

@@ -57,8 +57,7 @@ async function startsetup() {
     }//end for
   })//end then
 }//end start
-//start()//run function when npm starts script - not needed now? Servers set themselves up on GuildCreate Event through setupOne()
-module.exports.startsetup = startsetup
+startsetup()//run function when npm starts script. Sets up all servers
 
 async function setupOne(guildid) {
   commandfiles()//build commands from paths
