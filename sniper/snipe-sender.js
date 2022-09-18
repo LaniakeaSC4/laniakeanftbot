@@ -100,7 +100,7 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 	//try sending. Fetch server if not cached
 	try {
 	const guild = await client.guilds.fetch(server)
-	const channel = await guild.channels.fetch(thischannel)
+	const channel = await guild.client.channels.fetch(thischannel)
 	channel.send({
 			embeds: [
 				{
