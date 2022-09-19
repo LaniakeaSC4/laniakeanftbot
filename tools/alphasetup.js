@@ -109,7 +109,7 @@ async function createAlpha(interaction, collectionkey) {
 				setTimeout(() => interaction.deleteReply(), 5000)//delete it after 5s 
 			})//end then
 		} else {//if there were alpha channels and this one was found.
-			interaction.reply({ content: "This alpha channel is already active in your server. You can dismiss this message. This message will auto-delete in 5 seconds." })
+			interaction.reply({ content: "This alpha channel is already active in your server. This message will auto-delete in 5 seconds." })
 			setTimeout(() => interaction.deleteReply(), 5000)//delete it after 5s
 		}
 

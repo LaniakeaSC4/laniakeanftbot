@@ -234,3 +234,15 @@ async function getBotActiveServers() {
     })//end query
   })//end promise
 }; module.exports.getBotActiveServers = getBotActiveServers
+
+//get premium expiry time of a particular server
+async function getPremiumExpiry(serverid) {
+    var pgclient = db.getClient()
+
+    var querystring = "SELECT premiumexpire FROM servers WHERE serverid = \'" + serverid + "\'"
+
+    pgclient.query(querystring, (err, res) => {
+      if (err) throw err
+      return res.rows[0]
+    })//end query
+}; module.exports.getPremiumExpiry = getPremiumExpiry
