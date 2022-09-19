@@ -243,6 +243,6 @@ async function getPremiumExpiry(serverid) {
 
     pgclient.query(querystring, (err, res) => {
       if (err) throw err
-      return res.rows[0]
+      return res.rows
     })//end query
 }; module.exports.getPremiumExpiry = getPremiumExpiry
