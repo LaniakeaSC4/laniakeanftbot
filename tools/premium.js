@@ -12,7 +12,8 @@ async function updatePremium(serverid, days){
     var now = new Date()
     var premiumexpire = new Date()
     
-    premiumexpire.setDate(now.getDate() + days).toISOString().replace('T',' ').replace('Z','')
+    premiumexpire.setDate(now.getDate() + days)
+    premiumexpire.toISOString().replace('T',' ').replace('Z','')
     
     w.log.info('premiumexpire is: ' + premiumexpire)
   await sql.setPremiumExpiry(serverid, premiumexpire)
