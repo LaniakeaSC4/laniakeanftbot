@@ -33,8 +33,9 @@ function dateAdd(date, interval, units) {
 
 async function updatePremium(serverid, days){
   var premiumExpire = await sql.getPremiumExpiry(serverid)
-  w.log.info('premiumexpire is:' + premiumExpire)
+  w.log.info('premiumexpire is:' + premiumExpire[0])
   if (premiumExpire) {
+    
     w.log.info('There was an exisiting expiry time')
     var oldexpiry = new Date()
     var newexpiry = new Date()
