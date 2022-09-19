@@ -36,6 +36,7 @@ async function updatePremium(serverid, hours){
   } else {
     var now = new Date(Date.now()).toISOString()
     var expirydate = dateAdd(now, "hour", hours)
+    await sql.updateTableColumn('servers', 'serverid', serverid, 'premiumexpire', expirydate)
   }
   
 } module.exports.update = updatePremium
