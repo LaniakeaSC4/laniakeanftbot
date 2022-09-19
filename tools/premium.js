@@ -9,22 +9,14 @@ function addDays(date, days) {
 
 
 async function updatePremium(serverid, days){
-  var sqlpremium = await sql.getPremiumExpiry(serverid)
-  w.log.info('sqlpremium is:' + sqlpremium)
-  if (sqlpremium) {
-    w.log.info('There was an exisiting expiry time')
+    var now = new Date()
     var premiumexpire = new Date()
-    premiumexpire.setDate(premiumexpire.getDate() + days).toISOString()
-    w.log.info('premiumexpire is: ' + premiumexpire) 
-//await sql.updateTableColumn('servers', 'serverid', serverid, 'premiumexpire', newexpiry)
-  
     
-  } else {
-    w.log.info('There was no existing expiry time')
-    var premiumexpire = new Date()
-    premiumexpire.setDate(premiumexpire.getDate() + days).toISOString()
+    premiumexpire.setDate(now.getDate() + days)
+    
     w.log.info('premiumexpire is: ' + premiumexpire)
-    //await sql.updateTableColumn('servers', 'serverid', serverid, 'premiumexpire', expirydate)
-  }
+
+
+  
   
 } module.exports.update = updatePremium
