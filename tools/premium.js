@@ -15,7 +15,7 @@ async function updatePremium(serverid, days){
     premiumexpire.setDate(now.getDate() + days)
     
     w.log.info('premiumexpire is: ' + premiumexpire)
-
+  await sql.setPremiumExpiry(serverid, premiumexpire)
 
   
   
