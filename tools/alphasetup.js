@@ -64,8 +64,10 @@ async function validateCollection(interaction) {
 	var found = false//start as false
 	for (var i = 0; i < supportedcollections.length; i++) {//loop supported collections recieved from SQL
 		if (supportedcollections[i].collectionkey === meslug) {//if collection entered by user is found in our supported collections
+		  found = true
 			w.log.info('validated collection. Caling createAlpha')
 			await createAlpha(interaction, meslug)
+			break
 		}//end if
 	}//end for
 	
