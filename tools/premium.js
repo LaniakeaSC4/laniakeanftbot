@@ -10,10 +10,10 @@ function addDays(date, days) {
 
 async function updatePremium(serverid, days){
     var now = new Date()
-    var premiumexpire = new Date()
+    var add = new Date()
     
-    premiumexpire.setDate(now.getDate() + days)
-    premiumexpire.toISOString().replace('T',' ').replace('Z','')
+    add.setDate(now.getDate() + days)
+    var premiumexpire = new Date(add.toISOString().replace('T',' ').replace('Z',''))
     
     w.log.info('premiumexpire is: ' + premiumexpire)
   await sql.setPremiumExpiry(serverid, premiumexpire)
