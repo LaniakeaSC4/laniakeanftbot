@@ -103,16 +103,18 @@ async function createAlpha(interaction, collectionkey) {
 
 		if (foundalpha === false) {
 			await setupchannel(interaction, collectionkey, serverdetails[0].alpha_channels).then(async newchannelid => {
-				interaction.reply({ content: "New channel for " + collectionkey + " created", ephemeral: true })
+				interaction.reply({ content: "New channel for " + collectionkey + " created. This message will auto-delete in 5 seconds."} )
+				setTimeout(() => interaction.deleteReply(), 5000)//delete it after 5s 
 			})//end then
 		} else {//if there were alpha channels and this one was found.
-			interaction.reply({ content: "This alpha channel is already active in your server. You can dismiss this message.", ephemeral: true })
+			interaction.reply({ content: "This alpha channel is already active in your server. You can dismiss this message. This message will auto-delete in 5 seconds." })
+			setTimeout(() => interaction.deleteReply(), 5000)//delete it after 5s
 		}
 
 	} else {//if no existing config
 		w.log.info('there was NOT exisiting alpha channels. Calling setupchannel')
 		await setupchannel(interaction, collectionkey, null).then(async newchannelid => {
-			interaction.reply({ content: "New channel for " + collectionkey + " created", ephemeral: true })
+			interaction.reply({ content: "New channel for " + collectionkey + " created.\n\nYou can now dismiss this message.", ephemeral: true })
 		})//end then
 	}//end else
 }//end function createAlpha
