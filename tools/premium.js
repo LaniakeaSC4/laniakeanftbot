@@ -22,7 +22,7 @@ async function updatePremium(serverid, days){
   } else {
     w.log.info('There was no existing expiry time')
     var premiumexpire = new Date()
-    premiumexpire.setDate(premiumExpire.getDate() + days).toISOString()
+    premiumexpire.setDate(premiumexpire.getDate() + days).toISOString()
     w.log.info('premiumexpire is: ' + premiumexpire)
     //await sql.updateTableColumn('servers', 'serverid', serverid, 'premiumexpire', expirydate)
   }
