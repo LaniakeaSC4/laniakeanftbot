@@ -7,9 +7,6 @@ const { ChannelType, PermissionFlagsBits, PermissionsBitField,
 const w = require('./winston.js')
 const sql = require('./commonSQL.js')//common sql related commands are in here
 
-//Global var to hold valid/supported collections user is adding this setup round
-var alphacollections = { "enabled": {} }
-
 //Main setup
 async function replyMainSetup(interaction) {
 	//build a new button row for the command reply
@@ -20,17 +17,12 @@ async function replyMainSetup(interaction) {
 				.setLabel('Add an Alpha Channel')
 				.setStyle(ButtonStyle.Primary),
 		)
-		
-	if (!alphacollections.enabled[interaction.message.guildId]) {
-	alphacollections.enabled[interaction.message.guildId] = []
-	}
 	//get current alpha channels from sql here and display then
 	var replytext = ''
 	var alphachannels = await sql.getData("servers", "serverid", interaction.message.guildId, "alpha_channels")
 	//get exisiting collections to show to user 
 	for (var i = 0;i < alphachannels.enabled.length;i++){
 	  replytext = replytext + "\n<#" +alphachannels.enabled[i].channelid + '>'
-	  alphacollections.enabled[interaction.message.guildId].push("\n<#" +alphachannels.enabled[i].channelid + '>')
 	}
 	//if replytext is still blank, reply no current channels. If we added channels, drop that last comma space
 	if (replytext === '') {replytext = 'No current alpha channels.'} else {replytext = replytext + "\n\n"}
@@ -72,7 +64,7 @@ async function validateCollection(interaction) {
 	var found = false//start as false
 	for (var i = 0; i < supportedcollections.length; i++) {//loop supported collections recieved from SQL
 		if (supportedcollections[i].collectionkey === meslug) {//if collection entered by user is found in our supported collections
-		  found = true
+		found = true
 			w.log.info('validated collection. Caling createAlpha')
 			await createAlpha(interaction, meslug)
 			break
@@ -104,7 +96,6 @@ async function createAlpha(interaction, collectionkey) {
 					for (var i = 0; i < serverdetails[0].alpha_channels.enabled.length; i++) {
 						if (serverdetails[0].alpha_channels.enabled[i]['channelid'] === channel.id && serverdetails[0].alpha_channels.enabled[i]['meslug'] === collectionkey) {
 							foundalpha = true
-							interaction.update('test')
 							break
 						}//end if we have found a setup matching the current collectionkey
 					}//end for each alpha channel config object
@@ -125,8 +116,7 @@ async function createAlpha(interaction, collectionkey) {
 	} else {//if no existing config
 		w.log.info('there was NOT exisiting alpha channels. Calling setupchannel')
 		await setupchannel(interaction, collectionkey, null).then(async newchannelid => {
-			interaction.reply({ content: "New channel for " + collectionkey + " created. This message will auto-delete in 5 seconds."} )
-				setTimeout(() => interaction.deleteReply(), 5000)//delete it after 5s 
+			interaction.reply({ content: "New channel for " + collectionkey + " created.\n\nYou can now dismiss this message.", ephemeral: true })
 		})//end then
 	}//end else
 }//end function createAlpha
@@ -242,8 +232,6 @@ async function setupchannel(interaction, collectionkey, alphaconfig) {
 									]
 								}).then(async newchannel => {
 									w.log.info('created new channel ' + newchannel.name + ' it\'s ID is: ' + newchannel.id)
-									//push to config object for updating post
-									alphacollections.enabled[interaction.message.guildId].push("\n<#" + newchannel.id + '>')
 
 									if (alphaconfig) {//if existing config, add to it
 										w.log.info('old config was: ' + JSON.stringify(alphaconfig))
