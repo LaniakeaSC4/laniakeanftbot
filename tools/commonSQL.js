@@ -237,6 +237,7 @@ async function getBotActiveServers() {
 
 //get premium expiry time of a particular server
 async function getPremiumExpiry(serverid) {
+  return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
 
     var querystring = "SELECT premiumexpire FROM servers WHERE serverid = \'" + serverid + "\'"
@@ -245,4 +246,5 @@ async function getPremiumExpiry(serverid) {
       if (err) throw err
       return res.rows
     })//end query
+  })//end promise 
 }; module.exports.getPremiumExpiry = getPremiumExpiry
