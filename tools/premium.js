@@ -13,7 +13,7 @@ async function updatePremium(serverid, days){
     var add = new Date()
     
     add.setDate(now.getDate() + days)
-    var premiumexpire = add.toISOString().replace('T', '').replace('Z', '')
+    var premiumexpire = add.toISOString()
     
     w.log.info('premiumexpire is: ' + premiumexpire)
   await sql.updateTableColumn("servers", "serverid", serverid, "premiumexpire", premiumexpire) 
