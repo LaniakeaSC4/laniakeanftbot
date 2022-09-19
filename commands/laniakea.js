@@ -10,9 +10,10 @@ const { SlashCommandBuilder } = require('discord.js');
 const metaplex = require('../sniper/addCollection.js')
 //import common SQL commands
 const sql = require('../tools/commonSQL.js')
-
 //import sniper so we can restart it
 const sniper = require('../sniper/sniper-main.js')
+//premium management commands
+const premium = require('../tools/premium.js')
 
 //build the slash command
 module.exports = {
@@ -62,6 +63,7 @@ if (action === 'fulladd') { await metaplex.addNewNFT(data, meslug) }
 			  var hoursToAdd = 0
 			  if (interaction.options.getString('extradata')) { hoursToAdd = parseFloat(interaction.options.getString('extradata'))} //if there is extra data, set meslug to it
 				await interaction.reply({ content: "Adding " + hoursToAdd + " hours to server " + serverid, ephemeral: true })
+				await premium.update(serverid, hoursToAdd)
 			}
 
 		}//end if user is laniakea
