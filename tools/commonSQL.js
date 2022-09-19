@@ -248,17 +248,3 @@ async function getPremiumExpiry(serverid) {
     })//end query
   })//end promise 
 }; module.exports.getPremiumExpiry = getPremiumExpiry
-
-//set premium expiry time of a particular server
-async function setPremiumExpiry(serverid, expiretime) {
-  return new Promise((resolve, reject) => {
-    var pgclient = db.getClient()
-
-    var querystring = "insert into servers (premiumexpire) values (to_timestamp(" + expiretime + " / 1000.0)) WHERE serverid = \'" + serverid + "\'"
-
-    pgclient.query(querystring, (err, res) => {
-      if (err) throw err
-      resolve(true)
-    })//end query
-  })//end promise 
-}; module.exports.setPremiumExpiry = setPremiumExpiry

@@ -9,6 +9,11 @@ function addDays(date, days) {
 
 
 async function updatePremium(serverid, days){
+  
+  var sqltime = await sql.getPremiumExpiry(serverid) 
+  w.log.info('sql time is')
+  w.log.info(sqltime)
+  /* put time
     var now = new Date()
     var add = new Date()
     
@@ -17,7 +22,7 @@ async function updatePremium(serverid, days){
     
     w.log.info('premiumexpire is: ' + premiumexpire)
   await sql.updateTableColumn("servers", "serverid", serverid, "premiumexpire", premiumexpire) 
-
+*/
   
   
 } module.exports.update = updatePremium
