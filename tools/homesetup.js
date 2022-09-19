@@ -90,6 +90,7 @@ async function done(interaction) {
 		setupchannel(interaction)
 
 		var storecollections = { "enabled": homecollections.enabled[interaction.message.guildId]  }
+		homecollections.enabled[interaction.message.guildId] = []//blank this after storage
 		//save validated supported collections gathered from user
 		await sql.updateTableColumn('servers', 'serverid', interaction.message.guildId, 'homechannel_collections', storecollections)
 		//enable homechannel mode
