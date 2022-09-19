@@ -28,16 +28,25 @@ function dateAdd(date, interval, units) {
   return ret;
 }
 
-async function updatePremium(serverid, hours){
+
+
+
+async function updatePremium(serverid, days){
   var premiumExpire = await sql.getPremiumExpiry(serverid)
   w.log.info('premiumexpire is:' + premiumExpire)
   if (premiumExpire) {
     w.log.info('There was an exisiting expiry time')
   } else {
     w.log.info('There was no existing expiry time')
-    var now = new Date(Date.now()).toISOString()
-    w.log.info('now is: ' + now)
-    var expirydate = new Date(now + "+0" + hours + ":00")
+    
+    
+const today = new Date();
+const expirydate = new Date()
+
+// Add 1 Day
+expirydate.setDate(today.getDate() + days) 
+    
+    
     w.log.info('expiry time is: ' + expirydate)
     await sql.updateTableColumn('servers', 'serverid', serverid, 'premiumexpire', expirydate)
   }
