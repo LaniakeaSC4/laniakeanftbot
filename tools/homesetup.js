@@ -8,6 +8,8 @@ const sql = require('./commonSQL.js')//common sql related commands are in here
 
 //global var to hold supported collections. Populated in homechannelsetup1. Accessed in homechannelsetup3
 var supportedcollections = {}
+//Global var to hold valid/supported collections user is adding to this homechannel
+var homecollections = { "enabled": {} }
 
 //Main /setup message has a "set up home channel" button. When pressed, send this setup panel
 async function whichCollections(interaction) {
@@ -24,6 +26,9 @@ async function whichCollections(interaction) {
 				.setLabel('Done')
 				.setStyle(ButtonStyle.Secondary),
 		)
+	//reset config vars for any previous setup for this server
+	  homecollections.enabled[interaction.message.guildId] = []
+
 	//send the reply (including button row)
 	await interaction.reply({ content: "__**Home Channel Setup**__\n\nHome Channel allows you to select multiple collections (e.g. Collections for your NFT project) for which snipes of **any rarity** will go into a dedicated \'Home channel\'. If you have Snipe Feed enabled, collections you add to your home channel will be redirected from the snipe feed into your home channel. You can add multiple collections, but you may only have one home channel.\n\nPress \"Add collection\" below and enter the Magic Eden link to the collection you would like to add to your home channel. When you have added all the collections you wish to be in your homechannel, press Done.\n\nAdding: ", components: [row], ephemeral: true })
 } module.exports.whichCollections = whichCollections
@@ -48,17 +53,15 @@ async function sendModal(interaction) {
 	await interaction.showModal(modal)
 } module.exports.sendModal = sendModal
 
-//Global var to hold valid/supported collections user is adding to this homechannel
-var homecollections = { "enabled": {} }
-
 //function to process the input from the modal sent in homechannelsetup2
 async function validateCollection(interaction) {
 	const response = interaction.fields.getTextInputValue('collection-input')//get modal input text
 	var meslug = response.substring(response.lastIndexOf('magiceden.io/marketplace/') + 25).replace(/[^0-9a-z]/gi, '')//find the end slug and clean it (same process as cleaning to colleciton key in SQL)
 	
+	/*
 	if (!homecollections.enabled[interaction.message.guildId]) {
 	homecollections.enabled[interaction.message.guildId] = []
-	}
+	}*/
 
 	//get collections and populate global var
 	supportedcollections = {}//clear and repopulate in case collections have changed since last time command was run
