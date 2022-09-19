@@ -37,7 +37,7 @@ async function updatePremium(serverid, hours){
     w.log.info('There was no existing expiry time')
     var now = new Date(Date.now()).toISOString()
     w.log.info('now is: ' + now)
-    var expirydate = now + "+" + hours + ":00"
+    var expirydate = new Date(now + "+" + hours + ":00")
     w.log.info('expiry time is: ' + expirydate)
     await sql.updateTableColumn('servers', 'serverid', serverid, 'premiumexpire', expirydate)
   }
