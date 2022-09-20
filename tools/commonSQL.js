@@ -244,7 +244,7 @@ async function getPremiumExpiry(serverid) {
 
     pgclient.query(querystring, (err, res) => {
       if (err) throw err
-      resolve(JSON.stringify(res.rows[0].premiumexpire))
+      resolve(JSON.stringify(res.rows[0].premiumexpire).replace('\"', ''))
     })//end query
   })//end promise 
 }; module.exports.getPremiumExpiry = getPremiumExpiry
