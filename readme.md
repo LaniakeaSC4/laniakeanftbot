@@ -6,6 +6,8 @@
 * Roll a new VM using instructions below to split sql databse onto another drive
 * allow servers to set a low/high limit of what snipes they would like to see.
 * trait specific snipe channels
+* Single feed module
+* Collection vote 
 
 ### Crypto Coral Tribe Ideas
 
