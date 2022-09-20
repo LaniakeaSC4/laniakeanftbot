@@ -64,12 +64,17 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 			if (foundhome === true) {
 				sendsnipes(thisserverid, feedchannel, null, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
 			} else {//if valid homechannel was not found enter normal send filter process
-				//get the snipes channel id to send the snipe to
-				thisserverid = thisserver.serverid
+			
+			thisserverid = thisserver.serverid 
+			//check if single feed mode is enabled
+			if (thisserver.singlefeedmode === true) {
+			  feedchannel = thisserver.raresnipes
+			} else {//get the snipes channel id to send the snipe to
 				if (raritydescription === 'Rare') { feedchannel = thisserver.raresnipes }
 				if (raritydescription === 'Epic') { feedchannel = thisserver.epicsnipes }
 				if (raritydescription === 'Legendary') { feedchannel = thisserver.legendarysnipes }
 				if (raritydescription === 'Mythic') { feedchannel = thisserver.mythicsnipes }
+			} 
 
 				if (feedchannel) {//filters out servers which are in pg but not setup yet by checking if the snipe channel is valid for this server
 					//send snipes
