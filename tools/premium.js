@@ -14,7 +14,7 @@ async function updatePremium(serverid, days){
   
   w.log.info('sql time is')
   w.log.info(sqltime)
-  var oldtime = new Date(Date.parse(sqltime))
+  var oldtime = new Date(Date.toString(sqltime))
   var add = new Date()
   
   add.setDate(oldtime.getDate() + days)
