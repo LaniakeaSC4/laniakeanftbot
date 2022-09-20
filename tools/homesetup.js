@@ -27,7 +27,7 @@ async function whichCollections(interaction) {
 				.setStyle(ButtonStyle.Secondary),
 		)
 	//reset config vars for any previous setup for this server
-	  homecollections.enabled[interaction.message.guildId] = []
+	homecollections.enabled[interaction.message.guildId] = []
 
 	//send the reply (including button row)
 	await interaction.reply({ content: "__**Home Channel Setup**__\n\nHome Channel allows you to select multiple collections (e.g. Collections for your NFT project) for which snipes of **any rarity** will go into a dedicated \'Home channel\'. If you have Snipe Feed enabled, collections you add to your home channel will be redirected from the snipe feed into your home channel. You can add multiple collections, but you may only have one home channel.\n\nPress \"Add collection\" below and enter the Magic Eden link to the collection you would like to add to your home channel. When you have added all the collections you wish to be in your homechannel, press Done.\n\nAdding: ", components: [row], ephemeral: true })
@@ -57,12 +57,6 @@ async function sendModal(interaction) {
 async function validateCollection(interaction) {
 	const response = interaction.fields.getTextInputValue('collection-input')//get modal input text
 	var meslug = response.substring(response.lastIndexOf('magiceden.io/marketplace/') + 25).replace(/[^0-9a-z]/gi, '')//find the end slug and clean it (same process as cleaning to colleciton key in SQL)
-	
-	/*
-	if (!homecollections.enabled[interaction.message.guildId]) {
-	homecollections.enabled[interaction.message.guildId] = []
-	}*/
-
 	//get collections and populate global var
 	supportedcollections = {}//clear and repopulate in case collections have changed since last time command was run
 	supportedcollections = await sql.getOurMetaplexCollections()//set from sql
@@ -91,8 +85,7 @@ async function done(interaction) {
 
 		//create home channel if not already existing
 		setupchannel(interaction)
-
-		var storecollections = { "enabled": homecollections.enabled[interaction.message.guildId]  }
+		var storecollections = { "enabled": homecollections.enabled[interaction.message.guildId] }
 		homecollections.enabled[interaction.message.guildId] = []//blank this after storage
 		//save validated supported collections gathered from user
 		await sql.updateTableColumn('servers', 'serverid', interaction.message.guildId, 'homechannel_collections', storecollections)

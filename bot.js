@@ -24,8 +24,8 @@ client.on('ready', async () => {
     restarted = false
   })
 
-//update server reference object used by sniper functions every minute.
-setInterval(snipersender.initaliseServers,120000)
+  //update server reference object used by sniper functions preiodically.
+  setInterval(snipersender.initaliseServers, 120000)
 
 })//end client.on Ready
 
@@ -53,7 +53,6 @@ client.on("guildCreate", async guild => {
     }
     try {
       await deploy.setupOne(guild.id)
-
     } catch (err) { w.log.error(err) }
   } else { w.log.info('not adding commands. Within 5 seconds of restart') }
 })
@@ -101,7 +100,7 @@ client.on('interactionCreate', async interaction => {
   }//end catch
 })//end on interactionCreate
 
-const permissionerror = { content: 'Sorry, you do not have permissions to run this command (Manage Channels/Admin required)', ephemeral: true } 
+const permissionerror = { content: 'Sorry, you do not have permissions to run this command (Manage Channels/Admin required)', ephemeral: true }
 
 //feed setup
 const feedsetup = require('./tools/feedsetup.js')
@@ -161,12 +160,11 @@ client.on('interactionCreate', async interaction => {
 
   //show the main setup dialogue for alpha setup
   if (interaction.customId === 'startalphasetup-button') {
-        if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) { //only if you have manage channels
-            //if server is premium
-                 //if server is premium
+    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) { //only if you have manage channels
+      //if server is premium
       var serverconfig = await sql.getServerRow(interaction.message.guildId)
       if (serverconfig[0].premium === true) {
-      alphasetup.replyMainSetup(interaction)
+        alphasetup.replyMainSetup(interaction)
       } else { interaction.reply({ content: 'Alpha Channels are a premium feature. This server is not premium. For more details on premium please contact @Laniakea#3683.', ephemeral: true }) }
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }//if not laniakea
   }//end if startalphasetup-button
@@ -174,77 +172,76 @@ client.on('interactionCreate', async interaction => {
   //show add alpha modal
   if (interaction.customId === 'addAlpha-button') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) { //only if you have manage channels
-            //if server is premium
       alphasetup.sendAddModal(interaction)
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }//if not laniakea
   }//end show add alpha modal
 
-    //show add alpha modal
-    if (interaction.customId === 'removeAlpha-modal') {
+  //show add alpha modal
+  if (interaction.customId === 'removeAlpha-modal') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) { //only if you have manage channels
-              //if server is premium
-        alphasetup.sendRemoveModal(interaction)
-      } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }//if not laniakea
-    }//end show add alpha modal
+      alphasetup.sendRemoveModal(interaction)
+    } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }//if not laniakea
+  }//end show add alpha modal
 
-    //validate and if valid create alpha channel
-    if (interaction.customId === 'addAlpha-modal') {
+  //validate and if valid create alpha channel
+  if (interaction.customId === 'addAlpha-modal') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) { //only if you have manage channels
-              //if server is premium
-        w.log.info('addAlpha-modal activated')
-        alphasetup.validateCollection(interaction)
-      } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }//if not laniakea
-    }//end if button is 'submitAddAlpha-modal'
+      alphasetup.validateCollection(interaction)
+    } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }//if not laniakea
+  }//end if button is 'submitAddAlpha-modal'
 
 })//end on interactionCreate
 
 client.on('channelDelete', async channel => {
-w.log.info('Channel deleted in guild ' + channel.guildId + ' checking to see if its one of ours')
-var serverdetails = await sql.getServerRow(channel.guildId)
+  w.log.info('Channel deleted in guild ' + channel.guildId + ' checking to see if its one of ours')
+  var serverdetails = await sql.getServerRow(channel.guildId)
 
-//check if it was an alpha channel
-var alphafound = false
-if (serverdetails[0].alpha_channels) {
-for (var i = 0; i < serverdetails[0].alpha_channels.enabled.length; i++) {
-				if (serverdetails[0].alpha_channels.enabled[i]['channelid'] === channel.id) {
-				  w.log.info('matched the deleted channel to an alpha channel. Deleting that from the config')
-				  alphafound = true
-				  //splice out the deleted channel from the config
-				  serverdetails[0].alpha_channels.enabled.splice(i,1)
-				  //save updates config in sql
-					await sql.updateTableColumn('servers', 'serverid', channel.guildId, "alpha_channels", serverdetails[0].alpha_channels)
-					break
-				}//end if we have found a setup matching the current collectionkey
-			}//end for each alpha channel config object
-}//end if there is an exisiting config
+  //check if it was an alpha channel
+  var alphafound = false
+  if (serverdetails[0].alpha_channels) {
+    for (var i = 0; i < serverdetails[0].alpha_channels.enabled.length; i++) {
+      if (serverdetails[0].alpha_channels.enabled[i]['channelid'] === channel.id) {
+        w.log.info('matched the deleted channel to an alpha channel. Deleting that from the config')
+        alphafound = true
+        //splice out the deleted channel from the config
+        serverdetails[0].alpha_channels.enabled.splice(i, 1)
+        //save updates config in sql
+        await sql.updateTableColumn('servers', 'serverid', channel.guildId, "alpha_channels", serverdetails[0].alpha_channels)
+        break
+      }//end if we have found a setup matching the current collectionkey
+    }//end for each alpha channel config object
+  }//end if there is an exisiting config
 
-if (alphafound === false) {w.log.info('deleted channel didn\'t match an alpha channel')}
+  if (alphafound === false) { w.log.info('deleted channel didn\'t match an alpha channel') }
 
-//check if it was any of the main snipe channels
-if (channel.id === serverdetails[0].raresnipes) {
-  w.log.info('Raresnipes channel was deleted from server ' + serverdetails[0].servername + '. Nulling it in our database')
-  await sql.updateTableColumn('servers', 'serverid', channel.guildId, "raresnipes", null)
-  snipersender.initaliseServers()
-}
-if (channel.id === serverdetails[0].epicsnipes) {
-   w.log.info('Epicsnipes channel was deleted from server ' + serverdetails[0].servername + '. Nulling it in our database')
-  await sql.updateTableColumn('servers', 'serverid', channel.guildId, "epicsnipes", null)
-  snipersender.initaliseServers()
-}
-if (channel.id === serverdetails[0].legendarysnipes) { w.log.info('legendarysnipes channel was deleted from server ' + serverdetails[0].servername + '. Nulling it in our database')
-  await sql.updateTableColumn('servers', 'serverid', channel.guildId, "legendarysnipes", null)
-  snipersender.initaliseServers()
-}
-if (channel.id === serverdetails[0].mythicsnipes) { w.log.info('mythicsnipes channel was deleted from server ' + serverdetails[0].servername + '. Nulling it in our database')
-  await sql.updateTableColumn('servers', 'serverid', channel.guildId, "mythicsnipes", null)
-  snipersender.initaliseServers()
-}
+  //check if it was any of the main snipe channels
+  if (channel.id === serverdetails[0].raresnipes) {
+    w.log.info('Raresnipes channel was deleted from server ' + serverdetails[0].servername + '. Nulling it in our database')
+    await sql.updateTableColumn('servers', 'serverid', channel.guildId, "raresnipes", null)
+    snipersender.initaliseServers()
+  }
+  if (channel.id === serverdetails[0].epicsnipes) {
+    w.log.info('Epicsnipes channel was deleted from server ' + serverdetails[0].servername + '. Nulling it in our database')
+    await sql.updateTableColumn('servers', 'serverid', channel.guildId, "epicsnipes", null)
+    snipersender.initaliseServers()
+  }
+  if (channel.id === serverdetails[0].legendarysnipes) {
+    w.log.info('legendarysnipes channel was deleted from server ' + serverdetails[0].servername + '. Nulling it in our database')
+    await sql.updateTableColumn('servers', 'serverid', channel.guildId, "legendarysnipes", null)
+    snipersender.initaliseServers()
+  }
+  if (channel.id === serverdetails[0].mythicsnipes) {
+    w.log.info('mythicsnipes channel was deleted from server ' + serverdetails[0].servername + '. Nulling it in our database')
+    await sql.updateTableColumn('servers', 'serverid', channel.guildId, "mythicsnipes", null)
+    snipersender.initaliseServers()
+  }
 
-//check if it was the home channel
-if (channel.id === serverdetails[0].homechannel_id) { w.log.info('homechannel was deleted from server ' + serverdetails[0].servername + '. Nulling id in our database, deleting config and disabling')
-  await sql.updateTableColumn('servers', 'serverid', channel.guildId, "homechannel_id", null)
-  await sql.updateTableColumn('servers', 'serverid', channel.guildId, "homechannel_collections", null)
-  await sql.updateTableColumn('servers', 'serverid', channel.guildId, "homechannel_enabled", false)
-  snipersender.initaliseServers()
-}
+  //check if it was the home channel
+  if (channel.id === serverdetails[0].homechannel_id) {
+    w.log.info('homechannel was deleted from server ' + serverdetails[0].servername + '. Nulling id in our database, deleting config and disabling')
+    await sql.updateTableColumn('servers', 'serverid', channel.guildId, "homechannel_id", null)
+    await sql.updateTableColumn('servers', 'serverid', channel.guildId, "homechannel_collections", null)
+    await sql.updateTableColumn('servers', 'serverid', channel.guildId, "homechannel_enabled", false)
+    snipersender.initaliseServers()
+  }
 })//end on channelDelete event

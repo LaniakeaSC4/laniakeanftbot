@@ -20,9 +20,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 
 	for (i = 0; i < supportedservers.length; i++) {
 		if (supportedservers[i].inserver === true) {//only proceed if bot is in server
-			var thisserver = supportedservers[i]
-			var thisserverid = ''
-			var feedchannel = ''
+			var thisserver = supportedservers[i]; var thisserverid = ''; var feedchannel = ''
 			//w.log.info('thisserver.premium is: ' + thisserver.premium + ' for server ' + thisserver.serverid)
 
 			//check if this snipe should be sent to a homechannel or alphachannel
@@ -42,20 +40,20 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 					} else {/*w.log.info('No homechannel match for this collection on this server')*/ }
 				}//end loop through saved home channels
 			}//end if homechannel is enabled and server is premium
-			
-			var foundalpha = false
-			var alphachannelid = ''
+
+			//check if this server has this collection enabled for an alpha channel
+			var foundalpha = false; var alphachannelid = ''
 			if (thisserver.alpha_channels != null && thisserver.premium === true) {//if there is an alpha channel config and server is premium
-				for (var k = 0;k < thisserver.alpha_channels.enabled.length;k++) {
-				  if (thisserver.alpha_channels.enabled[k].meslug === thiscollection) {
-				    foundalpha = true
-				    alphachannelid = thisserver.alpha_channels.enabled[k].channelid
-				    w.log.info('Matched an alpha channel for this snipe we should send it to channel: ' + thisserver.alpha_channels.enabled[k].channelid)
-				    break
-				  }//end if match this collection
+				for (var k = 0; k < thisserver.alpha_channels.enabled.length; k++) {//for each enables alpha channel (for this server)
+					if (thisserver.alpha_channels.enabled[k].meslug === thiscollection) {//if match this collection
+						foundalpha = true
+						alphachannelid = thisserver.alpha_channels.enabled[k].channelid//save the alpha channel id for sending
+						w.log.info('Matched an alpha channel for this snipe we should send it to channel: ' + thisserver.alpha_channels.enabled[k].channelid)
+						break
+					}//end if match this collection
 				}//end for enabled alpha channels 
 			}//end if this server is premium and has an alpha config
-			
+
 			//if alpha channel is matched, send straight away.
 			if (foundalpha === true) {
 				sendsnipes(thisserverid, alphachannelid, null, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
@@ -99,9 +97,9 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 	} else { /*w.log.info('Sending ' + nftname + ' ' + raritydescription + ' immediately to premium server ' + server)*/ }
 	//try sending. Fetch server if not cached
 	try {
-	//const guild = await client.guilds.fetch(server)
-	const channel = await client.channels.fetch(thischannel)
-	channel.send({
+		//const guild = await client.guilds.fetch(server)
+		const channel = await client.channels.fetch(thischannel)
+		channel.send({
 			embeds: [
 				{
 					"title": hotness + ' Snipe Opportunity__\n' + nftname,

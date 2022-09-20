@@ -21,11 +21,11 @@ async function replyMainSetup(interaction) {
 	var replytext = ''
 	var alphachannels = await sql.getData("servers", "serverid", interaction.message.guildId, "alpha_channels")
 	//get exisiting collections to show to user 
-	for (var i = 0;i < alphachannels.enabled.length;i++){
-	  replytext = replytext + "\n<#" +alphachannels.enabled[i].channelid + '>'
+	for (var i = 0; i < alphachannels.enabled.length; i++) {
+		replytext = replytext + "\n<#" + alphachannels.enabled[i].channelid + '>'
 	}
 	//if replytext is still blank, reply no current channels. If we added channels, drop that last comma space
-	if (replytext === '') {replytext = 'No current alpha channels.'} else {replytext = replytext + "\n\n"}
+	if (replytext === '') { replytext = 'No current alpha channels.' } else { replytext = replytext + "\n\n" }
 	//send the replpy (including button row)
 	await interaction.reply({ content: "__**Alpha Channel Setup**__\n\nAlpha Channels allow you to dedicate a channel to snipes for particular collections. Snipes for these collections will always be delivered to these dedicated Alpha Channels regardless of any settings or filters on your Snipe Feed or Home Channel. Your current alpha channels are:\n" + replytext + "Add new Alpha Channels with the button below (you'll need the Magic Eden link to the collection and the collection must be supported by Laniakea Sniper). \n\nDismiss this message when you finished.", components: [row], ephemeral: true })
 } module.exports.replyMainSetup = replyMainSetup
@@ -64,19 +64,17 @@ async function validateCollection(interaction) {
 	var found = false//start as false
 	for (var i = 0; i < supportedcollections.length; i++) {//loop supported collections recieved from SQL
 		if (supportedcollections[i].collectionkey === meslug) {//if collection entered by user is found in our supported collections
-		found = true
+			found = true
 			w.log.info('validated collection. Caling createAlpha')
 			await createAlpha(interaction, meslug)
 			break
 		}//end if
 	}//end for
-	
-	
+
 	if (found === false) {
 		await interaction.reply({ content: 'Collection ' + meslug + 'was not found in our supported collections. View all supported collections with /supportedcollections. This message will delete in 5 seconds' });
 		setTimeout(() => interaction.deleteReply(), 5000)//delete it after 5s
 	}//end if !found
-
 } module.exports.validateCollection = validateCollection
 
 //if collection was validated, save in sql and make a new channel ready to recieve snipes
@@ -99,13 +97,12 @@ async function createAlpha(interaction, collectionkey) {
 							break
 						}//end if we have found a setup matching the current collectionkey
 					}//end for each alpha channel config object
-
-				})
-			})
+				})//end for each channel
+			})//end then channels
 
 		if (foundalpha === false) {
 			await setupchannel(interaction, collectionkey, serverdetails[0].alpha_channels).then(async newchannelid => {
-				interaction.reply({ content: "New channel for " + collectionkey + " created. This message will auto-delete in 5 seconds."} )
+				interaction.reply({ content: "New channel for " + collectionkey + " created. This message will auto-delete in 5 seconds." })
 				setTimeout(() => interaction.deleteReply(), 5000)//delete it after 5s 
 			})//end then
 		} else {//if there were alpha channels and this one was found.
@@ -253,24 +250,3 @@ async function setupchannel(interaction, collectionkey, alphaconfig) {
 			})//end then for fetched channels
 	} else { return null }//end if valid server
 }//end function setupchannel
-
-
-
-
-async function done(interaction) {
-	if (homecollections.enabled.length != 0) {
-
-		//create home channel if not already existing
-		setupchannel(interaction)
-
-		//save validated supported collections gathered from user
-		await sql.updateTableColumn('servers', 'serverid', interaction.message.guildId, 'homechannel_collections', homecollections)
-		//enable homechannel mode
-		await sql.updateTableColumn('servers', 'serverid', interaction.message.guildId, 'homechannel_enabled', true)
-		//reply success message
-		await interaction.reply({ content: "Changes saved. All snipes for the collections you added will now redirect to your Home Channel", ephemeral: true })
-
-	} else {
-		await interaction.reply({ content: "As you did not identify any collections, no changes have been made to your Home Channel setup.", ephemeral: true })
-	}
-} module.exports.done = done
