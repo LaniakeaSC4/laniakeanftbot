@@ -62,7 +62,7 @@ if (action === 'fulladd') { await metaplex.addNewNFT(data, meslug) }
 			  var serverid = data
 			  var daysToAdd = 0
 			  if (interaction.options.getString('extradata')) { daysToAdd = parseFloat(interaction.options.getString('extradata'))} //if there is extra data, set meslug to it
-				await interaction.reply({ content: "Adding " + daysToAdd + " hours to server " + serverid, ephemeral: true })
+				//await interaction.reply({ content: "Adding " + daysToAdd + " hours to server " + serverid, ephemeral: true })
 				await premium.update(serverid, daysToAdd)
 			}
 
