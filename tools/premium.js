@@ -12,7 +12,7 @@ async function updatePremium(serverid, days){
   
   var sqltime = await sql.getPremiumExpiry(serverid) 
   w.log.info('sql time is')
-  w.log.info(sqltime)
+  w.log.info(JSON.stringify(sqltime))
   /* put time
     var now = new Date()
     var add = new Date()
