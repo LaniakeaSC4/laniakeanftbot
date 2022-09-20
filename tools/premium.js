@@ -8,8 +8,9 @@ async function updatePremium(serverid, days, interaction) {
     if (sqltime) {//there was an exisiting time
       var oldtime = new Date(sqltime)//turn ISO8601 into JS Date
       var add = new Date()//case add as date to be used for calculations
-      add.setDate(oldtime + days)//add days to exisiting premiumexpire
-      var newtime = add.toISOString()//convert to ISO string to save in sql
+      var newtime = new Date()
+      add.setDate(oldtime.getDate() + days)//add days to exisiting premiumexpire
+      newtime = add.toISOString()//convert to ISO string to save in sql
       w.log.info("Updating premium expiry for " + serverid + ". There was an exisiting expiry time " + sqltime + " and it has been updated to " + newtime)
       await sql.updateTableColumn("servers", "serverid", serverid, "premiumexpire", newtime)//save
       interaction.reply({ content: "Updating premium expiry for " + serverid + ". There was an exisiting expiry time " + sqltime + " and it has been updated to " + newtime, ephemeral: true })
