@@ -154,11 +154,11 @@ async function snipeHotness(thisprice, floorprice, thislimit) {
   var warmlimit = floorprice + ((thislimit - floorprice) * 0.8); //w.log.info('warmlimit limit is: ' + warmlimit)
   var coollimit = thislimit; //w.log.info('coollimit limit is: ' + coollimit)
 
-  if (thisprice <= blazinglimit) { return '🔥🔥🔥🔥🔥\n__Blazing Hot' }
-  if (thisprice <= redhotlimit && thisprice > blazinglimit) { return '🔥🔥🔥🔥\n__Red Hot' }
-  if (thisprice <= hotlimit && thisprice > redhotlimit) { return '🔥🔥🔥\n__Hot' }
-  if (thisprice <= warmlimit && thisprice > hotlimit) { return '🔥🔥\n__Warm' }
-  if (thisprice <= coollimit && thisprice > warmlimit) { return '🔥\n__Cool' }
+  if (thisprice <= blazinglimit) { return '🔥🔥🔥🔥🔥 - Blazing Hot' }
+  if (thisprice <= redhotlimit && thisprice > blazinglimit) { return '🔥🔥🔥🔥 - Red Hot' }
+  if (thisprice <= hotlimit && thisprice > redhotlimit) { return '🔥🔥🔥 - Hot' }
+  if (thisprice <= warmlimit && thisprice > hotlimit) { return '🔥🔥 - Warm' }
+  if (thisprice <= coollimit && thisprice > warmlimit) { return '🔥 - Cool' }
 }//end fnction snipeHotness
 
 //returns rarity description (i.e. "Mythic" if its a snipe, else returns 'false') also returns 

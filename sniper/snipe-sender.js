@@ -102,12 +102,12 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 		channel.send({
 			embeds: [
 				{
-					"title": hotness + ' Snipe Opportunity__\n' + nftname,
+					"title": raritydescription + ' Snipe Opportunity: ' + nftname,
 					"color": embedcolour,
 					"fields": [
 						{
 							"name": "🎯 __Snipe Details__",
-							"value": "**Rarity**: " + thisrarity + "/" + collectionSize + ' - ' + raritydescription + "\n**List price**: " + pround(parseFloat(thisprice), 3) + ' SOL\n**Floor price**: ' + pround(parseFloat(floorprice), 3) + ' SOL\n[Buy on Magic Eden](' + listinglink + ')\n',
+							"value": "**Rarity**: " + thisrarity + "/" + collectionSize + ' - ' + raritydescription + "\n**Hotness**: " + hotness + "\n**List price**: " + pround(parseFloat(thisprice), 3) + ' SOL\n**Floor price**: ' + pround(parseFloat(floorprice), 3) + ' SOL\n[Buy on Magic Eden](' + listinglink + ')\n',
 							"inline": false
 						},
 						{
