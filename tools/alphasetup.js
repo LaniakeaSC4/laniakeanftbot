@@ -20,9 +20,13 @@ async function replyMainSetup(interaction) {
 	//get current alpha channels from sql here and display then
 	var replytext = ''
 	var alphachannels = await sql.getData("servers", "serverid", interaction.message.guildId, "alpha_channels")
-	//get exisiting collections to show to user 
-	for (var i = 0; i < alphachannels.enabled.length; i++) {
-		replytext = replytext + "\n<#" + alphachannels.enabled[i].channelid + '>'
+	//get exisiting collections to show to user
+	if (alphachannels) {
+		if (alphachannels.enabled.length != 0) {
+			for (var i = 0; i < alphachannels.enabled.length; i++) {
+				replytext = replytext + "\n<#" + alphachannels.enabled[i].channelid + '>'
+			}
+		}
 	}
 	//if replytext is still blank, reply no current channels. If we added channels, drop that last comma space
 	if (replytext === '') { replytext = 'No current alpha channels.' } else { replytext = replytext + "\n\n" }
