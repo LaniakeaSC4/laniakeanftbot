@@ -9,10 +9,12 @@ var nonPremiumDelay = 300000
 
 //initialise servers
 var supportedservers = []
+var initalisecount = 1
 async function initaliseServers() {
-	w.log.info('Initialising servers')
 	supportedservers = []
 	supportedservers = await sql.getSupportedServers()
+	initalisecount = initalisecount + 1
+	if ((initalisecount % 5) == 0) {w.log.info('Servers have been initalised 5 times since last log message') }
 }; module.exports.initaliseServers = initaliseServers
 
 //work out where to send them
@@ -48,7 +50,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 					if (thisserver.alpha_channels.enabled[k].meslug === thiscollection) {//if match this collection
 						foundalpha = true
 						alphachannelid = thisserver.alpha_channels.enabled[k].channelid//save the alpha channel id for sending
-						w.log.info('Matched an alpha channel for this snipe we should send it to channel: ' + thisserver.alpha_channels.enabled[k].channelid)
+						//w.log.info('Matched an alpha channel for this snipe we should send it to channel: ' + thisserver.alpha_channels.enabled[k].channelid)
 						break
 					}//end if match this collection
 				}//end for enabled alpha channels 
