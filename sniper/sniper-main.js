@@ -90,14 +90,13 @@ async function startsniper() {
               var thisname = thistoken.name
               var thisimage = thistoken.image
               var thislistinglink = 'https://magiceden.io/item-details/' + thistoken.mintAddress
-              w.log.info(thislistinglink)
 
               //get nft ID from name
               var thisnftid = 0
               //regex last number in string
               var regex = /(\d+)(?!.*\d)/
               var matchid = thistoken.name.match(regex)
-              thisnftid = parseFloat(matchid[0])
+              try {thisnftid = parseFloat(matchid[0])} catch {w.log.info("Name error with" + thislistinglink)}
 
               var NFTdata = await sql.getNFTdata(collections[k]['collectionkey'], thisnftid)
               if (NFTdata) {
