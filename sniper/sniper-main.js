@@ -90,6 +90,7 @@ async function startsniper() {
               var thisname = thistoken.name
               var thisimage = thistoken.image
               var thislistinglink = 'https://magiceden.io/item-details/' + thistoken.mintAddress
+              w.log.info(thislistinglink)
 
               //get nft ID from name
               var thisnftid = 0
