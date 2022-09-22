@@ -128,54 +128,52 @@ async function start(interaction, feedmode) {
 						channelcheck.snipecategory.server_cid = newchannel.id//save category channel ID to we can add children
 						await sql.updateTableColumn('servers', 'serverid', guildid, 'snipecategory', newchannel.id)
 					}).then(async result => {
-						await createchildren()
+						await createchildren(guildid)
 					})
 				} else {
 					w.log.info('Category channel already existed')
-					await createchildren()
+					await createchildren(guildid)
 				}
 
-				async function createchildren() {
+				async function createchildren(guildid) {
 					//get the category channel object so we can add children
 					w.log.info('fetching category channel')
 					const laniakeacategory = await client.channels.fetch(channelcheck.snipecategory.server_cid)
 
-if (feedmode === 'multichannel') {
-					for (const key in channelcheck) {
-						if (key != 'snipecategory') {//we have created the category already
-							if (channelcheck[key].verified === false) {//if this one isnt verified as present
-								//only create premium channels if premium server
-								if (thisserver.premium === true || channelcheck[key].premium === false) {
-									guild.channels.create({
-										name: channelcheck[key].name,
-										type: ChannelType.GuildText,
-										parent: laniakeacategory
-									}).then(async newchannel => {
-										w.log.info('created new channel ' + newchannel.name + ' it\'s ID is: ' + newchannel.id)
-										await sql.updateTableColumn('servers', 'serverid', guildid, channelcheck[key].servercolumn, newchannel.id)
-									})//end then
-								}//end if premium
-							}//end if verified was false
-						}//end if key isnt snipecategory
-					}//end for each key in channelcheck
-} else {//else, if feedmode wasn't multichannel
-//if there wasn't already a raresnipes channel
-if (channelcheck.raresnipes.verified === false) {
-  
-  guild.channels.create({
-										name: "Snipe-Feed",
-										type: ChannelType.GuildText,
-										parent: laniakeacategory
-									}).then(async newchannel => {
-										w.log.info('created new channel ' + newchannel.name + ' it\'s ID is: ' + newchannel.id)
-										//save channel id in raresnipes column. That's where single mode snipes are always sent.
-										await sql.updateTableColumn('servers', 'serverid', guildid, channelcheck.raresnipes.servercolumn, newchannel.id)
-									})//end then
-  
-} 
-
-
-}
+					if (feedmode === 'multichannel') {
+						sql.updateTableColumn('servers', 'serverid', guildid, 'singlefeedmode', false)
+						for (const key in channelcheck) {
+							if (key != 'snipecategory') {//we have created the category already
+								if (channelcheck[key].verified === false) {//if this one isnt verified as present
+									//only create premium channels if premium server
+									if (thisserver.premium === true || channelcheck[key].premium === false) {
+										guild.channels.create({
+											name: channelcheck[key].name,
+											type: ChannelType.GuildText,
+											parent: laniakeacategory
+										}).then(async newchannel => {
+											w.log.info('created new channel ' + newchannel.name + ' it\'s ID is: ' + newchannel.id)
+											await sql.updateTableColumn('servers', 'serverid', guildid, channelcheck[key].servercolumn, newchannel.id)
+										})//end then
+									}//end if premium
+								}//end if verified was false
+							}//end if key isnt snipecategory
+						}//end for each key in channelcheck
+					} else {//else, if feedmode wasn't multichannel
+						sql.updateTableColumn('servers', 'serverid', guildid, 'singlefeedmode', true)
+						//if there wasn't already a raresnipes channel
+						if (channelcheck.raresnipes.verified === false) {
+							guild.channels.create({
+								name: "Snipe-Feed",
+								type: ChannelType.GuildText,
+								parent: laniakeacategory
+							}).then(async newchannel => {
+								w.log.info('created new channel ' + newchannel.name + ' it\'s ID is: ' + newchannel.id)
+								//save channel id in raresnipes column. That's where single mode snipes are always sent.
+								await sql.updateTableColumn('servers', 'serverid', guildid, channelcheck.raresnipes.servercolumn, newchannel.id)
+							})//end then
+						}
+					}
 				}//end createchildren
 			})//end then after get channels
 		return true
