@@ -14,16 +14,16 @@ async function whichMode(interaction) {
 		.addComponents(
 			new ButtonBuilder()
 				.setCustomId('standardfeed-button')
-				.setLabel('Add Collection')
+				.setLabel('Enable Standard Feed')
 				.setStyle(ButtonStyle.Primary),
 		).addComponents(
 			new ButtonBuilder()
 				.setCustomId('singlefeed-button')
-				.setLabel('Done')
+				.setLabel('Enable Single Feed')
 				.setStyle(ButtonStyle.Primary),
 		)
 	//send the reply (including button row)
-	await interaction.reply({ content: "Which mode? Feed mode is xxx. Single mode is xxx", components: [row], ephemeral: true })
+	await interaction.reply({ content: "Which feed mode would you like?\n\n\"Standard Feed\" mode will create 4 channels (as below) and seperate snipes into those 4 channels depending on NFT rarity. This mode allows you to give access to the highest rarity snipes to your biggest holders by controlling access to those channels.\n```LANIAKEA SNIPER BOT\n|-rare-snipes\n|-epic-snipes\n|-legendary-snipes🌟\n|-mythic-snipes🌟```\n\n\"Single Feed\" mode will only create one channel and deliver **all** snipes to that channel regardless of rarity. In this mode, you will have less discord channels to manage, but the feed will scroll fast.\n\nIf you switch from Standard Feed mode to Single Feed mode, all snipes will start being delivered to the Rare-Snipes channel. If you switch from Single Feed mode to Standard Feed mode, you\'r single snipe feed channel will start recieving Rare snipes only and Epic, Legendary and Mythic channels will be created for those Snipes.", components: [row], ephemeral: true })
 } module.exports.whichMode = whichMode
 
 async function start(interaction, feedmode) {
