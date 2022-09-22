@@ -5,7 +5,26 @@ const { ChannelType, PermissionFlagsBits, PermissionsBitField } = require('disco
 const w = require('./winston.js')
 const sql = require('./commonSQL.js')//common sql related commands are in here
 
-async function start(interaction) {
+//Main feed setup dialogue. Does the user want single channel mode? 
+async function whichMode(interaction) {
+	//build a new button row for the command reply
+	const row = new ActionRowBuilder()
+		.addComponents(
+			new ButtonBuilder()
+				.setCustomId('standardfeed-button')
+				.setLabel('Add Collection')
+				.setStyle(ButtonStyle.Primary),
+		).addComponents(
+			new ButtonBuilder()
+				.setCustomId('singlefeed-button')
+				.setLabel('Done')
+				.setStyle(ButtonStyle.Primary),
+		)
+	//send the reply (including button row)
+	await interaction.reply({ content: "Which mode? Feed mode is xxx. Single mode is xxx", components: [row], ephemeral: true })
+} module.exports.whichMode = whichMode
+
+async function start(interaction, feedmode) {
 	//check if user has managechannels (or is admin)
 	if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) { w.log.info('user didnt have manage channel permissions'); return null }
 
@@ -121,6 +140,7 @@ async function start(interaction) {
 					w.log.info('fetching category channel')
 					const laniakeacategory = await client.channels.fetch(channelcheck.snipecategory.server_cid)
 
+if (feedmode === 'multichannel') {
 					for (const key in channelcheck) {
 						if (key != 'snipecategory') {//we have created the category already
 							if (channelcheck[key].verified === false) {//if this one isnt verified as present
@@ -138,6 +158,24 @@ async function start(interaction) {
 							}//end if verified was false
 						}//end if key isnt snipecategory
 					}//end for each key in channelcheck
+} else {//else, if feedmode wasn't multichannel
+//if there wasn't already a raresnipes channel
+if (channelcheck.raresnipes.verified === false) {
+  
+  guild.channels.create({
+										name: "Snipe-Feed",
+										type: ChannelType.GuildText,
+										parent: laniakeacategory
+									}).then(async newchannel => {
+										w.log.info('created new channel ' + newchannel.name + ' it\'s ID is: ' + newchannel.id)
+										//save channel id in raresnipes column. That's where single mode snipes are always sent.
+										await sql.updateTableColumn('servers', 'serverid', guildid, channelcheck.raresnipes.servercolumn, newchannel.id)
+									})//end then
+  
+} 
+
+
+}
 				}//end createchildren
 			})//end then after get channels
 		return true
