@@ -1,6 +1,8 @@
 var discord = require('../clients/discordclient.js')
 const client = discord.getClient()
-const { ChannelType, PermissionFlagsBits, PermissionsBitField } = require('discord.js')
+const { ChannelType, PermissionFlagsBits, PermissionsBitField,
+	ModalBuilder, ActionRowBuilder, TextInputBuilder,
+	TextInputStyle, ButtonBuilder, ButtonStyle } = require('discord.js')
 
 const w = require('./winston.js')
 const sql = require('./commonSQL.js')//common sql related commands are in here
