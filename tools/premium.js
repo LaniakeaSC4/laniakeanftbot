@@ -17,7 +17,7 @@ async function updatePremium(serverid, days, interaction) {
     } else {//if there wasnt an exisiting time, establish one
       var now = new Date()//get todays date
       var add = new Date()//cast var to be used for calculations
-      add.setDate(now.getDate() + days)//add x days to today
+      add.setDays(now.getDays() + days)//add x days to today
       var premiumexpire = add.toISOString()//convert to ISO string to save in SQL
       w.log.info("Updating premium expiry for " + serverid + ". There was not an exisiting expiry time, so expiry has been set to today plus " + days + " days (" + premiumexpire + ")")
       await sql.updateTableColumn("servers", "serverid", serverid, "premiumexpire", premiumexpire)
