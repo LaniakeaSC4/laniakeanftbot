@@ -20,11 +20,15 @@ async function updatePremium(serverid, days, interaction) {
       await sql.updateTableColumn("servers", "serverid", serverid, "premiumexpire", newtime)//save
       interaction.reply({ content: "Updating premium expiry for " + serverid + ". There was an exisiting expiry time " + sqltime + " and it has been updated to " + newtime, ephemeral: true })
     } else {//if there wasnt an exisiting time, establish one
+    w.log.info('1')
       var now = new Date()//get todays date
-      var add = new Date()//cast var to be used for calculations
+      w.log.info('2')
       now.addDays(days)//add x days to today
+      w.log.info('3')
       var premiumexpire = now.toISOString()//convert to ISO string to save in SQL
+      w.log.info('4')
       w.log.info("Updating premium expiry for " + serverid + ". There was not an exisiting expiry time, so expiry has been set to today plus " + days + " days (" + premiumexpire + ")")
+      w.log.info('5')
       await sql.updateTableColumn("servers", "serverid", serverid, "premiumexpire", premiumexpire)
       interaction.reply({ content: "Updating premium expiry for " + serverid + ". There was not an exisiting expiry time, so expiry has been set to today plus " + days + " days (" + premiumexpire + ")", ephemeral: true })
       //probably want to set premium = true here also
