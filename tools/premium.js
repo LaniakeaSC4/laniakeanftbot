@@ -11,7 +11,7 @@ async function updatePremium(serverid, days, interaction) {
   if (days > 0) {
     var sqltime = await sql.getPremiumExpiry(serverid)
     w.log.info(sqltime)
-    if (sqltime) {//there was an exisiting time
+    if (sqltime != null) {//there was an exisiting time
       var oldtime = new Date(sqltime)//turn ISO8601 into JS Date
       var add = new Date()//case add as date to be used for calculations
       var newtime = new Date()
