@@ -3,8 +3,8 @@ const client = discord.getClient()
 const { ChannelType, PermissionFlagsBits, PermissionsBitField,
 	ModalBuilder, ActionRowBuilder, TextInputBuilder,
 	TextInputStyle, ButtonBuilder, ButtonStyle } = require('discord.js')
-const w = require('./winston.js')
-const sql = require('./commonSQL.js')//common sql related commands are in here
+const w = require('../tools/winston.js')
+const sql = require('../tools/commonSQL.js')//common sql related commands are in here
 
 //global var to hold supported collections. Populated in homechannelsetup1. Accessed in homechannelsetup3
 var supportedcollections = {}
