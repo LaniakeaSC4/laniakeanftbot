@@ -4,8 +4,8 @@ const { ChannelType, PermissionFlagsBits, PermissionsBitField,
 	ModalBuilder, ActionRowBuilder, TextInputBuilder,
 	TextInputStyle, ButtonBuilder, ButtonStyle } = require('discord.js')
 
-const w = require('./winston.js')
-const sql = require('./commonSQL.js')//common sql related commands are in here
+const w = require('../tools/winston.js')
+const sql = require('../tools/commonSQL.js')//common sql related commands are in here
 
 //Main feed setup dialogue. Does the user want single channel mode? 
 async function whichMode(interaction) {

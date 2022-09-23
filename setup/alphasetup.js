@@ -4,8 +4,8 @@ const { ChannelType, PermissionFlagsBits, PermissionsBitField,
 	ModalBuilder, ActionRowBuilder, TextInputBuilder,
 	TextInputStyle, ButtonBuilder, ButtonStyle } = require('discord.js')
 
-const w = require('./winston.js')
-const sql = require('./commonSQL.js')//common sql related commands are in here
+const w = require('../tools/winston.js')
+const sql = require('../tools/commonSQL.js')//common sql related commands are in here
 
 //Main setup
 async function replyMainSetup(interaction) {
@@ -123,6 +123,7 @@ async function createAlpha(interaction, collectionkey) {
 }//end function createAlpha
 
 async function setupchannel(interaction, collectionkey, alphaconfig) {
+	if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) { w.log.info('user didnt have manage channel permissions'); return null }
 	//check if this server is in the table and currently premium 
 	const guildid = interaction.message.guildId
 	supportedservers = await sql.getSupportedServers()

@@ -100,6 +100,7 @@ async function done(interaction) {
 } module.exports.done = done
 
 async function setupchannel(interaction) {
+	if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) { w.log.info('user didnt have manage channel permissions'); return null }
 	//check if this server is in the table
 	const guildid = interaction.message.guildId
 	supportedservers = await sql.getSupportedServers()

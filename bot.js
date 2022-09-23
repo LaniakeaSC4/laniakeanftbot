@@ -103,7 +103,7 @@ client.on('interactionCreate', async interaction => {
 const permissionerror = { content: 'Sorry, you do not have permissions to run this command (Manage Channels/Admin required)', ephemeral: true }
 
 //feed setup
-const feedsetup = require('./tools/feedsetup.js')
+const feedsetup = require('./setup/feedsetup.js')
 client.on('interactionCreate', async interaction => {
 
   if (interaction.customId === 'feedsetup-button') {
@@ -141,7 +141,7 @@ client.on('interactionCreate', async interaction => {
 })//end on interactionCreate
 
 //home setup
-const homesetup = require('./tools/homesetup.js')
+const homesetup = require('./setup/homesetup.js')
 client.on('interactionCreate', async interaction => {
 
   if (interaction.customId === 'starthomesetup-button') {
@@ -174,7 +174,7 @@ client.on('interactionCreate', async interaction => {
 })//end on interactionCreate 
 
 //alpha setup
-const alphasetup = require('./tools/alphasetup.js')
+const alphasetup = require('./setup/alphasetup.js')
 client.on('interactionCreate', async interaction => {
 
   //show the main setup dialogue for alpha setup
