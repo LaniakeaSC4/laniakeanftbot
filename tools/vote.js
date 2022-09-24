@@ -84,9 +84,9 @@ async function validateCollection(interaction, updown) {
 
 		//can I check if that link gives a valid response header?
 		try {
-    const httpresponse = await fetch(response);
+    const httpresponse = await fetch('https://api-mainnet.magiceden.dev/v2/collections/' + meslug)
 
-    w.log.info('response.status: ', httpresponse.status)
+    w.log.info('httpresponse: ', JSON.stringify(httpresponse))
 
   } catch (err) {
     console.log(err);
