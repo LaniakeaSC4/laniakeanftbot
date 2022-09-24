@@ -113,7 +113,7 @@ client.on('interactionCreate', async interaction => {
       vote.sendVoteDownModal(interaction)
     }
 
-    if (interaction.customId === 'voteUp-model') {
+    if (interaction.customId === 'voteUp-modal') {
       vote.validateCollection(interaction, "up")
     }
     if (interaction.customId === 'voteDown-modal') {
