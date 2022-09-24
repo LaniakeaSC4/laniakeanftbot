@@ -73,7 +73,9 @@ async function validateCollection(interaction, updown) {
 			setTimeout(() => interaction.deleteReply(), 5000)//delete it after 5s
 		}//end if !found
 
-	} else if (updown === "up") {//if its an upvote
+	}
+	
+	if (updown === "up") {//if its an upvote
 		w.log.info("vote up triggered")
 		
 		//validate collection is me link
