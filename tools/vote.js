@@ -137,7 +137,7 @@ async function voteTimeoutOver(user_id) {
 			var onehour = 60 * 1000
 			var now = new Date()
 			var nextvote = new Date(now.getTime() + onehour)
-			if (now < nextvote) {
+			if (now > nextvote) {
 			  w.log.info('Sorry 1h not passed since last vote')
 			} else {
 			  w.log.info('1h has passed since last vote')
