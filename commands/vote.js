@@ -1,5 +1,5 @@
 /*
-* setup command to create server channels for snipes
+* vote command for voting for collections
 */
 
 //import discord parts we need

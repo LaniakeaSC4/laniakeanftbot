@@ -3,7 +3,6 @@ const w = require('./winston.js')
 const { ModalBuilder, ActionRowBuilder, TextInputBuilder, TextInputStyle } = require('discord.js')
 const sql = require('./commonSQL.js')//common sql related commands are in here
 
-
 //when a vote up button is pressed
 async function sendVoteUpModal(interaction) {
 	const modal = new ModalBuilder()
@@ -13,7 +12,7 @@ async function sendVoteUpModal(interaction) {
 			new ActionRowBuilder().addComponents(
 				new TextInputBuilder()
 					.setCustomId('collection-input')
-					.setLabel('Collection ID')
+					.setLabel('Link to collection to up vote')
 					.setStyle(TextInputStyle.Short)
 					.setMinLength(2)
 					.setMaxLength(120)
@@ -33,7 +32,7 @@ async function sendVoteDownModal(interaction) {
 			new ActionRowBuilder().addComponents(
 				new TextInputBuilder()
 					.setCustomId('collection-input')
-					.setLabel('Collection ID')
+					.setLabel('Link to collection to down vote')
 					.setStyle(TextInputStyle.Short)
 					.setMinLength(2)
 					.setMaxLength(120)
@@ -64,10 +63,7 @@ async function validateCollection(interaction, updown) {
 				w.log.info('validated collection. We can register a downvote for ' + meslug)
 				//add downvote row
 				await addVote(interaction.message.guildId, interaction.member.user.id, "down", meslug)
-				//
-
-
-				//
+				await interaction.reply({ content: 'Down vote registered for collection: ' + meslug + ". Thank you for your feedback. You can dismiss this message", ephemeral: true});
 				break
 			}//end if
 		}//end for
@@ -77,13 +73,20 @@ async function validateCollection(interaction, updown) {
 			setTimeout(() => interaction.deleteReply(), 5000)//delete it after 5s
 		}//end if !found
 
-	} else {//if its an upvote
-
+	} else if (updown === "up") {//if its an upvote
+		w.log.info("vote up triggered")
+		
 		//validate collection is me link
+		const response = interaction.fields.getTextInputValue('collection-input')//get modal input text
+		var meslug = response.substring(response.lastIndexOf('magiceden.io/marketplace/') + 25).replace(/[^0-9a-z]/gi, '')//find the end slug and clean it (same process as cleaning to colleciton key in SQL)
+
+		//can I check if that link gives a valid response header?
 
 		//register vote for meslug
+		await addVote(interaction.message.guildId, interaction.member.user.id, "up", meslug)
 
 		//reply to interaction
+		await interaction.reply({ content: 'Up vote registered for collection: ' + meslug + ". Thank you for your feedback. You can dismiss this message.", ephemeral: true });
 
 	}
 
