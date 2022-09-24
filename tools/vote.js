@@ -167,7 +167,7 @@ async function addVote(server_id, user_id, votetype, votemeslug, reason = null) 
 	return new Promise((resolve, reject) => {
 		var pgclient = db.getClient()
 
-		var querystring = "INSERT INTO votes(server_id, user_id, votetype, votemeslug,votetime, reason) VALUES ($1,$2,$3,$4,current_timestamp)"
+		var querystring = "INSERT INTO votes(server_id, user_id, votetype, votemeslug,votetime, reason) VALUES ($1,$2,$3,$4,current_timestamp, $5)"
 		var querydata = [server_id, user_id, votetype, votemeslug, reason]
 
 		pgclient.query(querystring, querydata, (err, res) => {
