@@ -19,7 +19,8 @@ async function sendVoteUpModal(interaction) {
 					.setMaxLength(120)
 					.setPlaceholder('e.g. https://magiceden.io/marketplace/{your-collection}')
 					.setRequired(true),
-			).addComponents(
+			),
+			new ActionRowBuilder().addComponents(
 				new TextInputBuilder()
 					.setCustomId('reason-input')
 					.setLabel('Why add this collection?')
@@ -28,7 +29,7 @@ async function sendVoteUpModal(interaction) {
 					.setMaxLength(120)
 					.setPlaceholder('Add this collection because...')
 					.setRequired(false),
-			),//end actionrow add components
+			)//end actionrow add components
 		])//end modal add components
 	await interaction.showModal(modal)
 } module.exports.sendVoteUpModal = sendVoteUpModal
@@ -48,7 +49,8 @@ async function sendVoteDownModal(interaction) {
 					.setMaxLength(120)
 					.setPlaceholder('e.g. https://magiceden.io/marketplace/{your-collection}')
 					.setRequired(true),
-			).addComponents(
+			),
+						new ActionRowBuilder().addComponents( 
 				new TextInputBuilder()
 					.setCustomId('reason-input')
 					.setLabel('Why remove this collection?')
