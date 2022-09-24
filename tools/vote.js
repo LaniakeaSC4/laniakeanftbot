@@ -81,6 +81,15 @@ async function validateCollection(interaction, updown) {
 		var meslug = response.substring(response.lastIndexOf('magiceden.io/marketplace/') + 25).replace(/[^0-9a-z]/gi, '')//find the end slug and clean it (same process as cleaning to colleciton key in SQL)
 
 		//can I check if that link gives a valid response header?
+		try {
+    const httpresponse = await fetch(response);
+
+    w.log.info('response.status: ', httpresponse.status)
+
+  } catch (err) {
+    console.log(err);
+  }
+
 
 		//register vote for meslug
 		await addVote(interaction.message.guildId, interaction.member.user.id, "up", meslug)
