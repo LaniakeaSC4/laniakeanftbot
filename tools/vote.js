@@ -22,7 +22,7 @@ async function sendVoteUpModal(interaction) {
 			).addComponents(
 				new TextInputBuilder()
 					.setCustomId('reason-input')
-					.setLabel('Why add this collection? (optional)')
+					.setLabel('Why add this collection?')
 					.setStyle(TextInputStyle.Short)
 					.setMinLength(2)
 					.setMaxLength(240)
@@ -51,7 +51,7 @@ async function sendVoteDownModal(interaction) {
 			).addComponents(
 				new TextInputBuilder()
 					.setCustomId('reason-input')
-					.setLabel('Why remove this collection? (optional)')
+					.setLabel('Why remove this collection?')
 					.setStyle(TextInputStyle.Short)
 					.setMinLength(2)
 					.setMaxLength(240)
