@@ -3,11 +3,7 @@
 */
 
 //import discord parts we need
-const { SlashCommandBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle, PermissionsBitField } = require('discord.js')
-
-const { ChannelType, PermissionFlagsBits, PermissionsBitField,
-	ModalBuilder, ActionRowBuilder, TextInputBuilder,
-	TextInputStyle, ButtonBuilder, ButtonStyle } = require('discord.js')
+const {ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js')
 
 
 //build the slash command
