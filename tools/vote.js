@@ -133,7 +133,7 @@ async function voteTimeoutOver(user_id) {
 
 		pgclient.query(querystring, (err, res) => {
 			if (err) throw err
-			var lastvote = new Date(JSON.stringify(res.rows[0].votetime).replaceAll('\"', ''))
+			var lastvote = new Date(JSON.stringify(res.rows[0].max).replaceAll('\"', ''))
 			var onehour = 60 * 1000
 			var now = new Date()
 			var nextvote = new Date(now.getTime() + onehour)
