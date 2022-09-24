@@ -46,7 +46,7 @@ async function sendVoteDownModal(interaction) {
 
 //function to process the input from sendVoteModal. Do we support this collection? 
 async function validateCollection(interaction, updown) {
-  voteTimeoutOver(interaction.member.user.id)
+  if (await voteTimeoutOver(interaction.member.user.id) === true) {
 	if (updown === 'down') {//if it's a downvote, check if its a valid exisiting collection
 		w.log.info("down vote triggered")
 		const response = interaction.fields.getTextInputValue('collection-input')//get modal input text
@@ -82,6 +82,7 @@ async function validateCollection(interaction, updown) {
 		
 		//validate collection is me link
 		const response = interaction.fields.getTextInputValue('collection-input')//get modal input text
+		if (response.includes('magiceden.io/marketplace/' )) {
 		var meslug = response.substring(response.lastIndexOf('magiceden.io/marketplace/') + 25).replace(/[^0-9a-z]/gi, '')//find the end slug and clean it (same process as cleaning to colleciton key in SQL)
 
 		//check if that link gives a valid response from ME
@@ -104,8 +105,10 @@ async function validateCollection(interaction, updown) {
 				}
 			})
 		}).on("error", (err) => { w.log.info("Error: " + err.message) })
+	} else {await interaction.reply({ content: 'Collection: `' + response + "` does not seem to be a valid Magic Eden collection link. Please make sure you have entered the Magic Eden link correctly. You can dismiss this message.", ephemeral: true });} 
 
 	}
+  } else {await interaction.reply({ content: 'Collection: ' + meslug + "Sorry, you may only vote once per hour. Please wait. You can dismiss this message.", ephemeral: true });}
 
 } module.exports.validateCollection = validateCollection
 
@@ -144,8 +147,10 @@ async function voteTimeoutOver(user_id) {
 			w.log.info('nextvote: ' + nextvote)
 			if (nextvote > now) {
 			  w.log.info('Sorry 1h not passed since last vote')
+			 resolve(false)
 			} else {
 			  w.log.info('1h has passed since last vote')
+			  resolve(true)
 			}
 		}) //end query
 	}) //end promise 
