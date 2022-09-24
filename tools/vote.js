@@ -84,7 +84,7 @@ async function validateCollection(interaction, updown) {
 		var meslug = response.substring(response.lastIndexOf('magiceden.io/marketplace/') + 25).replace(/[^0-9a-z]/gi, '')//find the end slug and clean it (same process as cleaning to colleciton key in SQL)
 
 		//can I check if that link gives a valid response header?
-		https.get(response, (resp) => {
+		https.get('https://api-mainnet.magiceden.dev/v2/collections/' + meslug, (resp) => {
 			let data = ''
 			// A chunk of data has been received.
 			resp.on('data', (chunk) => {
