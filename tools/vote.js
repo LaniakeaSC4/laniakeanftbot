@@ -86,6 +86,30 @@ async function validateCollection(interaction, updown) {
 		var rawmeslug = response.substring(response.lastIndexOf('magiceden.io/marketplace/') + 25)
 		var meslug = rawmeslug.replace(/[^0-9a-z]/gi, '')
 
+
+
+
+
+		//get collections and populate global var
+		supportedcollections = {}//clear and repopulate in case collections have changed since last time command was run
+		supportedcollections = await sql.getOurMetaplexCollections()//set from sql
+		//check if it was a supported collection
+		var found = false//start as false
+		for (var i = 0; i < supportedcollections.length; i++) {//loop supported collections recieved from SQL
+			if (supportedcollections[i].collectionkey === meslug) {//if collection entered by user is found in our supported collections
+				found = true
+				await interaction.reply({ content: 'Collection: ' + meslug + " is already supported. No need to vote for it. You can dismiss this message", ephemeral: true});
+				break
+			}//end if
+		}//end for
+
+		if (found === false) {
+
+
+
+
+
+
 		//check if that link gives a valid response from ME
 		https.get('https://api-mainnet.magiceden.dev/v2/collections/' + rawmeslug, (resp) => {
 			let data = ''
@@ -107,6 +131,7 @@ async function validateCollection(interaction, updown) {
 				}
 			})
 		}).on("error", (err) => { w.log.info("Error: " + err.message) })
+		}
 	} else {await interaction.reply({ content: 'Collection: `' + response + "` does not seem to be a valid Magic Eden collection link. Please make sure you have entered the Magic Eden link correctly. You can dismiss this message.", ephemeral: true });} 
 
 	}
