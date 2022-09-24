@@ -94,7 +94,7 @@ async function validateCollection(interaction, updown) {
 			});
 			// The whole response has been received. Print out the result.
 			resp.on('end', async () => {
-				if (data != "collection not found") {
+				if (!data.toString().includes("collection not found")) {
 				  		//register vote for meslug
 		          await addVote(interaction.message.guildId, interaction.member.user.id, "up", meslug)
 
@@ -108,7 +108,7 @@ async function validateCollection(interaction, updown) {
 	} else {await interaction.reply({ content: 'Collection: `' + response + "` does not seem to be a valid Magic Eden collection link. Please make sure you have entered the Magic Eden link correctly. You can dismiss this message.", ephemeral: true });} 
 
 	}
-  } else {await interaction.reply({ content: 'Collection: ' + meslug + "Sorry, you may only vote once per hour. Please wait. You can dismiss this message.", ephemeral: true });}
+  } else {await interaction.reply({ content: "Sorry, you may only vote once per hour. Please wait. You can dismiss this message.", ephemeral: true });}
 
 } module.exports.validateCollection = validateCollection
 
