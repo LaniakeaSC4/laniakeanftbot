@@ -26,7 +26,7 @@ async function sendVoteUpModal(interaction) {
 					.setStyle(TextInputStyle.Short)
 					.setMinLength(2)
 					.setMaxLength(120)
-					.setPlaceholder('I really like this collection because...')
+					.setPlaceholder('Add this collection because...')
 					.setRequired(false),
 			),//end actionrow add components
 		])//end modal add components
@@ -55,7 +55,7 @@ async function sendVoteDownModal(interaction) {
 					.setStyle(TextInputStyle.Short)
 					.setMinLength(2)
 					.setMaxLength(120)
-					.setPlaceholder('You should remove this collection because...')
+					.setPlaceholder('Remove this collection because')
 					.setRequired(false),
 			),//end actionrow add components
 		])//end modal add components
