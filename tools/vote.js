@@ -1,4 +1,5 @@
 var db = require('../clients/pgclient.js')
+const https = require('https')
 const w = require('./winston.js')
 const { ModalBuilder, ActionRowBuilder, TextInputBuilder, TextInputStyle } = require('discord.js')
 const sql = require('./commonSQL.js')//common sql related commands are in here
@@ -83,14 +84,18 @@ async function validateCollection(interaction, updown) {
 		var meslug = response.substring(response.lastIndexOf('magiceden.io/marketplace/') + 25).replace(/[^0-9a-z]/gi, '')//find the end slug and clean it (same process as cleaning to colleciton key in SQL)
 
 		//can I check if that link gives a valid response header?
-		try {
-    const httpresponse = await fetch('https://api-mainnet.magiceden.dev/v2/collections/' + meslug)
-
-    w.log.info('httpresponse: ', JSON.stringify(httpresponse))
-
-  } catch (err) {
-    console.log(err);
-  }
+		https.get(response, (resp) => {
+			let data = ''
+			// A chunk of data has been received.
+			resp.on('data', (chunk) => {
+				data += chunk
+			});
+			// The whole response has been received. Print out the result.
+			resp.on('end', () => {
+				var meresponse = JSON.parse(data)
+				w.log.info(meresponse)
+			})
+		}).on("error", (err) => { w.log.info("Error: " + err.message) })
 
 
 		//register vote for meslug
