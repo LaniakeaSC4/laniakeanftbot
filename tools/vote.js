@@ -93,7 +93,7 @@ async function validateCollection(interaction, updown) {
 			// The whole response has been received. Print out the result.
 			resp.on('end', () => {
 				var meresponse = data
-				w.log.info(JSON.stringify(meresponse))
+				w.log.info(meresponse)
 			})
 		}).on("error", (err) => { w.log.info("Error: " + err.message) })
 
