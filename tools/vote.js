@@ -19,6 +19,15 @@ async function sendVoteUpModal(interaction) {
 					.setMaxLength(120)
 					.setPlaceholder('e.g. https://magiceden.io/marketplace/{your-collection}')
 					.setRequired(true),
+			).addComponents(
+				new TextInputBuilder()
+					.setCustomId('reason-input')
+					.setLabel('Why add this collection? (optional)')
+					.setStyle(TextInputStyle.Short)
+					.setMinLength(2)
+					.setMaxLength(240)
+					.setPlaceholder('I really like this collection because...')
+					.setRequired(false),
 			),//end actionrow add components
 		])//end modal add components
 	await interaction.showModal(modal)
@@ -39,6 +48,15 @@ async function sendVoteDownModal(interaction) {
 					.setMaxLength(120)
 					.setPlaceholder('e.g. https://magiceden.io/marketplace/{your-collection}')
 					.setRequired(true),
+			).addComponents(
+				new TextInputBuilder()
+					.setCustomId('reason-input')
+					.setLabel('Why remove this collection? (optional)')
+					.setStyle(TextInputStyle.Short)
+					.setMinLength(2)
+					.setMaxLength(240)
+					.setPlaceholder('You should remove this collection because...')
+					.setRequired(false),
 			),//end actionrow add components
 		])//end modal add components
 	await interaction.showModal(modal)
@@ -50,6 +68,8 @@ async function validateCollection(interaction, updown) {
 	if (updown === 'down') {//if it's a downvote, check if its a valid exisiting collection
 		w.log.info("down vote triggered")
 		const response = interaction.fields.getTextInputValue('collection-input')//get modal input text
+		const reason = interaction.fields.getTextInputValue('reason-input')
+		
 		var meslug = response.substring(response.lastIndexOf('magiceden.io/marketplace/') + 25).replace(/[^0-9a-z]/gi, '')//find the end slug and clean it (same process as cleaning to colleciton key in SQL)
 
 		//get collections and populate global var
@@ -64,7 +84,7 @@ async function validateCollection(interaction, updown) {
 				found = true
 				w.log.info('validated collection. We can register a downvote for ' + meslug)
 				//add downvote row
-				await addVote(interaction.message.guildId, interaction.member.user.id, "down", meslug)
+				await addVote(interaction.message.guildId, interaction.member.user.id, "down", meslug, reason)
 				await interaction.reply({ content: 'Down vote registered for collection: ' + meslug + ". Thank you for your feedback. You can dismiss this message", ephemeral: true});
 				break
 			}//end if
@@ -82,6 +102,7 @@ async function validateCollection(interaction, updown) {
 		
 		//validate collection is me link
 		const response = interaction.fields.getTextInputValue('collection-input')//get modal input text
+		const reason = interaction.fields.getTextInputValue('reason-input')
 		if (response.includes('magiceden.io/marketplace/' )) {
 		var rawmeslug = response.substring(response.lastIndexOf('magiceden.io/marketplace/') + 25)
 		var meslug = rawmeslug.replace(/[^0-9a-z]/gi, '')
@@ -122,7 +143,7 @@ async function validateCollection(interaction, updown) {
 			  w.log.info(data)
 				if (data.toString().includes("collection not found") === false) {
 				  		//register vote for meslug
-		          await addVote(interaction.message.guildId, interaction.member.user.id, "up", meslug)
+		          await addVote(interaction.message.guildId, interaction.member.user.id, "up", meslug, reason)
 
 	            	//reply to interaction
                 await interaction.reply({ content: 'Up vote registered for collection: ' + meslug + ". Thank you for your feedback. You can dismiss this message.", ephemeral: true });
@@ -135,17 +156,17 @@ async function validateCollection(interaction, updown) {
 	} else {await interaction.reply({ content: 'Collection: `' + response + "` does not seem to be a valid Magic Eden collection link. Please make sure you have entered the Magic Eden link correctly. You can dismiss this message.", ephemeral: true });} 
 
 	}
-  } else {await interaction.reply({ content: "Sorry, you may only vote once per hour. Please wait. You can dismiss this message.", ephemeral: true });}
+  } else {await interaction.reply({ content: "Sorry, you may only vote once per minute. Please wait. You can dismiss this message.", ephemeral: true });}
 
 } module.exports.validateCollection = validateCollection
 
 //add vote
-async function addVote(server_id, user_id, votetype, votemeslug) {
+async function addVote(server_id, user_id, votetype, votemeslug, reason = null) {
 	return new Promise((resolve, reject) => {
 		var pgclient = db.getClient()
 
-		var querystring = "INSERT INTO votes(server_id, user_id, votetype, votemeslug,votetime) VALUES ($1,$2,$3,$4,current_timestamp)"
-		var querydata = [server_id, user_id, votetype, votemeslug]
+		var querystring = "INSERT INTO votes(server_id, user_id, votetype, votemeslug,votetime, reason) VALUES ($1,$2,$3,$4,current_timestamp)"
+		var querydata = [server_id, user_id, votetype, votemeslug, reason]
 
 		pgclient.query(querystring, querydata, (err, res) => {
 			if (err) throw err

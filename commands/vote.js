@@ -30,7 +30,7 @@ module.exports = {
         )//end add components
 
       //send the reply (including button row)
-      await interaction.reply({ content: 'Vote to add or remove a collection. When your done, dismiss this message.', components: [row], ephemeral: true })
+      await interaction.reply({ content: 'Add an up vote for a collection not yet supported or a down vote for an already supported collection. When your done, dismiss this message.', components: [row], ephemeral: true })
  
   },//end execute block
 }//end module.exports
