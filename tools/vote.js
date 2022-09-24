@@ -94,7 +94,7 @@ async function validateCollection(interaction, updown) {
 			});
 			// The whole response has been received. Print out the result.
 			resp.on('end', async () => {
-				if (!data.toString().includes("collection not found")) {
+				if (data.toString().includes("collection not found") === false) {
 				  		//register vote for meslug
 		          await addVote(interaction.message.guildId, interaction.member.user.id, "up", meslug)
 
