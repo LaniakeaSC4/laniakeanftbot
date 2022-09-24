@@ -1,8 +1,7 @@
 var db = require('../clients/pgclient.js')
 const w = require('./winston.js')
-const { ChannelType, PermissionFlagsBits, PermissionsBitField,
-	ModalBuilder, ActionRowBuilder, TextInputBuilder,
-	TextInputStyle, ButtonBuilder, ButtonStyle } = require('discord.js')
+const { ModalBuilder, ActionRowBuilder, TextInputBuilder,
+	TextInputStyle } = require('discord.js')
 const sql = require('./commonSQL.js')//common sql related commands are in here
 
 
