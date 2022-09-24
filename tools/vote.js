@@ -83,10 +83,11 @@ async function validateCollection(interaction, updown) {
 		//validate collection is me link
 		const response = interaction.fields.getTextInputValue('collection-input')//get modal input text
 		if (response.includes('magiceden.io/marketplace/' )) {
-		var meslug = response.substring(response.lastIndexOf('magiceden.io/marketplace/') + 25).replace(/[^0-9a-z]/gi, '')//find the end slug and clean it (same process as cleaning to colleciton key in SQL)
+		var rawmeslug = response.substring(response.lastIndexOf('magiceden.io/marketplace/') + 25)
+		var meslug = rawmeslug.replace(/[^0-9a-z]/gi, '')
 
 		//check if that link gives a valid response from ME
-		https.get('https://api-mainnet.magiceden.dev/v2/collections/' + meslug, (resp) => {
+		https.get('https://api-mainnet.magiceden.dev/v2/collections/' + rawmeslug, (resp) => {
 			let data = ''
 			// A chunk of data has been received.
 			resp.on('data', (chunk) => {
