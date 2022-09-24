@@ -22,13 +22,13 @@ module.exports = {
       const row = new ActionRowBuilder()
         .addComponents(
           new ButtonBuilder()
-            .setCustomId('voteadd-button')
+            .setCustomId('voteUp-button')
             .setLabel('Upvote Collection')
             .setStyle(ButtonStyle.Success),
         )
         .addComponents(
           new ButtonBuilder()
-            .setCustomId('voteremove-button')
+            .setCustomId('voteDown-button')
             .setLabel('Down vote Collection')
             .setStyle(ButtonStyle.Danger),
         )//end add components

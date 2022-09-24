@@ -102,6 +102,27 @@ client.on('interactionCreate', async interaction => {
 
 const permissionerror = { content: 'Sorry, you do not have permissions to run this command (Manage Channels/Admin required)', ephemeral: true }
 
+//vote
+const vote = require('./tools/vote.js')
+client.on('interactionCreate', async interaction => {
+  if (interaction.member.user.id === "684896787655557216") {
+    if (interaction.customId === 'voteUp-button') {
+      vote.sendVoteUpModal(interaction)
+    }
+    if (interaction.customId === 'voteDown-button') {
+      vote.sendVoteDownModal(interaction)
+    }
+
+    if (interaction.customId === 'voteUp-model') {
+      vote.validateCollection(interaction, "up")
+    }
+    if (interaction.customId === 'voteDown-modal') {
+      vote.validateCollection(interaction, "down")
+    }
+
+  }
+})//end on interactionCreate 
+
 //feed setup
 const feedsetup = require('./setup/feedsetup.js')
 client.on('interactionCreate', async interaction => {
