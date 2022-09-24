@@ -46,6 +46,7 @@ async function sendVoteDownModal(interaction) {
 
 //function to process the input from sendVoteModal. Do we support this collection? 
 async function validateCollection(interaction, updown) {
+  voteTimeoutOver(interaction.member.user.id)
 	if (updown === 'down') {//if it's a downvote, check if its a valid exisiting collection
 		w.log.info("down vote triggered")
 		const response = interaction.fields.getTextInputValue('collection-input')//get modal input text
@@ -83,7 +84,7 @@ async function validateCollection(interaction, updown) {
 		const response = interaction.fields.getTextInputValue('collection-input')//get modal input text
 		var meslug = response.substring(response.lastIndexOf('magiceden.io/marketplace/') + 25).replace(/[^0-9a-z]/gi, '')//find the end slug and clean it (same process as cleaning to colleciton key in SQL)
 
-		//can I check if that link gives a valid response header?
+		//check if that link gives a valid response from ME
 		https.get('https://api-mainnet.magiceden.dev/v2/collections/' + meslug, (resp) => {
 			let data = ''
 			// A chunk of data has been received.
@@ -92,17 +93,17 @@ async function validateCollection(interaction, updown) {
 			});
 			// The whole response has been received. Print out the result.
 			resp.on('end', () => {
-				var meresponse = data
-				w.log.info(meresponse)
+				if (data != "collection not found") {
+				  		//register vote for meslug
+		          await addVote(interaction.message.guildId, interaction.member.user.id, "up", meslug)
+
+	            	//reply to interaction
+                await interaction.reply({ content: 'Up vote registered for collection: ' + meslug + ". Thank you for your feedback. You can dismiss this message.", ephemeral: true });
+				} else {
+				  await interaction.reply({ content: 'Collection: ' + meslug + " does not seem to be a valid collection. Please make sure you have entered the Magic Eden link correctly. You can dismiss this message.", ephemeral: true });
+				}
 			})
 		}).on("error", (err) => { w.log.info("Error: " + err.message) })
-
-
-		//register vote for meslug
-		await addVote(interaction.message.guildId, interaction.member.user.id, "up", meslug)
-
-		//reply to interaction
-		await interaction.reply({ content: 'Up vote registered for collection: ' + meslug + ". Thank you for your feedback. You can dismiss this message.", ephemeral: true });
 
 	}
 
@@ -119,6 +120,28 @@ async function addVote(server_id, user_id, votetype, votemeslug) {
 		pgclient.query(querystring, querydata, (err, res) => {
 			if (err) throw err
 			resolve(true)
+		}) //end query
+	}) //end promise 
+}
+
+//check if this user has passed timeout
+async function voteTimeoutOver(user_id) {
+	return new Promise((resolve, reject) => {
+		var pgclient = db.getClient()
+
+		var querystring = 'SELECT max(votetime) FROM "votes" WHERE user_id = \'' + user_id + '\''
+
+		pgclient.query(querystring, (err, res) => {
+			if (err) throw err
+			var lastvote = new Date(JSON.stringify(res.rows[0].votetime).replaceAll('\"', ''))
+			var onehour = 60 * 1000
+			var now = new Date()
+			var nextvote = new Date(now.getTime() + onehour)
+			if (lastvote < nextvote) {
+			  w.log.info('Sorry 1h not passed since last vote')
+			} else {
+			  w.log.info('1h has passed since last vote')
+			}
 		}) //end query
 	}) //end promise 
 }
