@@ -90,7 +90,7 @@ async function getUpVotes() {
 	return new Promise((resolve, reject) => {
 		var pgclient = db.getClient()
 
-		var querystring = 'SELECT votemeslug,COUNT (votemeslug) FROM votes WHERE votetype = \'up\' GROUP BY votemeslug;'
+		var querystring = 'SELECT votemeslug, rawmeslug,COUNT (votemeslug) FROM votes WHERE votetype = \'up\' GROUP BY votemeslug, rawmeslug;'
 
 		pgclient.query(querystring, (err, res) => {
 			if (err) throw err
@@ -106,7 +106,7 @@ async function getDownVotes() {
 	return new Promise((resolve, reject) => {
 		var pgclient = db.getClient()
 
-		var querystring = 'SELECT votemeslug, rawmeslug,COUNT (votemeslug) FROM votes WHERE votetype = \'down\' GROUP BY votemeslug;'
+		var querystring = 'SELECT votemeslug, rawmeslug,COUNT (votemeslug) FROM votes WHERE votetype = \'down\' GROUP BY votemeslug, rawmeslug;'
 
 		pgclient.query(querystring, (err, res) => {
 			if (err) throw err
