@@ -7,6 +7,7 @@ const { SlashCommandBuilder } = require('discord.js')
 //import common SQL commands
 const sql = require('../tools/commonSQL.js')
 var db = require('../clients/pgclient.js')
+const w = require('../tools/winston.js')
 
 //build the slash command
 module.exports = {
