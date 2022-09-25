@@ -34,7 +34,7 @@ async function getUpVotes() {
 		pgclient.query(querystring, (err, res) => {
 			if (err) throw err
 			
-			w.log.info(JSON.parse(res))
+			w.log.info(JSON.stringify(res))
 			
 		}) //end query
 	}) //end promise 
