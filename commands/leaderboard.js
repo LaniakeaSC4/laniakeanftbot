@@ -18,21 +18,45 @@ module.exports = {
   //when command is triggered, do this
   async execute(interaction) {
     
+   //upvotes
    var upvotes = await getUpVotes()
-   var poststring = ''
+   var upPostString = ''
    
    if (upvotes.length!=0) {
    
    if (upvotes.length <= 5) {
    for (var i = 0; i < upvotes.length;i++){
-     poststring = poststring + upvotes[i].votemeslug + ': ' + upvotes[i].count + ' votes. [link]\n'
+     upPostString = upPostString + upvotes[i].votemeslug + ': ' + upvotes[i].count + ' votes. [link]\n'
    }
    } else {
    for (var i = 0; i < 5;i++){
-     poststring = poststring + upvotes[i].votemeslug + ': ' + upvotes[i].count + ' votes. [link]\n'
+     upPostString = upPostString + upvotes[i].votemeslug + ': ' + upvotes[i].count + ' votes. [link]\n'
    }
    }
-   poststring = poststring.slice(0,-2)//remove last linebreak
+   upPostString = upPostString.slice(0,-2)//remove last linebreak
+   } else {
+     upPostString = 'None! Vote using `/vote`'
+   }//if upvotes is 0
+   
+   //downvotes
+   var downvotes = await getDownVotes()
+   var downPostString = ''
+   
+   if (downvotes.length!=0) {
+   
+   if (downvotes.length <= 5) {
+   for (var i = 0; i < downvotes.length;i++){
+     downPostString = downPostString + downvotes[i].votemeslug + ': ' + downvotes[i].count + ' votes. [link]\n'
+   }
+   } else {
+   for (var i = 0; i < 5;i++){
+     downPostString = downPostString + downvotes[i].votemeslug + ': ' + downvotes[i].count + ' votes. [link]\n'
+   }
+   }
+   downPostString = downPostString.slice(0,-2)//remove last linebreak 
+   } else {
+     downPostString = 'None! Vote using `/vote`'
+   }//if downvotes was 0
    
    //post it
    interaction.reply({
@@ -42,26 +66,47 @@ module.exports = {
 					"color": 0x000000,
 					"fields": [
 						{
-							"name": "Upvotes",
-							"value": poststring,
+							"name": "Upvoted collecitons to add",
+							"value": upPostString,
 							"inline": false
-						}
+						}, 
+						{
+							"name": "Downvotes collections voted for removal",
+							"value": downPostString,
+							"inline": false
+						} 
 						] 
 				}
 			]//end embed 
    })
    
-   }//end if not 0
+
     
   }, //end execute block
 } //end module.exports
 
-//get up votre
+//get up votes
 async function getUpVotes() {
 	return new Promise((resolve, reject) => {
 		var pgclient = db.getClient()
 
 		var querystring = 'SELECT votemeslug,COUNT (votemeslug) FROM votes WHERE votetype = \'up\' GROUP BY votemeslug;'
+
+		pgclient.query(querystring, (err, res) => {
+			if (err) throw err
+			
+			resolve(res.rows)
+			
+		}) //end query
+	}) //end promise 
+}
+
+//get down votes
+async function getDownVotes() {
+	return new Promise((resolve, reject) => {
+		var pgclient = db.getClient()
+
+		var querystring = 'SELECT votemeslug,COUNT (votemeslug) FROM votes WHERE votetype = \'down\' GROUP BY votemeslug;'
 
 		pgclient.query(querystring, (err, res) => {
 			if (err) throw err
