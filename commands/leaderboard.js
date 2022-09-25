@@ -18,8 +18,40 @@ module.exports = {
   //when command is triggered, do this
   async execute(interaction) {
     
-    getUpVotes()
-    
+   var upvotes = await getUpVotes()
+   var poststring = ''
+   
+   if (upvotes.length!=0) {
+   
+   if (upvotes.length <= 5) {
+   for (var i = 0; i < upvotes.length;i++){
+     poststring = poststring + upvotes[i].votemeslug + ': ' + upvotes[i].count + ' votes. [link]\n'
+   }
+   } else {
+   for (var i = 0; i < 5;i++){
+     poststring = poststring + upvotes[i].votemeslug + ': ' + upvotes[i].count + ' votes. [link]\n'
+   }
+   }
+   poststring = poststring.slice(0,-2)//remove last linebreak
+   
+   //post it
+   interaction.reply({
+     			embeds: [
+				{
+					"title": "leaderboard",
+					"color": 0x000000,
+					"fields": [
+						{
+							"name": "Upvotes",
+							"value": poststring,
+							"inline": false
+						}
+						] 
+				}
+			]//end embed 
+   })
+   
+   }//end if not 0
     
   }, //end execute block
 } //end module.exports
@@ -34,7 +66,7 @@ async function getUpVotes() {
 		pgclient.query(querystring, (err, res) => {
 			if (err) throw err
 			
-			w.log.info(JSON.stringify(res))
+			resolve(res.rows)
 			
 		}) //end query
 	}) //end promise 
