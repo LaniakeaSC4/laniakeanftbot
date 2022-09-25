@@ -123,8 +123,8 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 							"inline": true
 						},
 						{
-							"name": "🐍 __Laniakea Sniper v2.5 (beta) __",
-							"value": "Hand crafted by Laniakea#3683.\n\n**📌 You can now vote for collections to be included in Snipe Feed. Cast your vote with `/vote`! **",
+							"name": "📌 __Laniakea Sniper by Laniakea#3683__",
+							"value": "**You can now vote for collections to be included in Snipe Feed. Cast your vote with `/vote`! **",
 							"inline": false
 						}
 					],
