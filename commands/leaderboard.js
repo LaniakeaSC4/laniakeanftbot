@@ -26,11 +26,11 @@ module.exports = {
    
    if (upvotes.length <= 5) {
    for (var i = 0; i < upvotes.length;i++){
-     upPostString = upPostString + '[' + upvotes[i].votemeslug + '](https://magiceden.io/marketplace/' + upvotes[i].votemeslug + '): ' + upvotes[i].count + ' votes.\n'
+     upPostString = upPostString + '[' + upvotes[i].votemeslug + '](https://magiceden.io/marketplace/' + upvotes[i].rawmeslug + '): ' + upvotes[i].count + ' votes.\n'
    }
    } else {
    for (var i = 0; i < 5;i++){
-     upPostString = upPostString + '[' + upvotes[i].votemeslug + '](https://magiceden.io/marketplace/' + upvotes[i].votemeslug + '): ' + upvotes[i].count + ' votes.\n'
+     upPostString = upPostString + '[' + upvotes[i].votemeslug + '](https://magiceden.io/marketplace/' + upvotes[i].rawmeslug + '): ' + upvotes[i].count + ' votes.\n'
    }
    }
    upPostString = upPostString.slice(0,-1)//remove last linebreak
@@ -46,11 +46,11 @@ module.exports = {
    
    if (downvotes.length <= 5) {
    for (var i = 0; i < downvotes.length;i++){
-     downPostString = downPostString + '[' + downvotes[i].votemeslug + '](https://magiceden.io/marketplace/' + downvotes[i].votemeslug + '): ' + downvotes[i].count + ' votes.\n'
+     downPostString = downPostString + '[' + downvotes[i].votemeslug + '](https://magiceden.io/marketplace/' + downvotes[i].rawmeslug + '): ' + downvotes[i].count + ' votes.\n'
    }
    } else {
    for (var i = 0; i < 5;i++){
-     downPostString = downPostString + '[' + downvotes[i].votemeslug + '](https://magiceden.io/marketplace/' + downvotes[i].votemeslug + '): ' + downvotes[i].count + ' votes.\n'
+     downPostString = downPostString + '[' + downvotes[i].votemeslug + '](https://magiceden.io/marketplace/' + downvotes[i].rawmeslug + '): ' + downvotes[i].count + ' votes.\n'
    }
    }
    downPostString = downPostString.slice(0,-1)//remove last linebreak 
@@ -106,7 +106,7 @@ async function getDownVotes() {
 	return new Promise((resolve, reject) => {
 		var pgclient = db.getClient()
 
-		var querystring = 'SELECT votemeslug,COUNT (votemeslug) FROM votes WHERE votetype = \'down\' GROUP BY votemeslug;'
+		var querystring = 'SELECT votemeslug, rawmeslug,COUNT (votemeslug) FROM votes WHERE votetype = \'down\' GROUP BY votemeslug;'
 
 		pgclient.query(querystring, (err, res) => {
 			if (err) throw err

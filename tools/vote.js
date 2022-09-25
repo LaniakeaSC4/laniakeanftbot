@@ -72,7 +72,8 @@ async function validateCollection(interaction, updown) {
 		const response = interaction.fields.getTextInputValue('collection-input')//get modal input text
 		const reason = interaction.fields.getTextInputValue('reason-input')
 		
-		var meslug = response.substring(response.lastIndexOf('magiceden.io/marketplace/') + 25).replace(/[^0-9a-z]/gi, '')//find the end slug and clean it (same process as cleaning to colleciton key in SQL)
+	var rawmeslug = response.substring(response.lastIndexOf('magiceden.io/marketplace/') + 25)
+	var meslug = rawmeslug.replace(/[^0-9a-z]/gi, '')
 
 		//get collections and populate global var
 		supportedcollections = {}//clear and repopulate in case collections have changed since last time command was run
@@ -86,7 +87,7 @@ async function validateCollection(interaction, updown) {
 				found = true
 				w.log.info('validated collection. We can register a downvote for ' + meslug)
 				//add downvote row
-				await addVote(interaction.message.guildId, interaction.member.user.id, "down", meslug, reason)
+				await addVote(interaction.message.guildId, interaction.member.user.id, "down", meslug, rawmeslug, reason)
 				await interaction.reply({ content: 'Down vote registered for collection: ' + meslug + ". Thank you for your feedback. You can dismiss this message", ephemeral: true});
 				break
 			}//end if
@@ -145,7 +146,7 @@ async function validateCollection(interaction, updown) {
 			  w.log.info(data)
 				if (data.toString().includes("collection not found") === false) {
 				  		//register vote for meslug
-		          await addVote(interaction.message.guildId, interaction.member.user.id, "up", meslug, reason)
+		          await addVote(interaction.message.guildId, interaction.member.user.id, "up", meslug, rawmeslug, reason)
 
 	            	//reply to interaction
                 await interaction.reply({ content: 'Up vote registered for collection: ' + meslug + ". Thank you for your feedback. You can dismiss this message.", ephemeral: true });
@@ -163,12 +164,12 @@ async function validateCollection(interaction, updown) {
 } module.exports.validateCollection = validateCollection
 
 //add vote
-async function addVote(server_id, user_id, votetype, votemeslug, reason = null) {
+async function addVote(server_id, user_id, votetype, votemeslug,rawmeslug,reason = null) {
 	return new Promise((resolve, reject) => {
 		var pgclient = db.getClient()
 
-		var querystring = "INSERT INTO votes(server_id, user_id, votetype, votemeslug,votetime, reason) VALUES ($1,$2,$3,$4,current_timestamp, $5)"
-		var querydata = [server_id, user_id, votetype, votemeslug, reason]
+		var querystring = "INSERT INTO votes(server_id, user_id, votetype, votemeslug,votetime,rawmeslug,reason) VALUES ($1,$2,$3,$4,current_timestamp, $5, $6)"
+		var querydata = [server_id, user_id, votetype, votemeslug,rawmeslug, reason]
 
 		pgclient.query(querystring, querydata, (err, res) => {
 			if (err) throw err
