@@ -68,12 +68,12 @@ module.exports = {
 					"color": 0x000000,
 					"fields": [
 						{
-							"name": "Upvoted collecitons to add",
+							"name": "⬆️ Upvoted collecitons to add",
 							"value": upPostString,
 							"inline": false
 						}, 
 						{
-							"name": "Downvotes collections voted for removal",
+							"name": "⬇️ Downvotes collections voted for removal",
 							"value": downPostString,
 							"inline": false
 						} 

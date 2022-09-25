@@ -19,18 +19,18 @@ module.exports = {
         .addComponents(
           new ButtonBuilder()
             .setCustomId('voteUp-button')
-            .setLabel('Upvote Collection')
+            .setLabel('⬆️ Upvote Collection')
             .setStyle(ButtonStyle.Success),
         )
         .addComponents(
           new ButtonBuilder()
             .setCustomId('voteDown-button')
-            .setLabel('Down vote Collection')
+            .setLabel('⬇️ Downvote Collection')
             .setStyle(ButtonStyle.Danger),
         )//end add components
 
       //send the reply (including button row)
-      await interaction.reply({ content: 'Add an up vote for a collection not yet supported or a down vote for an already supported collection. When your done, dismiss this message.', components: [row], ephemeral: true })
+      await interaction.reply({ content: 'Add an ⬆️ upvote for a collection you would like Laniakea Sniper to add to our database or a ⬇️ downvote a collection you would like removed. View the current leaderboard with `/leaderboard`. We will periodically review votes and add/remove collections. You can vote once per minute. When your done, dismiss this message.', components: [row], ephemeral: true })
  
   },//end execute block
 }//end module.exports
