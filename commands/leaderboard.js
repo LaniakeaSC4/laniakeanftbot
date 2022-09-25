@@ -42,6 +42,8 @@ module.exports = {
    
    //downvotes
    var downvotes = await getDownVotes()
+     //sort
+  downvotes.sort((a, b) => b.count - a.count)
    var downPostString = ''
    
    if (downvotes.length!=0) {
