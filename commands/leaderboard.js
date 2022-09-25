@@ -64,8 +64,9 @@ module.exports = {
    interaction.reply({
      			embeds: [
 				{
-					"title": "leaderboard",
-					"color": 0x000000,
+					"title": "Community Collection Vote Leaderboard",
+					"description" : "Here is the leaderboard of collections the community has voted to be added or removed from Laniakea Sniper. Cast your vote with `/vote`.", 
+					"color": 0xed2839,
 					"fields": [
 						{
 							"name": "⬆️ Upvoted collecitons to add",
@@ -73,7 +74,7 @@ module.exports = {
 							"inline": false
 						}, 
 						{
-							"name": "⬇️ Downvotes collections voted for removal",
+							"name": "⬇️ Downvoted collections for removal",
 							"value": downPostString,
 							"inline": false
 						} 
