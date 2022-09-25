@@ -30,7 +30,7 @@ module.exports = {
         )//end add components
 
       //send the reply (including button row)
-      await interaction.reply({ content: 'Add an ⬆️ upvote for a collection you would like Laniakea Sniper to add to our database or a ⬇️ downvote a collection you would like removed. View the current leaderboard with `/leaderboard`. We will periodically review votes and add/remove collections. You can vote once per minute. When your done, dismiss this message.', components: [row], ephemeral: true })
+      await interaction.reply({ content: 'Add an upvote ⬆️ for a collection you would like **Laniakea Sniper** to add to our database or a downvote ⬇️ a collection you would like removed.\n\nView the current leaderboard with `/leaderboard`. We will periodically review votes and add/remove collections.\n\nYou can vote once per minute. When your done, dismiss this message.', components: [row], ephemeral: true })
  
   },//end execute block
 }//end module.exports
