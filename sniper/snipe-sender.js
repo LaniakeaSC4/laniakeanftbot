@@ -111,6 +111,7 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 				{
 					"title": raritydescription + ' Snipe Opportunity: ' + nftname,
 					"color": embedcolour,
+					"footer" : "D: https://discord.gg/CgF7neAte2 | W: nftsniperbot.xyz",
 					"fields": [
 						{
 							"name": "🎯 __Snipe Details__",
