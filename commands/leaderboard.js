@@ -21,7 +21,7 @@ module.exports = {
    //upvotes
    var upvotes = await getUpVotes()
   //sort
-  upvotes = upvotes.sort((a, b) => a.count + b.count)
+  upvotes.sort((a, b) => b.count - a.count)
    var upPostString = ''
    
    if (upvotes.length!=0) {
