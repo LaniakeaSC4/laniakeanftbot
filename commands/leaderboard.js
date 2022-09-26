@@ -17,107 +17,104 @@ module.exports = {
 
   //when command is triggered, do this
   async execute(interaction) {
-    
-   //upvotes
-   var upvotes = await getUpVotes()
-  //sort
-  upvotes.sort((a, b) => b.count - a.count)
-   var upPostString = ''
-   
-   if (upvotes.length!=0) {
-   
-   if (upvotes.length <= 5) {
-   for (var i = 0; i < upvotes.length;i++){
-     upPostString = upPostString + '[' + upvotes[i].votemeslug + '](https://magiceden.io/marketplace/' + upvotes[i].rawmeslug + '): ' + upvotes[i].count + ' votes.\n'
-   }
-   } else {
-   for (var i = 0; i < 5;i++){
-     upPostString = upPostString + '[' + upvotes[i].votemeslug + '](https://magiceden.io/marketplace/' + upvotes[i].rawmeslug + '): ' + upvotes[i].count + ' votes.\n'
-   }
-   }
-   upPostString = upPostString.slice(0,-1)//remove last linebreak
-   } else {
-     upPostString = 'None! Vote using `/vote`'
-   }//if upvotes is 0
-   
-   //downvotes
-   var downvotes = await getDownVotes()
-     //sort
-  downvotes.sort((a, b) => b.count - a.count)
-   var downPostString = ''
-   
-   if (downvotes.length!=0) {
-   
-   if (downvotes.length <= 5) {
-   for (var i = 0; i < downvotes.length;i++){
-     downPostString = downPostString + '[' + downvotes[i].votemeslug + '](https://magiceden.io/marketplace/' + downvotes[i].rawmeslug + '): ' + downvotes[i].count + ' votes.\n'
-   }
-   } else {
-   for (var i = 0; i < 5;i++){
-     downPostString = downPostString + '[' + downvotes[i].votemeslug + '](https://magiceden.io/marketplace/' + downvotes[i].rawmeslug + '): ' + downvotes[i].count + ' votes.\n'
-   }
-   }
-   downPostString = downPostString.slice(0,-1)//remove last linebreak 
-   } else {
-     downPostString = 'None! Vote using `/vote`'
-   }//if downvotes was 0
-   
-   //post it
-   interaction.reply({
-     			embeds: [
-				{
-					"title": "Community Collection Vote Leaderboard",
-					"description" : "Here is the leaderboard of collections the community has voted to be added or removed from Laniakea Sniper. Cast your vote with `/vote`.", 
-					"color": 0xed2839,
-					"fields": [
-						{
-							"name": "⬆️ Upvoted collecitons to add",
-							"value": upPostString,
-							"inline": false
-						}, 
-						{
-							"name": "⬇️ Downvoted collections for removal",
-							"value": downPostString,
-							"inline": false
-						} 
-						] 
-				}
-			]//end embed 
-   })
-   
 
-    
+    //upvotes
+    var upvotes = await getUpVotes()
+    //sort
+    upvotes.sort((a, b) => b.count - a.count)
+    var upPostString = ''
+
+    if (upvotes.length != 0) {
+
+      if (upvotes.length <= 5) {
+        for (var i = 0; i < upvotes.length; i++) {
+          upPostString = upPostString + '[' + upvotes[i].votemeslug + '](https://magiceden.io/marketplace/' + upvotes[i].rawmeslug + '): ' + upvotes[i].count + ' votes.\n'
+        }
+      } else {
+        for (var i = 0; i < 5; i++) {
+          upPostString = upPostString + '[' + upvotes[i].votemeslug + '](https://magiceden.io/marketplace/' + upvotes[i].rawmeslug + '): ' + upvotes[i].count + ' votes.\n'
+        }
+      }
+      upPostString = upPostString.slice(0, -1)//remove last linebreak
+    } else {
+      upPostString = 'None! Vote using `/vote`'
+    }//if upvotes is 0
+
+    //downvotes
+    var downvotes = await getDownVotes()
+    //sort
+    downvotes.sort((a, b) => b.count - a.count)
+    var downPostString = ''
+
+    if (downvotes.length != 0) {
+
+      if (downvotes.length <= 5) {
+        for (var i = 0; i < downvotes.length; i++) {
+          downPostString = downPostString + '[' + downvotes[i].votemeslug + '](https://magiceden.io/marketplace/' + downvotes[i].rawmeslug + '): ' + downvotes[i].count + ' votes.\n'
+        }
+      } else {
+        for (var i = 0; i < 5; i++) {
+          downPostString = downPostString + '[' + downvotes[i].votemeslug + '](https://magiceden.io/marketplace/' + downvotes[i].rawmeslug + '): ' + downvotes[i].count + ' votes.\n'
+        }
+      }
+      downPostString = downPostString.slice(0, -1)//remove last linebreak 
+    } else {
+      downPostString = 'None! Vote using `/vote`'
+    }//if downvotes was 0
+
+    //post it
+    interaction.reply({
+      embeds: [
+        {
+          "title": "Community Collection Vote Leaderboard",
+          "description": "Here is the leaderboard of collections the community has voted to be added or removed from Laniakea Sniper. Cast your vote with `/vote`.",
+          "color": 0xed2839,
+          "fields": [
+            {
+              "name": "⬆️ Upvoted collecitons to add",
+              "value": upPostString,
+              "inline": false
+            },
+            {
+              "name": "⬇️ Downvoted collections for removal",
+              "value": downPostString,
+              "inline": false
+            }
+          ]
+        }
+      ]//end embed 
+    })
   }, //end execute block
 } //end module.exports
 
 //get up votes
 async function getUpVotes() {
-	return new Promise((resolve, reject) => {
-		var pgclient = db.getClient()
+  return new Promise((resolve, reject) => {
+    var pgclient = db.getClient()
 
-		var querystring = 'SELECT votemeslug, rawmeslug,COUNT (votemeslug) FROM votes WHERE votetype = \'up\' GROUP BY votemeslug, rawmeslug;'
+    var querystring = 'SELECT votemeslug, rawmeslug,COUNT (votemeslug) FROM votes WHERE votetype = \'up\' GROUP BY votemeslug, rawmeslug;'
 
-		pgclient.query(querystring, (err, res) => {
-			if (err) throw err
-			
-			resolve(res.rows)
-			
-		}) //end query
-	}) //end promise 
+    pgclient.query(querystring, (err, res) => {
+      if (err) throw err
+
+      resolve(res.rows)
+
+    }) //end query
+  }) //end promise 
 }
 
 //get down votes
 async function getDownVotes() {
-	return new Promise((resolve, reject) => {
-		var pgclient = db.getClient()
+  return new Promise((resolve, reject) => {
+    var pgclient = db.getClient()
 
-		var querystring = 'SELECT votemeslug, rawmeslug,COUNT (votemeslug) FROM votes WHERE votetype = \'down\' GROUP BY votemeslug, rawmeslug;'
+    var querystring = 'SELECT votemeslug, rawmeslug,COUNT (votemeslug) FROM votes WHERE votetype = \'down\' GROUP BY votemeslug, rawmeslug;'
 
-		pgclient.query(querystring, (err, res) => {
-			if (err) throw err
-			
-			resolve(res.rows)
-			
-		}) //end query
-	}) //end promise 
+    pgclient.query(querystring, (err, res) => {
+      if (err) throw err
+
+      resolve(res.rows)
+
+    }) //end query
+  }) //end promise 
 }

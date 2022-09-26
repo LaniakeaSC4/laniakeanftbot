@@ -14,7 +14,7 @@ async function initaliseServers() {
 	supportedservers = []
 	supportedservers = await sql.getSupportedServers()
 	initalisecount = initalisecount + 1
-	if ((initalisecount % 5) == 0) {w.log.info('Servers have been initalised 5 times since last log message') }
+	if ((initalisecount % 5) == 0) { w.log.info('Servers have been initalised 5 times since last log message') }
 }; module.exports.initaliseServers = initaliseServers
 
 //work out where to send them
@@ -66,17 +66,17 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 			if (foundhome === true) {
 				sendsnipes(thisserverid, feedchannel, null, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
 			} else {//if valid homechannel was not found enter normal send filter process
-			
-			thisserverid = thisserver.serverid 
-			//check if single feed mode is enabled
-			if (thisserver.singlefeedmode === true) {
-			  feedchannel = thisserver.raresnipes
-			} else {//get the snipes channel id to send the snipe to
-				if (raritydescription === 'Rare') { feedchannel = thisserver.raresnipes }
-				if (raritydescription === 'Epic') { feedchannel = thisserver.epicsnipes }
-				if (raritydescription === 'Legendary') { feedchannel = thisserver.legendarysnipes }
-				if (raritydescription === 'Mythic') { feedchannel = thisserver.mythicsnipes }
-			} 
+
+				thisserverid = thisserver.serverid
+				//check if single feed mode is enabled
+				if (thisserver.singlefeedmode === true) {
+					feedchannel = thisserver.raresnipes
+				} else {//get the snipes channel id to send the snipe to
+					if (raritydescription === 'Rare') { feedchannel = thisserver.raresnipes }
+					if (raritydescription === 'Epic') { feedchannel = thisserver.epicsnipes }
+					if (raritydescription === 'Legendary') { feedchannel = thisserver.legendarysnipes }
+					if (raritydescription === 'Mythic') { feedchannel = thisserver.mythicsnipes }
+				}
 
 				if (feedchannel) {//filters out servers which are in pg but not setup yet by checking if the snipe channel is valid for this server
 					//send snipes
@@ -111,8 +111,9 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 				{
 					"title": raritydescription + ' Snipe Opportunity: ' + nftname,
 					"color": embedcolour,
-					"footer" : { "text" : "D: https://discord.gg/CgF7neAte2 | W: nftsniperbot.xyz"
-					}, 
+					"footer": {
+						"text": "D: https://discord.gg/CgF7neAte2 | W: nftsniperbot.xyz"
+					},
 					"fields": [
 						{
 							"name": "🎯 __Snipe Details__",

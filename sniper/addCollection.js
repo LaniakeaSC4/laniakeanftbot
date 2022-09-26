@@ -126,7 +126,7 @@ async function calculateTraitPercentages(creatoraddress) {
 
   //store in DB
   w.log.info('Metaplex: Storing trait percentages in DB')
-  sql.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "traitrarity", traitPercentages)
+  await sql.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "traitrarity", traitPercentages)
 }; module.exports.calculateTraitPercentages = calculateTraitPercentages
 
 //addstep3 - get the nft and trait % data from SQL (added with getMetaplexData) and calculate the statistical rarity of each nft
@@ -239,7 +239,7 @@ async function combineTraitRarity(creatoraddress, meslug) {
   w.log.info('Metaplex: storing collection key: ' + meslug.replace(/[^0-9a-z]/gi, '').toLowerCase())
   await sql.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "collectionkey", meslug.replace(/[^0-9a-z]/gi, '').toLowerCase())
   w.log.info('Metaplex: storing meslug: ' + meslug)
-  sql.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "meslug", meslug)
+  await sql.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "meslug", meslug)
 }; module.exports.combineTraitRarity = combineTraitRarity
 
 //addstep4 - get the unranked NFTs with statistical rarity and rank them for the final data
@@ -267,7 +267,7 @@ async function rankNFTs(creatoraddress) {
   output.data = sorted//set the NFT data equal to the sorted data.
 
   w.log.info('Metaplex: Storing final object with ' + output.data.length + ' NFTs')
-  sql.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "finaldata", output)
+  await sql.updateTableColumn("solanametaplex", "creatoraddress", creatoraddress, "finaldata", output)
 
 }; module.exports.rankNFTs = rankNFTs
 

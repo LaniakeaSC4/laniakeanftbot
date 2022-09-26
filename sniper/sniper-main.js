@@ -96,7 +96,7 @@ async function startsniper() {
               //regex last number in string
               var regex = /(\d+)(?!.*\d)/
               var matchid = thistoken.name.match(regex)
-              try {thisnftid = parseFloat(matchid[0])} catch {w.log.info("Name error with" + thislistinglink)}
+              try { thisnftid = parseFloat(matchid[0]) } catch { w.log.info("Name error with" + thislistinglink) }
 
               var NFTdata = await sql.getNFTdata(collections[k]['collectionkey'], thisnftid)
               if (NFTdata) {
