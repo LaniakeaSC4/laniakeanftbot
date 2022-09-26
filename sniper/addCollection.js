@@ -73,6 +73,7 @@ async function getMetaplexData(creatoraddress) {
 
   w.log.info('Metaplex: storing metaplex data (with JSON) in DB')
   await sql.createTableRow("solanametaplex", "creatoraddress", creatoraddress, "withjson", JSON.stringify(withjson))
+  await wait(5000)
 }; module.exports.getMetaplexData = getMetaplexData
 
 //addstep2 - gets the metaplex data and caculates the percentages of each trait. Stores as seperate object in DB
