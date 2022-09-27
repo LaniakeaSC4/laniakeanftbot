@@ -169,8 +169,8 @@ async function getNFTdata(collectionKey, nftid) {
       if (res.rows[0]) {
         resolve(res.rows[0]['nftdata'])
       } else {
-        resolve(null)
         w.log.error('SQL error - row was empty')//is this needed or will the if (err) throw err prevent this?
+        resolve(null)
       }
     }).catch(e => {
       w.log.error('error getting that nft data: ' + e)

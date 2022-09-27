@@ -121,7 +121,7 @@ async function startsniper() {
 
                 } else { /* w.log.info('this was not a snipe') */ } //end if not false
               } else {
-                w.log.error('error getting nft data')
+                w.log.error('error getting nft data for ' + collections[k]['collectionkey'] + ' ' + thisnftid)
               }//end else if get nft data failed
             } else { w.log.error('error getting listing at magic Eden for this snipe test') }
           }//end else for a token we havnt seen before
