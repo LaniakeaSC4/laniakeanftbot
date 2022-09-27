@@ -82,7 +82,7 @@ async function startsniper() {
             rebuildarrary.unshift(thislistings[i])//add the new entry to the start of the rebuild arrary so we can remember this one if we see it later
 
             var thisprice = pround(thislistings[i].price, 6)//set price of this lisitng
-            var recievedtoken = await magiceden.getTokenDetails(thislistings[i].tokenMint)
+            var recievedtoken = await magiceden.getTokenDetails(thislistings[i].tokenMint)//added 25ms delay at the end of the loop to slow this down a little. Getting occasional me API and sql errors.
 
             if (recievedtoken) {
 
@@ -124,6 +124,7 @@ async function startsniper() {
                 w.log.error('error getting nft data for ' + collections[k]['collectionkey'] + ' ' + thisnftid)
               }//end else if get nft data failed
             } else { w.log.error('error getting listing at magic Eden for this snipe test') }
+            await wait(25)//getting sql and ME API errors. Might need a delay here for each match.
           }//end else for a token we havnt seen before
         }//end for loop of each listing recieved
 
