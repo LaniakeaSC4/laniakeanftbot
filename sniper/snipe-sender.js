@@ -23,9 +23,22 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 	for (i = 0; i < supportedservers.length; i++) {
 		if (supportedservers[i].inserver === true) {//only proceed if bot is in server
 			var thisserver = supportedservers[i]; var thisserverid = ''; var feedchannel = ''
-			//w.log.info('thisserver.premium is: ' + thisserver.premium + ' for server ' + thisserver.serverid)
+			
+			/*
+			//Skip this loop altogether if this server has a rarity disabled
+			if (raritydescription === "Rare" && supportedservers[i].rareenabled === false) {continue}
+			if (raritydescription === "Epic" && supportedservers[i].epicenabled === false) {continue}
+			if (raritydescription === "Legendary" && supportedservers[i].legendaryenabled === false) {continue}
+			if (raritydescription === "Mythic" && supportedservers[i].mythicenabled === false) {continue}
 
-			//check if this snipe should be sent to a homechannel or alphachannel
+			//filter by global blackslist (make /blacklist command)
+			Loop through blacklist same as alpha channels
+
+			//filter out snipes below global minimum list price (e.g. less than 2 sol)
+			if (thisprice < supportedservers[i].minimumprice) {continue}
+			*/
+
+			//check if this snipe should be redirected to a homechannel from the main feed
 			var foundhome = false
 			if (thisserver.homechannel_enabled === true && thisserver.premium === true) {
 				//w.log.info('homechannel was enabled for ' + thisserver.serverid)
@@ -43,7 +56,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 				}//end loop through saved home channels
 			}//end if homechannel is enabled and server is premium
 
-			//check if this server has this collection enabled for an alpha channel
+			//check if this server has this collection enabled for an alpha channel send a duplicate there
 			var foundalpha = false; var alphachannelid = ''
 			if (thisserver.alpha_channels != null && thisserver.premium === true) {//if there is an alpha channel config and server is premium
 				for (var k = 0; k < thisserver.alpha_channels.enabled.length; k++) {//for each enables alpha channel (for this server)

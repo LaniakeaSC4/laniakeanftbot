@@ -12,8 +12,8 @@
 ### Crypto Coral Tribe Ideas
 
 * Master filter for all collections in a server only allow added collections through to the main channels
-* Multiple 'home channels' - then users can do reaction roles to get access to them
-* allow other admins or all users to add collections (other admins at first?)
+* Multiple 'home channels' - then users can do reaction roles to get access to them - DONE
+* allow other admins or all users to add collections (other admins at first?) - VOTING DONE
 * server specific controls on the snipelimits
 * allow particular server to use howrare.is ranking for a particular collection
 
