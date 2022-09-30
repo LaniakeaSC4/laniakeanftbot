@@ -285,3 +285,21 @@ client.on('channelDelete', async channel => {
     snipersender.initaliseServers()
   }
 })//end on channelDelete event
+
+//Global config
+const globalconfig = require('./setup/globalconfig.js')
+client.on('interactionCreate', async interaction => {
+
+  if (interaction.customId === 'globalconfig-button') {
+    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
+      globalconfig.configPanel(interaction)
+    } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
+  }//end if button is 'globalconfig-button'
+  
+  if (interaction.customId === 'configrarity-button') {
+    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
+      globalconfig.configRarities(interaction)
+    } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
+  }//end if button is 'configrarity-button'
+
+})//end on interactionCreate 
