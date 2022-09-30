@@ -70,14 +70,14 @@ let button8 = new ButtonBuilder()
 		.setStyle(ButtonStyle.Secondary)
 		.setCustomId("rarityDone-button")  
 	
-let buttonRow1 = new MessageActionRow()
+let buttonRow1 = new ActionRowBuilder()
 		.addComponents([button1, button2, button3, button4])
 	
-let buttonRow2 = new MessageActionRow()
+let buttonRow2 = new ActionRowBuilder()
 		.addComponents([button5, button6, button, button8]) 
 		
 
-let buttonrow3 = new MessageActionRow()
+let buttonrow3 = new ActionRowBuilder()
 .addComponents([buttondone])
 
 
