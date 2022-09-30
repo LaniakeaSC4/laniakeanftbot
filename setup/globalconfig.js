@@ -26,43 +26,43 @@ async function configRarities(interaction) {
 	//build a new button row for the command reply
 	//enable
 	let button1 = new ButtonBuilder()
-		.setStyle(ButtonStyle.Secondary)
+		.setStyle(ButtonStyle.Success)
 		.setLabel("1️⃣")
 		.setCustomId("rareyes-button")
 
 	let button2 = new ButtonBuilder()
 		.setLabel("2️⃣")
-		.setStyle(ButtonStyle.Secondary)
+		.setStyle(ButtonStyle.Success)
 		.setCustomId("epicyes-button")
 		
 	let button3 = new ButtonBuilder()
 		.setLabel("3️⃣")
-		.setStyle(ButtonStyle.Secondary)
+		.setStyle(ButtonStyle.Success)
 		.setCustomId("legendaryyes-button")
 
 let button4 = new ButtonBuilder()
 		.setLabel("4️⃣")
-		.setStyle(ButtonStyle.Secondary)
+		.setStyle(ButtonStyle.Success)
 		.setCustomId("mythicyes-button")
 		
 let button5 = new ButtonBuilder()
-		.setStyle(ButtonStyle.Secondary)
+		.setStyle(ButtonStyle.Danger)
 		.setLabel("5️⃣")
 		.setCustomId("rareno-button")
 
 	let button6 = new ButtonBuilder()
 		.setLabel("6️⃣")
-		.setStyle(ButtonStyle.Secondary)
+		.setStyle(ButtonStyle.Danger)
 		.setCustomId("epicno-button")
 		
 	let button7 = new ButtonBuilder()
 		.setLabel("7️⃣")
-		.setStyle(ButtonStyle.Secondary)
+		.setStyle(ButtonStyle.Danger)
 		.setCustomId("legendaryno-button")
 
 let button8 = new ButtonBuilder()
 		.setLabel("8️⃣")
-		.setStyle(ButtonStyle.Secondary)
+		.setStyle(ButtonStyle.Danger)
 		.setCustomId("mythicno-button")  
 		
 		let buttondone = new ButtonBuilder()
@@ -82,5 +82,33 @@ let buttonRow3 = new ActionRowBuilder()
 
 
 	//send the reply (including button row)
-	await interaction.reply({ content: "What channels would you like to change?", components: [buttonRow1, buttonRow2, buttonRow3], ephemeral: true })
+await interaction.reply({
+  content: "What channels would you like to change?\n\n1️⃣ Enable Rare Snipes\n2️⃣ Enable Epic Snipes\n3️⃣ Enable Legendary Snipes\n4️⃣ Enable Mythic Snipes\n\n5️⃣ Disable All Rare Snipes\n6️⃣Disable All Epic Snipes\n7️⃣Disable all Legendary Snipes\n8️⃣Disable Mythic Snipess",
+  components: [buttonRow1, buttonRow2, buttonRow3], 
+  ephemeral: true })
 } module.exports.configRarities = configRarities
+
+//handle a button press
+async function buttonHandler(interaction) {
+if (interaction.customId === 'rareyes-button') {}
+if (interaction.customId === 'epicyes-button') {}
+if (interaction.customId === 'legendaryyes-button') {}
+if (interaction.customId === 'mythicyes-button') {}
+
+if (interaction.customId === 'rareno-button') {}
+if (interaction.customId === 'rareno-button') {}
+if (interaction.customId === 'legendaryno-button') {}
+if (interaction.customId === 'mythicno-button') {}
+} module.exports.buttonHandler = buttonHandler
+
+async function setRarityConfig(interaction, column,setTo) {
+  await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, column, setTo)
+  var status = '';if (setTo === true) {status = 'enabled'}; if (setTo === false) {status = 'disabled'}
+  var thisrarity = ''
+  if (column === 'rare_enabled') {thisrarity = 'rare'}
+  if (column === 'epic_enabled') {thisrarity = 'epic'}
+  if (column === 'legendary_enabled') {thisrarity = 'legendary'}
+  if (column === 'mythic_enabled') {thisrarity = 'mythic'}
+  await interaction.reply({content : "Your " + thisrarity + " snipes have now been globally " + status + ". This message will auto delete in 5 seconds."})
+  setTimeout(() => interaction.deleteReply(), 5000)//delete it after 5s
+}

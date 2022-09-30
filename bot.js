@@ -296,10 +296,18 @@ client.on('interactionCreate', async interaction => {
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
   }//end if button is 'globalconfig-button'
   
+  //config rarity
   if (interaction.customId === 'configrarity-button') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
       globalconfig.configRarities(interaction)
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
   }//end if button is 'configrarity-button'
+  
+  var rarityConfigButtons = ['rareyes-button','epicyes-button', 'legendaryyes-button', 'mythicyes-button','rareno-button','epicno-button', 'legendaryno-button', 'mythicno-button']
+  if (rarityConfigButtons.includes(interaction.customId)) {
+    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
+    globalconfig.buttonHandler(interaction)
+    }
+  }
 
 })//end on interactionCreate 
