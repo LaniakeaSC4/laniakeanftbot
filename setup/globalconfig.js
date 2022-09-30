@@ -27,46 +27,46 @@ async function configRarities(interaction) {
 	//enable
 	let button1 = new ButtonBuilder()
 		.setStyle("ButtonStyle.Secondary")
-		.setEmoji("1️⃣")
+		.setLabel("1️⃣")
 		.setCustomId("rareyes-button")
 
 	let button2 = new ButtonBuilder()
-		.setEmoji("2️⃣")
+		.setLabel("2️⃣")
 		.setStyle("ButtonStyle.Secondary")
 		.setCustomId("epicyes-button")
 		
 	let button3 = new ButtonBuilder()
-		.setEmoji("3️⃣")
+		.setLabel("3️⃣")
 		.setStyle("ButtonStyle.Secondary")
 		.setCustomId("legendaryyes-button")
 
 let button4 = new ButtonBuilder()
-		.setEmoji("4️⃣")
+		.setLabel("4️⃣")
 		.setStyle("ButtonStyle.Secondary")
 		.setCustomId("mythicyes-button")
 		
 let button5 = new ButtonBuilder()
 		.setStyle("ButtonStyle.Secondary")
-		.setEmoji("5️⃣")
+		.setLabel("5️⃣")
 		.setCustomId("rareno-button")
 
 	let button6 = new ButtonBuilder()
-		.setEmoji("6️⃣")
+		.setLabel("6️⃣")
 		.setStyle("ButtonStyle.Secondary")
 		.setCustomId("epicno-button")
 		
 	let button7 = new ButtonBuilder()
-		.setEmoji("7️⃣")
+		.setLabel("7️⃣")
 		.setStyle("ButtonStyle.Secondary")
 		.setCustomId("legendaryno-button")
 
 let button8 = new ButtonBuilder()
-		.setEmoji("8️⃣")
+		.setLabel("8️⃣")
 		.setStyle("ButtonStyle.Secondary")
 		.setCustomId("mythicno-button")  
 		
 		let buttondone = new ButtonBuilder()
-		.setEmoji("8️⃣")
+		.setLabel("8️⃣")
 		.setStyle("ButtonStyle.Secondary")
 		.setCustomId("rarityDone-button")  
 	
