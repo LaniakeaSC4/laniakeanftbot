@@ -64,27 +64,18 @@ let button8 = new ButtonBuilder()
 		.setLabel("8️⃣")
 		.setStyle(ButtonStyle.Danger)
 		.setCustomId("mythicno-button")  
-		
-		let buttondone = new ButtonBuilder()
-		.setLabel("8️⃣")
-		.setStyle(ButtonStyle.Secondary)
-		.setCustomId("rarityDone-button")  
 	
 let buttonRow1 = new ActionRowBuilder()
 		.addComponents([button1, button2, button3, button4])
 	
 let buttonRow2 = new ActionRowBuilder()
 		.addComponents([button5, button6, button7, button8]) 
-		
-
-let buttonRow3 = new ActionRowBuilder()
-.addComponents([buttondone])
 
 
 	//send the reply (including button row)
 await interaction.reply({
-  content: "What channels would you like to change?\n\n1️⃣ Enable Rare Snipes\n2️⃣ Enable Epic Snipes\n3️⃣ Enable Legendary Snipes\n4️⃣ Enable Mythic Snipes\n\n5️⃣ Disable All Rare Snipes\n6️⃣Disable All Epic Snipes\n7️⃣Disable all Legendary Snipes\n8️⃣Disable Mythic Snipess",
-  components: [buttonRow1, buttonRow2, buttonRow3], 
+  content: "What channels would you like to change?\n\n1️⃣ Enable Rare Snipes\n2️⃣ Enable Epic Snipes\n3️⃣ Enable Legendary Snipes\n4️⃣ Enable Mythic Snipes\n\n5️⃣ Disable All Rare Snipes\n6️⃣Disable All Epic Snipes\n7️⃣Disable all Legendary Snipes\n8️⃣Disable Mythic Snipes\n\nWhen your finished you can dismiss this message.",
+  components: [buttonRow1, buttonRow2], 
   ephemeral: true })
 } module.exports.configRarities = configRarities
 
@@ -107,7 +98,7 @@ if (interaction.customId === 'mythicyes-button') {
 if (interaction.customId === 'rareno-button') {
   setRarityConfig(interaction,'rare_enabled',false)
 }
-if (interaction.customId === 'rareno-button') {
+if (interaction.customId === 'epicno-button') {
   setRarityConfig(interaction,"epic_enabled",false)
 }
 if (interaction.customId === 'legendaryno-button') {
