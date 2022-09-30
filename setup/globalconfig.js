@@ -83,4 +83,4 @@ let buttonrow3 = new MessageActionRow()
 
 	//send the reply (including button row)
 	await interaction.reply({ content: "What channels would you like to change?", components: [buttonrow1, buttonrow1, buttonrow3], ephemeral: true })
-} module.exports.configPanel = configPanel
+} module.exports.configRarities = configRarities
