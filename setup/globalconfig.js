@@ -90,18 +90,35 @@ await interaction.reply({
 
 //handle a button press
 async function buttonHandler(interaction) {
-if (interaction.customId === 'rareyes-button') {}
-if (interaction.customId === 'epicyes-button') {}
-if (interaction.customId === 'legendaryyes-button') {}
-if (interaction.customId === 'mythicyes-button') {}
-
-if (interaction.customId === 'rareno-button') {}
-if (interaction.customId === 'rareno-button') {}
-if (interaction.customId === 'legendaryno-button') {}
-if (interaction.customId === 'mythicno-button') {}
+  //enable
+if (interaction.customId === 'rareyes-button') {
+  setRarityConfig(interaction,"rare_enabled",true)
+}
+if (interaction.customId === 'epicyes-button') {
+  setRarityConfig(interaction,"epic_enabled",true)
+}
+if (interaction.customId === 'legendaryyes-button') {
+  setRarityConfig(interaction,"legendary_enabled",true)
+}
+if (interaction.customId === 'mythicyes-button') {
+  setRarityConfig(interaction,"mythic_enabled",true)
+}
+//disable
+if (interaction.customId === 'rareno-button') {
+  setRarityConfig(interaction,'rare_enabled',false)
+}
+if (interaction.customId === 'rareno-button') {
+  setRarityConfig(interaction,"epic_enabled",false)
+}
+if (interaction.customId === 'legendaryno-button') {
+  setRarityConfig(interaction,"legendary_enabled",false)
+}
+if (interaction.customId === 'mythicno-button') {
+  setRarityConfig(interaction,"mythic_enabled",false)
+}
 } module.exports.buttonHandler = buttonHandler
 
-async function setRarityConfig(interaction, column,setTo) {
+async function setRarityConfig(interaction,column,setTo) {
   await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, column, setTo)
   var status = '';if (setTo === true) {status = 'enabled'}; if (setTo === false) {status = 'disabled'}
   var thisrarity = ''
