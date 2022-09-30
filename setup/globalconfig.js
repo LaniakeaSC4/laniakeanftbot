@@ -77,7 +77,7 @@ let buttonRow2 = new ActionRowBuilder()
 		.addComponents([button5, button6, button7, button8]) 
 		
 
-let buttonrow3 = new ActionRowBuilder()
+let buttonRow3 = new ActionRowBuilder()
 .addComponents([buttondone])
 
 
