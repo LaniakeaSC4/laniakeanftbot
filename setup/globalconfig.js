@@ -26,48 +26,48 @@ async function configRarities(interaction) {
 	//build a new button row for the command reply
 	//enable
 	let button1 = new ButtonBuilder()
-		.setStyle("ButtonStyle.Secondary")
+		.setStyle(ButtonStyle.Secondary)
 		.setLabel("1️⃣")
 		.setCustomId("rareyes-button")
 
 	let button2 = new ButtonBuilder()
 		.setLabel("2️⃣")
-		.setStyle("ButtonStyle.Secondary")
+		.setStyle(ButtonStyle.Secondary)
 		.setCustomId("epicyes-button")
 		
 	let button3 = new ButtonBuilder()
 		.setLabel("3️⃣")
-		.setStyle("ButtonStyle.Secondary")
+		.setStyle(ButtonStyle.Secondary)
 		.setCustomId("legendaryyes-button")
 
 let button4 = new ButtonBuilder()
 		.setLabel("4️⃣")
-		.setStyle("ButtonStyle.Secondary")
+		.setStyle(ButtonStyle.Secondary)
 		.setCustomId("mythicyes-button")
 		
 let button5 = new ButtonBuilder()
-		.setStyle("ButtonStyle.Secondary")
+		.setStyle(ButtonStyle.Secondary)
 		.setLabel("5️⃣")
 		.setCustomId("rareno-button")
 
 	let button6 = new ButtonBuilder()
 		.setLabel("6️⃣")
-		.setStyle("ButtonStyle.Secondary")
+		.setStyle(ButtonStyle.Secondary)
 		.setCustomId("epicno-button")
 		
 	let button7 = new ButtonBuilder()
 		.setLabel("7️⃣")
-		.setStyle("ButtonStyle.Secondary")
+		.setStyle(ButtonStyle.Secondary)
 		.setCustomId("legendaryno-button")
 
 let button8 = new ButtonBuilder()
 		.setLabel("8️⃣")
-		.setStyle("ButtonStyle.Secondary")
+		.setStyle(ButtonStyle.Secondary)
 		.setCustomId("mythicno-button")  
 		
 		let buttondone = new ButtonBuilder()
 		.setLabel("8️⃣")
-		.setStyle("ButtonStyle.Secondary")
+		.setStyle(ButtonStyle.Secondary)
 		.setCustomId("rarityDone-button")  
 	
 let buttonRow1 = new MessageActionRow()
