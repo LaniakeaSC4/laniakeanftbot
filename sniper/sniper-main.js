@@ -112,7 +112,7 @@ async function startsniper() {
                   var thislimit = parseFloat(snipe[2])
                   var hotness = await snipeHotness(parseFloat(thisprice), thisfloorprice, parseFloat(thissnipeprice))
 
-                  w.log.info('SniperV2: we have a ' + collections[k]['collectionkey'] + ' snipe! ' + thislistings[i].tokenMint + ' at price ' + thislistings[i].price)
+                  w.log.info('SniperV2: we have a ' + raritydescription + ' ' + collections[k]['collectionkey'] + ' snipe! ' + thislistings[i].tokenMint + ' at price ' + thislistings[i].price)
 
                   //initialise servers if not already - may need to do this periodically in future
                   if (!serversinitalized) { await snipersender.initaliseServers(); serversinitalized = true }
