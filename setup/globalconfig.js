@@ -18,7 +18,7 @@ async function configPanel(interaction) {
 				.setStyle(ButtonStyle.Primary),
 		)
 	//send the reply (including button row)
-	await interaction.reply({ content: "What would you like to config?", components: [row], ephemeral: true })
+	await interaction.reply({ content: "What would you like to configure?\n\n__Configure Rarities__\n Enabled or Disable particular rarities (e.g. All Rare Snipes) from all other bot functions.", components: [row], ephemeral: true })
 } module.exports.configPanel = configPanel
 
 //
@@ -74,7 +74,7 @@ let buttonRow2 = new ActionRowBuilder()
 
 	//send the reply (including button row)
 await interaction.reply({
-  content: "What channels would you like to change?\n\n1️⃣ Enable Rare Snipes\n2️⃣ Enable Epic Snipes\n3️⃣ Enable Legendary Snipes\n4️⃣ Enable Mythic Snipes\n\n5️⃣ Disable All Rare Snipes\n6️⃣Disable All Epic Snipes\n7️⃣Disable all Legendary Snipes\n8️⃣Disable Mythic Snipes\n\nWhen your finished you can dismiss this message.",
+  content: "What snipes would you like to enable or disable? Note: this change **is global** and will start/stop the selected snipe rarity for all other services (e.g. Alpha Channels, Snipe Feed, Home Channel). Disabled rarities will still be available to the rarity chacker.\n\n1️⃣ Enable Rare Snipes\n2️⃣ Enable Epic Snipes\n3️⃣ Enable Legendary Snipes\n4️⃣ Enable Mythic Snipes\n\n5️⃣ Disable All Rare Snipes\n6️⃣ Disable All Epic Snipes\n7️⃣ Disable all Legendary Snipes\n8️⃣ Disable Mythic Snipes\n\nWhen your finished you can dismiss this message.",
   components: [buttonRow1, buttonRow2], 
   ephemeral: true })
 } module.exports.configRarities = configRarities
