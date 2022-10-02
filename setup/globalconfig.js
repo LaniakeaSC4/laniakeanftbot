@@ -190,8 +190,8 @@ async function sendMaxModal(interaction) {
 async function validateModalInput(interaction, maxOrMin){
 const response = interaction.fields.getTextInputValue('price-input')//get modal input text
 //check if integer
-var responsefloat = parseFloat(response)
-w.log.info(JSON.stringify(responsefloat))
+var responsefloat = parseFloat(JSON.stringify(response))
+w.log.info(typeof responsefloat)
 if (typeof responsefloat === 'Number') {
   w.log.info('input was a number')
 }
