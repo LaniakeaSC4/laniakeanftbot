@@ -198,4 +198,4 @@ if (typeof responsefloat === 'Number') {
 
 //reply
 
-}
+} module.exports.validateModalInput = validateModalInput
