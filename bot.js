@@ -310,4 +310,42 @@ client.on('interactionCreate', async interaction => {
     }
   }
 
+  //config price
+  if (interaction.customId === 'configPrice-button') {
+    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
+      globalconfig.configPrices(interaction)
+    } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
+  }//end if button is 'configrarity-button'
+
+  //send set min price modal
+  if (interaction.customId === 'setMinPrice-button') {
+    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
+     globalconfig.sendMinModal(interaction)
+    } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
+  }//end if button is 'setMinPrice-button'
+
+ //send set max price modal
+  if (interaction.customId === 'setMaxPrice-button') {
+    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
+     globalconfig.sendMaxModal(interaction)
+    } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
+  }//end if button is 'setMaxPrice-button'
+
+
+
+
+
+  //validate and if valid create alpha channel
+  if (interaction.customId === 'setMin-modal') {
+    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) { //only if you have manage channels
+      globalconfig.validateModalInput(interaction, 'min')
+    } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }//if not laniakea
+  }//end if button is 'setMin-modal'
+  
+  if (interaction.customId === 'setMax-modal') {
+    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) { //only if you have manage channels
+      globalconfig.validateModalInput(interaction, 'max')
+    } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }//if not laniakea
+  }//end if button is 'setMax-modal' 
+
 })//end on interactionCreate 

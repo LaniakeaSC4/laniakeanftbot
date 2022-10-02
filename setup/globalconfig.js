@@ -17,11 +17,17 @@ async function configPanel(interaction) {
 				.setLabel('Configure Rarities')
 				.setStyle(ButtonStyle.Primary),
 		)
+		.addComponents(
+			new ButtonBuilder()
+				.setCustomId('configPrice-button')
+				.setLabel('Configure Price Limits')
+				.setStyle(ButtonStyle.Primary),
+		)
 	//send the reply (including button row)
-	await interaction.reply({ content: "What would you like to configure?\n\n__Configure Rarities__\n Enabled or Disable particular rarities (e.g. All Rare Snipes) from all other bot functions.", components: [row], ephemeral: true })
+	await interaction.reply({ content: "What would you like to configure?\n\n__Configure Rarities__\n Enabled or Disable particular rarities (e.g. All Rare Snipes) from all other bot functions.\n\n__Configure Price Limits__\nSet min/max prices for the snipes delivered to your server", components: [row], ephemeral: true })
 } module.exports.configPanel = configPanel
 
-//
+//configure rarity buttons/reply
 async function configRarities(interaction) {
 	//build a new button row for the command reply
 	//enable
@@ -71,7 +77,6 @@ let buttonRow1 = new ActionRowBuilder()
 let buttonRow2 = new ActionRowBuilder()
 		.addComponents([button5, button6, button7, button8]) 
 
-
 	//send the reply (including button row)
 await interaction.reply({
   content: "What snipes would you like to enable or disable? Note: this change **is global** and will start/stop the selected snipe rarity for all other services (e.g. Alpha Channels, Snipe Feed, Home Channel). Disabled rarities will still be available to the rarity chacker.\n\n1️⃣ Enable Rare Snipes\n2️⃣ Enable Epic Snipes\n3️⃣ Enable Legendary Snipes\n4️⃣ Enable Mythic Snipes\n\n5️⃣ Disable All Rare Snipes\n6️⃣ Disable All Epic Snipes\n7️⃣ Disable all Legendary Snipes\n8️⃣ Disable Mythic Snipes\n\nWhen your finished you can dismiss this message.",
@@ -119,4 +124,78 @@ async function setRarityConfig(interaction,column,setTo) {
   if (column === 'mythic_enabled') {thisrarity = 'mythic'}
   await interaction.reply({content : "Your " + thisrarity + " snipes have now been globally " + status + ". This message will auto delete in 5 seconds."})
   setTimeout(() => interaction.deleteReply(), 5000)//delete it after 5s
+}
+
+async function configPrices(interaction) {
+  const row = new ActionRowBuilder()
+		.addComponents(
+			new ButtonBuilder()
+				.setCustomId('setMinPrice-button')
+				.setLabel('Set Min Price')
+				.setStyle(ButtonStyle.Primary),
+		)
+		.addComponents(
+			new ButtonBuilder()
+				.setCustomId('setMaxPrice-button')
+				.setLabel('Set Max Price')
+				.setStyle(ButtonStyle.Primary),
+		)
+		
+	await interaction.reply({
+  content: "If you would like to set a minimum or maximum (or both) list price for the snipes sent to your server you can do so below. When your done, you can dismiss this message.",
+  components: [row], 
+  ephemeral: true })
+} 
+
+//send minimum price entry modal
+async function sendMinModal(interaction) {
+	const modal = new ModalBuilder()
+		.setCustomId('setMin-modal')
+		.setTitle('Enter minimum snipe price to be sent to your server')
+		.addComponents([
+			new ActionRowBuilder().addComponents(
+				new TextInputBuilder()
+					.setCustomId('price-input')
+					.setLabel('Minimum Snipe Price')
+					.setStyle(TextInputStyle.Short)
+					.setMinLength(1)
+					.setMaxLength(5)
+					.setPlaceholder('Please enter minimum snipe price.')
+					.setRequired(true),
+			),//end actionrow add components
+		])//end modal add components
+	await interaction.showModal(modal)
+} module.exports.sendMinModal = sendMinModal
+
+//send max price entry modal
+async function sendMaxModal(interaction) {
+	const modal = new ModalBuilder()
+		.setCustomId('setMax-modal')
+		.setTitle('Enter maximum snipe price to be sent to your server')
+		.addComponents([
+			new ActionRowBuilder().addComponents(
+				new TextInputBuilder()
+					.setCustomId('price-input')
+					.setLabel('Maximum Snipe Price')
+					.setStyle(TextInputStyle.Short)
+					.setMinLength(1)
+					.setMaxLength(5)
+					.setPlaceholder('Please enter maximum snipe price.')
+					.setRequired(true),
+			),//end actionrow add components
+		])//end modal add components
+	await interaction.showModal(modal)
+} module.exports.sendMaxModal = sendMaxModal
+
+async function validateModalInput(interaction, maxOrMin){
+const response = interaction.fields.getTextInputValue('price-input')//get modal input text
+//check if integer
+var responsefloat = parseFloat(response)
+if (typeof responsefloat === 'Number') {
+  w.log.info('input was a number')
+}
+//store it
+
+//reply
+
 }
