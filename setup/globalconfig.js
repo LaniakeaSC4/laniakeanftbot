@@ -191,6 +191,7 @@ async function validateModalInput(interaction, maxOrMin){
 const response = interaction.fields.getTextInputValue('price-input')//get modal input text
 //check if integer
 w.log.info(typeof response)
+w.log.info(response)
 if (typeof +response === 'number') {
   w.log.info('input was a number')
 }
