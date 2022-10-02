@@ -192,7 +192,7 @@ const response = interaction.fields.getTextInputValue('price-input')//get modal 
 //check if integer
 var responsefloat = parseFloat(JSON.stringify(response))
 w.log.info(typeof responsefloat)
-if (typeof responsefloat === 'Number') {
+if (typeof responsefloat === 'number') {
   w.log.info('input was a number')
 }
 //store it
