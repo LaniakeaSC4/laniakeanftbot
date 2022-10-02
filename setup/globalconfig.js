@@ -151,7 +151,7 @@ async function configPrices(interaction) {
 async function sendMinModal(interaction) {
 	const modal = new ModalBuilder()
 		.setCustomId('setMin-modal')
-		.setTitle('Enter minimum snipe price to be sent to your server')
+		.setTitle('Enter minimum snipe price')
 		.addComponents([
 			new ActionRowBuilder().addComponents(
 				new TextInputBuilder()
@@ -160,7 +160,7 @@ async function sendMinModal(interaction) {
 					.setStyle(TextInputStyle.Short)
 					.setMinLength(1)
 					.setMaxLength(5)
-					.setPlaceholder('Please enter minimum snipe price.')
+					.setPlaceholder('Enter minimum snipe price.')
 					.setRequired(true),
 			),//end actionrow add components
 		])//end modal add components
@@ -171,7 +171,7 @@ async function sendMinModal(interaction) {
 async function sendMaxModal(interaction) {
 	const modal = new ModalBuilder()
 		.setCustomId('setMax-modal')
-		.setTitle('Enter maximum snipe price to be sent to your server')
+		.setTitle('Enter maximum snipe price')
 		.addComponents([
 			new ActionRowBuilder().addComponents(
 				new TextInputBuilder()
@@ -180,7 +180,7 @@ async function sendMaxModal(interaction) {
 					.setStyle(TextInputStyle.Short)
 					.setMinLength(1)
 					.setMaxLength(5)
-					.setPlaceholder('Please enter maximum snipe price.')
+					.setPlaceholder('Enter maximum snipe price.')
 					.setRequired(true),
 			),//end actionrow add components
 		])//end modal add components
