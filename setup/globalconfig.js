@@ -145,7 +145,7 @@ async function configPrices(interaction) {
   content: "If you would like to set a minimum or maximum (or both) list price for the snipes sent to your server you can do so below. When your done, you can dismiss this message.",
   components: [row], 
   ephemeral: true })
-} 
+} module.exports.configPrices = configPrices
 
 //send minimum price entry modal
 async function sendMinModal(interaction) {
