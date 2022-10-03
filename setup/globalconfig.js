@@ -195,9 +195,12 @@ w.log.info(response)
 w.log.info(typeof +response)
 w.log.info(+response)
 
-if (typeof +response === 'number') {
-  w.log.info('input was a number')
+if (Number.isNaN(+response)) {
+  w.log.info('error this was not a number')
+} else {
+  w.log.info('This was a number. Lets do stuff')
 }
+
 //store it
 
 //reply
