@@ -36,9 +36,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 			*/
 			
 			//filter out snipes below global minimum list price (e.g. less than 2 sol)
-			if (parseFloat(thisprice) < parseFloat(supportedservers[i].min_price)) { continue }
-			if (parseFloat(thisprice) >= parseFloat(supportedservers[i].max_price)) { continue }
-
+			if (parseFloat(thisprice) < parseFloat(supportedservers[i].min_price) || parseFloat(thisprice) >= parseFloat(supportedservers[i].max_price)) { continue }
 
 			//check if this snipe should be redirected to a homechannel from the main feed
 			var foundhome = false
