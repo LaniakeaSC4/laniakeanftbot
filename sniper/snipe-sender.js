@@ -23,19 +23,22 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 	for (i = 0; i < supportedservers.length; i++) {
 		if (supportedservers[i].inserver === true) {//only proceed if bot is in server
 			var thisserver = supportedservers[i]; var thisserverid = ''; var feedchannel = ''
-			
+
 			//Skip this loop altogether if this server has a rarity disabled
-			if (raritydescription === "Rare" && supportedservers[i].rare_enabled === false) {continue}
-			if (raritydescription === "Epic" && supportedservers[i].epic_enabled === false) {continue}
-			if (raritydescription === "Legendary" && supportedservers[i].legendary_enabled === false) {continue}
-			if (raritydescription === "Mythic" && supportedservers[i].mythic_enabled === false) {continue}
-/*
+			if (raritydescription === "Rare" && supportedservers[i].rare_enabled === false) { continue }
+			if (raritydescription === "Epic" && supportedservers[i].epic_enabled === false) { continue }
+			if (raritydescription === "Legendary" && supportedservers[i].legendary_enabled === false) { continue }
+			if (raritydescription === "Mythic" && supportedservers[i].mythic_enabled === false) { continue }
+
+			/*
 			//filter by global blackslist (make /blacklist command)
 			Loop through blacklist same as alpha channels
+			*/
 
 			//filter out snipes below global minimum list price (e.g. less than 2 sol)
-			if (thisprice < supportedservers[i].minimumprice) {continue}
-			*/
+			if (thisprice < supportedservers[i].min_price) { continue }
+			if (thisprice >= supportedservers[i].max_price) { continue }
+
 
 			//check if this snipe should be redirected to a homechannel from the main feed
 			var foundhome = false
