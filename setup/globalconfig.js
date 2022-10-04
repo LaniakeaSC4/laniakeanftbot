@@ -185,7 +185,7 @@ async function validateModalInput(interaction, column) {
 	} else {
 		w.log.info('This was a number. Lets do stuff')
 		var thislimit = +response
-		if (thislimit < 0 && thislimit < 10000) {
+		if (thislimit > 0 && thislimit < 10000) {
 			//save to SQL
 			await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, column, thislimit)
 			//reply
