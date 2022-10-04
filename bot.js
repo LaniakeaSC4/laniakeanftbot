@@ -27,6 +27,13 @@ client.on('ready', async () => {
   //update server reference object used by sniper functions preiodically.
   setInterval(snipersender.initaliseServers, 240000)
 
+const schedule = require('node-schedule')
+
+//every day at 8am
+const job = schedule.scheduleJob('0 8 * * *', function(){
+  console.log('It\'s 8am. The answer to life, the universe, and everything!');
+})
+
 })//end client.on Ready
 
 const snipersender = require('./sniper/snipe-sender.js')
