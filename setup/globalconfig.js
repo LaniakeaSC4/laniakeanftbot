@@ -189,14 +189,10 @@ async function sendMaxModal(interaction) {
 
 async function validateModalInput(interaction, maxOrMin){
 const response = interaction.fields.getTextInputValue('price-input')//get modal input text
-//check if integer
-w.log.info(typeof response)
-w.log.info(response)
-w.log.info(typeof +response)
-w.log.info(+response)
+//check if number
 
 if (Number.isNaN(+response)) {
-  w.log.info('error this was not a number')
+  w.log.info('oh no! this was not a number')
 } else {
   w.log.info('This was a number. Lets do stuff')
 }
