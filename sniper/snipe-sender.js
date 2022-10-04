@@ -34,10 +34,10 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 			//filter by global blackslist (make /blacklist command)
 			Loop through blacklist same as alpha channels
 			*/
-			w.log.info(thisserver.serverid + "min price is: " + supportedservers[i].min_price + " and it type is " + typeof supportedservers[i].min_price + ". max price is " + supportedservers[i].max_price + " and its type is " + typeof supportedservers[i].max_price)
+			
 			//filter out snipes below global minimum list price (e.g. less than 2 sol)
-			if (thisprice < supportedservers[i].min_price) { continue }
-			if (thisprice >= supportedservers[i].max_price) { continue }
+			if (parseFloat(thisprice) < parseFloat(supportedservers[i].min_price)) { continue }
+			if (parseFloat(thisprice) >= parseFloat(supportedservers[i].max_price)) { continue }
 
 
 			//check if this snipe should be redirected to a homechannel from the main feed
