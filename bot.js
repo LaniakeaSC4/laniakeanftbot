@@ -295,18 +295,18 @@ client.on('interactionCreate', async interaction => {
       globalconfig.configPanel(interaction)
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
   }//end if button is 'globalconfig-button'
-  
+
   //config rarity
   if (interaction.customId === 'configrarity-button') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
       globalconfig.configRarities(interaction)
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
   }//end if button is 'configrarity-button'
-  
-  var rarityConfigButtons = ['rareyes-button','epicyes-button', 'legendaryyes-button', 'mythicyes-button','rareno-button','epicno-button', 'legendaryno-button', 'mythicno-button']
+
+  var rarityConfigButtons = ['rareyes-button', 'epicyes-button', 'legendaryyes-button', 'mythicyes-button', 'rareno-button', 'epicno-button', 'legendaryno-button', 'mythicno-button']
   if (rarityConfigButtons.includes(interaction.customId)) {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
-    globalconfig.buttonHandler(interaction)
+      globalconfig.buttonHandler(interaction)
     }
   }
 
@@ -320,31 +320,27 @@ client.on('interactionCreate', async interaction => {
   //send set min price modal
   if (interaction.customId === 'setMinPrice-button') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
-     globalconfig.sendMinModal(interaction)
+      globalconfig.sendMinModal(interaction)
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
   }//end if button is 'setMinPrice-button'
 
- //send set max price modal
+  //send set max price modal
   if (interaction.customId === 'setMaxPrice-button') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
-     globalconfig.sendMaxModal(interaction)
+      globalconfig.sendMaxModal(interaction)
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
   }//end if button is 'setMaxPrice-button'
 
-
-
-
-
-  //validate and if valid create alpha channel
+  //validate modal input and store it
   if (interaction.customId === 'setMin-modal') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) { //only if you have manage channels
-      globalconfig.validateModalInput(interaction, 'min')
+      globalconfig.validateModalInput(interaction, 'min_price')
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }//if not laniakea
   }//end if button is 'setMin-modal'
-  
+
   if (interaction.customId === 'setMax-modal') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) { //only if you have manage channels
-      globalconfig.validateModalInput(interaction, 'max')
+      globalconfig.validateModalInput(interaction, 'max_price')
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }//if not laniakea
   }//end if button is 'setMax-modal' 
 
