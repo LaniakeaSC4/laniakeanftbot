@@ -1,10 +1,11 @@
 require('dotenv').config()//import process environment vars into app engine nodejs environment using dotenv
+
+//import discord
 var discord = require('./clients/discordclient.js');
 const client = discord.getClient()
 const { Collection, PermissionsBitField } = require('discord.js');
 
-const fs = require('node:fs');
-const path = require('node:path');
+
 const w = require('./tools/winston.js');
 const deploy = require('./tools/deployonecommand.js');
 const sql = require('./tools/commonSQL.js');
@@ -30,8 +31,8 @@ client.on('ready', async () => {
 const schedule = require('node-schedule')
 
 //every day at 8am
-const job = schedule.scheduleJob('0 8 * * *', function(){
-  console.log('It\'s 8am. The answer to life, the universe, and everything!');
+const job = schedule.scheduleJob('0 9 * * *', function(){
+  console.log('It\'s 9am. The answer to life, the universe, and everything!');
 })
 
 })//end client.on Ready
@@ -76,6 +77,10 @@ client.on("guildDelete", async guild => {
 //==== Command Setup  ===
 //======================
 
+//import fs and path to build commands 
+const fs = require('node:fs')
+const path = require('node:path')
+
 //setup commands - this adds them to the client at client.commands
 client.commands = new Collection()//collection is discord fancy arrary with extended functionality
 const commandsPath = path.join(__dirname, 'commands')//all commands are at ./commands/
@@ -109,31 +114,26 @@ client.on('interactionCreate', async interaction => {
 
 const permissionerror = { content: 'Sorry, you do not have permissions to run this command (Manage Channels/Admin required)', ephemeral: true }
 
-//vote
+//=======================
+//==== interactions  ====
+//=======================
+
+//vote - user voting for collections
 const vote = require('./tools/vote.js')
 client.on('interactionCreate', async interaction => {
-  if (interaction.member.user.id === "684896787655557216") {
-    if (interaction.customId === 'voteUp-button') {
-      vote.sendVoteUpModal(interaction)
-    }
-    if (interaction.customId === 'voteDown-button') {
-      vote.sendVoteDownModal(interaction)
-    }
-
-    if (interaction.customId === 'voteUp-modal') {
-      vote.validateCollection(interaction, "up")
-    }
-    if (interaction.customId === 'voteDown-modal') {
-      vote.validateCollection(interaction, "down")
-    }
-
-  }
+    //send input modals when main up/down vote buttons are pressed
+    if (interaction.customId === 'voteUp-button') {vote.sendVoteUpModal(interaction)}
+    if (interaction.customId === 'voteDown-button') {vote.sendVoteDownModal(interaction)}
+//validate collection once modal is submitted
+    if (interaction.customId === 'voteUp-modal') {vote.validateCollection(interaction, "up")}
+    if (interaction.customId === 'voteDown-modal') {vote.validateCollection(interaction, "down")}
 })//end on interactionCreate 
 
-//feed setup
+//Main Snipe feed setup interactions
 const feedsetup = require('./setup/feedsetup.js')
 client.on('interactionCreate', async interaction => {
 
+//Main feed setup pressed from main setup dialogue 
   if (interaction.customId === 'feedsetup-button') {
     await feedsetup.whichMode(interaction)
   }//end if button is 'feedsetup-button'
