@@ -47,9 +47,13 @@ async function validateServers(){
   for (i = 0; i < supportedservers.length; i++) {
     
    supportedservers[i].premiumexpire = supportedservers[i].premiumexpire.replaceAll('\"' , '')
-   
-   
-   
+   var now = new Date()
+   var expiretime = new Date(supportedservers[i].premiumexpire)
+   if (expiretime < now){
+     w.log.info(supportedservers[i].serverid + ' has expired')
+   } else {
+     w.log.info(supportedservers[i].serverid + ' is still premium')
+   }
   } 
 
 } module.exports.validateServers = validateServers 
