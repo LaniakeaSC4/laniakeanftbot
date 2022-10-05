@@ -10,8 +10,8 @@
 
   "scripts": {
 
-    "start": "node bot.js", 
-    
+    "start": "node bot.js",
+
     "stop": "pkill --signal SIGINT nftbot"
 
   },
@@ -30,17 +30,17 @@
 
     "@solana/web3.js": "*",
 
+    "cron": "^2.1.0",
+
     "discord.js": "14.2.0",
 
     "dotenv": "*",
 
     "pg": "8.8.0",
 
-    "winston": "3.8.2", 
-    
-    "winston-papertrail-v2" : "1.0.5",
-    
-    "node-schedule" : "2.1.0"
+    "winston": "3.8.2",
+
+    "winston-papertrail-v2": "1.0.5"
 
   }
 
