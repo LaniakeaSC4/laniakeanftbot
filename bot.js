@@ -31,10 +31,10 @@ client.on('ready', async () => {
 const schedule = require('node-schedule')
 
 //every day at 8am
-const job = schedule.scheduleJob('0 10 * * *', function(){
+schedule.scheduleJob('0 10 * * *', function(){
   console.log('It\'s 10am. The answer to life, the universe, and everything!');
 })
-job()
+
 
 })//end client.on Ready
 
