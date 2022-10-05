@@ -30,11 +30,13 @@ client.on('ready', async () => {
 
 const schedule = require('node-schedule')
 
+function runcron(){
 //every day at 8am
-schedule.scheduleJob('0 11 * * *', function(){
-  w.log.info('It\'s 11am. The answer to life, the universe, and everything!');
+schedule.scheduleJob('0 19 * * *', function(){
+  w.log.info('It\'s 1900. The answer to life, the universe, and everything!');
 })
-
+}
+runcron()
 
 })//end client.on Ready
 
