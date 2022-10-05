@@ -31,8 +31,8 @@ client.on('ready', async () => {
 const schedule = require('node-schedule')
 
 //every day at 8am
-schedule.scheduleJob('0 10 * * *', function(){
-  console.log('It\'s 10am. The answer to life, the universe, and everything!');
+schedule.scheduleJob('0 11 * * *', function(){
+  w.log.info('It\'s 11am. The answer to life, the universe, and everything!');
 })
 
 
