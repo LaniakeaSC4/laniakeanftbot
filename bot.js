@@ -28,15 +28,14 @@ client.on('ready', async () => {
   //update server reference object used by sniper functions preiodically.
   setInterval(snipersender.initaliseServers, 240000)
 
-const schedule = require('node-schedule')
-
-function runcron(){
-//every day at 8am
-schedule.scheduleJob('0 19 * * *', function(){
-  w.log.info('It\'s 1900. The answer to life, the universe, and everything!');
-})
-}
-runcron()
+var CronJob = require('cron').CronJob;
+var job = new CronJob(
+	'0 22 * * * *',
+	function() {
+		w.log.info('You will see this message at 10');
+	}
+)
+job.start()
 
 })//end client.on Ready
 

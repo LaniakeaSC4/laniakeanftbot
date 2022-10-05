@@ -248,3 +248,17 @@ async function getPremiumExpiry(serverid) {
     })//end query
   })//end promise 
 }; module.exports.getPremiumExpiry = getPremiumExpiry
+
+async function getServerPremiumStatus() {
+  return new Promise((resolve, reject) => {
+    var pgclient = db.getClient()
+
+    var querystring = "SELECT serverid,premiumexpire FROM servers WHERE inserver = true"
+
+    pgclient.query(querystring, (err, res) => {
+      if (err) throw err
+      resolve(res.rows)
+    }) //end query
+  }) //end promise
+};
+module.exports.getServerPremiumStatus = getServerPremiumStatus
