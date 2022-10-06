@@ -30,7 +30,7 @@ client.on('ready', async () => {
 
 var CronJob = require('cron').CronJob;
 var job = new CronJob(
-	'* * * * *',
+	'*/10 * * * * ',
 	function() {
 		w.log.info('You will see this message at 10');
 	},null, true )
