@@ -31,7 +31,7 @@ client.on('ready', async () => {
 var CronJob = require('cron').CronJob
 var premium = require('./tools/premium.js')
 var job = new CronJob(
-	'*/10 * * * * ',
+	'0 */4 * * *',
 	function() {
 		w.log.info('Running cron job')
     premium.validateServers()
