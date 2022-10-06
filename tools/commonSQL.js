@@ -253,7 +253,7 @@ async function getServerPremiumStatus() {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
 
-    var querystring = "SELECT serverid,premium, premiumexpire FROM servers WHERE inserver = true"
+    var querystring = "SELECT serverid,premium, premiumexpire,servername FROM servers WHERE inserver = true"
 
     pgclient.query(querystring, (err, res) => {
       if (err) throw err

@@ -51,16 +51,16 @@ async function validateServers() {
       var expiretime = new Date(supportedservers[i].premiumexpire)
       if (expiretime < now) {
         if (supportedservers[i].premium === true) {
-          w.log.info('Server: ' + supportedservers[i].serverid + '\'s premium has just expired. Setting premium status to false.')
+          w.log.info('Server: ' + supportedservers[i].servername + '\'s premium has just expired. Setting premium status to false.')
           await sql.updateTableColumn("servers", "serverid", supportedservers[i].serverid, "premium", false)
-        } else {w.log.info('Server: ' + supportedservers[i].serverid + 'is not premium today.')}
+        } else {w.log.info('Server: ' + supportedservers[i].servername + 'is not premium today.')}
       } else {
-        w.log.info(supportedservers[i].serverid + ' is still premium. It will expire on: ' + expiretime)
+        w.log.info(supportedservers[i].servername + ' is still premium. It will expire on: ' + expiretime)
       }
     } else {//if there was no expiry at all for this server, let's set it to today so field isn't empty
     var newpremiumexpire = new Date()//get todays date
       newpremiumexpire.toISOString()//convert to ISO string to save in SQL
-      w.log.info('Server: ' + supportedservers[i].serverid + 'had no premium expiry time in sql setting it to now so sql is not null.')
+      w.log.info('Server: ' + supportedservers[i].servername + 'had no premium expiry time in sql setting it to now so sql is not null.')
       await sql.updateTableColumn("servers", "serverid", supportedservers[i].serverid, "premiumexpire", newpremiumexpire)
     } 
   }
