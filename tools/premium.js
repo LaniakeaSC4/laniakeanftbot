@@ -46,7 +46,7 @@ async function validateServers() {
   var supportedservers = await sql.getServerPremiumStatus()
   for (i = 0; i < supportedservers.length; i++) {
     if (supportedservers[i].premiumexpire) {//if not null (there is an exipry set)
-      supportedservers[i].premiumexpire = supportedservers[i].premiumexpire.replaceAll('\"', '')
+      supportedservers[i].premiumexpire = JSON.stringify(supportedservers[i].premiumexpire).replaceAll('\"', '')
       var now = new Date()
       var expiretime = new Date(supportedservers[i].premiumexpire)
       w.log.info(supportedservers[i].serverid + ': now is ' + now + '. expiretime is ' + expiretime + '. supportedservers[i].premiumexpire is: ' + supportedservers[i].premiumexpire)
