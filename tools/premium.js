@@ -53,7 +53,7 @@ async function validateServers() {
         if (supportedservers[i].premium === true) {
           w.log.info('Server: ' + supportedservers[i].serverid + '\'s premium has just expired. Setting premium status to false.')
           await sql.updateTableColumn("servers", "serverid", supportedservers[i].serverid, "premium", false)
-        }
+        } else {w.log.info('Server: ' + supportedservers[i].serverid + 'is not premium today.')}
       } else {
         w.log.info(supportedservers[i].serverid + ' is still premium. It will expire on: ' + expiretime)
       }
