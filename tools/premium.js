@@ -62,7 +62,7 @@ async function validateServers() {
     var newpremiumexpire = new Date()//get todays date
       newpremiumexpire.toISOString()//convert to ISO string to save in SQL
       w.log.info('Server: ' + supportedservers[i].serverid + 'had no premium expiry time in sql setting it to now so sql is not null.')
-      await sql.updateTableColumn("servers", "serverid", serverid, "premiumexpire", newpremiumexpire)
+      await sql.updateTableColumn("servers", "serverid", supportedservers[i].serverid, "premiumexpire", newpremiumexpire)
     } 
   }
 } module.exports.validateServers = validateServers 
