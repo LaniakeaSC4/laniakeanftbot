@@ -28,11 +28,13 @@ client.on('ready', async () => {
   //update server reference object used by sniper functions preiodically.
   setInterval(snipersender.initaliseServers, 240000)
 
-var CronJob = require('cron').CronJob;
+var CronJob = require('cron').CronJob
+var premium = require('./tools/premium.js')
 var job = new CronJob(
 	'*/10 * * * * ',
 	function() {
-		w.log.info('You will see this message at 10');
+		w.log.info('Running cron job')
+    premium.validateServers()
 	},null, true )
 //job.start()
 
