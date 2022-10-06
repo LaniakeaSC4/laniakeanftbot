@@ -43,7 +43,7 @@ async function updatePremium(serverid, days, interaction) {
 } module.exports.update = updatePremium
 
 async function validateServers(){
-  var supportedservers = sql.getServerPremiumStatus()
+  var supportedservers = await sql.getServerPremiumStatus()
   for (i = 0; i < supportedservers.length; i++) {
     
    supportedservers[i].premiumexpire = supportedservers[i].premiumexpire.replaceAll('\"' , '')
