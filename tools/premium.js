@@ -27,7 +27,7 @@ async function updatePremium(serverid, days, interaction) {
         expiretime.toISOString()//convert to ISO string to save in sql
         w.log.info("Updating premium expiry for " + serverid + ". There was an exisiting expiry time " + sqltime + " and it has been updated to " + expiretime)
         await sql.updateTableColumn("servers", "serverid", serverid, "premiumexpire", expiretime)//save
-        interaction.reply({ content: "Updating premium expiry for " + serverid + ". There was an exisiting expiry time " + sqltime + " and it has been updated to " + newtime, ephemeral: true })
+        interaction.reply({ content: "Updating premium expiry for " + serverid + ". There was an exisiting expiry time " + sqltime + " and it has been updated to " + expiretime, ephemeral: true })
       }
     } else {//if there wasnt an exisiting time, establish one
       var premiumexpire = new Date()//get todays date
@@ -51,10 +51,18 @@ async function validateServers() {
       var expiretime = new Date(supportedservers[i].premiumexpire)
       w.log.info(supportedservers[i].serverid + ': now is ' + now + '. expiretime is ' + expiretime + '. supportedservers[i].premiumexpire is: ' + supportedservers[i].premiumexpire)
       if (expiretime < now) {
-        w.log.info(supportedservers[i].serverid + ' has expired')
+        if (supportedservers[i].premium === true) {
+          w.log.info('Server: ' + supportedservers[i].serverid + '\'s premium has just expired. Setting premium status to false.')
+          await sql.updateTableColumn("servers", "serverid", supportedservers[i].serverid, "premium", false)
+        }
       } else {
-        w.log.info(supportedservers[i].serverid + ' is still premium')
+        w.log.info(supportedservers[i].serverid + ' is still premium. It will expire on: ' + expiretime)
       }
-    } else {}//set expire to now?
+    } else {//if there was no expiry at all for this server, let's set it to today so field isn't empty
+    var newpremiumexpire = new Date()//get todays date
+      newpremiumexpire.toISOString()//convert to ISO string to save in SQL
+      w.log.info('Server: ' + supportedservers[i].serverid + 'had no premium expiry time in sql setting it to now so sql is not null.')
+      await sql.updateTableColumn("servers", "serverid", serverid, "premiumexpire", newpremiumexpire)
+    } 
   }
 } module.exports.validateServers = validateServers 
