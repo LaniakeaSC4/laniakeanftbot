@@ -42,19 +42,19 @@ async function updatePremium(serverid, days, interaction) {
   } else { return null }
 } module.exports.update = updatePremium
 
-async function validateServers(){
+async function validateServers() {
   var supportedservers = await sql.getServerPremiumStatus()
   for (i = 0; i < supportedservers.length; i++) {
-    
-   supportedservers[i].premiumexpire = supportedservers[i].premiumexpire.replaceAll('\"' , '')
-   var now = new Date()
-   var expiretime = new Date(supportedservers[i].premiumexpire)
-   w.log.info(supportedservers[i].serverid + ': now is ' + now + '. expiretime is ' + expiretime + '. supportedservers[i].premiumexpire is: ' + supportedservers[i].premiumexpire)
-   if (expiretime < now){
-     w.log.info(supportedservers[i].serverid + ' has expired')
-   } else {
-     w.log.info(supportedservers[i].serverid + ' is still premium')
-   }
-  } 
-
+    if (supportedservers[i].premiumexpire) {//if not null (there is an exipry set)
+      supportedservers[i].premiumexpire = supportedservers[i].premiumexpire.replaceAll('\"', '')
+      var now = new Date()
+      var expiretime = new Date(supportedservers[i].premiumexpire)
+      w.log.info(supportedservers[i].serverid + ': now is ' + now + '. expiretime is ' + expiretime + '. supportedservers[i].premiumexpire is: ' + supportedservers[i].premiumexpire)
+      if (expiretime < now) {
+        w.log.info(supportedservers[i].serverid + ' has expired')
+      } else {
+        w.log.info(supportedservers[i].serverid + ' is still premium')
+      }
+    } else {}//set expire to now?
+  }
 } module.exports.validateServers = validateServers 
