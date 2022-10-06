@@ -49,6 +49,7 @@ async function validateServers(){
    supportedservers[i].premiumexpire = supportedservers[i].premiumexpire.replaceAll('\"' , '')
    var now = new Date()
    var expiretime = new Date(supportedservers[i].premiumexpire)
+   w.log.info(supportedservers[i].serverid + ': now is ' + now + '. expiretime is ' + expiretime + '. supportedservers[i].premiumexpire is: ' + supportedservers[i].premiumexpire)
    if (expiretime < now){
      w.log.info(supportedservers[i].serverid + ' has expired')
    } else {
