@@ -49,7 +49,6 @@ async function validateServers() {
       supportedservers[i].premiumexpire = JSON.stringify(supportedservers[i].premiumexpire).replaceAll('\"', '')
       var now = new Date()
       var expiretime = new Date(supportedservers[i].premiumexpire)
-      w.log.info(supportedservers[i].serverid + ': now is ' + now + '. expiretime is ' + expiretime + '. supportedservers[i].premiumexpire is: ' + supportedservers[i].premiumexpire)
       if (expiretime < now) {
         if (supportedservers[i].premium === true) {
           w.log.info('Server: ' + supportedservers[i].serverid + '\'s premium has just expired. Setting premium status to false.')
