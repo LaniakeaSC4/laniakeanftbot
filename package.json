@@ -26,7 +26,7 @@
 
   "dependencies": {
 
-    "@metaplex-foundation/js": "0.15.0",
+    "@metaplex-foundation/js": "0.16.1",
 
     "@solana/web3.js": "*",
 
