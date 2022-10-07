@@ -12,18 +12,6 @@ Then query databse with - pgclient.query()
 var db = require('../clients/pgclient.js')
 const w = require('./winston.js')
 
-/*enable if needed and edit query
-async function createTable() {
-  var pgclient = db.getClient()
-  return new Promise((resolve, reject) => {
-    //add supported collections from sqlDB to the slash command
-    pgclient.query('CREATE TABLE solanametaplex(collection_id TEXT PRIMARY KEY, data JSONB)', (err, res) => {
-      if (err) throw err
-      resolve()
-    })//end query
-  })
-};module.exports.createTable = createTable*/
-
 //creates a table row and adds data to one column - use if row dosent already exist - needs error handling like getNFTdata
 async function createTableRow(table, tableprimarykey, thisprimarykey, column, data) {
   return new Promise((resolve, reject) => {
@@ -221,7 +209,7 @@ async function getBotActiveStatus() {
   })//end promise
 }; module.exports.getBotActiveStatus = getBotActiveStatus
 
-//get servers where not is active - needs error handling like getNFTdata
+//get servers where bot is active - needs error handling like getNFTdata
 async function getBotActiveServers() {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
@@ -244,20 +232,21 @@ async function getPremiumExpiry(serverid) {
 
     pgclient.query(querystring, (err, res) => {
       if (err) throw err
-      resolve(JSON.stringify(res.rows[0].premiumexpire).replaceAll('\"', ''))
+      resolve(JSON.stringify(res.rows[0].premiumexpire).replaceAll('\"', ''))//processed so can be used in JS new Date()
     })//end query
   })//end promise 
 }; module.exports.getPremiumExpiry = getPremiumExpiry
 
+//used by cron job when checking if preium expiry times have passed
 async function getServerPremiumStatus() {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
 
-    var querystring = "SELECT serverid,premium, premiumexpire,servername FROM servers WHERE inserver = true"
+    var querystring = "SELECT serverid,premium,premiumexpire,servername FROM servers WHERE inserver = true"
 
     pgclient.query(querystring, (err, res) => {
       if (err) throw err
-      resolve(res.rows)
+      resolve(res.rows)//returned times are unprocessed for JS will need to use .replaceAll('\"', '')) before can be converted to JS date
     }) //end query
   }) //end promise
 };

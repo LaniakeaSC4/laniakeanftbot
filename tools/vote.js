@@ -72,8 +72,8 @@ async function validateCollection(interaction, updown) {
 			const response = interaction.fields.getTextInputValue('collection-input')//get modal input text
 			const reason = interaction.fields.getTextInputValue('reason-input')
 
-			var rawmeslug = response.substring(response.lastIndexOf('magiceden.io/marketplace/') + 25)
-			var meslug = rawmeslug.replace(/[^0-9a-z]/gi, '')
+			var rawmeslug = response.substring(response.lastIndexOf('magiceden.io/marketplace/') + 25)//need to save this to be able to rebuild the link later
+			var meslug = rawmeslug.replace(/[^0-9a-z]/gi, '')//also saving this clean version. clean meslug is used as common key throughout app
 
 			//get collections and populate global var
 			supportedcollections = {}//clear and repopulate in case collections have changed since last time command was run
@@ -106,8 +106,8 @@ async function validateCollection(interaction, updown) {
 			const response = interaction.fields.getTextInputValue('collection-input')//get modal input text
 			const reason = interaction.fields.getTextInputValue('reason-input')
 			if (response.includes('magiceden.io/marketplace/')) {
-				var rawmeslug = response.substring(response.lastIndexOf('magiceden.io/marketplace/') + 25)
-				var meslug = rawmeslug.replace(/[^0-9a-z]/gi, '')
+				var rawmeslug = response.substring(response.lastIndexOf('magiceden.io/marketplace/') + 25)//need to save this to be able to rebuild the link later
+				var meslug = rawmeslug.replace(/[^0-9a-z]/gi, '')//also saving this clean version. clean meslug is used as common key throughout app
 
 				//get collections and populate global var
 				supportedcollections = {}//clear and repopulate in case collections have changed since last time command was run
@@ -129,30 +129,28 @@ async function validateCollection(interaction, updown) {
 						// A chunk of data has been received.
 						resp.on('data', (chunk) => {
 							data += chunk
-						});
+						})
 						// The whole response has been received. Print out the result.
 						resp.on('end', async () => {
 							w.log.info(data)
-							if (data.toString().includes("collection not found") === false) {
+							if (data.toString().includes("collection not found") === false) {//ME responds with this is the link isnt valid (could change in future? Better using status codes?)
 								//register vote for meslug
 								await addVote(interaction.message.guildId, interaction.member.user.id, "up", meslug, rawmeslug, reason)
-
 								//reply to interaction
 								await interaction.reply({ content: 'Up vote registered for collection: ' + meslug + ". Thank you for your feedback. You can dismiss this message.", ephemeral: true });
 							} else {
 								await interaction.reply({ content: 'Collection: ' + meslug + " does not seem to be a valid collection. Please make sure you have entered the Magic Eden link correctly. You can dismiss this message.", ephemeral: true });
-							}
-						})
+							}//end else
+						})//end on data recieve end
 					}).on("error", (err) => { w.log.info("Error: " + err.message) })
-				}
+				}//end if found === false
 			} else { await interaction.reply({ content: 'Collection: `' + response + "` does not seem to be a valid Magic Eden collection link. Please make sure you have entered the Magic Eden link correctly. You can dismiss this message.", ephemeral: true }); }
-
-		}
+		}//end if upvote
 	} else { await interaction.reply({ content: "Sorry, you may only vote once per minute. Please wait. You can dismiss this message.", ephemeral: true }); }
 
 } module.exports.validateCollection = validateCollection
 
-//add vote
+//Save vote to SQL
 async function addVote(server_id, user_id, votetype, votemeslug, rawmeslug, reason = null) {
 	return new Promise((resolve, reject) => {
 		var pgclient = db.getClient()
@@ -165,33 +163,27 @@ async function addVote(server_id, user_id, votetype, votemeslug, rawmeslug, reas
 			resolve(true)
 		}) //end query
 	}) //end promise 
-}
+}//end add note
 
 //check if this user has passed timeout
 async function voteTimeoutOver(user_id) {
 	return new Promise((resolve, reject) => {
 		var pgclient = db.getClient()
-
+		//get the most recent vote for this user
 		var querystring = 'SELECT max(votetime) FROM "votes" WHERE user_id = \'' + user_id + '\''
-
 		pgclient.query(querystring, (err, res) => {
 			if (err) throw err
+			//make JS date from recived data from SQL
 			var lastvote = new Date(JSON.stringify(res.rows[0].max).replaceAll('\"', ''))
-			w.log.info('lastvote: ' + lastvote)
-			var onehour = 60 * 1000
+			var onemin = 60 * 1000
 			var now = new Date()
 			var nextvote = new Date()
-			w.log.info('now: ' + nextvote)
-			nextvote = new Date(lastvote.getTime() + onehour)
-
-			w.log.info('nextvote: ' + nextvote)
-			if (nextvote > now) {
-				w.log.info('Sorry 1h not passed since last vote')
+			nextvote = new Date(lastvote.getTime() + onemin)//add one minute to last vote time
+			if (nextvote > now) {//if allowable next vote time has passed
 				resolve(false)
 			} else {
-				w.log.info('1h has passed since last vote')
 				resolve(true)
 			}
 		}) //end query
 	}) //end promise 
-}
+}//end voteTimeoutOver

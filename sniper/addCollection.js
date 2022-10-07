@@ -2,7 +2,7 @@
 /* Gets all NFTs by verified creator address from quiknode (private RPC), then completes metadata (also via quiknode), then saves to DB*/
 
 const { Metaplex, keypairIdentity, bundlrStorage } = require("@metaplex-foundation/js")
-const { Connection, clusterApiUrl, Keypair, PublicKey } = require("@solana/web3.js")
+const { Connection, Keypair, PublicKey } = require("@solana/web3.js")
 const sql = require('../tools/commonSQL.js')//common sql related commands are in here
 const w = require('../tools/winston.js')
 const sniper = require('./sniper-main.js')
@@ -38,29 +38,29 @@ async function getMetaplexData(creatoraddress) {
 
   w.log.info('Metaplex: adding NFT JSON to the ' + metadata.length + ' NFTs we recieved - 1 API request per 65ms')
   var withjson = { "data": [], "fails": [] }
-  var heartbeat = 0
+  var heartbeat = 0//start at 0 and count for each NFT. Send log every 50
 
-  for (var i = 0; i < metadata.length; i++) {
-    var thisnft = await metaplex.nfts().load({ "metadata": metadata[i] }).run()
+  for (var i = 0; i < metadata.length; i++) {//for each of the recieved NFTs (without metadata)
+    var thisnft = await metaplex.nfts().load({ "metadata": metadata[i] }).run()//request NFT metadata
 
-    if (thisnft.json != null) {
-      withjson.data.push(thisnft)
-      heartbeat = heartbeat + 1
-      if ((heartbeat % 50) == 0) { w.log.info('Metaplex: I\'ve sent ' + heartbeat + ' json load requests') }
+    if (thisnft.json != null) {//if the response did indeed have metadata
+      withjson.data.push(thisnft)//add it to the final object
+      heartbeat = heartbeat + 1//count up heartbeat logger
+      if ((heartbeat % 50) == 0) { w.log.info('Metaplex: I\'ve sent ' + heartbeat + ' json load requests') }//console log every 50 requests (so we know process is alive)
       await wait(60)//wait to slow API requests.
-    } else {
+    } else {//if recieved NFT didnt have metadata, we can retry is. push it to a fail object.
       w.log.info('Metaplex: ' + thisnft.name + ' failed to add JSON. Pushing metadata[i] to fail list')
       withjson.fails.push(metadata[i])
-    }
+    }//end else if no NFT metadata
   }//end for each NFT metadata
 
-  //retry the fails
+  //retry the fails - only one retry, should probably do at least a 2nd retry (or more?)
   w.log.info('Metaplex: retrying ' + withjson.fails.length + ' fails')
   var heartbeat = 0
-  for (var i = 0; i < withjson.fails.length; i++) {
-    var thisnft = await metaplex.nfts().load({ "metadata": withjson.fails[i] }).run()
+  for (var i = 0; i < withjson.fails.length; i++) {//loop hrough fails object
+    var thisnft = await metaplex.nfts().load({ "metadata": withjson.fails[i] }).run()//request NFT metadata
 
-    if (thisnft.json != null) {
+    if (thisnft.json != null) {//if we got metadata
       w.log.info('Metaplex: ' + thisnft.name + ' got data on retry')
       withjson.data.push(thisnft)
       heartbeat = heartbeat + 1
@@ -68,12 +68,12 @@ async function getMetaplexData(creatoraddress) {
       await wait(80)//wait to slow API requests.
     } else {
       w.log.info("Metaplex: failed to add JSON twice. " + thisnft.name + " will not be in final obj.data")
-    }
+    }//end else if we got metadata
   }//end for each fail
 
   w.log.info('Metaplex: storing metaplex data (with JSON) in DB')
   await sql.createTableRow("solanametaplex", "creatoraddress", creatoraddress, "withjson", JSON.stringify(withjson))
-  await wait(5000)
+  await wait(5000)//making sure data has all been sucessfully transfer into SQL (could be a several MB of data)
 }; module.exports.getMetaplexData = getMetaplexData
 
 //addstep2 - gets the metaplex data and caculates the percentages of each trait. Stores as seperate object in DB
@@ -86,13 +86,13 @@ async function calculateTraitPercentages(creatoraddress) {
   for (var i = 0; i < metaplexdata.data.length; i++) {//for each nft in the metaplex data
 
     try {
-      if (metaplexdata.data[i].json) {
+      if (metaplexdata.data[i].json) {//if there is JSON metadata. This shouldnt happen now we retry fails.
         for (var j = 0; j < metaplexdata.data[i].json.attributes.length; j++) { //for each attribute of this NFT
           var maintype = metaplexdata.data[i].json.attributes[j].trait_type
           var subtype = ''
-          if (metaplexdata.data[i].json.attributes[j].value.toString()) {
-            subtype = metaplexdata.data[i].json.attributes[j].value
-          } else { subtype = 'none' }
+          if (metaplexdata.data[i].json.attributes[j].value.toString()) {//if the atribute has a value (not sure why it wouldn't or why I added this!)
+            subtype = metaplexdata.data[i].json.attributes[j].value//set subtype to it
+          } else { subtype = 'none' }//else set it to "none" which essentially adds a count for it
 
           if (maintype in traitPercentages) {//if maintype is already a key in the object
             if (subtype in traitPercentages[maintype]) {//if maintype and subtype already exist, +1 to timesSeen and +1 to total count for that maintype
@@ -113,7 +113,7 @@ async function calculateTraitPercentages(creatoraddress) {
       } else { throw 'Metaplex: var i = ' + i + ' var j = ' + j + ' maintype is: ' + maintype + 'subtype is: ' + subtype + ' for ' + metaplexdata.data[i].name }
     } catch (err) {
       w.log.info('Metaplex: Error finding traits: ' + err)
-    }
+    }//end catch error
   }//end for each nft
 
   //work out percentages
@@ -154,12 +154,14 @@ async function combineTraitRarity(creatoraddress, meslug) {
   output['collectionKey'] = nftdata.data[0].name.substring(0, (nftdata.data[0].name.indexOf('#') - 1)).toString().replace(/[^0-9a-z]/gi, '')
   output['description'] = nftdata.data[0].json.description
 
+  //log any with null JSON. This shouldnt happen no we are retrying fails and excluding failed metadata requests
+  /*
   for (var i = 0; i < nftdata.data.length; i++) {
     if (nftdata.data[i].json == null) {
       w.log.info('Metaplex: there was a null json')
       w.log.info(nftdata.data[i])
     }
-  }
+  }*/
 
   var jsonerrors = 0
   for (var i = 0; i < nftdata.data.length; i++) {//for each NFT
@@ -167,10 +169,8 @@ async function combineTraitRarity(creatoraddress, meslug) {
 
     //add the percentage rarity of each attribute of this NFT to an arrary
     try {
-      if (nftdata.data[i].json) {
+      if (nftdata.data[i].json) {//if there is metadata
         for (var j = 0; j < nftdata.data[i].json.attributes.length; j++) { //for each attribute
-          //w.log.info(nftdata.data[i].json.attributes[j] )
-
           try {
             if (nftdata.data[i].json.attributes[j]) {
               var maintype = nftdata.data[i].json.attributes[j].trait_type
@@ -194,19 +194,17 @@ async function combineTraitRarity(creatoraddress, meslug) {
           thisrarity = thisrarity * (parseFloat(thesepercentages[k]) * 10)//multiplying percentage 10x so we don't loose any resolution off the right side
         }//end for percentages
 
+        //these addresses are not always in the metadata. Set them if we can.
         var tokenAddress = ''
         try { if (nftdata.data[i].address) { tokenAddress = nftdata.data[i].address } } catch { tokenAddress = 'not found' }
-
         var mintAuthorityAddress = ''
         try { if (nftdata.data[i].mint.mintAuthorityAddress) { mintAuthorityAddress = nftdata.data[i].mint.mintAuthorityAddress } } catch { mintAuthorityAddress = 'not found' }
-
         var collectionAddress = ''
         try { if (nftdata.data[i].collection.address) { collectionAddress = nftdata.data[i].collection.address } } catch { collectionAddress = 'not found' }
-
         var metadataAddress = ''
         try { if (nftdata.data[i].metadataAddress) { metadataAddress = nftdata.data[i].metadataAddress } } catch { metadataAddress = 'not found' }
 
-        //get nft ID from name
+        //get nft ID from name - regex last number in name
         var thisnftid = 0
         var regex = /(\d+)(?!.*\d)/
         var matchid = nftdata.data[i].json.name.match(regex)
@@ -229,7 +227,7 @@ async function combineTraitRarity(creatoraddress, meslug) {
       } else { jsonerrors = jsonerrors + 1 }
     } catch (err) {
       w.log.info(err)
-    }
+    }//end catch error
   }//end for each NFT
   w.log.info('Metaplex: ' + jsonerrors + '/' + nftdata.data.length + ' gave JSON errors')
   //store new nft arrary in SQL

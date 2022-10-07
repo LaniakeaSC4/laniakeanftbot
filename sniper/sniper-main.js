@@ -1,5 +1,3 @@
-var discord = require('../clients/discordclient.js')
-const client = discord.getClient()
 const w = require('../tools/winston.js')
 const magiceden = require('../tools/magicedenRPC.js')//Magic Eden related commands are in here
 const nfttools = require('../tools/nfttools.js')//generic nft tools like get rarity description from rank in here
@@ -44,7 +42,7 @@ const initaliseSniperCollections = async () => {
       collections[seq]['listings'] = thislistings//fill tracked listings with the listings we just got
       //w.log.info('SniperV2: added initial ' + initialget + ' Listings for ' + collections[seq]['meslug'])
     })//end then
-    await wait(2000)//add delay between API requests
+    await wait(1200)//add delay between API requests
   }//for seq of sniperSequencer
 
   //get servers and load into supported servers var
@@ -84,7 +82,7 @@ async function startsniper() {
             var thisprice = pround(thislistings[i].price, 6)//set price of this lisitng
             var recievedtoken = await magiceden.getTokenDetails(thislistings[i].tokenMint)//added 25ms delay at the end of the loop to slow this down a little. Getting occasional me API and sql errors.
 
-            if (recievedtoken) {
+            if (recievedtoken) {//check if we got data from Magic Eden
 
               var thistoken = recievedtoken
               var thisname = thistoken.name
@@ -100,6 +98,7 @@ async function startsniper() {
 
               var NFTdata = await sql.getNFTdata(collections[k]['collectionkey'], thisnftid)
               if (NFTdata) {
+                //should make this promise.all instead of sequential awaits
                 var collectionSize = await sql.getData("solanametaplex", "collectionkey", collections[k]['collectionkey'], 'collectioncount')
                 var raritydescription = await nfttools.getraritydescription(collectionSize, NFTdata.rarityRank)
                 var thisembedcolour = await nfttools.getembedcolour(raritydescription)
@@ -107,24 +106,23 @@ async function startsniper() {
                 var thisfloorprice = pround(parseFloat(floorprice), 6)
                 var snipe = await testifsnipe(raritydescription, parseFloat(thisprice), parseFloat(thisfloorprice))
 
-                if (snipe) {
+                if (snipe) {//after testing, if this one was a snipe...
                   var thissnipeprice = parseFloat(snipe[1])
                   var thislimit = parseFloat(snipe[2])
-                  var hotness = await snipeHotness(parseFloat(thisprice), thisfloorprice, parseFloat(thissnipeprice))
+                  var hotness = await snipeHotness(parseFloat(thisprice), thisfloorprice, parseFloat(thissnipeprice))//how hot is this snipe?
 
                   w.log.info('SniperV2: we have a ' + raritydescription + ' ' + collections[k]['collectionkey'] + ' snipe! ' + thislistings[i].tokenMint + ' at price ' + thislistings[i].price)
 
-                  //initialise servers if not already - may need to do this periodically in future
+                  //initialise servers if not already
                   if (!serversinitalized) { await snipersender.initaliseServers(); serversinitalized = true }
-
+                  //send snipe into the send filter where server specific filters are applied (e.g. premium, price limits, etc)
                   snipersender.sendFilter(thisname, collections[k]['collectionkey'], thisembedcolour, NFTdata.rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
-
                 } else { /* w.log.info('this was not a snipe') */ } //end if not false
-              } else {
+              } else {//end else if we got data from ME
                 w.log.error('error getting nft data for ' + collections[k]['collectionkey'] + ' ' + thisnftid)
               }//end else if get nft data failed
             } else { w.log.error('error getting listing at magic Eden for this snipe test') }
-            await wait(25)//getting sql and ME API errors. Might need a delay here for each match.
+            await wait(25)//added a delay between loops so we are not sending too many requests to ME or our SQL DB
           }//end else for a token we havnt seen before
         }//end for loop of each listing recieved
 
@@ -141,7 +139,7 @@ async function startsniper() {
 
       })//end then after getting 
     }, thisinterval, value)//end recheck listing loop
-    //save this interval id so we can kill it in a restart
+    //save this interval id so we can kill it in a restart using stopsniper()
     currentloops.push(thisintervalid)
   })//end snipersequencer values
   )//end promise.all
@@ -149,12 +147,13 @@ async function startsniper() {
 module.exports.start = startsniper
 
 async function snipeHotness(thisprice, floorprice, thislimit) {
-  var blazinglimit = floorprice + ((thislimit - floorprice) * 0.2); //w.log.info('blazing limit is: ' + blazinglimit)
-  var redhotlimit = floorprice + ((thislimit - floorprice) * 0.4); //w.log.info('redhotlimit limit is: ' + redhotlimit)
-  var hotlimit = floorprice + ((thislimit - floorprice) * 0.6); //w.log.info('hotlimit limit is: ' + hotlimit)
-  var warmlimit = floorprice + ((thislimit - floorprice) * 0.8); //w.log.info('warmlimit limit is: ' + warmlimit)
-  var coollimit = thislimit; //w.log.info('coollimit limit is: ' + coollimit)
-
+  //calculate steps between list price and the snipe limit
+  var blazinglimit = floorprice + ((thislimit - floorprice) * 0.2)
+  var redhotlimit = floorprice + ((thislimit - floorprice) * 0.4)
+  var hotlimit = floorprice + ((thislimit - floorprice) * 0.6)
+  var warmlimit = floorprice + ((thislimit - floorprice) * 0.8)
+  var coollimit = thislimit
+  //assign 🔥 depedending on how close to the bottom this listing is
   if (thisprice <= blazinglimit) { return 'Blazing Hot 🔥🔥🔥🔥🔥' }
   if (thisprice <= redhotlimit && thisprice > blazinglimit) { return 'Red Hot 🔥🔥🔥🔥' }
   if (thisprice <= hotlimit && thisprice > redhotlimit) { return 'Hot 🔥🔥🔥' }
@@ -192,10 +191,11 @@ async function testifsnipe(raritydescription, thisprice, floorprice) {
   }) //end promise
 }//end testifsnipe function
 
+//function to kill all the sniper loops by interval ID. Used during a hot restart
 async function stopsniper() {
   w.log.info('stopping sniper bot with clearinterval')
-  for (var i = 0; i < currentloops.length; i++) {
+  for (var i = 0; i < currentloops.length; i++) {//for each establised loop
     clearInterval(currentloops[i])
-  }
+  }//end for
   currentloops = []//reset it
 } module.exports.stop = stopsniper

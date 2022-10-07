@@ -19,7 +19,6 @@ async function initaliseServers() {
 
 //work out where to send them
 async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize) {
-
 	for (i = 0; i < supportedservers.length; i++) {
 		if (supportedservers[i].inserver === true) {//only proceed if bot is in server
 			var thisserver = supportedservers[i]; var thisserverid = ''; var feedchannel = ''
@@ -30,28 +29,27 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 			if (raritydescription === "Legendary" && supportedservers[i].legendary_enabled === false) { continue }
 			if (raritydescription === "Mythic" && supportedservers[i].mythic_enabled === false) { continue }
 
+			//filter out snipes below global minimum list price (e.g. less than 2 sol)
+			if (parseFloat(thisprice) < parseFloat(supportedservers[i].min_price) || parseFloat(thisprice) >= parseFloat(supportedservers[i].max_price)) { continue }
+
 			/*
 			//filter by global blackslist (make /blacklist command)
 			Loop through blacklist same as alpha channels
 			*/
-			
-			//filter out snipes below global minimum list price (e.g. less than 2 sol)
-			if (parseFloat(thisprice) < parseFloat(supportedservers[i].min_price) || parseFloat(thisprice) >= parseFloat(supportedservers[i].max_price)) { continue }
 
 			//check if this snipe should be redirected to a homechannel from the main feed
-			var foundhome = false
+			var foundhome = false//start with false
 			if (thisserver.homechannel_enabled === true && thisserver.premium === true) {
 				//w.log.info('homechannel was enabled for ' + thisserver.serverid)
 				//check if this snipe needs to go into a home channel
-				for (var j = 0; j < thisserver.homechannel_collections.enabled.length; j++) {
-					if (thisserver.homechannel_collections.enabled[j] == thiscollection) {
-						if (thisserver.homechannel_id) {
-							thisserverid = thisserver.serverid
-							feedchannel = thisserver.homechannel_id
-							foundhome = true
-						}
-						//w.log.info('matched this snipe to a home collection for server: ' + thisserver.homechannel_id)
-						break
+				for (var j = 0; j < thisserver.homechannel_collections.enabled.length; j++) {//for enabled homechannel collections (could be 0)
+					if (thisserver.homechannel_collections.enabled[j] == thiscollection) {//if we match on meslug
+						if (thisserver.homechannel_id) {//if there is a homechannel ID (perhaps there are defined home collections, but channel has been deleted)
+							thisserverid = thisserver.serverid//this is the server where we are going to send it
+							feedchannel = thisserver.homechannel_id//this is (home)channel we should send it to
+							foundhome = true//set true, we found a homechannel
+						}//end if there is a homechannel id
+						break//no need to loop further
 					} else {/*w.log.info('No homechannel match for this collection on this server')*/ }
 				}//end loop through saved home channels
 			}//end if homechannel is enabled and server is premium
@@ -82,14 +80,14 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 
 				thisserverid = thisserver.serverid
 				//check if single feed mode is enabled
-				if (thisserver.singlefeedmode === true) {
+				if (thisserver.singlefeedmode === true) {//if it is, use the raresnipes channel
 					feedchannel = thisserver.raresnipes
 				} else {//get the snipes channel id to send the snipe to
 					if (raritydescription === 'Rare') { feedchannel = thisserver.raresnipes }
 					if (raritydescription === 'Epic') { feedchannel = thisserver.epicsnipes }
 					if (raritydescription === 'Legendary') { feedchannel = thisserver.legendarysnipes }
 					if (raritydescription === 'Mythic') { feedchannel = thisserver.mythicsnipes }
-				}
+				}//end else not single feed mode
 
 				if (feedchannel) {//filters out servers which are in pg but not setup yet by checking if the snipe channel is valid for this server
 					//send snipes
@@ -110,14 +108,10 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 }; module.exports.sendFilter = sendFilter
 
 async function sendsnipes(server, thischannel, delay, nftname, embedcolour, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage, listinglink, hotness, collectionSize) {
-	//if senddelay isnt null
-	if (delay) {
-		//w.log.info('server: ' + server + ' is not premium. Waiting to send ' + nftname + ' ' + raritydescription)
-		await wait(delay); /*w.log.info('Done waiting. Now sending ' + nftname + ' to ' + server)*/
-	} else { /*w.log.info('Sending ' + nftname + ' ' + raritydescription + ' immediately to premium server ' + server)*/ }
-	//try sending. Fetch server if not cached
+	//don't need server ID, channel ID is enough
+	if (delay) { await wait(delay) }//delay delivery if one was set
+	//send it
 	try {
-		//const guild = await client.guilds.fetch(server)
 		const channel = await client.channels.fetch(thischannel)
 		channel.send({
 			embeds: [
