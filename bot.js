@@ -5,29 +5,33 @@ var discord = require('./clients/discordclient.js');
 const client = discord.getClient()
 const { Collection, PermissionsBitField } = require('discord.js');
 
-
+const snipersender = require('./sniper/snipe-sender.js')
 const w = require('./tools/winston.js');
 const deploy = require('./tools/deployonecommand.js');
 const sql = require('./tools/commonSQL.js');
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
-const sniper = require('./sniper/sniper-main.js')
+//when bot restarts it "joins" all its guilds. I want to watch for new server guild joins and exectue functions on join (deploy commands). Set restarted to true, then set to false 5 seconds after client us ready.
 var restarted = true
 
 //start services
 client.on('ready', async () => {
-
-  w.log.info('Warp drive activated');
+  w.log.info('Warp drive activated')
+  
+  //start sniper functions
+  const sniper = require('./sniper/sniper-main.js')
   sniper.initialise()
+  
+  //update server reference object used by sniper functions preiodically.
+  setInterval(snipersender.initaliseServers, 240000)
 
+//after 5s,set restarted to false so guildcreate event functions will fire
   await wait(5000).then(result => {
     w.log.info('done waiting 5 on startup. Setting restarted to false')
     restarted = false
   })
-
-  //update server reference object used by sniper functions preiodically.
-  setInterval(snipersender.initaliseServers, 240000)
-
+  
+//schedule cron job on startup to check if any premium servers have expired. Runs every 4h.
 var CronJob = require('cron').CronJob
 var premium = require('./tools/premium.js')
 var job = new CronJob(
@@ -36,48 +40,56 @@ var job = new CronJob(
 		w.log.info('Running cron job')
     premium.validateServers()
 	},null, true )
-//job.start()
 
 })//end client.on Ready
 
-const snipersender = require('./sniper/snipe-sender.js')
-//joined a server
+//=========================
+//==== Guild Join/Leave ===
+//=========================
+
+//bot joined a server
 client.on("guildCreate", async guild => {
-  if (restarted != true) {
+  if (restarted != true) {//if not in the first 5 seconds after a restart
     w.log.info("Bot joined a new guild: " + guild.id)
-    var serverlist = await sql.getBotActiveStatus()
+    var serverlist = await sql.getBotActiveStatus()//serverid and inserver
     var serverfound = false
+    //check through existing servers to see if we've seen this one before
     for (var i = 0; i < serverlist.length; i++) {
       if (serverlist[i].serverid === guild.id) {
-        w.log.info('This server was already in database. Reactivating')
+        w.log.info('This server was already in database. Reactivating: setting inserver to true')
         serverfound = true
         await sql.updateTableColumn("servers", "serverid", guild.id, "inserver", true)
         break
-      }
-    }
+      }//end if match guild id to database
+    }//end for
 
-    //if server wasn't found, create it
+    //if server wasn't found, create database entry for it
     if (!serverfound) {
       w.log.info('We have not seen this server before. Creating new database entry')
+      //set create new row and set inserver true, then store guild name
       await sql.createTableRow("servers", "serverid", guild.id, "inserver", true)
       await sql.updateTableColumn("servers", "serverid", guild.id, "servername", guild.name)
-    }
+    }//end if server not found
+    //try deploy commands to this server
     try {
-      await deploy.setupOne(guild.id)
+      await deploy.setupOne(guild.id)//setup one server
     } catch (err) { w.log.error(err) }
   } else { w.log.info('not adding commands. Within 5 seconds of restart') }
-})
+})//end on GuildCreate
 
-//left a server
+//bot left a server
 client.on("guildDelete", async guild => {
   w.log.info("Bot left guild: " + guild.id)
+  //set inserver to false
   await sql.updateTableColumn("servers", "serverid", guild.id, "inserver", false)
+  //set an updated guild name on exit
   await sql.updateTableColumn("servers", "serverid", guild.id, "servername", guild.name)
+  //re-initalise the servers object the sniper sender uses now that servers have changed
   snipersender.initaliseServers()
-})
+})//end on guildDelete
 
 //======================
-//==== Command Setup  ===
+//==== Command Setup ===
 //======================
 
 //import fs and path to build commands 
@@ -110,16 +122,15 @@ client.on('interactionCreate', async interaction => {
   try {
     await command.execute(interaction)//execute in command file
   } catch (error) {
-    w.log.info(error);
-    await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+    await interaction.reply({ content: 'There was an error (' + error + ' while executing this command!', ephemeral: true });
   }//end catch
 })//end on interactionCreate
-
-const permissionerror = { content: 'Sorry, you do not have permissions to run this command (Manage Channels/Admin required)', ephemeral: true }
 
 //=======================
 //==== interactions  ====
 //=======================
+
+const permissionerror = { content: 'Sorry, you do not have permissions to run this command (Manage Channels/Admin required)', ephemeral: true }
 
 //vote - user voting for collections
 const vote = require('./tools/vote.js')
@@ -147,12 +158,12 @@ client.on('interactionCreate', async interaction => {
     if (setupstatus) {
       w.log.info('setup status was sucessful')
       await wait(5000)//give time for channels to be created
-      snipersender.initaliseServers()
+      snipersender.initaliseServers()//rebuild snipe sender object so it includes the new channels
       interaction.editReply({ content: 'Setup complete. Your Snipe Feed channels will now start receiving snipes! Default permissions are deny @\'everyone, please now configure access to the Snipe Feed channels for your users. Please also confirm the bot has send permissions on the Snipe Feed channels.', ephemeral: true })
     } else {
       w.log.info('there was an error during a setup attempt')
       interaction.reply({ content: 'There was a setup error. If your seeing this please contact Laniakea#3683 with the time the error occurred.', ephemeral: true })
-    }
+    }//end else there is an error
   }//end if button is 'standardfeed-button'
 
   if (interaction.customId === 'singlefeed-button') {
@@ -161,20 +172,22 @@ client.on('interactionCreate', async interaction => {
     if (setupstatus) {
       w.log.info('setup status was sucessful')
       await wait(5000)//give time for channels to be created
-      snipersender.initaliseServers()
+      snipersender.initaliseServers()//rebuild the snipe sender object so it has the new channel
       interaction.editReply({ content: 'Setup complete. Your Snipe Feed channel will now start receiving snipes! Default permissions are deny @\'everyone, please now configure access to the Snipe Feed channels for your users. Please also confirm the bot has send permissions on the Snipe Feed channels.', ephemeral: true })
     } else {
       w.log.info('there was an error during a setup attempt')
       interaction.reply({ content: 'There was a setup error. If your seeing this please contact Laniakea#3683 with the time the error occurred.', ephemeral: true })
-    }
+    }//end else there was an error
   }//end if button is 'singlefeed-button'
 
 })//end on interactionCreate
 
-//home setup
+//home channel setup
 const homesetup = require('./setup/homesetup.js')
 client.on('interactionCreate', async interaction => {
 
+//home setup on main /setup dialogue is pressed
+//replies to main dialogue button press with home setup dialogue asking which collections to add. Had Add and Done buttons
   if (interaction.customId === 'starthomesetup-button') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
       //if server is premium
@@ -185,11 +198,13 @@ client.on('interactionCreate', async interaction => {
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
   }//end if button is 'starthomesetup-button'
 
+//when add collection is pressed. Send a modal for collection input
   if (interaction.customId === 'addHomeCollection-button') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
       homesetup.sendModal(interaction)
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
   }//end if button is 'addHomeCollection-button'
+
 
   if (interaction.customId === 'submithome-modal') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
