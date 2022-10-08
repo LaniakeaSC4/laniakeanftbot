@@ -4,7 +4,7 @@
 
   "description": "NFT Sniper and rarity checker bot",
 
-  "version": "2.3.0",
+  "version": "3.0",
 
   "main": "bot.js",
 
