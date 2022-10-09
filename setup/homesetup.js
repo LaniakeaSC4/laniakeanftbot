@@ -115,7 +115,7 @@ async function setupchannel(interaction) {
 		}//end if
 	}//end for
 
-	if (validserver) {
+	if (validserver) {//if a supported server and currently premium
 		w.log.info('setting up home channel for guild ' + guildid)
 		const guild = await client.guilds.fetch(guildid)
 
@@ -141,14 +141,14 @@ async function setupchannel(interaction) {
 							channelcheck.snipecategory.serverfound = true
 							channelcheck.snipecategory.server_cid = channel.id
 							channelcheck.snipecategory.verified = true
-						}
+						}//end if match category channel
 						if (channel.id === channelcheck.homechannel.db_cid) {
 							w.log.info('Found the saved homechannel channel')
 							channelcheck.homechannel.serverfound = true
 							channelcheck.homechannel.server_cid = channel.id
 							channelcheck.homechannel.verified = true
-						}
-					}
+						}//end if match home channel
+					}//end if a channel is recieved (not null) from discord. Can be null if bot has no access to any channels
 				})//end forEach
 
 				//first check and create the category channel
@@ -174,12 +174,13 @@ async function setupchannel(interaction) {
 						await sql.updateTableColumn('servers', 'serverid', guildid, 'snipecategory', newchannel.id)
 					}).then(async result => {
 						createchildren()
-					})
+					})//end then create children after cat channel
 				} else {
 					w.log.info('Category channel already existed')
 					createchildren()
-				}
+				}//end else
 
+				//create children channels under the category. For home channel, only will be one child
 				async function createchildren() {
 					//get the category channel object so we can add children
 					w.log.info('fetching category channel')

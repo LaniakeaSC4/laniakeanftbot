@@ -25,9 +25,10 @@ async function replyMainSetup(interaction) {
 		if (alphachannels.enabled.length != 0) {
 			for (var i = 0; i < alphachannels.enabled.length; i++) {
 				replytext = replytext + "\n<#" + alphachannels.enabled[i].channelid + '>'
-			}
-		}
-	}
+			}//end for each alpha channel
+		}//end if alpha channel setting length isn't 0
+	}//end if there is some alpha channel settings at all
+	
 	//if replytext is still blank, reply no current channels. If we added channels, drop that last comma space
 	if (replytext === '') { replytext = '\nNo current alpha channels.\n\n' } else { replytext = replytext + "\n\n" }
 	//send the replpy (including button row)
@@ -172,14 +173,14 @@ async function setupchannel(interaction, collectionkey, alphaconfig) {
 							channelcheck.snipecategory.serverfound = true
 							channelcheck.snipecategory.server_cid = channel.id
 							channelcheck.snipecategory.verified = true
-						}
+						}//end if category
 						if (channel.id === channelcheck.alphachannel.db_cid) {
 							w.log.info('Found the saved alphachannel channel in server')
 							channelcheck.alphachannel.serverfound = true
 							channelcheck.alphachannel.server_cid = channel.id
 							channelcheck.alphachannel.verified = true
-						}
-					}
+						}//end if alpha channel
+					}//end if a channel is recieved (not null) from discord. Can be null if bot has no access to any channels
 				})//end forEach
 
 				//first check and create the category channel

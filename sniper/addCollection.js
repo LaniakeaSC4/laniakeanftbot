@@ -172,14 +172,17 @@ async function combineTraitRarity(creatoraddress, meslug) {
       if (nftdata.data[i].json) {//if there is metadata
         for (var j = 0; j < nftdata.data[i].json.attributes.length; j++) { //for each attribute
           try {
+            //if there are any attributes (should be)
             if (nftdata.data[i].json.attributes[j]) {
               var maintype = nftdata.data[i].json.attributes[j].trait_type
 
+              //if the attribute has a value, else set to none. As mentioned in calculate percentages. This may not be needed
               var subtype = ''
               if (nftdata.data[i].json.attributes[j].value.toString()) {
                 subtype = nftdata.data[i].json.attributes[j].value
               } else { subtype = 'none' }
 
+              //push percentage into an arrary
               var thispercentage = traitdata[maintype][subtype]['percentage']
               thesepercentages.push(thispercentage)
             } else { throw 'Metaplex: var i = ' + i + ' var j = ' + j + '.  maintype is a ' + typeof maintype + ': ' + maintype + '. subtype is a ' + typeof subtype + ': ' + subtype }
@@ -249,17 +252,18 @@ async function rankNFTs(creatoraddress) {
   const input = await sql.getData("solanametaplex", "creatoraddress", creatoraddress, "withrarity")//get data from DB
   w.log.info('Metaplex: input.data.length is: ' + input.data.length)
 
+  //make sure there are no null entries in our ranking. There shouldn't be as preceeding functions should handle this, but best be safe.
   var filtered = []
   for (var i = 0; i < input.data.length; i++) {
     if (input.data[i] != null) {
       filtered.push(input.data[i])
-    }
-  }
+    }//end if not null
+  }//end for
 
   //rank NFTs based on statistical rarity
   var sorted = filtered.sort((a, b) => a.statisticalRarity - b.statisticalRarity)
 
-  for (i = 0; i < sorted.length; i++) { sorted[i]['rarityRank'] = (i + 1) }//add a rank value
+  for (i = 0; i < sorted.length; i++) { sorted[i]['rarityRank'] = (i + 1) }//add a rank value to object which will be output
 
   var output = input//set output equal to what we got from DB
   output.data = []//clear just the data part (so we keep the other data)

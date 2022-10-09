@@ -69,13 +69,13 @@ async function configRarities(interaction) {
 		.setStyle(ButtonStyle.Danger)
 		.setCustomId("mythicno-button")
 
-	//build rows
+	//build discord action rows
 	let buttonRow1 = new ActionRowBuilder()
 		.addComponents([button1, button2, button3, button4])
 	let buttonRow2 = new ActionRowBuilder()
 		.addComponents([button5, button6, button7, button8])
 
-	//send the reply (including button row)
+	//send the reply (including button rows)
 	await interaction.reply({
 		content: "What snipes would you like to enable or disable? Note: this change **is global** and will start/stop the selected snipe rarity for all other services (e.g. Alpha Channels, Snipe Feed, Home Channel). Disabled rarities will still be available to the rarity chacker.\n\n1️⃣ Enable Rare Snipes\n2️⃣ Enable Epic Snipes\n3️⃣ Enable Legendary Snipes\n4️⃣ Enable Mythic Snipes\n\n5️⃣ Disable All Rare Snipes\n6️⃣ Disable All Epic Snipes\n7️⃣ Disable all Legendary Snipes\n8️⃣ Disable Mythic Snipes\n\nWhen your finished you can dismiss this message.",
 		components: [buttonRow1, buttonRow2],
@@ -85,12 +85,12 @@ async function configRarities(interaction) {
 
 //When a global config button is pressed, send it here for handling
 async function buttonHandler(interaction) {
-	//enable
+	//enable buttons
 	if (interaction.customId === 'rareyes-button') { setRarityConfig(interaction, "rare_enabled", true) }
 	if (interaction.customId === 'epicyes-button') { setRarityConfig(interaction, "epic_enabled", true) }
 	if (interaction.customId === 'legendaryyes-button') { setRarityConfig(interaction, "legendary_enabled", true) }
 	if (interaction.customId === 'mythicyes-button') { setRarityConfig(interaction, "mythic_enabled", true) }
-	//disable
+	//disable buttons
 	if (interaction.customId === 'rareno-button') { setRarityConfig(interaction, 'rare_enabled', false) }
 	if (interaction.customId === 'epicno-button') { setRarityConfig(interaction, "epic_enabled", false) }
 	if (interaction.customId === 'legendaryno-button') { setRarityConfig(interaction, "legendary_enabled", false) }
@@ -113,7 +113,7 @@ async function setRarityConfig(interaction, column, setTo) {
 Configure global min/max prices
 */
 
-//min/max setting dialogue, triggered 
+//min/max setting dialogue triggered reply with options panel to click min/max
 async function configPrices(interaction) {
 	const row = new ActionRowBuilder()
 		.addComponents(
@@ -128,7 +128,6 @@ async function configPrices(interaction) {
 				.setLabel('Set Max Price')
 				.setStyle(ButtonStyle.Primary),
 		)
-
 	await interaction.reply({
 		content: "If you would like to set a minimum or maximum (or both) list price for the snipes sent to your server you can do so below. When your done, you can dismiss this message.",
 		components: [row],
@@ -180,12 +179,12 @@ async function sendMaxModal(interaction) {
 async function validateModalInput(interaction, column) {
 	const response = interaction.fields.getTextInputValue('price-input')//get modal input text
 	//check if number
-	if (Number.isNaN(+response)) {
+	if (Number.isNaN(+response)) {//if when response is cast to a number it is NaN
 		w.log.info('oh no! this was not a number')
-	} else {
+	} else {//if it was a valid number
 		w.log.info('This was a number. Lets do stuff')
 		var thislimit = +response
-		if (thislimit > 0 && thislimit < 10000) {
+		if (thislimit > 0 && thislimit < 10000) {//if number is in some sensible range
 			//save to SQL
 			await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, column, thislimit)
 			//reply
@@ -195,6 +194,6 @@ async function validateModalInput(interaction, column) {
 		} else {
 			await interaction.reply({ content: "Min/max price must be between 0 and 10,000. Please enter a number in this range. This message will auto delete in 5 seconds." })
 			setTimeout(() => interaction.deleteReply(), 5000)//delete it after 5s
-		}
-	}
+		}//end else out of range
+	}//end else NaN
 } module.exports.validateModalInput = validateModalInput

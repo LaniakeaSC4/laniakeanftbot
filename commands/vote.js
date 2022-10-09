@@ -5,7 +5,6 @@
 //import discord parts we need
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } = require('discord.js')
 
-
 //build the slash command
 module.exports = {
   data: new SlashCommandBuilder()

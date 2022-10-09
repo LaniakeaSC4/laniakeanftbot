@@ -4,9 +4,6 @@
 
 //import discord parts we need
 const { SlashCommandBuilder } = require('discord.js')
-//import common SQL commands
-const sql = require('../tools/commonSQL.js')
-var db = require('../clients/pgclient.js')
 const w = require('../tools/winston.js')
 
 //build the slash command
@@ -24,19 +21,18 @@ module.exports = {
     upvotes.sort((a, b) => b.count - a.count)
     var upPostString = ''
 
-    if (upvotes.length != 0) {
-
-      if (upvotes.length <= 5) {
+    if (upvotes.length != 0) {//if there are some upvotes
+      if (upvotes.length <= 5) {//if there are less than 5 votes, prepare them all for printing to the reply
         for (var i = 0; i < upvotes.length; i++) {
           upPostString = upPostString + '[' + upvotes[i].votemeslug + '](https://magiceden.io/marketplace/' + upvotes[i].rawmeslug + '): ' + upvotes[i].count + ' votes.\n'
-        }
-      } else {
+        }//end for
+      } else {//if there were more than 5,lets do top 5 (they're already sorted)
         for (var i = 0; i < 5; i++) {
           upPostString = upPostString + '[' + upvotes[i].votemeslug + '](https://magiceden.io/marketplace/' + upvotes[i].rawmeslug + '): ' + upvotes[i].count + ' votes.\n'
-        }
-      }
+        }//end for 5
+      }//end else more than 5
       upPostString = upPostString.slice(0, -1)//remove last linebreak
-    } else {
+    } else {//if there was not any votes
       upPostString = 'None! Vote using `/vote`'
     }//if upvotes is 0
 
@@ -46,19 +42,18 @@ module.exports = {
     downvotes.sort((a, b) => b.count - a.count)
     var downPostString = ''
 
-    if (downvotes.length != 0) {
-
-      if (downvotes.length <= 5) {
+    if (downvotes.length != 0) {//if there was some downvotes
+      if (downvotes.length <= 5) {//if there are less than 5 votes, prepare them all for printing to the reply
         for (var i = 0; i < downvotes.length; i++) {
           downPostString = downPostString + '[' + downvotes[i].votemeslug + '](https://magiceden.io/marketplace/' + downvotes[i].rawmeslug + '): ' + downvotes[i].count + ' votes.\n'
-        }
-      } else {
+        }//end for
+      } else {//if there were more than 5,lets do top 5 (they're already sorted) 
         for (var i = 0; i < 5; i++) {
           downPostString = downPostString + '[' + downvotes[i].votemeslug + '](https://magiceden.io/marketplace/' + downvotes[i].rawmeslug + '): ' + downvotes[i].count + ' votes.\n'
-        }
-      }
+        }//end for 5
+      }//end else
       downPostString = downPostString.slice(0, -1)//remove last linebreak 
-    } else {
+    } else {//if there were not any downvotes
       downPostString = 'None! Vote using `/vote`'
     }//if downvotes was 0
 
@@ -83,9 +78,12 @@ module.exports = {
           ]
         }
       ]//end embed 
-    })
+    })//end interaction.reply
   }, //end execute block
 } //end module.exports
+
+//import dB client
+var db = require('../clients/pgclient.js')
 
 //get up votes
 async function getUpVotes() {
@@ -101,7 +99,7 @@ async function getUpVotes() {
 
     }) //end query
   }) //end promise 
-}
+}//end get upvotes function
 
 //get down votes
 async function getDownVotes() {
@@ -117,4 +115,4 @@ async function getDownVotes() {
 
     }) //end query
   }) //end promise 
-}
+}//end get downvotes function

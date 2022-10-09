@@ -80,32 +80,32 @@ async function start(interaction, feedmode) {
 							channelcheck.snipecategory.serverfound = true
 							channelcheck.snipecategory.server_cid = channel.id
 							channelcheck.snipecategory.verified = true
-						}
+						}//end if category
 						if (channel.id === channelcheck.raresnipes.db_cid) {
 							w.log.info('Found the saved raresnipes channel')
 							channelcheck.raresnipes.serverfound = true
 							channelcheck.raresnipes.server_cid = channel.id
 							channelcheck.raresnipes.verified = true
-						}
+						}//end if rare
 						if (channel.id === channelcheck.epicsnipes.db_cid) {
 							w.log.info('Found the saved epicsnipes channel')
 							channelcheck.epicsnipes.serverfound = true
 							channelcheck.epicsnipes.server_cid = channel.id
 							channelcheck.epicsnipes.verified = true
-						}
+						}//end if epic
 						if (channel.id === channelcheck.legendarysnipes.db_cid) {
 							w.log.info('Found the saved legendarysnipes channel')
 							channelcheck.legendarysnipes.serverfound = true
 							channelcheck.legendarysnipes.server_cid = channel.id
 							channelcheck.legendarysnipes.verified = true
-						}
+						}//end if legendary
 						if (channel.id === channelcheck.mythicsnipes.db_cid) {
 							w.log.info('Found the saved mythicsnipes channel')
 							channelcheck.mythicsnipes.serverfound = true
 							channelcheck.mythicsnipes.server_cid = channel.id
 							channelcheck.mythicsnipes.verified = true
-						}
-					}
+						}//end if mythic
+					}//end if a channel is recieved (not null) from discord. Can be null if bot has no access to any channels
 				})//end channels for each
 
 				//first check and create the category channel
@@ -135,7 +135,7 @@ async function start(interaction, feedmode) {
 				} else {
 					w.log.info('Category channel already existed')
 					await createchildren(guildid)
-				}
+				}//end else
 
 				async function createchildren(guildid) {
 					//get the category channel object so we can add children
@@ -174,8 +174,8 @@ async function start(interaction, feedmode) {
 								//save channel id in raresnipes column. That's where single mode snipes are always sent.
 								await sql.updateTableColumn('servers', 'serverid', guildid, channelcheck.raresnipes.servercolumn, newchannel.id)
 							})//end then
-						}
-					}
+						}//end if raresnipes verified === false
+					}//end else feedmode wasn't multichannel
 				}//end createchildren
 			})//end then after get channels
 		return true
