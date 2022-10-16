@@ -258,7 +258,7 @@ async function lastSeen(collectionkey, floorprice) {
     var pgclient = db.getClient()
 
     //update this table to add this data to this column where this key matches the table's primary key
-    var querystring = "UPDATE solanametaplex SET lastfloor = $1, lastseen = current_timestamp WHERE collectionkey = '" + collectionKey + "'"
+    var querystring = "UPDATE solanametaplex SET lastfloor = $1, lastseen = current_timestamp WHERE collectionkey = '" + collectionkey + "'"
     var querydata = [floorprice]
 
     pgclient.query(querystring, querydata, (err, res) => {
