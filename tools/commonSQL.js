@@ -251,3 +251,19 @@ async function getServerPremiumStatus() {
   }) //end promise
 };
 module.exports.getServerPremiumStatus = getServerPremiumStatus
+
+//save last seen time and floorprice
+async function lastSeen(collectionkey, floorprice) {
+  return new Promise((resolve, reject) => {
+    var pgclient = db.getClient()
+
+    //update this table to add this data to this column where this key matches the table's primary key
+    var querystring = "UPDATE solanametaplex SET lastfloor = $1, lastseen = current_timestamp WHERE collectionkey = '" + collectionKey + "'"
+    var querydata = [floorprice]
+
+    pgclient.query(querystring, querydata, (err, res) => {
+      if (err) throw err
+      resolve(true)
+    })//end query
+  })//end promise
+}; module.exports.lastSeen = lastSeen

@@ -6,8 +6,8 @@
 * Roll a new VM using instructions below to split sql databse onto another drive
 * allow servers to set a low/high limit of what snipes they would like to see.
 * trait specific snipe channels
-* Single feed module
-* Collection vote 
+* log last seen time and last fp to sql for each snipe
+* make alpha channels support multiple collections like home channels and then remove home channels
 
 ### Crypto Coral Tribe Ideas
 

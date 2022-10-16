@@ -117,6 +117,8 @@ async function startsniper() {
                   if (!serversinitalized) { await snipersender.initaliseServers(); serversinitalized = true }
                   //send snipe into the send filter where server specific filters are applied (e.g. premium, price limits, etc)
                   snipersender.sendFilter(thisname, collections[k]['collectionkey'], thisembedcolour, NFTdata.rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
+                  //save record of last seen time and floor price
+                  sql.lastSeen(collections[k]['collectionkey'],thisfloorprice)
                 } else { /* w.log.info('this was not a snipe') */ } //end if not false
               } else {//end else if we got data from ME
                 w.log.error('error getting nft data for ' + collections[k]['collectionkey'] + ' ' + thisnftid)
