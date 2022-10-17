@@ -82,6 +82,8 @@ async function getMetaplexData(creatoraddress) {
   }//end for each fail
 
   w.log.info('Metaplex: storing metaplex data (with JSON) in DB')
+  //log one to look at it
+  w.log.info(JSON.stringify(withjson.data[7]))
   return (JSON.stringify(withjson))
 }; module.exports.getMetaplexData = getMetaplexData
 
