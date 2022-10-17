@@ -15,18 +15,20 @@ const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
 //fulladd - do all steps
 async function addNewNFT(creatoraddress, meslug) {
-
+w.log.info('autoAdd: starting auto add. Getting metaplex data with JSON')
   var withJSON = await getMetaplexData(creatoraddress)
+  w.log.info('autoAdd: Got metaplex data. Calculating trait percentages')
   var traitPercentages = await calculateTraitPercentages(creatoraddress, withJSON)
+  w.log.info('autoAdd: Calculated trait percentages. Combining trait rarities with NFT data')
   var data = await combineTraitRarity(withJSON, traitPercentages, meslug)
   var unrankedNFTs = data[0]
   var collectionSize = data[1]
   var collectionkey = data[2]
-
+ w.log.info('autoAdd: Trait rarity combined. Function also returned collectionsize: ' + collectionSize + ' and collectionkey ' + collectionKey + '. Now ranking NFTs') 
   var ranked = await rankNFTs(unrankedNFTs)
-  w.log.info('Storing final object')
+  w.log.info('autoAdd: NFTs have been ranked. Storing final object. Storing creatoraddress: ' + creatoraddress + ' collectionkey: ' + collectionKey + ' meslug: ' + meslug + ' collectioncount: ' + collectionSize + ' and final nft data')
   await storeCollection(creatoraddress, collectionkey, meslug, collectionSize, ranked)
-
+w.log.info('autoAdd: Restarting sniper')
   await sniper.stop()
   await sniper.initialise()
 
@@ -43,10 +45,10 @@ async function getMetaplexData(creatoraddress) {
 
   var creatorkey = new PublicKey(creatoraddress)//make the verified creator address into a public key
 
-  w.log.info('Metaplex: getting metadata from RPC - should take about 1 minute per 100 NFTs in collection')
+  w.log.info('autoAdd1: getting metadata from RPC - should take about 1 minute per 100 NFTs in collection')
   const metadata = await metaplex.nfts().findAllByCreator({ "creator": creatorkey }).run()
 
-  w.log.info('Metaplex: adding NFT JSON to the ' + metadata.length + ' NFTs we recieved - 1 API request per 65ms')
+  w.log.info('autoAdd1: adding NFT JSON to the ' + metadata.length + ' NFTs we recieved - 1 API request per 65ms')
   var withjson = { "data": [], "fails": [] }
   var heartbeat = 0//start at 0 and count for each NFT. Send log every 50
 
@@ -56,41 +58,43 @@ async function getMetaplexData(creatoraddress) {
     if (thisnft.json != null) {//if the response did indeed have metadata
       withjson.data.push(thisnft)//add it to the final object
       heartbeat = heartbeat + 1//count up heartbeat logger
-      if ((heartbeat % 50) == 0) { w.log.info('Metaplex: I\'ve sent ' + heartbeat + ' json load requests') }//console log every 50 requests (so we know process is alive)
+      if ((heartbeat % 50) == 0) { w.log.info('autoAdd1: I\'ve sent ' + heartbeat + ' json load requests') }//console log every 50 requests (so we know process is alive)
       await wait(60)//wait to slow API requests.
     } else {//if recieved NFT didnt have metadata, we can retry is. push it to a fail object.
-      w.log.info('Metaplex: ' + thisnft.name + ' failed to add JSON. Pushing metadata[i] to fail list')
+      w.log.info('autoAdd1: ' + thisnft.name + ' failed to add JSON. Pushing metadata[i] to fail list')
       withjson.fails.push(metadata[i])
     }//end else if no NFT metadata
   }//end for each NFT metadata
 
   //retry the fails - only one retry, should probably do at least a 2nd retry (or more?)
-  w.log.info('Metaplex: retrying ' + withjson.fails.length + ' fails')
+  w.log.info('autoAdd1: retrying ' + withjson.fails.length + ' fails')
   var heartbeat = 0
   for (var i = 0; i < withjson.fails.length; i++) {//loop hrough fails object
     var thisnft = await metaplex.nfts().load({ "metadata": withjson.fails[i] }).run()//request NFT metadata
 
     if (thisnft.json != null) {//if we got metadata
-      w.log.info('Metaplex: ' + thisnft.name + ' got data on retry')
+      w.log.info('autoAdd1: ' + thisnft.name + ' got data on retry')
       withjson.data.push(thisnft)
       heartbeat = heartbeat + 1
-      if ((heartbeat % 5) == 0) { w.log.info('Metaplex: I\'ve sent ' + heartbeat + ' json load requests') }
+      if ((heartbeat % 5) == 0) { w.log.info('autoAdd1: I\'ve sent ' + heartbeat + ' json load requests') }
       await wait(80)//wait to slow API requests.
     } else {
-      w.log.info("Metaplex: failed to add JSON twice. " + thisnft.name + " will not be in final obj.data")
+      w.log.info("autoAdd1: failed to add JSON twice. " + thisnft.name + " will not be in final obj.data")
     }//end else if we got metadata
   }//end for each fail
 
-  w.log.info('Metaplex: storing metaplex data (with JSON) in DB')
+  w.log.info('autoAdd1: storing metaplex data (with JSON) in DB')
+  try {
   //log one to look at it
   w.log.info(JSON.stringify(withjson.data[7]))
+  } catch {w.log.info('autoAdd1: Error logging nft number 7')}
   return (JSON.stringify(withjson))
 }; module.exports.getMetaplexData = getMetaplexData
 
 //addstep2 - gets the metaplex data and caculates the percentages of each trait. Stores as seperate object in DB
 async function calculateTraitPercentages(metaplexdata) {
 
-  w.log.info('Metaplex: Calculating trait percentages')
+  w.log.info('autoAdd2: Calculating trait percentages')
   var traitPercentages = {}//establish output object
 
   for (var i = 0; i < metaplexdata.data.length; i++) {//for each nft in the metaplex data
@@ -120,9 +124,9 @@ async function calculateTraitPercentages(metaplexdata) {
             traitPercentages[maintype]['totalcount'] = 1
           }//end else
         }//end for each trait
-      } else { throw 'Metaplex: var i = ' + i + ' var j = ' + j + ' maintype is: ' + maintype + 'subtype is: ' + subtype + ' for ' + metaplexdata.data[i].name }
+      } else { throw 'autoAdd2: var i = ' + i + ' var j = ' + j + ' maintype is: ' + maintype + 'subtype is: ' + subtype + ' for ' + metaplexdata.data[i].name }
     } catch (err) {
-      w.log.info('Metaplex: Error finding traits: ' + err)
+      w.log.info('autoAdd2: Error finding traits: ' + err)
     }//end catch error
   }//end for each nft
 
@@ -142,7 +146,7 @@ async function calculateTraitPercentages(metaplexdata) {
 //addstep3 - get the nft and trait % data from SQL (added with getMetaplexData) and calculate the statistical rarity of each nft
 async function combineTraitRarity(nftdata, traitdata, meslug) {
 
-  w.log.info('Metaplex: Building final object with statistical rarity')
+  w.log.info('autoAdd3: Building final object with statistical rarity')
 
   var output = { "data": [] }//establish output object
 
@@ -158,7 +162,7 @@ async function combineTraitRarity(nftdata, traitdata, meslug) {
   /*
   for (var i = 0; i < nftdata.data.length; i++) {
     if (nftdata.data[i].json == null) {
-      w.log.info('Metaplex: there was a null json')
+      w.log.info('autoAdd3: there was a null json')
       w.log.info(nftdata.data[i])
     }
   }*/
@@ -185,9 +189,9 @@ async function combineTraitRarity(nftdata, traitdata, meslug) {
               //push percentage into an arrary
               var thispercentage = traitdata[maintype][subtype]['percentage']
               thesepercentages.push(thispercentage)
-            } else { throw 'Metaplex: var i = ' + i + ' var j = ' + j + '.  maintype is a ' + typeof maintype + ': ' + maintype + '. subtype is a ' + typeof subtype + ': ' + subtype }
+            } else { throw 'autoAdd3: var i = ' + i + ' var j = ' + j + '.  maintype is a ' + typeof maintype + ': ' + maintype + '. subtype is a ' + typeof subtype + ': ' + subtype }
           } catch (err) {
-            w.log.info('Metaplex: Error finding traits: ' + err)
+            w.log.info('autoAdd3: Error finding traits: ' + err)
           }
         }//end for each attribute
 
@@ -232,7 +236,7 @@ async function combineTraitRarity(nftdata, traitdata, meslug) {
       w.log.info(err)
     }//end catch error
   }//end for each NFT
-  w.log.info('Metaplex: ' + jsonerrors + '/' + nftdata.data.length + ' gave JSON errors')
+  w.log.info('autoAdd3: ' + jsonerrors + '/' + nftdata.data.length + ' gave JSON errors')
 
   //return [unranked nft object, collection count, collectionkey]
   return ([output, parseFloat(output.data.length), meslug.replace(/[^0-9a-z]/gi, '').toLowerCase()])
@@ -258,7 +262,7 @@ async function rankNFTs(input) {
   output.data = []//clear just the data part (so we keep the other data)
   output.data = sorted//set the NFT data equal to the sorted data.
 
-  w.log.info('Metaplex: Storing final object with ' + output.data.length + ' NFTs')
+  w.log.info('autoAdd4: Returning final object with ' + output.data.length + ' NFTs')
   return (output)
 
 }; module.exports.rankNFTs = rankNFTs
@@ -271,7 +275,7 @@ async function storeCollection(creatoraddress, collectionkey, meslug, collection
 
     var querystring = 'INSERT INTO solanametaplex (creatoraddress,collectionkey,meslug,collectioncount,finaldata) VALUES ($1,$2,$3,$4,$5) ON CONFLICT (creatoraddress) DO NOTHING'
     var querydata = [creatoraddress, collectionkey, meslug, collectioncount, finaldata]
-
+w.log.info('autoAdd5: Running storage command to store data in sql')
     pgclient.query(querystring, querydata, (err, res) => {
       if (err) throw err
       resolve('success')
