@@ -12,17 +12,16 @@ const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 //fulladd - do all steps
 async function addNewNFT(creatoraddress, meslug) {
 
-var withJSON = await getMetaplexData(creatoraddress)
+  var withJSON = await getMetaplexData(creatoraddress)
+  var traitPercentages = await calculateTraitPercentages(creatoraddress, withJSON)
+  var data = await combineTraitRarity(withJSON, traitPercentages, meslug)
+  var unrankedNFTs = data[0]
+  var collectionSize = data[1]
+  var collectionkey = data[2]
 
-var traitPercentages =  await calculateTraitPercentages(creatoraddress, withjson)
-
-var data = await combineTraitRarity(withJSON, traitPercentages, meslug)
-
-var unrankedNFTs = data[0]
-var collectionSize = data[1]
-var collectionkey = data [2]
-
-var ranked = await rankNFTs(creatoraddress)
+  var ranked = await rankNFTs(unrankedNFTs)
+  w.log.info('Storing final object')
+  await storeCollection(creatoraddress, collectionkey, meslug, collectionSize, ranked)
 
   await sniper.stop()
   await sniper.initialise()
@@ -79,7 +78,7 @@ async function getMetaplexData(creatoraddress) {
   }//end for each fail
 
   w.log.info('Metaplex: storing metaplex data (with JSON) in DB')
-return(JSON.stringify(withjson))
+  return (JSON.stringify(withjson))
 }; module.exports.getMetaplexData = getMetaplexData
 
 //addstep2 - gets the metaplex data and caculates the percentages of each trait. Stores as seperate object in DB
@@ -131,7 +130,7 @@ async function calculateTraitPercentages(metaplexdata) {
   })//end for each maintype
 
   //store in DB
- return(traitPercentages)
+  return (traitPercentages)
 }; module.exports.calculateTraitPercentages = calculateTraitPercentages
 
 //addstep3 - get the nft and trait % data from SQL (added with getMetaplexData) and calculate the statistical rarity of each nft
@@ -229,8 +228,8 @@ async function combineTraitRarity(nftdata, traitdata, meslug) {
   }//end for each NFT
   w.log.info('Metaplex: ' + jsonerrors + '/' + nftdata.data.length + ' gave JSON errors')
 
-//return [unranked nft object, collection count, collectionkey]
-return([output,parseFloat(output.data.length),meslug.replace(/[^0-9a-z]/gi, '').toLowerCase()])
+  //return [unranked nft object, collection count, collectionkey]
+  return ([output, parseFloat(output.data.length), meslug.replace(/[^0-9a-z]/gi, '').toLowerCase()])
 }; module.exports.combineTraitRarity = combineTraitRarity
 
 //addstep4 - get the unranked NFTs with statistical rarity and rank them for the final data
@@ -254,18 +253,18 @@ async function rankNFTs(input) {
   output.data = sorted//set the NFT data equal to the sorted data.
 
   w.log.info('Metaplex: Storing final object with ' + output.data.length + ' NFTs')
-return(output)
+  return (output)
 
 }; module.exports.rankNFTs = rankNFTs
 
 //store everything function
 var db = require('../clients/pgclient.js')
-async function storeCollection(table, tableprimarykey, thisprimarykey, column, data) {
+async function storeCollection(creatoraddress, collectionkey, meslug, collectioncount, finaldata) {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
 
-    var querystring = 'INSERT INTO solanametaplex (creatoraddress,collectionkey,meslug,collectioncount, finaldata) VALUES ( $1,$2,$3,$4,$5) ON CONFLICT (' + tableprimarykey + ') DO NOTHING'
-    var querydata = [thisprimarykey, data]
+    var querystring = 'INSERT INTO solanametaplex (creatoraddress,collectionkey,meslug,collectioncount,finaldata) VALUES ($1,$2,$3,$4,$5) ON CONFLICT (creatoraddress) DO NOTHING'
+    var querydata = [creatoraddress, collectionkey, meslug, collectioncount, finaldata]
 
     pgclient.query(querystring, querydata, (err, res) => {
       if (err) throw err

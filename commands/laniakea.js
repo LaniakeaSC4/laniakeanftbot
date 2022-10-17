@@ -6,8 +6,10 @@
 //import discord parts we need
 const { SlashCommandBuilder } = require('discord.js');
 
-//import metaplex RPC - add database functionality
+//Add collection with staged storage in SQL
 const metaplex = require('../sniper/addCollection.js')
+//Add collection without storing stages in sql
+const addcollection2 = require('../sniper/addCollection2.js')
 //import common SQL commands
 const sql = require('../tools/commonSQL.js')
 //import sniper so we can restart it
@@ -49,6 +51,16 @@ module.exports = {
 				if (action === 'addstep3') { await metaplex.combineTraitRarity(data, meslug) }
 				if (action === 'addstep4') { await metaplex.rankNFTs(data) }
 				if (action === 'addstep5') { await metaplex.cleanupDatabase(data) }
+			}
+
+			if (action === 'newadd') {
+				await interaction.reply({ content: "Command recieved. Adding new collection to database", ephemeral: true })
+				var meslug = ''
+				if (interaction.options.getString('extradata')) {
+					meslug = interaction.options.getString('extradata')
+					await addcollection2.addNewNFT(data, meslug)
+				}
+
 			}
 
 			//restart the sniper intervals
