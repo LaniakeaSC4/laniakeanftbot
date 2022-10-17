@@ -18,7 +18,7 @@ async function addNewNFT(creatoraddress, meslug) {
 w.log.info('autoAdd: starting auto add. Getting metaplex data with JSON')
   var withJSON = await getMetaplexData(creatoraddress)
   w.log.info('autoAdd: Got metaplex data. Calculating trait percentages')
-  var traitPercentages = await calculateTraitPercentages(creatoraddress, withJSON)
+  var traitPercentages = await calculateTraitPercentages(withJSON)
   w.log.info('autoAdd: Calculated trait percentages. Combining trait rarities with NFT data')
   var data = await combineTraitRarity(withJSON, traitPercentages, meslug)
   var unrankedNFTs = data[0]
