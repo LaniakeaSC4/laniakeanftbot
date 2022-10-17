@@ -88,7 +88,7 @@ async function getMetaplexData(creatoraddress) {
   //log one to look at it
   w.log.info(JSON.stringify(withjson.data[7]))
   } catch {w.log.info('autoAdd1: Error logging nft number 7')}
-  return (JSON.stringify(withjson))
+  return (withjson)
 }; module.exports.getMetaplexData = getMetaplexData
 
 //addstep2 - gets the metaplex data and caculates the percentages of each trait. Stores as seperate object in DB
