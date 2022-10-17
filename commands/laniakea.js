@@ -5,11 +5,6 @@
 
 //import discord parts we need
 const { SlashCommandBuilder } = require('discord.js');
-
-//Add collection with staged storage in SQL
-const metaplex = require('../sniper/addCollection.js')
-//Add collection without storing stages in sql
-const addcollection2 = require('../sniper/addCollection2.js')
 //import common SQL commands
 const sql = require('../tools/commonSQL.js')
 //import sniper so we can restart it
@@ -40,8 +35,14 @@ module.exports = {
 		var action = interaction.options.getString('action'); var data = interaction.options.getString('data')
 
 		//for adding new metaplex collections
+
+		//Add collection with staged storage in SQL
+		const metaplex = require('../sniper/stageAddCollection.js')
+		//Add collection without storing stages in sql
+		const addcollection2 = require('../sniper/autoAddCollection.js')
+
 		if (interaction.member.user.id === "684896787655557216") {
-			if (action === ('fulladd' || 'addstep1' || 'addstep2' || 'addstep3' || 'addstep4' || 'addstep5')) {
+			if (action === ('stageadd' || 'addstep1' || 'addstep2' || 'addstep3' || 'addstep4' || 'addstep5')) {
 				await interaction.reply({ content: "Command recieved. Adding new collection to database", ephemeral: true })
 				var meslug = ''
 				if (interaction.options.getString('extradata')) { meslug = interaction.options.getString('extradata') } //if there is extra data, set meslug to it
@@ -51,17 +52,16 @@ module.exports = {
 				if (action === 'addstep3') { await metaplex.combineTraitRarity(data, meslug) }
 				if (action === 'addstep4') { await metaplex.rankNFTs(data) }
 				if (action === 'addstep5') { await metaplex.cleanupDatabase(data) }
-			}
+			}//end if one of the stages
 
-			if (action === 'newadd') {
+			if (action === 'autoadd') {
 				await interaction.reply({ content: "Command recieved. Adding new collection to database", ephemeral: true })
 				var meslug = ''
 				if (interaction.options.getString('extradata')) {
 					meslug = interaction.options.getString('extradata')
 					await addcollection2.addNewNFT(data, meslug)
-				}
-
-			}
+				}//end if there is extradata (meslug)
+			}//end if action is autoadd
 
 			//restart the sniper intervals
 			if (action === 'restart') {
