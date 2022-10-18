@@ -22,10 +22,12 @@ async function addNewNFT(creatoraddress, meslug) {
   var traitPercentages = await calculateTraitPercentages(withJSON)
 
   w.log.info('autoAdd3: Calculated trait percentages. Combining trait rarities with NFT data')
-  var data = await combineTraitRarity(withJSON, traitPercentages, meslug, creatoraddress)
-  var unrankedNFTs = data.unrankedNFTs
-  var collectionSize = data.collectionSize
-  var collectionkey = data.collectionkey
+  var step3data = await combineTraitRarity(withJSON, traitPercentages, meslug, creatoraddress)
+  var unrankedNFTs = step3data.nft
+  var collectionSize = step3data.size
+  var collectionkey = step3data.key
+  w.log.info('autoAdd3: Function returned size: ' + collectionSize + 'for key: ' + collectionkey)
+
 
   w.log.info('autoAdd4: Trait rarity combined. Function also returned collectionsize: ' + collectionSize + ' and collectionkey ' + collectionKey + '. Now ranking NFTs')
   var ranked = await rankNFTs(unrankedNFTs)
@@ -248,12 +250,12 @@ async function combineTraitRarity(nftdata, traitdata, meslug, creatoraddress) {
   w.log.info('autoAdd3: ' + jsonerrors + '/' + nftdata.data.length + ' gave JSON errors')
   w.log.info('autoAdd3: lenth is: ' + parseFloat(output.data.length) + ' meslug clean is: ' + meslug.replace(/[^0-9a-z]/gi, '').toLowerCase())
   
-  var returnthis = new Object()
-  returnthis['unrankedNFTs'] = output
-  returnthis['collectionSize'] = parseFloat(output.data.length)
-  returnthis['collectionkey'] = meslug.replace(/[^0-9a-z]/gi, '').toLowerCase()
+  var returnthis = {}
+  returnthis['nft'] = output
+  returnthis['size'] = parseFloat(output.data.length)
+  returnthis['key'] = meslug.replace(/[^0-9a-z]/gi, '').toLowerCase()
   //return [unranked nft object, collection count, collectionkey]
-  return (returnthis)
+  return returnthis
 }; module.exports.combineTraitRarity = combineTraitRarity
 
 //addstep4 - get the unranked NFTs with statistical rarity and rank them for the final data
