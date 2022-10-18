@@ -98,7 +98,7 @@ async function startsniper() {
               var matchid = thistoken.name.match(regex)
               try { thisnftid = parseFloat(matchid[0]) } catch { w.log.info("Name error with" + thislistinglink) }
 
-              var NFTdata = await sql.getNFTdata(collections[k]['collectionkey'], thisnftid)
+              var NFTdata = await sql.getNFTdata(collections[k]['collectionkey'], thistoken.mintAddress)
               if (NFTdata) {
                 //should make this promise.all instead of sequential awaits
                 var collectionSize = await sql.getData("solanametaplex", "collectionkey", collections[k]['collectionkey'], 'collectioncount')

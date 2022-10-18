@@ -148,10 +148,10 @@ async function getAllNFTdata(collectionKey) {
 }; module.exports.getAllNFTdata = getAllNFTdata
 
 //get a single NFT collection by collectionKey and NFT ID - needs error handling like getNFTdata
-async function getNFTdata(collectionKey, nftid) {
+async function getNFTdata(collectionKey, tokenAddress) {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
-    var querystring = 'SELECT jsonb_path_query_first(finaldata, \'$.data[*] ? (@.nftid == ' + parseFloat(nftid) + ' || @.nftid == "' + nftid + '")\') AS nftdata FROM solanametaplex WHERE collectionkey = \'' + collectionKey + '\''
+    var querystring = 'SELECT jsonb_path_query_first(finaldata, \'$.data[*] ? (@.tokenAddress == ' + tokenAddress + ' || @.tokenAddress == "' + tokenAddress + '")\') AS nftdata FROM solanametaplex WHERE collectionkey = \'' + collectionKey + '\''
     pgclient.query(querystring).then(res => {
 
       if (res.rows[0]) {
