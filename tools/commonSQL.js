@@ -151,7 +151,7 @@ async function getAllNFTdata(collectionKey) {
 async function getNFTdata(collectionKey, tokenAddress) {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
-    var querystring = 'SELECT jsonb_path_query_first(finaldata, \'$.data[*] ? (@.tokenAddress == ' + tokenAddress + ' || @.tokenAddress == "' + tokenAddress + '")\') AS nftdata FROM solanametaplex WHERE collectionkey = \'' + collectionKey + '\''
+    var querystring = 'SELECT jsonb_path_query_first(finaldata, \'$.data[*] ?  (@.tokenAddress == "' + tokenAddress + '")\') AS nftdata FROM solanametaplex WHERE collectionkey = \'' + collectionKey + '\''
     pgclient.query(querystring).then(res => {
 
       if (res.rows[0]) {
