@@ -22,7 +22,7 @@ async function addNewNFT(creatoraddress, meslug) {
   var traitPercentages = await calculateTraitPercentages(withJSON)
 
   w.log.info('autoAdd3: Calculated trait percentages. Combining trait rarities with NFT data')
-  var data = await combineTraitRarity(withJSON, traitPercentages, meslug)
+  var data = await combineTraitRarity(withJSON, traitPercentages, meslug,creatoraddress)
   var unrankedNFTs = data[0]
   var collectionSize = data[1]
   var collectionkey = data[2]
@@ -150,7 +150,7 @@ async function calculateTraitPercentages(metaplexdata) {
 }; module.exports.calculateTraitPercentages = calculateTraitPercentages
 
 //addstep3 - get the nft and trait % data from SQL (added with getMetaplexData) and calculate the statistical rarity of each nft
-async function combineTraitRarity(nftdata, traitdata, meslug) {
+async function combineTraitRarity(nftdata, traitdata, meslug,creatoraddress) {
 
   w.log.info('autoAdd3: Building final object with statistical rarity')
 
