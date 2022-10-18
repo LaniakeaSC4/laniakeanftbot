@@ -15,20 +15,25 @@ const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
 //fulladd - do all steps
 async function addNewNFT(creatoraddress, meslug) {
-w.log.info('autoAdd: starting auto add. Getting metaplex data with JSON')
+  w.log.info('autoAdd1: starting auto add. Getting metaplex data with JSON')
   var withJSON = await getMetaplexData(creatoraddress)
-  w.log.info('autoAdd: Got metaplex data. Calculating trait percentages')
+
+  w.log.info('autoAdd2: Got metaplex data. Calculating trait percentages')
   var traitPercentages = await calculateTraitPercentages(withJSON)
-  w.log.info('autoAdd: Calculated trait percentages. Combining trait rarities with NFT data')
+
+  w.log.info('autoAdd3: Calculated trait percentages. Combining trait rarities with NFT data')
   var data = await combineTraitRarity(withJSON, traitPercentages, meslug)
   var unrankedNFTs = data[0]
   var collectionSize = data[1]
   var collectionkey = data[2]
- w.log.info('autoAdd: Trait rarity combined. Function also returned collectionsize: ' + collectionSize + ' and collectionkey ' + collectionKey + '. Now ranking NFTs') 
+
+  w.log.info('autoAdd4: Trait rarity combined. Function also returned collectionsize: ' + collectionSize + ' and collectionkey ' + collectionKey + '. Now ranking NFTs')
   var ranked = await rankNFTs(unrankedNFTs)
-  w.log.info('autoAdd: NFTs have been ranked. Storing final object. Storing creatoraddress: ' + creatoraddress + ' collectionkey: ' + collectionKey + ' meslug: ' + meslug + ' collectioncount: ' + collectionSize + ' and final nft data')
+
+  w.log.info('autoAdd5: NFTs have been ranked. Storing final object. Storing creatoraddress: ' + creatoraddress + ' collectionkey: ' + collectionKey + ' meslug: ' + meslug + ' collectioncount: ' + collectionSize + ' and final nft data')
   await storeCollection(creatoraddress, collectionkey, meslug, collectionSize, ranked)
-w.log.info('autoAdd: Restarting sniper')
+
+  w.log.info('autoAdd6: Restarting sniper')
   await sniper.stop()
   await sniper.initialise()
 
@@ -85,9 +90,10 @@ async function getMetaplexData(creatoraddress) {
 
   w.log.info('autoAdd1: storing metaplex data (with JSON) in DB')
   try {
-  //log one to look at it
-  w.log.info(JSON.stringify(withjson.data[7]))
-  } catch {w.log.info('autoAdd1: Error logging nft number 7')}
+    //log one to look at it
+    w.log.info('Debug loggin number 7')
+    w.log.info(JSON.stringify(withjson.data[7]))
+  } catch { w.log.info('autoAdd1: Error logging nft number 7') }
   return (withjson)
 }; module.exports.getMetaplexData = getMetaplexData
 
@@ -147,6 +153,9 @@ async function calculateTraitPercentages(metaplexdata) {
 async function combineTraitRarity(nftdata, traitdata, meslug) {
 
   w.log.info('autoAdd3: Building final object with statistical rarity')
+
+  w.log.info('Debug loggin number 7')
+  w.log.info(JSON.stringify(nftdata.data[7]))
 
   var output = { "data": [] }//establish output object
 
@@ -275,7 +284,7 @@ async function storeCollection(creatoraddress, collectionkey, meslug, collection
 
     var querystring = 'INSERT INTO solanametaplex (creatoraddress,collectionkey,meslug,collectioncount,finaldata) VALUES ($1,$2,$3,$4,$5) ON CONFLICT (creatoraddress) DO NOTHING'
     var querydata = [creatoraddress, collectionkey, meslug, collectioncount, finaldata]
-w.log.info('autoAdd5: Running storage command to store data in sql')
+    w.log.info('autoAdd5: Running storage command to store data in sql')
     pgclient.query(querystring, querydata, (err, res) => {
       if (err) throw err
       resolve('success')

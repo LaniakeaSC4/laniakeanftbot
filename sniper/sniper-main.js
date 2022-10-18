@@ -7,6 +7,8 @@ const snipersender = require('./snipe-sender.js')
 const pround = (number, decimalPlaces) => Number(Math.round(Number(number + "e" + decimalPlaces)) + "e" + decimalPlaces * -1)
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
+var logging = false//disable logging of snipe found messages. Could transiently enable this later with command
+
 var collections = {}
 
 //build array of [0,1,2,etc] for each collection we have. These integers can be used to key access to sniperCollections arrary to loop other functions through all supported collections
@@ -111,7 +113,7 @@ async function startsniper() {
                   var thislimit = parseFloat(snipe[2])
                   var hotness = await snipeHotness(parseFloat(thisprice), thisfloorprice, parseFloat(thissnipeprice))//how hot is this snipe?
 
-                  w.log.info('SniperV2: we have a ' + raritydescription + ' ' + collections[k]['collectionkey'] + ' snipe! ' + thislistings[i].tokenMint + ' at price ' + thislistings[i].price)
+                  if (logging === true) {w.log.info('SniperV2: we have a ' + raritydescription + ' ' + collections[k]['collectionkey'] + ' snipe! ' + thislistings[i].tokenMint + ' at price ' + thislistings[i].price)}
 
                   //initialise servers if not already
                   if (!serversinitalized) { await snipersender.initaliseServers(); serversinitalized = true }

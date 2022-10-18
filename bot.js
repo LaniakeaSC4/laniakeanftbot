@@ -23,7 +23,7 @@ client.on('ready', async () => {
   sniper.initialise()
 
   //update server reference object used by sniper functions preiodically.
-  setInterval(snipersender.initaliseServers, 240000)
+  setInterval(snipersender.initaliseServers, 350000)
 
   //after 5s,set restarted to false so guildcreate event functions will fire
   await wait(5000).then(result => {
