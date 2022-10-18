@@ -247,7 +247,11 @@ async function combineTraitRarity(nftdata, traitdata, meslug, creatoraddress) {
   }//end for each NFT
   w.log.info('autoAdd3: ' + jsonerrors + '/' + nftdata.data.length + ' gave JSON errors')
   w.log.info('autoAdd3: lenth is: ' + parseFloat(output.data.length) + ' meslug clean is: ' + meslug.replace(/[^0-9a-z]/gi, '').toLowerCase())
-  var returnthis = [output, parseFloat(output.data.length), meslug.replace(/[^0-9a-z]/gi, '').toLowerCase()]
+  
+  var returnthis = new Object()
+  returnthis[0] = output
+  returnthis[1] = parseFloat(output.data.length)
+  returnthis[2] = meslug.replace(/[^0-9a-z]/gi, '').toLowerCase()
   //return [unranked nft object, collection count, collectionkey]
   return (returnthis)
 }; module.exports.combineTraitRarity = combineTraitRarity
