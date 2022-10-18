@@ -23,9 +23,9 @@ async function addNewNFT(creatoraddress, meslug) {
 
   w.log.info('autoAdd3: Calculated trait percentages. Combining trait rarities with NFT data')
   var data = await combineTraitRarity(withJSON, traitPercentages, meslug, creatoraddress)
-  var unrankedNFTs = data[0]
-  var collectionSize = data[1]
-  var collectionkey = data[2]
+  var unrankedNFTs = data.unrankedNFTs
+  var collectionSize = data.collectionSize
+  var collectionkey = data.collectionkey
 
   w.log.info('autoAdd4: Trait rarity combined. Function also returned collectionsize: ' + collectionSize + ' and collectionkey ' + collectionKey + '. Now ranking NFTs')
   var ranked = await rankNFTs(unrankedNFTs)
@@ -249,9 +249,9 @@ async function combineTraitRarity(nftdata, traitdata, meslug, creatoraddress) {
   w.log.info('autoAdd3: lenth is: ' + parseFloat(output.data.length) + ' meslug clean is: ' + meslug.replace(/[^0-9a-z]/gi, '').toLowerCase())
   
   var returnthis = new Object()
-  returnthis[0] = output
-  returnthis[1] = parseFloat(output.data.length)
-  returnthis[2] = meslug.replace(/[^0-9a-z]/gi, '').toLowerCase()
+  returnthis['unrankedNFTs'] = output
+  returnthis['collectionSize'] = parseFloat(output.data.length)
+  returnthis['collectionkey'] = meslug.replace(/[^0-9a-z]/gi, '').toLowerCase()
   //return [unranked nft object, collection count, collectionkey]
   return (returnthis)
 }; module.exports.combineTraitRarity = combineTraitRarity
