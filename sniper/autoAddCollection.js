@@ -223,12 +223,17 @@ async function combineTraitRarity(nftdata, traitdata, meslug, creatoraddress) {
         try { if (nftdata.data[i].metadataAddress) { metadataAddress = nftdata.data[i].metadataAddress } } catch { metadataAddress = 'not found' }
 
  //add global true/false if enabled for rarity checker based on ability to save an id
+ output['raritychecker'] = true
               //get nft ID from name
               var thisnftid = 0
               //regex last number in string
               var regex = /(\d+)(?!.*\d)/
               var matchid = thistoken.name.match(regex)
-              try { thisnftid = parseFloat(matchid[0]) } catch { w.log.info("This NFT had no id saving as ID 0: " + thislistinglink) }
+              try { thisnftid = parseFloat(matchid[0]) } catch { 
+                output['raritychecker'] = false
+                w.log.info("This NFT had no id saving as ID 0 and disabling raritychecker for: " + thislistinglink) 
+                
+              }
 
         
         
