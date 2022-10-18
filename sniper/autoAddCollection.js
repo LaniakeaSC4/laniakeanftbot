@@ -29,10 +29,10 @@ async function addNewNFT(creatoraddress, meslug) {
   w.log.info('autoAdd3: Function returned size: ' + collectionSize + 'for key: ' + collectionkey)
 
 
-  w.log.info('autoAdd4: Trait rarity combined. Function also returned collectionsize: ' + collectionSize + ' and collectionkey ' + collectionKey + '. Now ranking NFTs')
+  w.log.info('autoAdd4: Trait rarity combined. Function also returned collectionsize: ' + collectionSize + ' and collectionkey ' + collectionkey + '. Now ranking NFTs')
   var ranked = await rankNFTs(unrankedNFTs)
 
-  w.log.info('autoAdd5: NFTs have been ranked. Storing final object. Storing creatoraddress: ' + creatoraddress + ' collectionkey: ' + collectionKey + ' meslug: ' + meslug + ' collectioncount: ' + collectionSize + ' and final nft data')
+  w.log.info('autoAdd5: NFTs have been ranked. Storing final object. Storing creatoraddress: ' + creatoraddress + ' collectionkey: ' + collectionkey + ' meslug: ' + meslug + ' collectioncount: ' + collectionSize + ' and final nft data')
   await storeCollection(creatoraddress, collectionkey, meslug, collectionSize, ranked)
 
   w.log.info('autoAdd6: Restarting sniper')
