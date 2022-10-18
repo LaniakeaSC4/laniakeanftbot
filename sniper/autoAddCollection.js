@@ -228,7 +228,7 @@ async function combineTraitRarity(nftdata, traitdata, meslug, creatoraddress) {
               var thisnftid = 0
               //regex last number in string
               var regex = /(\d+)(?!.*\d)/
-              var matchid = thistoken.name.match(regex)
+              var matchid = nftdata.data[i].name.match(regex)
               try { thisnftid = parseFloat(matchid[0]) } catch { 
                 output['raritychecker'] = false
                 w.log.info("This NFT had no id saving as ID 0 and disabling raritychecker for: " + thislistinglink) 
