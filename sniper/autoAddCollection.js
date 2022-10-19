@@ -231,12 +231,15 @@ async function combineTraitRarity(nftdata, traitdata, meslug, creatoraddress) {
         var regex = /(\d+)(?!.*\d)/
         var matchid = nftdata.data[i].name.match(regex)
 
+        var noidcount = 0
         if (matchid[0]) {
           thisnftid = parseFloat(matchid[0])
         } else {
           output['raritychecker'] = false//this collection dosent use IDs in the name.
-          w.log.info("This NFT had no id saving as ID 0 and disabling raritychecker for: " + nftdata.data[i].name)
+          noidcount = noidcount + 1
         }
+        
+        w.log.info("autoAdd3: " + noidcount + " NFTs had no id. Saving them as ID 0 and disabling raritychecker for this collection")
 
         //now store the NFT with this info into out output object
         output.data[i] = {
