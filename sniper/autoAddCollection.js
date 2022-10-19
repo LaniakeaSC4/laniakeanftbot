@@ -222,25 +222,21 @@ async function combineTraitRarity(nftdata, traitdata, meslug, creatoraddress) {
         var metadataAddress = ''
         try { if (nftdata.data[i].metadataAddress) { metadataAddress = nftdata.data[i].metadataAddress } } catch { metadataAddress = 'not found' }
 
- //add global true/false if enabled for rarity checker based on ability to save an id
- output['raritychecker'] = true
-              //get nft ID from name
-              var thisnftid = 0
-              //regex last number in string
-              var regex = /(\d+)(?!.*\d)/
-              var matchid = nftdata.data[i].name.match(regex)
-              try { thisnftid = parseFloat(matchid[0]) } catch { 
-                output['raritychecker'] = false
-                w.log.info("This NFT had no id saving as ID 0 and disabling raritychecker for: " + thislistinglink) 
-                
-              }
+        //set true for this collection to be enabled for rarity checker (has NFT IDs)
+        output['raritychecker'] = true
 
-        
-        
-        
-        
-        
-        
+        //get nft ID from name
+        var thisnftid = 0
+        //regex last number in string
+        var regex = /(\d+)(?!.*\d)/
+        var matchid = nftdata.data[i].name.match(regex)
+
+        if (matchid[0]) {
+          thisnftid = parseFloat(matchid[0])
+        } else {
+          output['raritychecker'] = false//this collection dosent use IDs in the name.
+          w.log.info("This NFT had no id saving as ID 0 and disabling raritychecker for: " + nftdata.data[i].name)
+        }
 
         //now store the NFT with this info into out output object
         output.data[i] = {
@@ -261,9 +257,9 @@ async function combineTraitRarity(nftdata, traitdata, meslug, creatoraddress) {
       w.log.info(err)
     }//end catch error
   }//end for each NFT
-  w.log.info('autoAdd3: ' + jsonerrors + '/' + nftdata.data.length + ' gave JSON errors')
-  w.log.info('autoAdd3: lenth is: ' + parseFloat(output.data.length) + ' meslug clean is: ' + meslug.replace(/[^0-9a-z]/gi, '').toLowerCase())
-  
+  w.log.info('autoAdd3: ' + jsonerrors + '/' + nftdata.data.length + '(input size) gave JSON errors')
+  w.log.info('autoAdd3: lenth is: ' + parseFloat(output.data.length) + '(output size) meslug clean is: ' + meslug.replace(/[^0-9a-z]/gi, '').toLowerCase())
+
   var returnthis = {}
   returnthis['nft'] = output
   returnthis['size'] = parseFloat(output.data.length)
