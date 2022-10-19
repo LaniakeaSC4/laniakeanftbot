@@ -179,6 +179,7 @@ async function combineTraitRarity(nftdata, traitdata, meslug, creatoraddress) {
   }*/
 
   var jsonerrors = 0
+  var noidcount = 0
   for (var i = 0; i < nftdata.data.length; i++) {//for each NFT
     var thesepercentages = []
 
@@ -231,15 +232,12 @@ async function combineTraitRarity(nftdata, traitdata, meslug, creatoraddress) {
         var regex = /(\d+)(?!.*\d)/
         var matchid = nftdata.data[i].name.match(regex)
 
-        var noidcount = 0
         if (matchid) {
           thisnftid = parseFloat(matchid[0])
         } else {
           output['raritychecker'] = false//this collection dosent use IDs in the name.
           noidcount = noidcount + 1
         }
-        
-        w.log.info("autoAdd3: " + noidcount + " NFTs had no id. Saving them as ID 0 and disabling raritychecker for this collection")
 
         //now store the NFT with this info into out output object
         output.data[i] = {
@@ -260,6 +258,7 @@ async function combineTraitRarity(nftdata, traitdata, meslug, creatoraddress) {
       w.log.info(err)
     }//end catch error
   }//end for each NFT
+   w.log.info("autoAdd3: " + noidcount + " NFTs had no id. Saving them as ID 0 and disabling raritychecker for this collection")
   w.log.info('autoAdd3: ' + jsonerrors + '/' + nftdata.data.length + '(input size) gave JSON errors')
   w.log.info('autoAdd3: lenth is: ' + parseFloat(output.data.length) + '(output size) meslug clean is: ' + meslug.replace(/[^0-9a-z]/gi, '').toLowerCase())
 
