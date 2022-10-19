@@ -96,7 +96,7 @@ async function startsniper() {
               //regex last number in string
               var regex = /(\d+)(?!.*\d)/
               var matchid = thistoken.name.match(regex)
-              try { thisnftid = parseFloat(matchid[0]) } catch { w.log.info("Name error with" + thislistinglink) }
+              if (matchid) { thisnftid = parseFloat(matchid[0]) }//if there is an NFT ID in the name, set thisnftid to it. Else it stays 0
 
               var NFTdata = await sql.getNFTdata(collections[k]['collectionkey'], thistoken.mintAddress)
               if (NFTdata) {
@@ -113,14 +113,14 @@ async function startsniper() {
                   var thislimit = parseFloat(snipe[2])
                   var hotness = await snipeHotness(parseFloat(thisprice), thisfloorprice, parseFloat(thissnipeprice))//how hot is this snipe?
 
-                  if (logging === true) {w.log.info('SniperV2: we have a ' + raritydescription + ' ' + collections[k]['collectionkey'] + ' snipe! ' + thislistings[i].tokenMint + ' at price ' + thislistings[i].price)}
+                  if (logging === true) { w.log.info('SniperV2: we have a ' + raritydescription + ' ' + collections[k]['collectionkey'] + ' snipe! ' + thislistings[i].tokenMint + ' at price ' + thislistings[i].price) }
 
                   //initialise servers if not already
                   if (!serversinitalized) { await snipersender.initaliseServers(); serversinitalized = true }
                   //send snipe into the send filter where server specific filters are applied (e.g. premium, price limits, etc)
                   snipersender.sendFilter(thisname, collections[k]['collectionkey'], thisembedcolour, NFTdata.rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize)
                   //save record of last seen time and floor price
-                  sql.lastSeen(collections[k]['collectionkey'],thisfloorprice)
+                  sql.lastSeen(collections[k]['collectionkey'], thisfloorprice)
                 } else { /* w.log.info('this was not a snipe') */ } //end if not false
               } else {//end else if we got data from ME
                 w.log.error('error getting nft data for ' + collections[k]['collectionkey'] + ' ' + thisnftid)
