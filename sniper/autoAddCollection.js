@@ -232,7 +232,7 @@ async function combineTraitRarity(nftdata, traitdata, meslug, creatoraddress) {
         var matchid = nftdata.data[i].name.match(regex)
 
         var noidcount = 0
-        if (matchid[0]) {
+        if (matchid) {
           thisnftid = parseFloat(matchid[0])
         } else {
           output['raritychecker'] = false//this collection dosent use IDs in the name.
