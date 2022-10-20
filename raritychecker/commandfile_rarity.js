@@ -2,7 +2,7 @@
  * Rarity checker command file
  
  
-this was removed from /commands when I stated adding collecitons without nft ids (creator address only
+this file was removed from /commands when I stated adding collecitons without nft ids (creator address only. Files in /commands directory are parsed to setup bot slash commands.
 functionality disbaked for now. If I bring this back, would need a way to differentiate between collections which have searchable nft ids or not.
  
  
