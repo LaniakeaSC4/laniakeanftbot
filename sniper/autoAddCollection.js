@@ -302,7 +302,7 @@ async function storeCollection(creatoraddress, collectionkey, meslug, collection
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
 
-    var querystring = 'INSERT INTO solanametaplex (creatoraddress,collectionkey,meslug,collectioncount,finaldata) VALUES ($1,$2,$3,$4,$5) ON CONFLICT (creatoraddress) DO NOTHING'
+    var querystring = 'INSERT INTO solanametaplex (creatoraddress,collectionkey,meslug,collectioncount,finaldata) VALUES ($1,$2,$3,$4,$5) ON CONFLICT (creatoraddress) DO UPDATE SET finaldata = $5,collectioncount = $4'
     var querydata = [creatoraddress, collectionkey, meslug, collectioncount, finaldata]
     w.log.info('autoAdd5: Running storage command to store data in sql')
     pgclient.query(querystring, querydata, (err, res) => {
