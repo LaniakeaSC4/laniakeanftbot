@@ -1,5 +1,11 @@
 /*
- * Rarity checker command
+ * Rarity checker command file
+ 
+ 
+this was removed from /commands when I stated adding collecitons without nft ids (creator address only
+functionality disbaked for now. If I bring this back, would need a way to differentiate between collections which have searchable nft ids or not.
+ 
+ 
  * Users can use this to check the rarity of an individual nft in a collection.
  */
 
