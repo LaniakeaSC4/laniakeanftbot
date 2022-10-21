@@ -117,7 +117,6 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 			embeds: [
 				{
 					"title": nftname,
-					"description": raritydescription + ' Snipe Opportunity',
 					"color": embedcolour,
 					"footer": {
 						"text": "D: https://discord.gg/CgF7neAte2 | W: nftsniperbot.xyz"
@@ -129,8 +128,8 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 							"inline": false
 						},
 						{
-							"name": "⚡ __Snipe Price Info__",
-							"value": 'For ' + raritydescription + ' NFTs, any price less than ' + parseFloat(thislimit) + 'x the floor price of ' + pround(parseFloat(floorprice), 3) + ' SOL is a snipe (i.e. less than ' + pround(parseFloat(thissnipeprice), 3) + ' SOL)',
+							"name": "⚡ __Why is this a snipe?__",
+							"value": 'For ' + raritydescription.toLowerCase() + ' NFTs, listing price <' + parseFloat(thislimit) + 'x the floor price of ' + pround(parseFloat(floorprice), 3) + ' SOL is a snipe (i.e. less than ' + pround(parseFloat(thissnipeprice), 3) + ' SOL)',
 							"inline": true
 						},
 						{
