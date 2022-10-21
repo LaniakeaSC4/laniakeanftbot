@@ -39,6 +39,9 @@ client.on('ready', async () => {
     //make a new table, loop through all supported collections every time this cron job runs and save a record of fp
     //then run a cleanup job to keep only last x entries in that table - https://dba.stackexchange.com/questions/314004/delete-but-keep-x-amount-of-rows-per-input
   }, null, true)
+  
+  var averageFP = require('./tools/collectionAverage.js')
+  averageFP.getCurrentFP()
 
 })//end client.on Ready
 
