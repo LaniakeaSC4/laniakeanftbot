@@ -10,8 +10,8 @@ var meslugs = await sql.getRowsForColumn("solanametaplex", "meslug")
 
 for (i = 0;i < meslugs.length;i++){
 
-  var thisfp = await magiceden.getFloorPrice(meslugs[i])
-    w.log.info('Floor price for collection ' + meslugs[i] + ' is ' + thisfp)
+  var thisfp = await magiceden.getFloorPrice(meslugs[i].meslug)
+    w.log.info('Floor price for collection ' + meslugs[i].meslug+ ' is ' + thisfp)
     await wait(2000)
 
 }
