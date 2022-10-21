@@ -116,7 +116,8 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 		channel.send({
 			embeds: [
 				{
-					"title": raritydescription + ' Snipe Opportunity: ' + nftname,
+					"title": nftname,
+					"description": raritydescription + ' Snipe Opportunity',
 					"color": embedcolour,
 					"footer": {
 						"text": "D: https://discord.gg/CgF7neAte2 | W: nftsniperbot.xyz"
@@ -134,7 +135,7 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 						},
 						{
 							"name": "📌 __Laniakea Sniper by Laniakea#3683__",
-							"value": "**You can now vote for collections to be included in Snipe Feed. Cast your vote with `/vote`! **",
+							"value": "What features would make this bot better? DM @Laniakea#3683 or join the discord below to let me know!",
 							"inline": false
 						}
 					],
