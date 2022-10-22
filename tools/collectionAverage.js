@@ -40,7 +40,7 @@ for (i = 0;i < collections.length;i++){
   
   var dbstore = {}
   dbstore['fp_history'] = fpoutput
-  dbatore['sol_history'] = soloutput
+  dbstore['sol_history'] = soloutput
   
   
     w.log.info('Floor price for collection ' + collections[i].meslug+ ' is ' + thisfp + ' and solprice is ' + solprice)
