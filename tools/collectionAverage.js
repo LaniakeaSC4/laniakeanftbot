@@ -1,3 +1,4 @@
+const https = require('https')
 var db = require('../clients/pgclient.js')
 const sql = require('./commonSQL.js')//common sql related commands are in here
 const w = require('./winston.js')
