@@ -88,6 +88,13 @@ for (i = 0;i < collections.length;i++){
   
   if (sol_direction === 'decreased' && fp_direction === 'increased') {collection_strength = '⬆️ This collection is increasing FP but SOL is decreasing'}
   
+  if (sol_direction === 'unchanged' && fp_direction === 'decreased') {collection_strength = '⬆️ This collection FP is dropping but SOL is unchanged'}
+  if (sol_direction === 'unchanged' && fp_direction === 'increased') {collection_strength = '⬇️ This collection FP is dropping but SOL is unchanged'}
+  
+  if (sol_direction === 'increased' && fp_direction === 'unchanged') { collection_strength = '↘️ This collection FP is unchanged but SOL is increasing' }
+  if (sol_direction === 'decreased' && fp_direction === 'unchanged') { collection_strength = '↗️ This collection FP is unchanged but SOL is decreasing' }
+  if (sol_direction === 'unchanged' && fp_direction === 'unchanged') { collection_strength = '➡️ This collection FP is unchanged and SOL is unchanged' }
+  
   
   w.log.info('solchange is: ' + solchange + ' sol_direction: ' + sol_direction + '. sol_percent is: ' + sol_percent)
   w.log.info('fpchange is: ' + fpchange + ' fp_direction: ' + fp_direction + '. fp_percent is: ' + fp_percent)
