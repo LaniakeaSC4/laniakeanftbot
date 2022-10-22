@@ -2,6 +2,7 @@ const https = require('https')
 var db = require('../clients/pgclient.js')
 const sql = require('./commonSQL.js')//common sql related commands are in here
 const w = require('./winston.js')
+const pround = (number, decimalPlaces) => Number(Math.round(Number(number + "e" + decimalPlaces)) + "e" + decimalPlaces * -1)
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 const magiceden = require('./magicedenRPC.js')//Magic Eden related commands are in here
 
@@ -40,18 +41,33 @@ for (i = 0;i < collections.length;i++){
   
   var solchange = 1
   var fpchange = 1
+  var sol_direction = ''
+  var sol_percent = ''
+  var fp_direction = ''
+  
   if (soloutput.length > 1 && fpoutput.length > 1) {
-    var lastsolentry = parseFloat(soloutput.length - 1)
-    var secondlastsol = lastsolentry - 1
-    w.log.info(lastsolentry + ' ' + soloutput[lastsolentry] + ' ' + typeof lastsolentry + '. ' + secondlastsol + ' ' + soloutput[secondlastsol] + ' ' + typeof secondlastsol)
-    solchange = soloutput[secondlastsol] / soloutput[lastsolentry]
-    w.log.info('solchange is: ' + solchange + typeof solchange)
     
-    var lastfpentry = parseFloat(fpoutput.length - 1)
-    var secondlastfp = lastfpentry - 1
-    fpchange = fpoutput[secondlastfp] / fpoutput[lastfpentry]
+    solchange = soloutput[1] / soloutput[0]
+    solchange = pround(solchange,4)
+    
+    if (solchange > 1) {
+      sol_direction = 'increased'
+      sol_percent = pround(((solchange - 1) * 100),2) + '%'
+    }
+    if (solchange < 1) {
+      sol_direction = 'decreased'
+      sol_percent = pround((Math.abs((solchange - 1)) * 100),2) + '%'
+    }
+    if (solchange === 1) {
+      sol_direction = 'unchanged'
+      sol_percent = '0%'
+    }
+    
+    fpchange = fpoutput[1] / fpoutput[0]
     w.log.info('Floor change is: ' + fpchange)
   } 
+  w.log.info('solchange is: ' + solchange + 'sol_direction: ' + sol_direction + '. sol_percent is: ' + sol_percent)
+  
   
   var dbstore = {}
   dbstore['fp_history'] = fpoutput
