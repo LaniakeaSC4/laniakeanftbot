@@ -40,12 +40,10 @@ for (i = 0;i < collections.length;i++){
   
   var solchange = 1
   var fpchange = 1
-  w.log.info('soloutput length is: ' + soloutput.length)
-  w.log.info('fpoutput length is: ' + fpoutput.length)
   if (soloutput.length > 1 && fpoutput.length > 1) {
-    solchange = soloutput[soloutput.lenght - 1] / soloutput[soloutput.lenght]
+    solchange = soloutput[soloutput.length - 1]/ soloutput[soloutput.length]
     w.log.info('solchange is: ' + solchange)
-    fpchange = fpoutput[fpoutput.lenght - 1] / fpoutput[fpoutput.lenght]
+    fpchange = fpoutput[fpoutput.length - 1] / fpoutput[fpoutput.length]
     w.log.info('Floor change is: ' + fpchange)
   } 
   
