@@ -45,6 +45,8 @@ for (i = 0;i < collections.length;i++){
   var sol_percent = ''
   var fp_direction = ''
   var fp_percent = ''
+  var sol_significant = false
+  var fp_significant = false
   var collection_strength = ''
   
   if (soloutput.length > 1 && fpoutput.length > 1) {
@@ -65,6 +67,9 @@ for (i = 0;i < collections.length;i++){
       sol_percent = '0%'
     }
     
+    //if change is more than 5%
+    if (pround(((solchange - 1) * 100), 2) > 5) { sol_significant = true }
+    
     fpchange = fpoutput[1] / fpoutput[0]
     if (fpchange > 1) {
       fp_direction = 'increased'
@@ -79,8 +84,13 @@ for (i = 0;i < collections.length;i++){
       fp_percent = '0%'
     }
     
+   //if change is more than 5%
+   if (pround(((fpchange - 1) * 100), 2) > 5) { fp_significant = true }
+    
   } 
   
+  //if there had been significant change to both fp and sol price
+  if (fp_significant === true || sol_significant === true) {
   if (sol_direction === 'increased' && fp_direction === 'increased') {collection_strength = collections[i].meslug + '↗️ FP +' + fp_percent + ' SOL/USD +' + sol_percent}
   
   if (sol_direction === 'decreased' && fp_direction === 'decreased') {collection_strength = collections[i].meslug + '↘️ FP -' + fp_percent + ' SOL/USD -' + sol_percent}
@@ -97,7 +107,9 @@ for (i = 0;i < collections.length;i++){
   
   if (sol_direction === 'decreased' && fp_direction === 'unchanged') { collection_strength = collections[i].meslug + '↗️ FP +' + fp_percent + ' SOL/USD -' + sol_percent}
   
-  if (sol_direction === 'unchanged' && fp_direction === 'unchanged') { collection_strength = collections[i].meslug + '➡️ FP +' + fp_percent + ' SOL/USD +' + sol_percent}
+  } else {
+    collection_strength = collections[i].meslug + '➡️ No significant change in FP or SOL/USD price.
+  }
   
   w.log.info(collection_strength)
   
