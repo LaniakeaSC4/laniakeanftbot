@@ -40,6 +40,8 @@ for (i = 0;i < collections.length;i++){
   
   var solchange = 1
   var fpchange = 1
+  w.log.info('soloutput length is: ' + soloutput.length)
+  w.log.info('fpoutput length is: ' + fpoutput.lenght)
   if (soloutput.length > 1 && fpoutput.lenght > 1) {
     solchange = soloutput[soloutput.lenght - 1] / soloutput[soloutput.lenght]
     w.log.info('solchange is: ' + solchange)
