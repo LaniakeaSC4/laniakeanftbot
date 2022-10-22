@@ -108,7 +108,7 @@ for (i = 0;i < collections.length;i++){
   if (sol_direction === 'decreased' && fp_direction === 'unchanged') { collection_strength = collections[i].meslug + '↗️ FP +' + fp_percent + ' SOL/USD -' + sol_percent}
   
   } else {
-    collection_strength = collections[i].meslug + '➡️ No significant change in FP or SOL/USD price.
+    collection_strength = collections[i].meslug + '➡️ No significant change in FP or SOL/USD price.'
   }
   
   w.log.info(collection_strength)
