@@ -81,22 +81,23 @@ for (i = 0;i < collections.length;i++){
     
   } 
   
-  if (sol_direction === 'increased' && fp_direction === 'increased') {collection_strength = '↗️ FP +' + fp_percent + ' SOL/USD +' + sol_percent}
-  if (sol_direction === 'decreased' && fp_direction === 'decreased') {collection_strength = '↘️ FP -' + fp_percent + ' SOL/USD -' + sol_percent}
+  if (sol_direction === 'increased' && fp_direction === 'increased') {collection_strength = collections[i].meslug + '↗️ FP +' + fp_percent + ' SOL/USD +' + sol_percent}
   
-  if (sol_direction === 'increased' && fp_direction === 'decreased') {collection_strength = '⬇️ FP -' + fp_percent + ' SOL/USD +' + sol_percent}
+  if (sol_direction === 'decreased' && fp_direction === 'decreased') {collection_strength = collections[i].meslug + '↘️ FP -' + fp_percent + ' SOL/USD -' + sol_percent}
   
-  if (sol_direction === 'decreased' && fp_direction === 'increased') {collection_strength = '⬆️ FP +' + fp_percent + ' SOL/USD -' + sol_percent}
+  if (sol_direction === 'increased' && fp_direction === 'decreased') {collection_strength = collections[i].meslug + '⬇️ FP -' + fp_percent + ' SOL/USD +' + sol_percent}
   
-  if (sol_direction === 'unchanged' && fp_direction === 'decreased') {collection_strength = '⬇️ FP -' + fp_percent + ' SOL/USD +' + sol_percent}
+  if (sol_direction === 'decreased' && fp_direction === 'increased') {collection_strength = collections[i].meslug + '⬆️ FP +' + fp_percent + ' SOL/USD -' + sol_percent}
   
-  if (sol_direction === 'unchanged' && fp_direction === 'increased') {collection_strength = '⬆️ FP +' + fp_percent + ' SOL/USD +' + sol_percent}
+  if (sol_direction === 'unchanged' && fp_direction === 'decreased') {collection_strength = collections[i].meslug + '⬇️ FP -' + fp_percent + ' SOL/USD +' + sol_percent}
   
-  if (sol_direction === 'increased' && fp_direction === 'unchanged') { collection_strength = '↘️ FP +' + fp_percent + ' SOL/USD +' + sol_percent}
+  if (sol_direction === 'unchanged' && fp_direction === 'increased') {collection_strength = collections[i].meslug + '⬆️ FP +' + fp_percent + ' SOL/USD +' + sol_percent}
   
-  if (sol_direction === 'decreased' && fp_direction === 'unchanged') { collection_strength = '↗️ FP +' + fp_percent + ' SOL/USD -' + sol_percent}
+  if (sol_direction === 'increased' && fp_direction === 'unchanged') { collection_strength = collections[i].meslug + '↘️ FP +' + fp_percent + ' SOL/USD +' + sol_percent}
   
-  if (sol_direction === 'unchanged' && fp_direction === 'unchanged') { collection_strength = '➡️ FP +' + fp_percent + ' SOL/USD +' + sol_percent}
+  if (sol_direction === 'decreased' && fp_direction === 'unchanged') { collection_strength = collections[i].meslug + '↗️ FP +' + fp_percent + ' SOL/USD -' + sol_percent}
+  
+  if (sol_direction === 'unchanged' && fp_direction === 'unchanged') { collection_strength = collections[i].meslug + '➡️ FP +' + fp_percent + ' SOL/USD +' + sol_percent}
   
   w.log.info(collection_strength)
   
