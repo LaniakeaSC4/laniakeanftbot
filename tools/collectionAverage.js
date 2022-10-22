@@ -41,9 +41,14 @@ for (i = 0;i < collections.length;i++){
   var solchange = 1
   var fpchange = 1
   if (soloutput.length > 1 && fpoutput.length > 1) {
-    solchange = soloutput[soloutput.length - 1]/ soloutput[soloutput.length]
+    var lastsolentry = parseFloat(soloutput.length)
+    var secondlastsol = lastsolentry - 1
+    solchange = soloutput[secondlastsol] / soloutput[lastsolentry]
     w.log.info('solchange is: ' + solchange)
-    fpchange = fpoutput[fpoutput.length - 1] / fpoutput[fpoutput.length]
+    
+    var lastfpentry = parseFloat(fpoutput.length)
+    var secondlastfp = lastfpentry - 1
+    fpchange = fpoutput[secondlastfp] / fpoutput[lastfpentry]
     w.log.info('Floor change is: ' + fpchange)
   } 
   
