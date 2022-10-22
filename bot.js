@@ -34,14 +34,16 @@ client.on('ready', async () => {
   //schedule cron job on startup to check if any premium servers have expired. Runs every 4h.
   var CronJob = require('cron').CronJob
   var premium = require('./tools/premium.js')
-  var job = new CronJob('0 */4 * * *', function () { w.log.info('Running cron job')
+  var job_validatePremium = new CronJob('0 */4 * * *', function () { w.log.info('Cron: Running Premium Check')
   premium.validateServers()
-    //make a new table, loop through all supported collections every time this cron job runs and save a record of fp
-    //then run a cleanup job to keep only last x entries in that table - https://dba.stackexchange.com/questions/314004/delete-but-keep-x-amount-of-rows-per-input
   }, null, true)
   
   var averageFP = require('./tools/collectionAverage.js')
-  averageFP.getCurrentFP()
+  var job_updateAverage = new CronJob('0 * * * *', function () { w.log.info('Cron: Updating averages')
+    averageFP.getCurrentFP() 
+  }, null, true)
+  
+  
 
 })//end client.on Ready
 
