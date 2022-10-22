@@ -119,7 +119,7 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 					"title": nftname,
 					"color": embedcolour,
 					"footer": {
-						"text": "Search this channel with \"Snipe" + thiscollection + "\" for more snipes in this collection.\nD: https://discord.gg/CgF7neAte2 | W: nftsniperbot.xyz"
+						"text": "Search \"Snipe" + thiscollection + "\" for more snipes in this collection.\nD: https://discord.gg/CgF7neAte2 | W: nftsniperbot.xyz"
 					},
 					"fields": [
 						{
