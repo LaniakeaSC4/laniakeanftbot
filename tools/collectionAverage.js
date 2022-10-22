@@ -44,6 +44,8 @@ for (i = 0;i < collections.length;i++){
   var sol_direction = ''
   var sol_percent = ''
   var fp_direction = ''
+  var fp_percent = ''
+  var collection_strength = ''
   
   if (soloutput.length > 1 && fpoutput.length > 1) {
     
@@ -64,9 +66,32 @@ for (i = 0;i < collections.length;i++){
     }
     
     fpchange = fpoutput[1] / fpoutput[0]
-    w.log.info('Floor change is: ' + fpchange)
+    if (fpchange > 1) {
+      fp_direction = 'increased'
+      fp_percent = pround(((fpchange - 1) * 100),2) + '%'
+    }
+    if (fpchange < 1) {
+      fp_direction = 'decreased'
+      fp_percent = pround((Math.abs((fpchange - 1)) * 100),2) + '%'
+    }
+    if (fpchange === 1) {
+      fp_direction = 'unchanged'
+      fp_percent = '0%'
+    }
+    
   } 
-  w.log.info('solchange is: ' + solchange + 'sol_direction: ' + sol_direction + '. sol_percent is: ' + sol_percent)
+  
+  if (sol_direction === 'increased' && fp_direction === 'increased') {collection_strength = '↗️ FP and SOL are increasing together'}
+  if (sol_direction === 'decreased' && fp_direction === 'decreased') {collection_strength = '↘️ FP and SOL are decreasing together'}
+  
+  if (sol_direction === 'increased' && fp_direction === 'decreased') {collection_strength = '⬇️ This collection is dropping FP but SOL is increasing'}
+  
+  if (sol_direction === 'decreased' && fp_direction === 'increased') {collection_strength = '⬆️ This collection is increasing FP but SOL is decreasing'}
+  
+  
+  w.log.info('solchange is: ' + solchange + ' sol_direction: ' + sol_direction + '. sol_percent is: ' + sol_percent)
+  w.log.info('fpchange is: ' + fpchange + ' fp_direction: ' + fp_direction + '. fp_percent is: ' + fp_percent)
+  w.log.info(collection_strength)
   
   
   var dbstore = {}
