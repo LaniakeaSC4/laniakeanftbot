@@ -6,14 +6,48 @@ const magiceden = require('./magicedenRPC.js')//Magic Eden related commands are 
 
 async function getCurrentFP() {
 
-//get meslugs
-var meslugs = await getCollectionAverages()
+//get collections
+var collections = await getCollectionAverages()
+//get solana/usdt price from https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd
+var solprice = await getSolPrice()
 
-for (i = 0;i < meslugs.length;i++){
 
-  var thisfp = await magiceden.getFloorPrice(meslugs[i].meslug)
-    w.log.info('Floor price for collection ' + meslugs[i].meslug+ ' is ' + thisfp)
+
+for (i = 0;i < collections.length;i++){
+  
+  //current collection fp
+  var fpoutput
+  var thisfp = await magiceden.getFloorPrice(collections[i].meslug)
+  
+  if (!collections[i].floor_history) {
+    fpoutput = [thisfp]
+  } else {
+    fpoutput = collections[i].floor_history.fp_history
+    fpoutput.push(thisfp)
+    if (fpoutput.length > 5) {fpoutput.pop()}
+  }
+  
+  //get current sol price
+  var soloutput
+  if (!collections[i].floor_history) {
+    soloutput = [solprice]
+  } else {
+    soloutput = collections[i].floor_history.sol_history
+    soloutput.push(solprice)
+    if (soloutput.length > 5) {soloutput.pop()}
+  }
+  
+  var dbstore = {}
+  dbstore['fp_history'] = fpoutput
+  dbatore['sol_history'] = soloutput
+  
+  
+    w.log.info('Floor price for collection ' + collections[i].meslug+ ' is ' + thisfp + ' and solprice is ' + solprice)
+    w.log.info(JSON.stringify(fpoutput))
+    w.log.info(JSON.stringify(soloutput))
     await wait(2000)
+    
+    
 
 }
 
@@ -31,4 +65,28 @@ async function getCollectionAverages() {
       resolve(res.rows)
     }) //end query
   }) //end promise
+}
+
+//get solana usdt price 
+async function getSolPrice() {
+	return new Promise((resolve, reject) => {
+		var thisurl = 'https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd'
+
+		https.get(thisurl, (resp) => {
+			let data = ''
+			// A chunk of data has been received.
+			resp.on('data', (chunk) => {
+				data += chunk
+			})
+
+			// The whole response has been received.
+			resp.on('end', () => {
+				var rawprice = JSON.parse(data)
+				var thisprice = rawprice.solana.usd
+				resolve(thisprice)
+			})
+		}).on("error", (err) => { 
+		  w.log.error("General http error when getting solana price from coingeko. Error: " + err.message)
+		  resolve(null)})
+	}) //end promise
 }
