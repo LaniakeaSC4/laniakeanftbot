@@ -117,6 +117,7 @@ for (i = 0;i < collections.length;i++){
   var dbstore = {}
   dbstore['fp_history'] = fpoutput
   dbstore['sol_history'] = soloutput
+  dbstore['collection_strength'] = collection_strength
   
   sql.updateTableColumn("solanametaplex", "meslug", collections[i].meslug, "floor_history", dbstore)
   
