@@ -38,10 +38,18 @@ for (i = 0;i < collections.length;i++){
     if (soloutput.length > 5) {soloutput.pop()}
   }
   
+  var solchange = 1
+  var fpchange = 1
+  if (soloutput.length > 1 && fpoutput.lenght > 1) {
+    solchange = soloutput[soloutput.lenght - 1] / soloutput[soloutput.lenght]
+    fpchange = fpoutput[fpoutput.lenght - 1] / fpoutput[fpoutput.lenght]
+  } 
+  
   var dbstore = {}
   dbstore['fp_history'] = fpoutput
   dbstore['sol_history'] = soloutput
   
+  sql.updateTableColumn("solanametaplex", "meslug", collections[i].meslug, "floor_history", dbstore)
   
     w.log.info('Floor price for collection ' + collections[i].meslug+ ' is ' + thisfp + ' and solprice is ' + solprice)
     w.log.info(JSON.stringify(fpoutput))
