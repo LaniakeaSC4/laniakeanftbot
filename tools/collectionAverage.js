@@ -107,9 +107,6 @@ for (i = 0;i < collections.length;i++){
   
   sql.updateTableColumn("solanametaplex", "meslug", collections[i].meslug, "floor_history", dbstore)
   
-    w.log.info('Floor price for collection ' + collections[i].meslug+ ' is ' + thisfp + ' and solprice is ' + solprice)
-    w.log.info(JSON.stringify(fpoutput))
-    w.log.info(JSON.stringify(soloutput))
     await wait(2000)
     
     
