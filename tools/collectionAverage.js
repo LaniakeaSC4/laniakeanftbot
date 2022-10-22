@@ -42,7 +42,9 @@ for (i = 0;i < collections.length;i++){
   var fpchange = 1
   if (soloutput.length > 1 && fpoutput.lenght > 1) {
     solchange = soloutput[soloutput.lenght - 1] / soloutput[soloutput.lenght]
+    w.log.info('solchange is: ' + solchange)
     fpchange = fpoutput[fpoutput.lenght - 1] / fpoutput[fpoutput.lenght]
+    w.log.info('Floor change is: ' + fpchange)
   } 
   
   var dbstore = {}
