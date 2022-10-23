@@ -66,35 +66,35 @@ for (i = 0;i < collections.length;i++){
     if (solchange > 1) {
       sol_direction = 'increased'
       sol_percent = pround(((solchange - 1) * 100),2) + '%'
+      if (pround(pround(((solchange - 1) * 100),2) > 2.5)) { sol_significant = true }
     }
     if (solchange < 1) {
       sol_direction = 'decreased'
       sol_percent = pround((Math.abs((solchange - 1)) * 100),2) + '%'
+      if (pround(pround((Math.abs((solchange - 1)) * 100),2) > 2.5)) { sol_significant = true }
     }
     if (solchange === 1) {
       sol_direction = 'unchanged'
       sol_percent = '0%'
     }
     
-    //if change is more than 3%
-    if (pround(((solchange - 1) * 100), 2) > 2) { sol_significant = true }
-    
     fpchange = fpoutput[1] / fpoutput[0]
     if (fpchange > 1) {
       fp_direction = 'increased'
-      fp_percent = pround(((fpchange - 1) * 100),2.5) + '%'
+      fp_percent = pround(((fpchange - 1) * 100),2) + '%'
+       if (pround(((fpchange - 1) * 100),2) > 2.5) { fp_significant = true }
     }
     if (fpchange < 1) {
       fp_direction = 'decreased'
       fp_percent = pround((Math.abs((fpchange - 1)) * 100),2) + '%'
+       if (pround((Math.abs((fpchange - 1)) * 100),2) > 2.5) { fp_significant = true }
     }
     if (fpchange === 1) {
       fp_direction = 'unchanged'
       fp_percent = '0%'
     }
     
-   //if change is more than 3%
-   if (pround(((fpchange - 1) * 100), 2) > 2.5) { fp_significant = true }
+  
     
   } 
   
@@ -139,9 +139,9 @@ for (i = 0;i < collections.length;i++){
   dbstore['sol_5daverage'] = pround(sol_5daverage,2)
   dbstore['fp_5dchange'] = pround(fp_5dchange,2)
   
-  sql.updateTableColumn("solanametaplex", "meslug", collections[i].meslug, "floor_history", dbstore)
+  await sql.updateTableColumn("solanametaplex", "meslug", collections[i].meslug, "floor_history", dbstore)
   
-    await wait(2000)
+    await wait(1500)
     
     
 
