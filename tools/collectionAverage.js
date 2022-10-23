@@ -77,12 +77,12 @@ for (i = 0;i < collections.length;i++){
     }
     
     //if change is more than 3%
-    if (pround(((solchange - 1) * 100), 2) > 3) { sol_significant = true }
+    if (pround(((solchange - 1) * 100), 2) > 2) { sol_significant = true }
     
     fpchange = fpoutput[1] / fpoutput[0]
     if (fpchange > 1) {
       fp_direction = 'increased'
-      fp_percent = pround(((fpchange - 1) * 100),2) + '%'
+      fp_percent = pround(((fpchange - 1) * 100),2.5) + '%'
     }
     if (fpchange < 1) {
       fp_direction = 'decreased'
@@ -94,7 +94,7 @@ for (i = 0;i < collections.length;i++){
     }
     
    //if change is more than 3%
-   if (pround(((fpchange - 1) * 100), 2) > 3) { fp_significant = true }
+   if (pround(((fpchange - 1) * 100), 2) > 2.5) { fp_significant = true }
     
   } 
   
