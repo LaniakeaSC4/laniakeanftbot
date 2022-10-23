@@ -43,7 +43,7 @@ client.on('ready', async () => {
     averageFP.getCurrentFP() 
   }, null, true)
   
-  
+  averageFP.getCurrentFP()
 
 })//end client.on Ready
 

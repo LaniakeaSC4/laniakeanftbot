@@ -25,7 +25,7 @@ for (i = 0;i < collections.length;i++){
   var fp_percent = ''
   var sol_significant = false
   var fp_significant = false
-  var collection_strength = ''
+  var collection_24h_strength = ''
   var fp_5daverage = 0
   var sol_5daverage = 0
   
@@ -100,35 +100,44 @@ for (i = 0;i < collections.length;i++){
   
   //if there had been significant change to both fp and sol price
   if (fp_significant === true || sol_significant === true) {
-  if (sol_direction === 'increased' && fp_direction === 'increased') {collection_strength = collections[i].meslug + '↗️ FP +' + fp_percent + ' SOL/USD +' + sol_percent}
+  if (sol_direction === 'increased' && fp_direction === 'increased') {collection_24h_strength = '↗️ Strong. FP +' + fp_percent + ' SOL/USD +' + sol_percent}
   
-  if (sol_direction === 'decreased' && fp_direction === 'decreased') {collection_strength = collections[i].meslug + '↘️ FP -' + fp_percent + ' SOL/USD -' + sol_percent}
+  if (sol_direction === 'decreased' && fp_direction === 'decreased') {collection_24h_strength = '↘️ Weak. FP -' + fp_percent + ' SOL/USD -' + sol_percent}
   
-  if (sol_direction === 'increased' && fp_direction === 'decreased') {collection_strength = collections[i].meslug + '⬇️ FP -' + fp_percent + ' SOL/USD +' + sol_percent}
+  if (sol_direction === 'increased' && fp_direction === 'decreased') {collection_24h_strength = '⬇️ V.Weak. FP -' + fp_percent + ' SOL/USD +' + sol_percent}
   
-  if (sol_direction === 'decreased' && fp_direction === 'increased') {collection_strength = collections[i].meslug + '⬆️ FP +' + fp_percent + ' SOL/USD -' + sol_percent}
+  if (sol_direction === 'decreased' && fp_direction === 'increased') {collection_24h_strength = '⬆️ V.Strong. FP +' + fp_percent + ' SOL/USD -' + sol_percent}
   
-  if (sol_direction === 'unchanged' && fp_direction === 'decreased') {collection_strength = collections[i].meslug + '⬇️ FP -' + fp_percent + ' SOL/USD +' + sol_percent}
+  if (sol_direction === 'unchanged' && fp_direction === 'decreased') {collection_24h_strength = '⬇️ V.Weak. FP -' + fp_percent + ' SOL/USD +' + sol_percent}
   
-  if (sol_direction === 'unchanged' && fp_direction === 'increased') {collection_strength = collections[i].meslug + '⬆️ FP +' + fp_percent + ' SOL/USD +' + sol_percent}
+  if (sol_direction === 'unchanged' && fp_direction === 'increased') {collection_24h_strength = '⬆️ V.Strong. FP +' + fp_percent + ' SOL/USD +' + sol_percent}
   
-  if (sol_direction === 'increased' && fp_direction === 'unchanged') { collection_strength = collections[i].meslug + '↘️ FP +' + fp_percent + ' SOL/USD +' + sol_percent}
+  if (sol_direction === 'increased' && fp_direction === 'unchanged') { collection_24h_strength = '↘️ Weak. FP +' + fp_percent + ' SOL/USD +' + sol_percent}
   
-  if (sol_direction === 'decreased' && fp_direction === 'unchanged') { collection_strength = collections[i].meslug + '↗️ FP +' + fp_percent + ' SOL/USD -' + sol_percent}
+  if (sol_direction === 'decreased' && fp_direction === 'unchanged') { collection_24h_strength = '↗️ Strong. FP +' + fp_percent + ' SOL/USD -' + sol_percent}
   
   } else {
-    collection_strength = collections[i].meslug + '➡️ No significant change in FP (' + fp_percent + ') or SOL/USD price (' + sol_percent + ').'
+    var solsymbol = ''
+    var fpsymbol = ''
+    if (sol_direction === 'decreased') {solsymbol = '-'} else {solsymbol = '+'}
+    if (fp_direction === 'decreased') {fpsymbol = '-'} else {fpsymbol = '+'}
+    
+    collection_24h_strength = '➡️ Stable. No significant change in FP (' + fpsymbol + fp_percent + ') or SOL/USD price (' + solsymbol + sol_percent + ').'
   }
   
-  w.log.info(collection_strength)
+  //calculate 5d fp change
+ var fp_5dchange = fp_5daverage / fpoutput[0]
+  
+  w.log.info(collection_24h_strength)
   
   
   var dbstore = {}
   dbstore['fp_history'] = fpoutput
   dbstore['sol_history'] = soloutput
-  dbstore['collection_strength'] = collection_strength
-  dbstore['fp_5daverage'] = fp_5daverage
-  dbstore['sol_5daverage'] = sol_5daverage
+  dbstore['collection_24h_strength'] = collection_24h_strength
+  dbstore['fp_5daverage'] = pround(fp_5daverage,2)
+  dbstore['sol_5daverage'] = pround(sol_5daverage,2)
+  dbstore['fp_5dchange'] = pround(fp_5dchange,2)
   
   sql.updateTableColumn("solanametaplex", "meslug", collections[i].meslug, "floor_history", dbstore)
   
