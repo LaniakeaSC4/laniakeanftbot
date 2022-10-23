@@ -96,7 +96,7 @@ async function getSupportedCollections() {
     var pgclient = db.getClient()
 
     //select the data in this column for a row which has this primary key
-    var querystring = "SELECT collectionkey, collectioncount, meslug FROM \"solanametaplex\""
+    var querystring = "SELECT collectionkey, collectioncount, meslug, floor_history FROM \"solanametaplex\""
 
     pgclient.query(querystring, (err, res) => {
       if (err) throw err
