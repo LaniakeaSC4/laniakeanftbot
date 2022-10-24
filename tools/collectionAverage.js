@@ -134,7 +134,7 @@ async function getCurrentFP() {
     dbstore['collection_24h_strength'] = collection_24h_strength
     dbstore['fp_5daverage'] = pround(fp_5daverage, 2)
     dbstore['sol_5daverage'] = pround(sol_5daverage, 2)
-    dbstore['fp_5dchange'] = pround(fp_5dchange, 2)
+    dbstore['fp_5dchange'] = fp_5dchange
 
     await sql.updateTableColumn("solanametaplex", "meslug", collections[i].meslug, "floor_history", dbstore)
 
