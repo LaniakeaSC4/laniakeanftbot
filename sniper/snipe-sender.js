@@ -129,7 +129,7 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 						},
 						{
 							"name": "📌 __Collection Stats__(experimental)",
-							"value": "**Current FP**: " + pround(parseFloat(floorprice), 3) + " SOL\n**5 Day avg FP**: " + floor_history.fp_5daverage + "\n**5 Day FP change**: " + floor_history.fp_5dchange + "\n**24h Strength**: " + floor_history.collection_24h_strength,
+							"value": "**Current FP**: " + pround(parseFloat(floorprice), 3) + " SOL\n**5 Day avg FP**: " + floor_history?.fp_5daverage + "\n**5 Day FP change**: " + floor_history?.fp_5dchange + "\n**24h Strength**: " + floor_history?.collection_24h_strength,
 							"inline": false
 						},
 						{
