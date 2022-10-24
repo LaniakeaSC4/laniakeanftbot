@@ -98,10 +98,10 @@ async function getCurrentFP() {
     if (fp_significant === true || sol_significant === true) {
       if (sol_direction === 'increased' && fp_direction === 'increased') { collection_24h_strength = '↗️ Strong. FP +' + fp_percent + ' | SOL/USD +' + sol_percent }
       if (sol_direction === 'decreased' && fp_direction === 'decreased') { collection_24h_strength = '↘️ Weak. FP -' + fp_percent + ' | SOL/USD -' + sol_percent }
-      if (sol_direction === 'increased' && fp_direction === 'decreased') { collection_24h_strength = '⬇️ V.Weak. FP -' + fp_percent + ' | SOL/USD +' + sol_percent }
-      if (sol_direction === 'decreased' && fp_direction === 'increased') { collection_24h_strength = '⬆️ V.Strong. FP +' + fp_percent + ' | SOL/USD -' + sol_percent }
-      if (sol_direction === 'unchanged' && fp_direction === 'decreased') { collection_24h_strength = '⬇️ V.Weak. FP -' + fp_percent + ' | SOL/USD +' + sol_percent }
-      if (sol_direction === 'unchanged' && fp_direction === 'increased') { collection_24h_strength = '⬆️ V.Strong. FP +' + fp_percent + ' | SOL/USD +' + sol_percent }
+      if (sol_direction === 'increased' && fp_direction === 'decreased') { collection_24h_strength = '⬇️ Weak. FP -' + fp_percent + ' | SOL/USD +' + sol_percent }
+      if (sol_direction === 'decreased' && fp_direction === 'increased') { collection_24h_strength = '⬆️ Strong. FP +' + fp_percent + ' | SOL/USD -' + sol_percent }
+      if (sol_direction === 'unchanged' && fp_direction === 'decreased') { collection_24h_strength = '⬇️ Weak. FP -' + fp_percent + ' | SOL/USD +' + sol_percent }
+      if (sol_direction === 'unchanged' && fp_direction === 'increased') { collection_24h_strength = '⬆️ Strong. FP +' + fp_percent + ' | SOL/USD +' + sol_percent }
       if (sol_direction === 'increased' && fp_direction === 'unchanged') { collection_24h_strength = '↘️ Weak. FP +' + fp_percent + ' | SOL/USD +' + sol_percent }
       if (sol_direction === 'decreased' && fp_direction === 'unchanged') { collection_24h_strength = '↗️ Strong. FP +' + fp_percent + ' | SOL/USD -' + sol_percent }
     } else {
