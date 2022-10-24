@@ -124,19 +124,20 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 					"fields": [
 						{
 							"name": "🎯 __Snipe Details__",
-							"value": "**Rarity**: " + thisrarity + "/" + collectionSize + ' - ' + raritydescription + "\n**Hotness**: " + hotness + "\n**List price**: " + pround(parseFloat(thisprice), 3) + ' SOL\n**Floor price**: ' + pround(parseFloat(floorprice), 3) + ' SOL\n[Buy on Magic Eden](' + listinglink + ')\n',
+							"value": "**Rarity**: " + thisrarity + "/" + collectionSize + ' - ' + raritydescription + "\n**Hotness**: " + hotness + "\n**List price**: " + pround(parseFloat(thisprice), 3) + ' SOL\n[Buy on Magic Eden](' + listinglink + ')\n',
+							"inline": false
+						},
+						{
+							"name": "📌 __Collection Stats__",
+							"value": "**Current FP**: " + pround(parseFloat(floorprice), 3) + " SOL\n**5 Day avg FP**: " + floor_history.fp_5dayaverage + "\n*5 Day FP change**:" + floor_history.fp_5daychange + "\n**Collection 24h Strength**: " + floor_history.collection_24h_strength,
 							"inline": false
 						},
 						{
 							"name": "⚡ __Why is this a snipe?__",
 							"value": 'For ' + raritydescription.toLowerCase() + ' NFTs, listing price <' + parseFloat(thislimit) + 'x the floor price of ' + pround(parseFloat(floorprice), 3) + ' SOL is a snipe (i.e. less than ' + pround(parseFloat(thissnipeprice), 3) + ' SOL)',
 							"inline": true
-						},
-						{
-							"name": "📌 __Laniakea Sniper by Laniakea#3683__",
-							"value": "What features would make this bot better? DM @Laniakea#3683 or join the discord below to let me know!",
-							"inline": false
 						}
+
 					],
 					"thumbnail": {
 						"url": thisimage,
