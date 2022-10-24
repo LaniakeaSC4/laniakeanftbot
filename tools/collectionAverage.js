@@ -66,12 +66,12 @@ for (i = 0;i < collections.length;i++){
     if (solchange > 1) {
       sol_direction = 'increased'
       sol_percent = pround(((solchange - 1) * 100),2) + '%'
-      if (pround(pround(((solchange - 1) * 100),2) > 2.5)) { sol_significant = true }
+      if (pround(pround(((solchange - 1) * 100),2) > 3)) { sol_significant = true }
     }
     if (solchange < 1) {
       sol_direction = 'decreased'
       sol_percent = pround((Math.abs((solchange - 1)) * 100),2) + '%'
-      if (pround(pround((Math.abs((solchange - 1)) * 100),2) > 2.5)) { sol_significant = true }
+      if (pround(pround((Math.abs((solchange - 1)) * 100),2) > 3)) { sol_significant = true }
     }
     if (solchange === 1) {
       sol_direction = 'unchanged'
@@ -82,12 +82,12 @@ for (i = 0;i < collections.length;i++){
     if (fpchange > 1) {
       fp_direction = 'increased'
       fp_percent = pround(((fpchange - 1) * 100),2) + '%'
-       if (pround(((fpchange - 1) * 100),2) > 2.5) { fp_significant = true }
+       if (pround(((fpchange - 1) * 100),2) > 3) { fp_significant = true }
     }
     if (fpchange < 1) {
       fp_direction = 'decreased'
       fp_percent = pround((Math.abs((fpchange - 1)) * 100),2) + '%'
-       if (pround((Math.abs((fpchange - 1)) * 100),2) > 2.5) { fp_significant = true }
+       if (pround((Math.abs((fpchange - 1)) * 100),2) > 3) { fp_significant = true }
     }
     if (fpchange === 1) {
       fp_direction = 'unchanged'
@@ -122,7 +122,7 @@ for (i = 0;i < collections.length;i++){
     if (sol_direction === 'decreased') {solsymbol = '-'} else {solsymbol = '+'}
     if (fp_direction === 'decreased') {fpsymbol = '-'} else {fpsymbol = '+'}
     
-    collection_24h_strength = '➡️ Stable. No significant change in FP (' + fpsymbol + fp_percent + ') or SOL/USD price (' + solsymbol + sol_percent + ').'
+    collection_24h_strength = '➡️ Stable. FP ' + fpsymbol + fp_percent + ' SOL/USD price ' + solsymbol + sol_percent + '.'
   }
   
   //calculate 5d fp change
