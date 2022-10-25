@@ -39,7 +39,7 @@ w.log.info('Updating collection stats')
       //calculate average before pushing out oldest
       fp_5daverage = fpoutput.reduce((a, b) => a + b, 0) / fpoutput.length
       //push new
-      fpoutput.push(thisfp)
+      fpoutput.unshift(thisfp)
       if (fpoutput.length > 5) { fpoutput.pop() }
     }
 
@@ -52,7 +52,7 @@ w.log.info('Updating collection stats')
       //calculate average before pushing out oldest
       sol_5daverage = soloutput.reduce((a, b) => a + b, 0) / soloutput.length
       //push new
-      soloutput.push(solprice)
+      soloutput.unshift(solprice)
       if (soloutput.length > 5) { soloutput.pop() }
     }
 
