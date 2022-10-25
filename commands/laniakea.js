@@ -76,6 +76,12 @@ module.exports = {
 				if (interaction.options.getString('extradata')) { daysToAdd = parseFloat(interaction.options.getString('extradata')) } //if there is extra data, set daysToAdd to it
 				await premium.update(serverid, daysToAdd, interaction)
 			}
+			
+				if (action === 'ether') {
+				const ether = require('../ether/ethertest.js')
+				ether.ethertest()
+			  }
+
 
 		}//end if user is laniakea
 	},//end execute block
