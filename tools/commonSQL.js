@@ -12,6 +12,10 @@ Then query databse with - pgclient.query()
 var db = require('../clients/pgclient.js')
 const w = require('./winston.js')
 
+// ====================
+// Generic SQL commands
+//=====================
+
 //creates a table row and adds data to one column - use if row dosent already exist
 async function createTableRow(table, tableprimarykey, thisprimarykey, column, data) {
   return new Promise((resolve, reject) => {
@@ -90,6 +94,24 @@ async function getRowsForColumn(table, column) {
 };
 module.exports.getRowsForColumn = getRowsForColumn
 
+//get entire server settings row - needs error handling like getNFTdata
+async function getServerRow(serverid) {
+  return new Promise((resolve, reject) => {
+    var pgclient = db.getClient()
+
+    var querystring = "SELECT * FROM servers WHERE serverid = '" + serverid + "'"
+
+    pgclient.query(querystring, (err, res) => {
+      if (err) throw err
+      resolve(res.rows)
+    })//end query
+  })//end promise
+}; module.exports.getServerRow = getServerRow
+
+//===================
+// Multi-use commands
+//===================
+
 //get a particular column for all rows
 async function getSupportedCollections() {
   return new Promise((resolve, reject) => {
@@ -104,48 +126,6 @@ async function getSupportedCollections() {
     }) //end query
   }) //end promise
 }; module.exports.getSupportedCollections = getSupportedCollections
-
-//get collectionKeys for supported collections - needs error handling like getNFTdata
-async function getOurMetaplexCollections() {
-  return new Promise((resolve, reject) => {
-    var pgclient = db.getClient()
-
-    var querystring = "SELECT collectionkey FROM solanametaplex"
-
-    pgclient.query(querystring, (err, res) => {
-      if (err) throw err
-      resolve(res.rows)
-    })//end query
-  })//end promise
-}; module.exports.getOurMetaplexCollections = getOurMetaplexCollections
-
-//get verified creator address from collection key - needs error handling like getNFTdata
-async function getVerifiedCreator(collectionKey) {
-  return new Promise((resolve, reject) => {
-    var pgclient = db.getClient()
-
-    var querystring = "SELECT jsonb_path_query_first(finaldata, '$.verifiedCreator') AS verifiedCreator FROM solanametaplex WHERE jsonb_path_exists(finaldata, '$.collectionKey ? (@[*] == \"" + collectionKey + "\")')"
-
-    pgclient.query(querystring, (err, res) => {
-      if (err) throw err
-      resolve(res.rows[0])
-    })//end query
-  })//end promise
-}; module.exports.getVerifiedCreator = getVerifiedCreator
-
-//get whole NFT collection by collectionKey
-async function getAllNFTdata(collectionKey) {
-  return new Promise((resolve, reject) => {
-    var pgclient = db.getClient()
-
-    var querystring = "SELECT jsonb_path_query_first(finaldata, '$.data') AS NFTdata FROM solanametaplex WHERE jsonb_path_exists(finaldata, '$.collectionKey ? (@[*] == \"" + collectionKey + "\")')"
-
-    pgclient.query(querystring, (err, res) => {
-      if (err) throw err
-      resolve(res.rows[0])
-    })//end query
-  })//end promise
-}; module.exports.getAllNFTdata = getAllNFTdata
 
 //get a single NFT collection by collectionKey and NFT ID - needs error handling like getNFTdata
 async function getNFTdata(collectionKey, tokenAddress) {
@@ -166,20 +146,6 @@ async function getNFTdata(collectionKey, tokenAddress) {
     })
   })//end promise
 }; module.exports.getNFTdata = getNFTdata
-
-//get entire server settings row - needs error handling like getNFTdata
-async function getServerRow(serverid) {
-  return new Promise((resolve, reject) => {
-    var pgclient = db.getClient()
-
-    var querystring = "SELECT * FROM servers WHERE serverid = '" + serverid + "'"
-
-    pgclient.query(querystring, (err, res) => {
-      if (err) throw err
-      resolve(res.rows)
-    })//end query
-  })//end promise
-}; module.exports.getServerRow = getServerRow
 
 //get supported servers - needs error handling like getNFTdata
 async function getSupportedServers() {
@@ -222,48 +188,3 @@ async function getBotActiveServers() {
     })//end query
   })//end promise
 }; module.exports.getBotActiveServers = getBotActiveServers
-
-//get premium expiry time of a particular server
-async function getPremiumExpiry(serverid) {
-  return new Promise((resolve, reject) => {
-    var pgclient = db.getClient()
-
-    var querystring = "SELECT premiumexpire FROM servers WHERE serverid = \'" + serverid + "\'"
-
-    pgclient.query(querystring, (err, res) => {
-      if (err) throw err
-      resolve(JSON.stringify(res.rows[0].premiumexpire).replaceAll('\"', ''))//processed so can be used in JS new Date()
-    })//end query
-  })//end promise 
-}; module.exports.getPremiumExpiry = getPremiumExpiry
-
-//used by cron job when checking if preium expiry times have passed
-async function getServerPremiumStatus() {
-  return new Promise((resolve, reject) => {
-    var pgclient = db.getClient()
-
-    var querystring = "SELECT serverid,premium,premiumexpire,servername FROM servers WHERE inserver = true"
-
-    pgclient.query(querystring, (err, res) => {
-      if (err) throw err
-      resolve(res.rows)//returned times are unprocessed for JS will need to use .replaceAll('\"', '')) before can be converted to JS date
-    }) //end query
-  }) //end promise
-};
-module.exports.getServerPremiumStatus = getServerPremiumStatus
-
-//save last seen time and floorprice
-async function lastSeen(collectionkey, floorprice) {
-  return new Promise((resolve, reject) => {
-    var pgclient = db.getClient()
-
-    //update this table to add this data to this column where this key matches the table's primary key
-    var querystring = "UPDATE solanametaplex SET lastfloor = $1, lastseen = current_timestamp WHERE collectionkey = '" + collectionkey + "'"
-    var querydata = [floorprice]
-
-    pgclient.query(querystring, querydata, (err, res) => {
-      if (err) throw err
-      resolve(true)
-    })//end query
-  })//end promise
-}; module.exports.lastSeen = lastSeen

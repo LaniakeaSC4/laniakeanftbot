@@ -9,7 +9,7 @@ Date.prototype.addDays = function (d) {
 //function to get (or add) an expiry time to sql database
 async function updatePremium(serverid, days, interaction) {
   if (days > 0) {//only want to add a positive number of days
-    var sqltime = await sql.getPremiumExpiry(serverid)//get current expirey time. getPremiumExpiry() parses sql result to JS acceptable string
+    var sqltime = await getPremiumExpiry(serverid)//get current expirey time. getPremiumExpiry() parses sql result to JS acceptable string
     if (sqltime != "null") {//there was an exisiting time (sql function makes null result a string)
       var today = new Date()//get today's date
       var expiretime = new Date(sqltime)
@@ -43,7 +43,7 @@ async function updatePremium(serverid, days, interaction) {
 
 //preiodic cron function to check if servers are still premium and if not, expire them
 async function validateServers() {
-  var supportedservers = await sql.getServerPremiumStatus()//get current server status
+  var supportedservers = await getServerPremiumStatus()//get current server status
   for (i = 0; i < supportedservers.length; i++) {//for each server
     if (supportedservers[i].premiumexpire) {//if not null (there is an exipry set)
       supportedservers[i].premiumexpire = JSON.stringify(supportedservers[i].premiumexpire).replaceAll('\"', '')//make retrieved date JS friendly
@@ -65,3 +65,32 @@ async function validateServers() {
     }//end else if there was no expire time
   }//end for each server
 } module.exports.validateServers = validateServers 
+
+var db = require('../clients/pgclient.js')
+//get premium expiry time of a particular server
+async function getPremiumExpiry(serverid) {
+  return new Promise((resolve, reject) => {
+    var pgclient = db.getClient()
+
+    var querystring = "SELECT premiumexpire FROM servers WHERE serverid = \'" + serverid + "\'"
+
+    pgclient.query(querystring, (err, res) => {
+      if (err) throw err
+      resolve(JSON.stringify(res.rows[0].premiumexpire).replaceAll('\"', ''))//processed so can be used in JS new Date()
+    })//end query
+  })//end promise 
+}
+
+//used by cron job when checking if preium expiry times have passed
+async function getServerPremiumStatus() {
+  return new Promise((resolve, reject) => {
+    var pgclient = db.getClient()
+
+    var querystring = "SELECT serverid,premium,premiumexpire,servername FROM servers WHERE inserver = true"
+
+    pgclient.query(querystring, (err, res) => {
+      if (err) throw err
+      resolve(res.rows)//returned times are unprocessed for JS will need to use .replaceAll('\"', '')) before can be converted to JS date
+    }) //end query
+  }) //end promise
+}

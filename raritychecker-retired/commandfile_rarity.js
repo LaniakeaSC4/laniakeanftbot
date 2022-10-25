@@ -35,7 +35,7 @@ module.exports = {
 
     //get the inputs from the command
     var collectionKey = interaction.options.getString('collectionkey'); var nftid = interaction.options.getString('nftid')
-    var supportedcollections = await sql.getOurMetaplexCollections()//set supported collections from sql
+    var supportedcollections = await sql.getSupportedCollections()//set supported collections from sql
 
     //check if collection is supported
     var validcollection = false

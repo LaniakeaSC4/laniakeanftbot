@@ -62,7 +62,7 @@ async function validateCollection(interaction) {
 
 	//get collections and populate global var
 	supportedcollections = {}//clear and repopulate in case collections have changed since last time command was run
-	supportedcollections = await sql.getOurMetaplexCollections()//set from sql
+	supportedcollections = await sql.getSupportedCollections()//set from sql
 
 	w.log.info('validating collection')
 	//check if it was a supported collection

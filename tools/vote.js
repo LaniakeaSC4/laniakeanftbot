@@ -1,4 +1,3 @@
-var db = require('../clients/pgclient.js')
 const https = require('https')
 const w = require('./winston.js')
 const { ModalBuilder, ActionRowBuilder, TextInputBuilder, TextInputStyle } = require('discord.js')
@@ -77,7 +76,7 @@ async function validateCollection(interaction, updown) {
 
 			//get collections and populate global var
 			supportedcollections = {}//clear and repopulate in case collections have changed since last time command was run
-			supportedcollections = await sql.getOurMetaplexCollections()//set from sql
+			supportedcollections = await sql.getSupportedCollections()//set from sql
 
 			w.log.info('validating collection')
 			//check if it was a supported collection
@@ -111,7 +110,7 @@ async function validateCollection(interaction, updown) {
 
 				//get collections and populate global var
 				supportedcollections = {}//clear and repopulate in case collections have changed since last time command was run
-				supportedcollections = await sql.getOurMetaplexCollections()//set from sql
+				supportedcollections = await sql.getSupportedCollections()//set from sql
 				//check if it was a supported collection
 				var found = false//start as false
 				for (var i = 0; i < supportedcollections.length; i++) {//loop supported collections recieved from SQL
@@ -150,6 +149,7 @@ async function validateCollection(interaction, updown) {
 
 } module.exports.validateCollection = validateCollection
 
+var db = require('../clients/pgclient.js')
 //Save vote to SQL
 async function addVote(server_id, user_id, votetype, votemeslug, rawmeslug, reason = null) {
 	return new Promise((resolve, reject) => {

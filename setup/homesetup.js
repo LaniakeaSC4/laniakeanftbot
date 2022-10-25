@@ -59,7 +59,7 @@ async function validateCollection(interaction) {
 	var meslug = response.substring(response.lastIndexOf('magiceden.io/marketplace/') + 25).replace(/[^0-9a-z]/gi, '')//find the end slug and clean it (same process as cleaning to colleciton key in SQL)
 	//get collections and populate global var
 	supportedcollections = {}//clear and repopulate in case collections have changed since last time command was run
-	supportedcollections = await sql.getOurMetaplexCollections()//set from sql
+	supportedcollections = await sql.getSupportedCollections()//set from sql
 
 	var found = false//start as false
 	for (var i = 0; i < supportedcollections.length; i++) {//loop supported collections recieved from SQL

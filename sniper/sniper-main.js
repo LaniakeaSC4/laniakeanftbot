@@ -120,7 +120,7 @@ async function startsniper() {
                   //send snipe into the send filter where server specific filters are applied (e.g. premium, price limits, etc)
                   snipersender.sendFilter(thisname, collections[k]['collectionkey'], thisembedcolour, NFTdata.rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize, collections[k]['floor_history'])
                   //save record of last seen time and floor price
-                  sql.lastSeen(collections[k]['collectionkey'], thisfloorprice)
+                  lastSeen(collections[k]['collectionkey'], thisfloorprice)
                 } else { /* w.log.info('this was not a snipe') */ } //end if not false
               } else {//end else if we got data from ME
                 w.log.error('error getting nft data for ' + collections[k]['collectionkey'] + ' ' + thisnftid)
@@ -203,3 +203,20 @@ async function stopsniper() {
   }//end for
   currentloops = []//reset it
 } module.exports.stop = stopsniper
+
+var db = require('../clients/pgclient.js')
+//save last seen time and floorprice
+async function lastSeen(collectionkey, floorprice) {
+  return new Promise((resolve, reject) => {
+    var pgclient = db.getClient()
+
+    //update this table to add this data to this column where this key matches the table's primary key
+    var querystring = "UPDATE solanametaplex SET lastfloor = $1, lastseen = current_timestamp WHERE collectionkey = '" + collectionkey + "'"
+    var querydata = [floorprice]
+
+    pgclient.query(querystring, querydata, (err, res) => {
+      if (err) throw err
+      resolve(true)
+    })//end query
+  })//end promise
+} module.exports.lastSeen = lastSeen

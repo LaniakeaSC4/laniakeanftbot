@@ -39,7 +39,7 @@ client.on('ready', async () => {
   }, null, true)
   
   var averageFP = require('./tools/collectionAverage.js')
-  var job_updateAverage = new CronJob('0 9 * * *', function () { w.log.info('Cron: Updating averages')
+  var job_updateAverage = new CronJob('0 10 * * *', function () { w.log.info('Cron: Updating averages')
     averageFP.getCurrentFP() 
   }, null, true)
 

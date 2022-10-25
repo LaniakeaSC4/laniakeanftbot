@@ -1,5 +1,4 @@
 const https = require('https')
-var db = require('../clients/pgclient.js')
 const sql = require('./commonSQL.js')//common sql related commands are in here
 const w = require('./winston.js')
 const pround = (number, decimalPlaces) => Number(Math.round(Number(number + "e" + decimalPlaces)) + "e" + decimalPlaces * -1)
@@ -23,9 +22,10 @@ async function getCurrentFP() {
     var fp_percent = ''
     var sol_significant = false
     var fp_significant = false
-    var collection_24h_strength = ''
+    var collection_24h_strength = 'Not enough data'
     var fp_5daverage = 0
     var sol_5daverage = 0
+    var fp_5dchange = 'Not enough data'
 
     //current collection fp
     var fpoutput
@@ -56,9 +56,9 @@ async function getCurrentFP() {
       if (soloutput.length > 5) { soloutput.pop() }
     }
 
-    if (soloutput.length > 1 && fpoutput.length > 1) {
+    if (soloutput.length > 2 && fpoutput.length > 2) {
 
-      solchange = soloutput[1] / soloutput[0]
+      solchange = soloutput[0] / soloutput[1]
       solchange = pround(solchange, 4)
 
       if (solchange > 1) {
@@ -76,7 +76,7 @@ async function getCurrentFP() {
         sol_percent = '0%'
       }
 
-      fpchange = fpoutput[1] / fpoutput[0]
+      fpchange = fpoutput[0] / fpoutput[1]
       if (fpchange > 1) {
         fp_direction = 'increased'
         fp_percent = pround(((fpchange - 1) * 100), 2) + '%'
@@ -92,38 +92,40 @@ async function getCurrentFP() {
         fp_percent = '0%'
       }
 
-    }
+      //calculate 5d fp change
+      var fp_5dchangecalc = fpoutput[0] / fp_5daverage
 
-    //if there had been significant change to both fp and sol price
-    if (fp_significant === true || sol_significant === true) {
-      if (sol_direction === 'increased' && fp_direction === 'increased') { collection_24h_strength = '↗️ Strong. FP +' + fp_percent + ' | SOL/USD +' + sol_percent }
-      if (sol_direction === 'decreased' && fp_direction === 'decreased') { collection_24h_strength = '↘️ Weak. FP -' + fp_percent + ' | SOL/USD -' + sol_percent }
-      if (sol_direction === 'increased' && fp_direction === 'decreased') { collection_24h_strength = '⬇️ Weak. FP -' + fp_percent + ' | SOL/USD +' + sol_percent }
-      if (sol_direction === 'decreased' && fp_direction === 'increased') { collection_24h_strength = '⬆️ Strong. FP +' + fp_percent + ' | SOL/USD -' + sol_percent }
-      if (sol_direction === 'unchanged' && fp_direction === 'decreased') { collection_24h_strength = '⬇️ Weak. FP -' + fp_percent + ' | SOL/USD +' + sol_percent }
-      if (sol_direction === 'unchanged' && fp_direction === 'increased') { collection_24h_strength = '⬆️ Strong. FP +' + fp_percent + ' | SOL/USD +' + sol_percent }
-      if (sol_direction === 'increased' && fp_direction === 'unchanged') { collection_24h_strength = '↘️ Weak. FP +' + fp_percent + ' | SOL/USD +' + sol_percent }
-      if (sol_direction === 'decreased' && fp_direction === 'unchanged') { collection_24h_strength = '↗️ Strong. FP +' + fp_percent + ' | SOL/USD -' + sol_percent }
-    } else {
-      var solsymbol = ''
-      var fpsymbol = ''
-      if (sol_direction === 'decreased') { solsymbol = '-' } else { solsymbol = '+' }
-      if (fp_direction === 'decreased') { fpsymbol = '-' } else { fpsymbol = '+' }
+      if (fp_5dchangecalc > 1) {
+        fp_5dchange = '+' + pround(((fp_5dchangecalc - 1) * 100), 2) + '%'
+      }
+      if (fp_5dchangecalc < 1) {
+        fp_5dchange = '-' + pround((Math.abs((fp_5dchangecalc - 1)) * 100), 2) + '%'
+      }
+      if (fp_5dchangecalc === 1) {
+        fp_5dchange = '+0%'
+      }
 
-      collection_24h_strength = '➡️ Stable. FP ' + fpsymbol + fp_percent + ' | SOL/USD price ' + solsymbol + sol_percent + '.'
-    }
+      //if there had been significant change to both fp and sol price
+      if (fp_significant === true || sol_significant === true) {
+        if (sol_direction === 'increased' && fp_direction === 'increased') { collection_24h_strength = '↗️ Strong. FP +' + fp_percent + ' | SOL/USD +' + sol_percent }
+        if (sol_direction === 'decreased' && fp_direction === 'decreased') { collection_24h_strength = '↘️ Weak. FP -' + fp_percent + ' | SOL/USD -' + sol_percent }
+        if (sol_direction === 'increased' && fp_direction === 'decreased') { collection_24h_strength = '⬇️ Weak. FP -' + fp_percent + ' | SOL/USD +' + sol_percent }
+        if (sol_direction === 'decreased' && fp_direction === 'increased') { collection_24h_strength = '⬆️ Strong. FP +' + fp_percent + ' | SOL/USD -' + sol_percent }
+        if (sol_direction === 'unchanged' && fp_direction === 'decreased') { collection_24h_strength = '⬇️ Weak. FP -' + fp_percent + ' | SOL/USD +' + sol_percent }
+        if (sol_direction === 'unchanged' && fp_direction === 'increased') { collection_24h_strength = '⬆️ Strong. FP +' + fp_percent + ' | SOL/USD +' + sol_percent }
+        if (sol_direction === 'increased' && fp_direction === 'unchanged') { collection_24h_strength = '↘️ Weak. FP +' + fp_percent + ' | SOL/USD +' + sol_percent }
+        if (sol_direction === 'decreased' && fp_direction === 'unchanged') { collection_24h_strength = '↗️ Strong. FP +' + fp_percent + ' | SOL/USD -' + sol_percent }
+      } else {
+        
+        var solsymbol = ''
+        var fpsymbol = ''
+        if (sol_direction === 'decreased') { solsymbol = '-' } else { solsymbol = '+' }
+        if (fp_direction === 'decreased') { fpsymbol = '-' } else { fpsymbol = '+' }
 
-    //calculate 5d fp change
-    var fp_5dchangecalc = fp_5daverage / fpoutput[0]
-    var fp_5dchange = ''
-    if (fp_5dchangecalc > 1) {
-      fp_5dchange = '+' + pround(((fp_5dchangecalc - 1) * 100), 2) + '%'
-    }
-    if (fp_5dchangecalc < 1) {
-      fp_5dchange = '-' + pround((Math.abs((fp_5dchangecalc - 1)) * 100), 2) + '%'
-    }
-    if (fp_5dchangecalc === 1) {
-      fp_5dchange = '+0%'
+        collection_24h_strength = '➡️ Stable. FP ' + fpsymbol + fp_percent + ' | SOL/USD price ' + solsymbol + sol_percent + '.'
+      }
+
+
     }
 
     w.log.info(collection_24h_strength)
@@ -143,6 +145,7 @@ async function getCurrentFP() {
   }
 } module.exports.getCurrentFP = getCurrentFP
 
+var db = require('../clients/pgclient.js')
 async function getCollectionAverages() {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
