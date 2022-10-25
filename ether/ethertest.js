@@ -13,5 +13,5 @@ async function ethertest() {
     page: 1,
     perPage: 10,
   });
-  w.log.info(heads);
+  w.log.info(JSON.stringify(heads))
 }; module.exports.ethertest = ethertest
