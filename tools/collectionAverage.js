@@ -6,7 +6,7 @@ const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 const magiceden = require('./magicedenRPC.js')//Magic Eden related commands are in here
 
 async function getCurrentFP() {
-
+w.log.info('Updating collection stats')
   //get collections
   var collections = await getCollectionAverages()
   //get solana/usdt price from https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd
@@ -128,7 +128,7 @@ async function getCurrentFP() {
 
     }
 
-    w.log.info(collection_24h_strength)
+    w.log.info('Collection strength for ' + collections[i].meslug + ' is: ' + collection_24h_strength)
 
     var dbstore = {}
     dbstore['fp_history'] = fpoutput
