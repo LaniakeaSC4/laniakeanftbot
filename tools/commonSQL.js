@@ -12,7 +12,7 @@ Then query databse with - pgclient.query()
 var db = require('../clients/pgclient.js')
 const w = require('./winston.js')
 
-//creates a table row and adds data to one column - use if row dosent already exist - needs error handling like getNFTdata
+//creates a table row and adds data to one column - use if row dosent already exist
 async function createTableRow(table, tableprimarykey, thisprimarykey, column, data) {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
@@ -28,7 +28,7 @@ async function createTableRow(table, tableprimarykey, thisprimarykey, column, da
   })//end promise
 }; module.exports.createTableRow = createTableRow
 
-//adds data to a column in an existing row - needs error handling like getNFTdata
+//adds data to a column in an existing row
 async function updateTableColumn(table, tableprimarykey, thisprimarykey, column, data) {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
@@ -44,7 +44,7 @@ async function updateTableColumn(table, tableprimarykey, thisprimarykey, column,
   })//end promise
 }; module.exports.updateTableColumn = updateTableColumn
 
-//generic get data from table - needs error handling like getNFTdata
+//generic get data from table
 async function getData(table, tableprimarykey, thisprimarykey, column) {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
@@ -59,7 +59,7 @@ async function getData(table, tableprimarykey, thisprimarykey, column) {
   })//end promise
 }; module.exports.getData = getData
 
-//generic delete column data from table - needs error handling like getNFTdata
+//generic delete column data from table
 async function deleteColumnData(table, tableprimarykey, thisprimarykey, column) {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
@@ -74,7 +74,7 @@ async function deleteColumnData(table, tableprimarykey, thisprimarykey, column) 
   })//end promise
 }; module.exports.deleteColumnData = deleteColumnData
 
-//get a particular column for all rows - needs error handling like getNFTdata
+//get a particular column for all rows
 async function getRowsForColumn(table, column) {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
@@ -90,7 +90,7 @@ async function getRowsForColumn(table, column) {
 };
 module.exports.getRowsForColumn = getRowsForColumn
 
-//get a particular column for all rows - needs error handling like getNFTdata
+//get a particular column for all rows
 async function getSupportedCollections() {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()

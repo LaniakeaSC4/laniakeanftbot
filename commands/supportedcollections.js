@@ -15,7 +15,7 @@ module.exports = {
 
   //when command is triggered, do this
   async execute(interaction) {
-    var unsortedcollections = await sql.getOurMetaplexCollections()//set from sql
+    var unsortedcollections = await sql.getSupportedCollections()//set from sql
     //sort alphabetically
     var collections = unsortedcollections.sort((a, b) => (a.collectionkey > b.collectionkey) ? 1 : ((b.collectionkey > a.collectionkey) ? -1 : 0))
     //start reply with codeblock markdown and first sorted element
