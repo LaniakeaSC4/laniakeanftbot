@@ -128,7 +128,7 @@ w.log.info('Updating collection stats')
 
     }
 
-    w.log.info('Collection strength for ' + collections[i].meslug + ' is: ' + collection_24h_strength)
+    w.log.info('Collection strength for ' + collections[i].meslug + ' is: ' + collection_24h_strength + ". FP history is: " + fpoutput.toString() + ". SOL history is: " + soloutput.toString() + ". 5D FP AVG is: " + fp_5daverage + ". Today\'s change on 5D AVG FP is: " + fp_5dchange)
 
     var dbstore = {}
     dbstore['fp_history'] = fpoutput
