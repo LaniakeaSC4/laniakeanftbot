@@ -133,7 +133,7 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 							"inline": false
 						},
 						{
-							"name": "📌 __Collection Stats__ (experimental - data set building)",
+							"name": "📌 __Collection Stats__",
 							"value": "**5 Day avg FP**: " + floor_history?.fp_5daverage + "\n**5 Day FP change**: " + floor_history?.fp_5dchange + "\n**24h Strength**: " + floor_history?.collection_24h_strength,
 							"inline": false
 						},

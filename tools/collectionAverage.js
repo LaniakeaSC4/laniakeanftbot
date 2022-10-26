@@ -13,7 +13,7 @@ async function getCurrentFP() {
   var solprice = await getSolPrice()
  // w.log.info(JSON.stringify(collections))
 w.log.info('collections.meslug.length is ' + collections.length)
-  for (i = 0; i < collections.length; i++) {
+  for (i = 0; i < 4; i++) {
 w.log.info('loop: ' + i)
 
     var solchange = 1
@@ -32,14 +32,18 @@ w.log.info('loop: ' + i)
     //current collection fp
     var fpoutput
     var thisfp = await magiceden.getFloorPrice(collections[i].meslug)
+    w.log.info('got this fp: ' + thisfp + 'with meslug: ' + collections[i].meslug)
 
     if (!collections[i].floor_history) {
+      w.log.info('There was no history so fp = ' + thisfp)
       fpoutput = [thisfp]
+      w.log.info(JSON.stringify(fpoutput))
     } else {
-
+w.log.info('There was a history setting fp history to ' + JSON.stringify(collections[i].floor_history.fp_history))
       fpoutput = collections[i].floor_history.fp_history
       //calculate average before pushing out oldest
       fp_5daverage = fpoutput.reduce((a, b) => a + b, 0) / fpoutput.length
+      w.log.info("average calculated as: " + fp_5daverage)
       //push new
       fpoutput.unshift(thisfp)
       if (fpoutput.length > 5) { fpoutput.pop() }
