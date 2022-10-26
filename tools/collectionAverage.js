@@ -105,8 +105,16 @@ w.log.info('Updating collection stats')
         fp_5dchange = '+0%'
       }
 
-      //if there had been significant change to both fp and sol price
-      if (fp_significant === true || sol_significant === true) {
+      //if there had been significant change to fp
+      if (fp_significant === true) {
+        if (fp_direction === 'increased') {
+          if (sol_significant === true ){
+            if (sol_direction === 'increased'){
+              
+            }
+          }
+        }
+        
         if (sol_direction === 'increased' && fp_direction === 'increased') { collection_24h_strength = '↗️ Strong. FP +' + fp_percent + ' | SOL/USD +' + sol_percent }
         if (sol_direction === 'decreased' && fp_direction === 'decreased') { collection_24h_strength = '↘️ Weak. FP -' + fp_percent + ' | SOL/USD -' + sol_percent }
         if (sol_direction === 'increased' && fp_direction === 'decreased') { collection_24h_strength = '⬇️ Weak. FP -' + fp_percent + ' | SOL/USD +' + sol_percent }
