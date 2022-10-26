@@ -13,7 +13,7 @@ async function getCurrentFP() {
   var solprice = await getSolPrice()
  // w.log.info(JSON.stringify(collections))
 w.log.info('collections.meslug.length is ' + collections.length)
-  for (i = 0; i < 4; i++) {
+  for (i = 0; i < collections.length; i++) {
 w.log.info('loop: ' + i)
 
     var solchange = 1
@@ -63,10 +63,10 @@ w.log.info('There was a history setting fp history to ' + JSON.stringify(collect
     }
 
     if (soloutput.length > 2 && fpoutput.length > 2) {
-
+w.log.info('output length was greater than 2')
       solchange = soloutput[0] / soloutput[1]
       solchange = pround(solchange, 4)
-
+w.log.info('solchange is: ' + soloutput[0] + '/' + soloutput[1] + '=' + solchange)
       if (solchange > 1) {
         sol_direction = 'increased'
         sol_percent = pround(((solchange - 1) * 100), 2) + '%'
@@ -81,6 +81,8 @@ w.log.info('There was a history setting fp history to ' + JSON.stringify(collect
         sol_direction = 'unchanged'
         sol_percent = '0%'
       }
+      
+w.log.info('SOL direction is: ' + sol_direction + '. Percentage is: ' + sol_percent + '. Sol_significant is: ' + sol_significant)
 
       fpchange = fpoutput[0] / fpoutput[1]
       if (fpchange > 1) {
@@ -97,9 +99,13 @@ w.log.info('There was a history setting fp history to ' + JSON.stringify(collect
         fp_direction = 'unchanged'
         fp_percent = '0%'
       }
+      
+      w.log.info('FP direction is: ' + fp_direction + '. Percentage is: ' + fp_percent + '. Sol_significant is: ' + fp_significant)
 
       //calculate 5d fp change
       var fp_5dchangecalc = fpoutput[0] / fp_5daverage
+
+w.log.info('fp_5dchangecalc = ' + fpoutput[0] + '/' + fp_5daverage + '=' + fp_5dchangecalc)
 
       if (fp_5dchangecalc > 1) {
         fp_5dchange = '+' + pround(((fp_5dchangecalc - 1) * 100), 2) + '%'
@@ -110,18 +116,29 @@ w.log.info('There was a history setting fp history to ' + JSON.stringify(collect
       if (fp_5dchangecalc === 1) {
         fp_5dchange = '+0%'
       }
+      
+w.log.info('fp_5dchange = ' + fp_5dchange)
 
       //if there had been significant change to fp
       if (fp_significant === true) {
+        
+        w.log.info('There has been a significant fp shift')
 
         if (fp_direction === 'increased') {
+          
+          w.log.info('after the significant fp shift. FP shift was increase')
+          
           if (sol_significant === true) {
+            
+            w.log.info('after the significant fp shift and the shift was in increase. There was a significant sol shift also. Sol_direction was: ' + sol_direction)
+            
             if (sol_direction === 'increased') { collection_24h_strength = '↗️ Strong. FP +' + fp_percent + ' | SOL/USD +' + sol_percent }
             if (sol_direction === 'decreased') { collection_24h_strength = '⬆️ Strong. FP +' + fp_percent + ' | SOL/USD -' + sol_percent }
           } else {
             //if no significant change to SOL (just FP increase). Sol change can be insignficantly plus, minus or unchanged
             var solsymbol_1 = ""; if (sol_direction === 'decreased') { solsymbol_1 = '-' } else { solsymbol_1 = '+' }
             collection_24h_strength = '↗️ Strong. FP +' + fp_percent + ' | SOL/USD ' + solsymbol_1 + sol_percent
+            w.log.info('after the significant fp shift and the shift was in increase. Sol shift was not significant. So solsymbol_1 is ' + solsymbol_1)
           }
         }
 
