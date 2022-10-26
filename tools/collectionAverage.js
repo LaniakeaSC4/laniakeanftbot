@@ -100,7 +100,7 @@ w.log.info('SOL direction is: ' + sol_direction + '. Percentage is: ' + sol_perc
         fp_percent = '0%'
       }
       
-      w.log.info('FP direction is: ' + fp_direction + '. Percentage is: ' + fp_percent + '. Sol_significant is: ' + fp_significant)
+      w.log.info('FP direction is: ' + fp_direction + '. Percentage is: ' + fp_percent + '. fp_significant is: ' + fp_significant)
 
       //calculate 5d fp change
       var fp_5dchangecalc = fpoutput[0] / fp_5daverage
