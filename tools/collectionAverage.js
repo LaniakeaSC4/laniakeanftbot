@@ -11,9 +11,9 @@ async function getCurrentFP() {
   var collections = await getCollectionAverages()
   //get solana/usdt price from https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd
   var solprice = await getSolPrice()
-  w.log.info(JSON.stringify(collections))
-w.log.info('collections.meslug.length is ' + collections.meslug.length)
-  for (i = 0; i < collections.meslug.length; i++) {
+ // w.log.info(JSON.stringify(collections))
+w.log.info('collections.meslug.length is ' + collections.length)
+  for (i = 0; i < collections.length; i++) {
 w.log.info('loop: ' + i)
 
     var solchange = 1
