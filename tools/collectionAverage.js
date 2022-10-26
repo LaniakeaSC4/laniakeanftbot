@@ -14,6 +14,7 @@ async function getCurrentFP() {
 w.log.info('collections.meslug.length is ' + collections.meslug.length)
   for (i = 0; i < collections.meslug.length; i++) {
 w.log.info('loop: ' + i)
+
     var solchange = 1
     var fpchange = 1
     var sol_direction = ''
