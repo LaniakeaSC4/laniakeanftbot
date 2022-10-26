@@ -42,6 +42,8 @@ client.on('ready', async () => {
   var job_updateAverage = new CronJob('0 17 * * *', function () { w.log.info('Cron: Updating averages')
     averageFP.getCurrentFP() 
   }, null, true)
+  
+  averageFP.getCurrentFP()
 
 })//end client.on Ready
 

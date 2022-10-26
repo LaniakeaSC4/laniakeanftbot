@@ -110,6 +110,11 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 async function sendsnipes(server, thischannel, delay, nftname, embedcolour, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage, listinglink, hotness, collectionSize, thiscollection, floor_history) {
 	//don't need server ID, channel ID is enough
 	if (delay) { await wait(delay) }//delay delivery if one was set
+	
+	floor_history.fp_5daverage = 'coming soon'
+	floor_history.fp_5dchange = 'coming soon'
+	floor_history.collection_24h_strength = 'coming soon'
+	
 	//send it
 	try {
 		const channel = await client.channels.fetch(thischannel)
@@ -119,25 +124,19 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 					"title": nftname,
 					"color": embedcolour,
 					"footer": {
-						"text": "Search \"Snipe" + thiscollection + "\" for more snipes in this collection.\nD: https://discord.gg/CgF7neAte2 | W: nftsniperbot.xyz"
+						"text": 'For ' + raritydescription.toLowerCase() + ' NFTs, listing price <' + parseFloat(thislimit) + 'x the floor price of ' + pround(parseFloat(floorprice), 3) + ' SOL is a snipe (i.e. less than ' + pround(parseFloat(thissnipeprice), 3) + ' SOL)' + "\nSearch \"Snipe" + thiscollection + "\" for more snipes in this collection.\nD: https://discord.gg/CgF7neAte2 | W: nftsniperbot.xyz"
 					},
 					"fields": [
 						{
 							"name": "🎯 __Snipe Details__",
-							"value": "**Rarity**: " + thisrarity + "/" + collectionSize + ' - ' + raritydescription + "\n**Hotness**: " + hotness + "\n**List price**: " + pround(parseFloat(thisprice), 3) + ' SOL\n[Buy on Magic Eden](' + listinglink + ')\n',
+							"value": "**Rarity**: " + thisrarity + "/" + collectionSize + ' - ' + raritydescription + "\n**Hotness**: " + hotness + "\n**List price**: " + pround(parseFloat(thisprice), 3) + ' SOL\n**Current FP**: ' + pround(parseFloat(floorprice), 3) + " SOL\n[Buy on Magic Eden](" + listinglink + ')\n',
 							"inline": false
 						},
 						{
 							"name": "📌 __Collection Stats__ (experimental - data set building)",
-							"value": "**Current FP**: " + pround(parseFloat(floorprice), 3) + " SOL\n**5 Day avg FP**: " + floor_history?.fp_5daverage + "\n**5 Day FP change**: " + floor_history?.fp_5dchange + "\n**24h Strength**: " + floor_history?.collection_24h_strength,
+							"value": "**5 Day avg FP**: " + floor_history?.fp_5daverage + "\n**5 Day FP change**: " + floor_history?.fp_5dchange + "\n**24h Strength**: " + floor_history?.collection_24h_strength,
 							"inline": false
 						},
-						{
-							"name": "⚡ __Why is this a snipe?__",
-							"value": 'For ' + raritydescription.toLowerCase() + ' NFTs, listing price <' + parseFloat(thislimit) + 'x the floor price of ' + pround(parseFloat(floorprice), 3) + ' SOL is a snipe (i.e. less than ' + pround(parseFloat(thissnipeprice), 3) + ' SOL)',
-							"inline": true
-						}
-
 					],
 					"thumbnail": {
 						"url": thisimage,
