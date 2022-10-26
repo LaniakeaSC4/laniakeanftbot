@@ -6,7 +6,7 @@ const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 const magiceden = require('./magicedenRPC.js')//Magic Eden related commands are in here
 
 async function getCurrentFP() {
-w.log.info('Updating collection stats')
+  w.log.info('Updating collection stats')
   //get collections
   var collections = await getCollectionAverages()
   //get solana/usdt price from https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd
@@ -107,34 +107,67 @@ w.log.info('Updating collection stats')
 
       //if there had been significant change to fp
       if (fp_significant === true) {
+
         if (fp_direction === 'increased') {
-          if (sol_significant === true ){
-            if (sol_direction === 'increased'){
-              
-            }
+          if (sol_significant === true) {
+            if (sol_direction === 'increased') { collection_24h_strength = '↗️ Strong. FP +' + fp_percent + ' | SOL/USD +' + sol_percent }
+            if (sol_direction === 'decreased') { collection_24h_strength = '⬆️ Strong. FP +' + fp_percent + ' | SOL/USD -' + sol_percent }
+          } else {
+            //if no significant change to SOL (just FP increase). Sol change can be insignficantly plus, minus or unchanged
+            collection_24h_strength = '↗️ Strong. FP +' + fp_percent + ' | SOL/USD +' + sol_percent
           }
         }
-        
-        if (sol_direction === 'increased' && fp_direction === 'increased') { collection_24h_strength = '↗️ Strong. FP +' + fp_percent + ' | SOL/USD +' + sol_percent }
-        if (sol_direction === 'decreased' && fp_direction === 'decreased') { collection_24h_strength = '↘️ Weak. FP -' + fp_percent + ' | SOL/USD -' + sol_percent }
-        if (sol_direction === 'increased' && fp_direction === 'decreased') { collection_24h_strength = '⬇️ Weak. FP -' + fp_percent + ' | SOL/USD +' + sol_percent }
-        if (sol_direction === 'decreased' && fp_direction === 'increased') { collection_24h_strength = '⬆️ Strong. FP +' + fp_percent + ' | SOL/USD -' + sol_percent }
-        if (sol_direction === 'unchanged' && fp_direction === 'decreased') { collection_24h_strength = '⬇️ Weak. FP -' + fp_percent + ' | SOL/USD +' + sol_percent }
-        if (sol_direction === 'unchanged' && fp_direction === 'increased') { collection_24h_strength = '⬆️ Strong. FP +' + fp_percent + ' | SOL/USD +' + sol_percent }
-        if (sol_direction === 'increased' && fp_direction === 'unchanged') { collection_24h_strength = '↘️ Weak. FP +' + fp_percent + ' | SOL/USD +' + sol_percent }
-        if (sol_direction === 'decreased' && fp_direction === 'unchanged') { collection_24h_strength = '↗️ Strong. FP +' + fp_percent + ' | SOL/USD -' + sol_percent }
-      } else {
-        
+
+        if (fp_direction === 'decreased') {
+          if (sol_significant === true) {
+            if (sol_direction === 'increased') { collection_24h_strength = '⬇️ Weak. FP -' + fp_percent + ' | SOL/USD +' + sol_percent }
+            if (sol_direction === 'decreased') { collection_24h_strength = '↘️ Weak. FP +' + fp_percent + ' | SOL/USD +' + sol_percent }
+          } else {
+            //if no significant change to SOL (just FP increase). Sol change can be insignficantly plus, minus or unchanged
+            collection_24h_strength = '↘️ Weak. FP +' + fp_percent + ' | SOL/USD +' + sol_percent
+          }
+        }
+
+      }
+
+      //if there had been significant change to sol
+      if (sol_significant === true) {
+
+        if (sol_direction === 'increased') {
+          if (fp_significant === true) {
+            if (fp_direction === 'increased') { collection_24h_strength = '↗️ Strong. FP +' + fp_percent + ' | SOL/USD +' + sol_percent }
+            if (fp_direction === 'decreased') { collection_24h_strength = '⬇️ Weak. FP -' + fp_percent + ' | SOL/USD +' + sol_percent }
+          } else {
+            //if significant change to SOL but no significant change to FP
+            collection_24h_strength = '↘️ Weak. FP +' + fp_percent + ' | SOL/USD +' + sol_percent
+          }
+        }
+
+        if (sol_direction === 'decreased') {
+          if (fp_significant === true) {
+            if (fp_direction === 'increased') { collection_24h_strength = '⬆️ Strong. FP +' + fp_percent + ' | SOL/USD -' + sol_percent }
+            if (fp_direction === 'decreased') { collection_24h_strength = '↘️ Weak. FP +' + fp_percent + ' | SOL/USD +' + sol_percent }
+          } else {
+            //if no significant change to SOL (just FP increase). Sol change can be insignficantly plus, minus or unchanged
+            collection_24h_strength = '↗️ Strong. FP +' + fp_percent + ' | SOL/USD +' + sol_percent
+          }
+        }
+
+      }
+
+      //if no significant changes
+      if (sol_significant === false && fp_significant === false) {
+
         var solsymbol = ''
         var fpsymbol = ''
         if (sol_direction === 'decreased') { solsymbol = '-' } else { solsymbol = '+' }
         if (fp_direction === 'decreased') { fpsymbol = '-' } else { fpsymbol = '+' }
 
         collection_24h_strength = '➡️ Stable. FP ' + fpsymbol + fp_percent + ' | SOL/USD price ' + solsymbol + sol_percent + '.'
+
       }
 
-
-    }
+    }//if output length > 2
 
     w.log.info('Collection strength for ' + collections[i].meslug + ' is: ' + collection_24h_strength + " FP history is: " + fpoutput.toString() + ". SOL history is: " + soloutput.toString() + ". 5D FP AVG is: " + fp_5daverage + ". Today\'s change on 5D AVG FP is: " + fp_5dchange)
 
