@@ -377,10 +377,17 @@ client.on('interactionCreate', async interaction => {
 //Configure alerts
 const alerts = require('./setup/alerts.js')
 client.on('interactionCreate', async interaction => {
-  //main globalconfig button on main setup dialogue. Replied with global config panel
+  
   if (interaction.customId === 'setupalerts-button') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
       alerts.configPanel(interaction)
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
-  }//end if button is 'globalconfig-button'' 
+  }
+  
+  if (interaction.customId === 'enable_alerts-button') {
+    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
+      alerts.enableAlerts(interaction)
+    } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
+  }
+  
 })//end on interactionCreate 
