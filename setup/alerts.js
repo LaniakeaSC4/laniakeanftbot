@@ -37,7 +37,7 @@ async function configPanel(interaction) {
       await interaction.message.guild.roles.fetch()
       let oldrole = await interaction.message.guild.roles.cache.get(pingrole)
       w.log.info('oldrole is: ' + oldrole)
-      if (typeof oldrole === undefined) {
+      if (oldrole != pingrole) {
         // Role doesn't exist, safe to create
         w.log.info('Didnt find the DB role in guild')
         replytext = "Alerts are already enabled for this server. There was a saved role in our database, but it must have been deleted. Please press [Enable alerts] again to make a new alerts role"
