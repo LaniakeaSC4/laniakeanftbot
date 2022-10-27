@@ -34,17 +34,20 @@ async function configPanel(interaction) {
     if (pingrole) {//enabled and existing. Check if role still exists and confirm back to the user that all is good
 
       //check guild roles to see if it's still there
+      await interaction.message.guild.roles.fetch()
       let oldrole = await interaction.message.guild.roles.cache.find(x => x.id === pingrole);
       if (typeof oldrole === undefined) {
         // Role doesn't exist, safe to create
-        w.log.info('Didnt find the BD role in guild')
+        w.log.info('Didnt find the DB role in guild')
+        replytext = "Alerts are already enabled for this server. There was a saved role in our database, but it must have been deleted. Please press [Enable alerts] again to make a new alerts role"
       } else {
         // Role exists
-        w.log.info('Found the BD role in guild')
+        w.log.info('Found the DB role in guild')
+        replytext = "Alerts are already enabled for this server. The Role is: <@" + pingrole + ">"
       }
 
 
-      replytext = "Alerts are already enabled for this server. The Role is: <@" + pingrole + ">"
+      
 
     } else {//make a new pingrole. Somehow DB is blank?
 
