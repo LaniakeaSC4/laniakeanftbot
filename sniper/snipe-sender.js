@@ -110,10 +110,15 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 async function sendsnipes(server, thischannel, delay, nftname, embedcolour, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage, listinglink, hotness, collectionSize, thiscollection, floor_history) {
 	//don't need server ID, channel ID is enough
 	if (delay) { await wait(delay) }//delay delivery if one was set
-	
-	floor_history?.fp_5daverage = 'coming soon'
-	floor_history?.fp_5dchange = 'coming soon'
-	floor_history?.collection_24h_strength = 'coming soon'
+	if (floor_history) {
+	floor_history.fp_5daverage = 'coming soon'
+	floor_history.fp_5dchange = 'coming soon'
+	floor_history.collection_24h_strength = 'coming soon'} else {
+	  floor_history = {}
+	  floor_history.fp_5daverage = 'coming soon'
+	  floor_history.fp_5dchange = 'coming soon'
+	  floor_history.collection_24h_strength = 'coming soon'
+	}
 	
 	//send it
 	try {
