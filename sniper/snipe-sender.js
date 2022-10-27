@@ -111,9 +111,9 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 	//don't need server ID, channel ID is enough
 	if (delay) { await wait(delay) }//delay delivery if one was set
 	
-	floor_history.fp_5daverage = 'coming soon'
-	floor_history.fp_5dchange = 'coming soon'
-	floor_history.collection_24h_strength = 'coming soon'
+	floor_history?.fp_5daverage = 'coming soon'
+	floor_history?.fp_5dchange = 'coming soon'
+	floor_history?.collection_24h_strength = 'coming soon'
 	
 	//send it
 	try {
