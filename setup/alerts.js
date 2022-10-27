@@ -65,9 +65,10 @@ async function enableAlerts(interaction) {
     if (pingrole) {//enabled and existing. Check if role still exists and confirm back to the user that all is good
 
     } else {//make a new pingrole. Somehow DB is blank?
-      var newroleID = await createRole(interaction.message.guildId)
-      w.log.info('EnableAlerts1: New role ID is: ' + newroleID)
-      await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "pingrole", newroleID)
+      w.log.info('Creating Role')
+      var newrole = await createRole(interaction.message.guildId)
+      w.log.info('EnableAlerts1: New role ID is: ' + newrole.id)
+      await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "pingrole", newrole.id)
       await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "enable_ping", true)
 
     }//end else pingrole was enabled but no role existed.
@@ -78,9 +79,10 @@ async function enableAlerts(interaction) {
 
     } else {//there wasn't an exisiting pingrole. Make one and enable pingrolez
 
-      var newroleID = await createRole(interaction.message.guildId)
-      w.log.info('EnableAlerts2: New role ID is: ' + newroleID)
-      await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "pingrole", newroleID)
+      w.log.info('Creating Role')
+      var newrole = await createRole(interaction.message.guildId)
+      w.log.info('EnableAlerts2: New role ID is: ' + newrole.id)
+      await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "pingrole", newrole.id)
       await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "enable_ping", true)
 
 
@@ -94,6 +96,6 @@ async function createRole(guildid) {
   const thisGuild = await client.guilds.cache.get(guildid)
   await thisGuild.roles.create({ name: 'Snipe Alerts' }).then(async role => {
     w.log.info('CreateRole: New role ID is: ' + role.id)
-    return role.id;
+    return role;
   })
 }
