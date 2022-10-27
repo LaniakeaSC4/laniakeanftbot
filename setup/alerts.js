@@ -94,7 +94,6 @@ async function createRole(guildid) {
   const thisGuild = await client.guilds.cache.get(guildid)
   await thisGuild.roles.create({ name: 'Snipe Alerts' }).then(async role => {
     w.log.info('CreateRole: New role ID is: ' + role.id)
-    var thisrole = role.id
-    return thisrole
+    return role.id
   })
 }
