@@ -180,7 +180,7 @@ async function disableAlerts(interaction) {
 
     } else {
       // Role exists
-      interaction.reply({ content: "Alerts have now been disabled for this server. There was no exisitng role: <@&" + newrole.id + ">. You can now delete this, or leave it and it will be reused if your later renable alerts", ephemeral: true })
+      interaction.reply({ content: "Alerts have now been disabled for this server. There was no exisitng role: <@&" + pingrole + ">. You can now delete this, or leave it and it will be reused if your later renable alerts", ephemeral: true })
 
     }
   } else {
