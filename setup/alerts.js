@@ -35,8 +35,7 @@ async function enableAlerts(interaction) {
     if (pingrole) {//enabled and existing. Check if role still exists and confirm back to the user that all is good
       
     } else {//make a new pingrole. Somehow DB is blank?
-    const thisGuild = client.guilds.cache.get(interaction.message.guildId)
-      thisGuild.roles.create({ name: 'Snipe Alerts'});
+    createRole(interaction.message.guildId)
       
     }//end else pingrole was enabled but no role existed.
     
@@ -45,8 +44,16 @@ async function enableAlerts(interaction) {
     if (pingrole) {//wasn't enabled, but there was a previous pingrole. Check if that role still exists, renable pings and respond to the user confirming the role
       
     } else {//there wasn't an exisiting pingrole. Make one and enable pingrolez
+    
+    createRole(interaction.message.guildId)
+    
       
     }//end else pingrole wasn't enabled and role didn't exist
   }//end else pingrole not enabled
 }//end function
 module.exports.enableAlerts = enableAlerts
+
+async function createRole(guildid) {
+const thisGuild = client.guilds.cache.get(guildid)
+  thisGuild.roles.create({ name: 'Snipe Alerts' });
+}
