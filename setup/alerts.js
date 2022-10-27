@@ -35,7 +35,7 @@ async function configPanel(interaction) {
 
       //check guild roles to see if it's still there
       await interaction.message.guild.roles.fetch()
-      let oldrole = await interaction.message.guild.roles.cache.find(x => x.id === pingrole);
+      let oldrole = await interaction.message.guild.roles.cache.get(pingrole)
       w.log.info('oldrole is: ' + oldrole)
       if (typeof oldrole === undefined) {
         // Role doesn't exist, safe to create
