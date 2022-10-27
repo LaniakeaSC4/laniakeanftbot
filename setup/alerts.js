@@ -144,7 +144,7 @@ async function enableAlerts(interaction) {
         // Role exists
         w.log.info('Found the DB role in guild. Lets just re-enable it')
         await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "enable_ping", true)
-        interaction.reply({ content: "Now enabled Alerts for this server. There was no exisitng role, so we created a new alert role: <@&" + newrole.id + ">", ephemeral: true })
+        interaction.reply({ content: "Now enabled Alerts for this server. There was no exisitng role, so we created a new alert role: <@&" + pingrole + ">", ephemeral: true })
 
       }
 
@@ -177,10 +177,11 @@ async function disableAlerts(interaction) {
     if (oldrole != pingrole) {
 
       interaction.reply({ content: "Alerts have now been disabled for this server. We have a saved alert role in our database, but it looks like you have already deleted it from the server", ephemeral: true })
+      await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "pingrole", null)
 
     } else {
       // Role exists
-      interaction.reply({ content: "Alerts have now been disabled for this server. There was no exisitng role: <@&" + pingrole + ">. You can now delete this, or leave it and it will be reused if your later renable alerts", ephemeral: true })
+      interaction.reply({ content: "Alerts have now been disabled for this server. There was an exisitng role: <@&" + pingrole + ">. You can now delete this, or leave it and it will be reused if your later renable alerts", ephemeral: true })
 
     }
   } else {
