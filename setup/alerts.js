@@ -94,8 +94,8 @@ module.exports.enableAlerts = enableAlerts
 
 async function createRole(guildid) {
   const thisGuild = await client.guilds.cache.get(guildid)
-  await thisGuild.roles.create({ name: 'Snipe Alerts' }).then(async role => {
-    w.log.info('CreateRole: New role ID is: ' + role.id)
-    return role;
-  })
+  const role = await thisGuild.roles.create({ name: 'Snipe Alerts' })
+  w.log.info('CreateRole: New role ID is: ' + role.id)
+  return role;
+
 }
