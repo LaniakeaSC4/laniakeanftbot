@@ -44,7 +44,7 @@ async function configPanel(interaction) {
       } else {
         // Role exists
         w.log.info('Found the DB role in guild')
-        replytext = "Alerts are already enabled for this server. The Role is: <@" + pingrole + ">"
+        replytext = "Alerts are already enabled for this server. The Role is: <@&" + pingrole + ">"
       }
 
 
@@ -70,7 +70,7 @@ async function configPanel(interaction) {
       } else {
         // Role exists
         w.log.info('Found the DB role in guild')
-        replytext = "Alerts are not already enabled for this server. However, a role was found: <@" + pingrole + ">"
+        replytext = "Alerts are not already enabled for this server. However, a role was found: <@&" + pingrole + ">. To reenable use of this role press [Enable alerts]"
       }
 
     } else {//there wasn't an exisiting pingrole. Make one and enable pingrole
@@ -144,7 +144,7 @@ async function enableAlerts(interaction) {
         // Role exists
         w.log.info('Found the DB role in guild. Lets just re-enable it')
         await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "enable_ping", true)
-        interaction.reply({ content: "Now enabled Alerts for this server. There was no exisitng role, so we created a new alert role: <@&" + pingrole + ">", ephemeral: true })
+        interaction.reply({ content: "Now enabled Alerts for this server. There was an exisitng role, so it has been reused: <@&" + pingrole + ">", ephemeral: true })
 
       }
 
