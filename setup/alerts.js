@@ -29,7 +29,7 @@ async function configPanel(interaction) {
 
 async function enableAlerts(interaction) {
   var pingrole = await sql.getData("servers", "serverid", interaction.message.guildId, "pingrole")
-  var ping_enabled = await sql.getData("servers", "serverid", interaction.message.guildId, "ping_enabled")
+  var ping_enabled = await sql.getData("servers", "serverid", interaction.message.guildId, "enable_ping")
   
   if (ping_enabled === true) {
     if (pingrole) {//enabled and existing. Check if role still exists and confirm back to the user that all is good
