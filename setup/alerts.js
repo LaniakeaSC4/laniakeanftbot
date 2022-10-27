@@ -49,3 +49,4 @@ async function enableAlerts(interaction) {
     }//end else pingrole wasn't enabled and role didn't exist
   }//end else pingrole not enabled
 }//end function
+module.exports.enableAlerts = enableAlerts
