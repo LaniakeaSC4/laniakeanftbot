@@ -389,5 +389,11 @@ client.on('interactionCreate', async interaction => {
       alerts.enableAlerts(interaction)
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
   }
+
+  if (interaction.customId === 'disable_alerts-button') {
+    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
+      alerts.disableAlerts(interaction)
+    } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
+  }
   
 })//end on interactionCreate 

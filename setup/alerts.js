@@ -103,12 +103,12 @@ async function enableAlerts(interaction) {
         w.log.info('EnableAlerts1: New role ID is: ' + newrole.id)
         await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "pingrole", newrole.id)
         await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "enable_ping", true)
-        interaction.reply({content: "Created a new alert role to replace the deleted one: <@&" + newrole.id + ">",ephemeral:true})
+        interaction.reply({ content: "Created a new alert role to replace the deleted one: <@&" + newrole.id + ">", ephemeral: true })
 
       } else {
         // Role exists
         w.log.info('Found the DB role in guild')
-        interaction.reply({content: "No action taken. Alerts are already enabled for this server. The Role is: <@&" + pingrole + ">",ephemeral:true})
+        interaction.reply({ content: "No action taken. Alerts are already enabled for this server. The Role is: <@&" + pingrole + ">", ephemeral: true })
       }
 
     } else {//make a new pingrole. Somehow DB is blank? this should not happen
@@ -118,7 +118,7 @@ async function enableAlerts(interaction) {
       w.log.info('EnableAlerts1: New role ID is: ' + newrole.id)
       await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "pingrole", newrole.id)
       await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "enable_ping", true)
-      interaction.reply({content: "Alerts were enabled for this server, but there was no saved role. Created a new alert role: <@&" + newrole.id + ">",ephemeral:true})
+      interaction.reply({ content: "Alerts were enabled for this server, but there was no saved role. Created a new alert role: <@&" + newrole.id + ">", ephemeral: true })
 
     }//end else pingrole was enabled but no role existed.
 
@@ -138,13 +138,13 @@ async function enableAlerts(interaction) {
         w.log.info('EnableAlerts1: New role ID is: ' + newrole.id)
         await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "pingrole", newrole.id)
         await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "enable_ping", true)
-        interaction.reply({content: "Now enabled Alerts for this server. There was an exisitng saved role, but it must have been deleted. Created a new alert role: <@&" + newrole.id + ">",ephemeral:true})
+        interaction.reply({ content: "Now enabled Alerts for this server. There was an exisitng saved role, but it must have been deleted. Created a new alert role: <@&" + newrole.id + ">", ephemeral: true })
 
       } else {
         // Role exists
         w.log.info('Found the DB role in guild. Lets just re-enable it')
         await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "enable_ping", true)
-        interaction.reply({content: "Now enabled Alerts for this server. There was no exisitng role, so we created a new alert role: <@&" + newrole.id + ">",ephemeral:true})
+        interaction.reply({ content: "Now enabled Alerts for this server. There was no exisitng role, so we created a new alert role: <@&" + newrole.id + ">", ephemeral: true })
 
       }
 
@@ -155,52 +155,43 @@ async function enableAlerts(interaction) {
       w.log.info('EnableAlerts1: New role ID is: ' + newrole.id)
       await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "pingrole", newrole.id)
       await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "enable_ping", true)
-      interaction.reply({content: "Alerts are now enabled for this server. Created a new alert role: <@&" + newrole.id + ">",ephemeral:true})
+      interaction.reply({ content: "Alerts are now enabled for this server. Created a new alert role: <@&" + newrole.id + ">", ephemeral: true })
 
     }//end else pingrole wasn't enabled and role didn't exist
   }//end else pingrole not enabled
-
-
-/*
-
-
-
-
-
-
-  if (ping_enabled === true) {
-    if (pingrole) {//enabled and existing. Check if role still exists and confirm back to the user that all is good
-
-    } else {//make a new pingrole. Somehow DB is blank?
-      w.log.info('Creating Role')
-      var newrole = await createRole(interaction.message.guildId)
-      w.log.info('EnableAlerts1: New role ID is: ' + newrole.id)
-      await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "pingrole", newrole.id)
-      await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "enable_ping", true)
-
-    }//end else pingrole was enabled but no role existed.
-
-  } else {//if pingrole not enabled
-
-    if (pingrole) {//wasn't enabled, but there was a previous pingrole. Check if that role still exists, renable pings and respond to the user confirming the role
-
-    } else {//there wasn't an exisiting pingrole. Make one and enable pingrolez
-
-      w.log.info('Creating Role')
-      var newrole = await createRole(interaction.message.guildId)
-      w.log.info('EnableAlerts2: New role ID is: ' + newrole.id)
-      await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "pingrole", newrole.id)
-      await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "enable_ping", true)
-
-
-
-    }//end else pingrole wasn't enabled and role didn't exist
-  }//end else pingrole not enabled
-
-  */
-
 }//end function
 module.exports.enableAlerts = enableAlerts
+
+async function disableAlerts(interaction) {
+  //disable alerts
+  await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "enable_ping", false)
+
+  //get the alert role if if there is one
+  var pingrole = await sql.getData("servers", "serverid", interaction.message.guildId, "pingrole")
+  if (pingrole) {//wasn't enabled, but there was a previous pingrole. Check if that role still exists, renable pings and respond to the user confirming the role
+
+    //check guild roles to see if it's still there
+    await interaction.message.guild.roles.fetch()
+    let oldrole = await interaction.message.guild.roles.cache.get(pingrole)
+    w.log.info('oldrole is: ' + oldrole)
+    if (oldrole != pingrole) {
+
+      interaction.reply({ content: "Alerts have now been disabled for this server. We have a saved alert role in our database, but it looks like you have already deleted it from the server", ephemeral: true })
+
+    } else {
+      // Role exists
+      interaction.reply({ content: "Alerts have now been disabled for this server. There was no exisitng role: <@&" + newrole.id + ">. You can now delete this, or leave it and it will be reused if your later renable alerts", ephemeral: true })
+
+    }
+  } else {
+
+    interaction.reply({ content: "Alerts have now been disabled for this server. You can now dismiss this message", ephemeral: true })
+
+  }
+
+
+}//end function
+module.exports.disableAlerts = disableAlerts
 
 async function createRole(guildid) {
   const thisGuild = await client.guilds.cache.get(guildid)
