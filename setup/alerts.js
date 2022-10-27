@@ -66,6 +66,7 @@ async function enableAlerts(interaction) {
 
     } else {//make a new pingrole. Somehow DB is blank?
       var newroleID = await createRole(interaction.message.guildId)
+      w.log.info('EnableAlerts: New role ID is: ' + newroleID)
       await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "pingrole", newroleID)
       await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "enable_ping", true)
 
@@ -78,6 +79,7 @@ async function enableAlerts(interaction) {
     } else {//there wasn't an exisiting pingrole. Make one and enable pingrolez
 
       var newroleID = await createRole(interaction.message.guildId)
+      w.log.info('EnableAlerts: New role ID is: ' + newroleID)
       await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "pingrole", newroleID)
       await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "enable_ping", true)
 
@@ -91,6 +93,7 @@ module.exports.enableAlerts = enableAlerts
 async function createRole(guildid) {
   const thisGuild = await client.guilds.cache.get(guildid)
   thisGuild.roles.create({ name: 'Snipe Alerts' }).then(role => {
+    w.log.info('CreateRole: New role ID is: ' + role.id)
     thisrole = role.id
     return thisrole
   })
