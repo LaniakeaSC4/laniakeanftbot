@@ -111,6 +111,7 @@ async function startsniper() {
                 if (snipe) {//after testing, if this one was a snipe...
                   var thissnipeprice = parseFloat(snipe[1])
                   var thislimit = parseFloat(snipe[2])
+                  var snipe_ping = snipe[3]
                   var hotness = await snipeHotness(parseFloat(thisprice), thisfloorprice, parseFloat(thissnipeprice))//how hot is this snipe?
 
                   if (logging === true) { w.log.info('SniperV2: we have a ' + raritydescription + ' ' + collections[k]['collectionkey'] + ' snipe! ' + thislistings[i].tokenMint + ' at price ' + thislistings[i].price) }
@@ -118,7 +119,7 @@ async function startsniper() {
                   //initialise servers if not already
                   if (!serversinitalized) { await snipersender.initaliseServers(); serversinitalized = true }
                   //send snipe into the send filter where server specific filters are applied (e.g. premium, price limits, etc)
-                  snipersender.sendFilter(thisname, collections[k]['collectionkey'], thisembedcolour, NFTdata.rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize, collections[k]['floor_history'])
+                  snipersender.sendFilter(thisname, collections[k]['collectionkey'], thisembedcolour, NFTdata.rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize, collections[k]['floor_history'], snipe_ping)
                   //save record of last seen time and floor price
                   lastSeen(collections[k]['collectionkey'], thisfloorprice)
                 } else { /* w.log.info('this was not a snipe') */ } //end if not false
@@ -181,13 +182,13 @@ async function testifsnipe(raritydescription, thisprice, floorprice) {
       var raresnipe = rarelimit * floorprice
 
       if ((raritydescription === 'Mythic') && (thisprice <= mythicsnipe)) {
-        resolve([raritydescription, mythicsnipe, mythiclimit])
+        resolve([raritydescription, mythicsnipe, mythiclimit, false])
       } else if ((raritydescription === 'Legendary') && (thisprice <= legendarysnipe)) {
-        resolve([raritydescription, legendarysnipe, legendarylimit])
+        resolve([raritydescription, legendarysnipe, legendarylimit, false])
       } else if ((raritydescription === 'Epic') && (thisprice <= epicsnipe)) {
-        resolve([raritydescription, epicsnipe, epiclimit])
+        resolve([raritydescription, epicsnipe, epiclimit,false])
       } else if ((raritydescription === 'Rare') && (thisprice <= raresnipe)) {
-        resolve([raritydescription, raresnipe, rarelimit])
+        resolve([raritydescription, raresnipe, rarelimit,false])
       } else {
         resolve(null)
       }

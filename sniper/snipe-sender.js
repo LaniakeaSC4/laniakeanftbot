@@ -18,7 +18,7 @@ async function initaliseServers() {
 }; module.exports.initaliseServers = initaliseServers
 
 //work out where to send them
-async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize, floor_history) {
+async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize, floor_history, snipe_ping) {
 	for (i = 0; i < supportedservers.length; i++) {
 		if (supportedservers[i].inserver === true) {//only proceed if bot is in server
 			var thisserver = supportedservers[i]; var thisserverid = ''; var feedchannel = ''

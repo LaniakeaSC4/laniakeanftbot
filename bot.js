@@ -373,3 +373,14 @@ client.on('interactionCreate', async interaction => {
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }//if not laniakea
   }//end if button is 'setMax-modal' 
 })//end on interactionCreate 
+
+//Configure alerts
+const alerts = require('./setup/alerts.js')
+client.on('interactionCreate', async interaction => {
+  //main globalconfig button on main setup dialogue. Replied with global config panel
+  if (interaction.customId === 'setupalerts-button') {
+    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
+      alerts.configPanel(interaction)
+    } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
+  }//end if button is 'globalconfig-button'' 
+})//end on interactionCreate 
