@@ -33,7 +33,18 @@ async function configPanel(interaction) {
   if (ping_enabled === true) {
     if (pingrole) {//enabled and existing. Check if role still exists and confirm back to the user that all is good
 
-      replytext = "Alerts are already enabled for this server. The Role ID is: " + pingrole
+      //check guild roles to see if it's still there
+      let oldrole = await message.guild.roles.cache.find(x => x.id === pingrole);
+      if (typeof oldrole === undefined) {
+        // Role doesn't exist, safe to create
+        w.log.info('Didnt find the BD role in guild')
+      } else {
+        // Role exists
+        w.log.info('Found the BD role in guild')
+      }
+
+
+      replytext = "Alerts are already enabled for this server. The Role is: <@" + pingrole + ">"
 
     } else {//make a new pingrole. Somehow DB is blank?
 
@@ -44,7 +55,7 @@ async function configPanel(interaction) {
   } else {//if pingrole not enabled
     if (pingrole) {//wasn't enabled, but there was a previous pingrole. Check if that role still exists, renable pings and respond to the user confirming the role
 
-      replytext = "Alerts is not currently enabled. There was a previous Alert Role though: " + pingrole
+      replytext = "Alerts is not currently enabled. There was a previous Alert Role <@" + pingrole + ">"
 
     } else {//there wasn't an exisiting pingrole. Make one and enable pingrolez
 
