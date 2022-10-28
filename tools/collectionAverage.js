@@ -24,10 +24,10 @@ w.log.info('loop: ' + i)
     var fp_percent = ''
     var sol_significant = false
     var fp_significant = false
-    var collection_24h_strength = 'Not enough data'
-    var fp_5daverage = 0
-    var sol_5daverage = 0
-    var fp_5dchange = 'Not enough data'
+    var collection_12h_strength = 'Not enough data'
+    var fp_3daverage = 0
+    var sol_3daverage = 0
+    var fp_3dchange = 'Not enough data'
 
     //current collection fp
     var fpoutput
@@ -42,11 +42,11 @@ w.log.info('loop: ' + i)
 w.log.info('There was a history setting fp history to ' + JSON.stringify(collections[i].floor_history.fp_history))
       fpoutput = collections[i].floor_history.fp_history
       //calculate average before pushing out oldest
-      fp_5daverage = fpoutput.reduce((a, b) => a + b, 0) / fpoutput.length
-      w.log.info("average calculated as: " + fp_5daverage)
+      fp_3daverage = fpoutput.reduce((a, b) => a + b, 0) / fpoutput.length
+      w.log.info("average calculated as: " + fp_3daverage)
       //push new
       fpoutput.unshift(thisfp)
-      if (fpoutput.length > 5) { fpoutput.pop() }
+      if (fpoutput.length > 6) { fpoutput.pop() }
     }
 
     //get current sol price
@@ -56,10 +56,10 @@ w.log.info('There was a history setting fp history to ' + JSON.stringify(collect
     } else {
       soloutput = collections[i].floor_history.sol_history
       //calculate average before pushing out oldest
-      sol_5daverage = soloutput.reduce((a, b) => a + b, 0) / soloutput.length
+      sol_3daverage = soloutput.reduce((a, b) => a + b, 0) / soloutput.length
       //push new
       soloutput.unshift(solprice)
-      if (soloutput.length > 5) { soloutput.pop() }
+      if (soloutput.length > 6) { soloutput.pop() }
     }
 
     if (soloutput.length > 2 && fpoutput.length > 2) {
@@ -102,22 +102,22 @@ w.log.info('SOL direction is: ' + sol_direction + '. Percentage is: ' + sol_perc
       
       w.log.info('FP direction is: ' + fp_direction + '. Percentage is: ' + fp_percent + '. fp_significant is: ' + fp_significant)
 
-      //calculate 5d fp change
-      var fp_5dchangecalc = fpoutput[0] / fp_5daverage
+      //calculate 3d fp change
+      var fp_3dchangecalc = fpoutput[0] / fp_3daverage
 
-w.log.info('fp_5dchangecalc = ' + fpoutput[0] + '/' + fp_5daverage + '=' + fp_5dchangecalc)
+w.log.info('fp_3dchangecalc = ' + fpoutput[0] + '/' + fp_3daverage + '=' + fp_3dchangecalc)
 
-      if (fp_5dchangecalc > 1) {
-        fp_5dchange = '+' + pround(((fp_5dchangecalc - 1) * 100), 2) + '%'
+      if (fp_3dchangecalc > 1) {
+        fp_3dchange = '+' + pround(((fp_3dchangecalc - 1) * 100), 2) + '%'
       }
-      if (fp_5dchangecalc < 1) {
-        fp_5dchange = '-' + pround((Math.abs((fp_5dchangecalc - 1)) * 100), 2) + '%'
+      if (fp_3dchangecalc < 1) {
+        fp_3dchange = '-' + pround((Math.abs((fp_3dchangecalc - 1)) * 100), 2) + '%'
       }
-      if (fp_5dchangecalc === 1) {
-        fp_5dchange = '+0%'
+      if (fp_3dchangecalc === 1) {
+        fp_3dchange = '+0%'
       }
       
-w.log.info('fp_5dchange = ' + fp_5dchange)
+w.log.info('fp_3dchange = ' + fp_3dchange)
 
       //if there had been significant change to fp
       if (fp_significant === true) {
@@ -132,24 +132,24 @@ w.log.info('fp_5dchange = ' + fp_5dchange)
             
             w.log.info('after the significant fp shift and the shift was in increase. There was a significant sol shift also. Sol_direction was: ' + sol_direction)
             
-            if (sol_direction === 'increased') { collection_24h_strength = '↗️ Strong. FP +' + fp_percent + ' | SOL/USD +' + sol_percent }
-            if (sol_direction === 'decreased') { collection_24h_strength = '⬆️ Strong. FP +' + fp_percent + ' | SOL/USD -' + sol_percent }
+            if (sol_direction === 'increased') { collection_12h_strength = '↗️ Strong. FP +' + fp_percent + ' | SOL/USD +' + sol_percent }
+            if (sol_direction === 'decreased') { collection_12h_strength = '⬆️ Strong. FP +' + fp_percent + ' | SOL/USD -' + sol_percent }
           } else {
             //if no significant change to SOL (just FP increase). Sol change can be insignficantly plus, minus or unchanged
             var solsymbol_1 = ""; if (sol_direction === 'decreased') { solsymbol_1 = '-' } else { solsymbol_1 = '+' }
-            collection_24h_strength = '↗️ Strong. FP +' + fp_percent + ' | SOL/USD ' + solsymbol_1 + sol_percent
+            collection_12h_strength = '↗️ Strong. FP +' + fp_percent + ' | SOL/USD ' + solsymbol_1 + sol_percent
             w.log.info('after the significant fp shift and the shift was in increase. Sol shift was not significant. So solsymbol_1 is ' + solsymbol_1)
           }
         }
 
         if (fp_direction === 'decreased') {
           if (sol_significant === true) {
-            if (sol_direction === 'increased') { collection_24h_strength = '⬇️ Weak. FP -' + fp_percent + ' | SOL/USD +' + sol_percent }
-            if (sol_direction === 'decreased') { collection_24h_strength = '↘️ Weak. FP -' + fp_percent + ' | SOL/USD -' + sol_percent }
+            if (sol_direction === 'increased') { collection_12h_strength = '⬇️ Weak. FP -' + fp_percent + ' | SOL/USD +' + sol_percent }
+            if (sol_direction === 'decreased') { collection_12h_strength = '↘️ Weak. FP -' + fp_percent + ' | SOL/USD -' + sol_percent }
           } else {
             //if no significant change to SOL (just FP decrease). Sol change can be insignficantly plus, minus or unchanged
             var solsymbol_2 = ""; if (sol_direction === 'decreased') { solsymbol_2 = '-' } else { solsymbol_2 = '+' }
-            collection_24h_strength = '↘️ Weak. FP -' + fp_percent + ' | SOL/USD ' + solsymbol_2 + sol_percent
+            collection_12h_strength = '↘️ Weak. FP -' + fp_percent + ' | SOL/USD ' + solsymbol_2 + sol_percent
           }
         }
 
@@ -160,23 +160,23 @@ w.log.info('fp_5dchange = ' + fp_5dchange)
 
         if (sol_direction === 'increased') {
           if (fp_significant === true) {
-            if (fp_direction === 'increased') { collection_24h_strength = '↗️ Strong. FP +' + fp_percent + ' | SOL/USD +' + sol_percent }
-            if (fp_direction === 'decreased') { collection_24h_strength = '⬇️ Weak. FP -' + fp_percent + ' | SOL/USD +' + sol_percent }
+            if (fp_direction === 'increased') { collection_12h_strength = '↗️ Strong. FP +' + fp_percent + ' | SOL/USD +' + sol_percent }
+            if (fp_direction === 'decreased') { collection_12h_strength = '⬇️ Weak. FP -' + fp_percent + ' | SOL/USD +' + sol_percent }
           } else {
             //if significant change to SOL but no significant change to FP. FP change can be insignficantly plus, minus or unchanged
             var fpsymbol_1 = ""; if (fp_direction === 'decreased') { fpsymbol_1 = '-' } else { fpsymbol_1 = '+' }
-            collection_24h_strength = '↘️ Weak. FP ' + fpsymbol_1 + fp_percent + ' | SOL/USD +' + sol_percent
+            collection_12h_strength = '↘️ Weak. FP ' + fpsymbol_1 + fp_percent + ' | SOL/USD +' + sol_percent
           }
         }
 
         if (sol_direction === 'decreased') {
           if (fp_significant === true) {
-            if (fp_direction === 'increased') { collection_24h_strength = '⬆️ Strong. FP +' + fp_percent + ' | SOL/USD -' + sol_percent }
-            if (fp_direction === 'decreased') { collection_24h_strength = '↘️ Weak. FP -' + fp_percent + ' | SOL/USD -' + sol_percent }
+            if (fp_direction === 'increased') { collection_12h_strength = '⬆️ Strong. FP +' + fp_percent + ' | SOL/USD -' + sol_percent }
+            if (fp_direction === 'decreased') { collection_12h_strength = '↘️ Weak. FP -' + fp_percent + ' | SOL/USD -' + sol_percent }
           } else {
             //if no significant change to SOL (just FP increase). Sol change can be insignficantly plus, minus or unchanged
             var fpsymbol_2 = ""; if (fp_direction === 'decreased') { fpsymbol_2 = '-' } else { fpsymbol_2 = '+' }
-            collection_24h_strength = '↗️ Strong. FP ' + fpsymbol_2 + fp_percent + ' | SOL/USD -' + sol_percent
+            collection_12h_strength = '↗️ Strong. FP ' + fpsymbol_2 + fp_percent + ' | SOL/USD -' + sol_percent
           }
         }
 
@@ -190,21 +190,21 @@ w.log.info('fp_5dchange = ' + fp_5dchange)
         if (sol_direction === 'decreased') { solsymbol = '-' } else { solsymbol = '+' }
         if (fp_direction === 'decreased') { fpsymbol = '-' } else { fpsymbol = '+' }
 
-        collection_24h_strength = '➡️ Stable. FP ' + fpsymbol + fp_percent + ' | SOL/USD price ' + solsymbol + sol_percent + '.'
+        collection_12h_strength = '➡️ Stable. FP ' + fpsymbol + fp_percent + ' | SOL/USD price ' + solsymbol + sol_percent + '.'
 
       }
 
     }//if output length > 2
 
-    w.log.info('Collection strength for ' + collections[i].meslug + ' is: ' + collection_24h_strength + " FP history is: " + fpoutput.toString() + ". SOL history is: " + soloutput.toString() + ". 5D FP AVG is: " + fp_5daverage + ". Today\'s change on 5D AVG FP is: " + fp_5dchange)
+    w.log.info('Collection strength for ' + collections[i].meslug + ' is: ' + collection_12h_strength + " FP history is: " + fpoutput.toString() + ". SOL history is: " + soloutput.toString() + ". 3d FP AVG is: " + fp_3daverage + ". Today\'s change on 3d AVG FP is: " + fp_3dchange)
 
     var dbstore = {}
     dbstore['fp_history'] = fpoutput
     dbstore['sol_history'] = soloutput
-    dbstore['collection_24h_strength'] = collection_24h_strength
-    dbstore['fp_5daverage'] = pround(fp_5daverage, 2)
-    dbstore['sol_5daverage'] = pround(sol_5daverage, 2)
-    dbstore['fp_5dchange'] = fp_5dchange
+    dbstore['collection_12h_strength'] = collection_12h_strength
+    dbstore['fp_3daverage'] = pround(fp_3daverage, 2)
+    dbstore['sol_3daverage'] = pround(sol_3daverage, 2)
+    dbstore['fp_3dchange'] = fp_3dchange
 
     await sql.updateTableColumn("solanametaplex", "meslug", collections[i].meslug, "floor_history", dbstore)
 
