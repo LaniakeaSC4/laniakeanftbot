@@ -110,10 +110,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 async function sendsnipes(server, thischannel, delay, nftname, embedcolour, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage, listinglink, hotness, collectionSize, thiscollection, floor_history) {
 	//don't need server ID, channel ID is enough
 	if (delay) { await wait(delay) }//delay delivery if one was set
-	if (floor_history) {
-	floor_history.fp_3daverage = 'coming soon'
-	floor_history.fp_3dchange = 'coming soon'
-	floor_history.collection_12h_strength = 'coming soon'} else {
+	if (!floor_history) {
 	  floor_history = {}
 	  floor_history.fp_3daverage = 'coming soon'
 	  floor_history.fp_3dchange = 'coming soon'
@@ -128,9 +125,6 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 				{
 					"title": nftname,
 					"color": embedcolour,
-					"footer": {
-						"text": 'For ' + raritydescription.toLowerCase() + ' NFTs, listing price <' + parseFloat(thislimit) + 'x the floor price of ' + pround(parseFloat(floorprice), 3) + ' SOL is a snipe (i.e. less than ' + pround(parseFloat(thissnipeprice), 3) + ' SOL)' + "\nSearch \"Snipe" + thiscollection + "\" for more snipes in this collection.\nD: https://discord.gg/CgF7neAte2 | W: nftsniperbot.xyz"
-					},
 					"fields": [
 						{
 							"name": "🎯 __Snipe Details__",
@@ -147,7 +141,10 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 						"url": thisimage,
 						"height": 75,
 						"width": 75
-					}
+					},
+				  "footer": {
+						"text": "Search \"Snipe" + thiscollection + "\" for more snipes in this collection.\n" + raritydescription.toLowerCase() + ' snipes have list price <' + parseFloat(thislimit) + 'x the floor price ' + pround(parseFloat(floorprice), 3) + ' (<' + pround(parseFloat(thissnipeprice), 3) + ' SOL)' + "\nCollection Stats refreshed 01:00 and 13:00 UTC\n**D**: https://discord.gg/CgF7neAte2 | **W**: nftsniperbot.xyz"
+					}, 
 				}
 			]//end embed
 		}).catch((err) => { w.log.error('there was a message send error: ' + err) })//end message send
