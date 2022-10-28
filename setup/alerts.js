@@ -7,6 +7,11 @@ const { ChannelType, PermissionFlagsBits, PermissionsBitField,
 const w = require('../tools/winston.js')
 const sql = require('../tools/commonSQL.js')//common sql related commands are in here
 
+//===============
+//  Admin Panel
+//===============
+
+
 //respond to alerts config button press
 async function configPanel(interaction) {
   //build a new button row for the command reply
@@ -228,4 +233,51 @@ async function createRole(guildid) {
   w.log.info('CreateRole: New role ID is: ' + role.id)
   return role;
 
+}
+
+//===============
+//  User Roles
+//===============
+
+async function addRole(interaction) {
+     //check if the bot had manage roles
+  var managerolepermission = false
+  if (interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.ManageRoles)) {
+    managerolepermission = true
+  }
+
+if (managerolepermission === true ) {
+  //check if alerts are enabled and there is a valid alertrole
+   //get current config for this server
+  var pingrole = await sql.getData("servers", "serverid", interaction.message.guildId, "pingrole")
+  var ping_enabled = await sql.getData("servers", "serverid", interaction.message.guildId, "enable_ping")
+  
+  if (ping_enabled === true) {
+    if (pingrole) {//enabled and existing. Check if role still exists and confirm back to the user that all is good
+
+      //check guild roles to see if it's still there
+      await interaction.message.guild.roles.fetch()
+      let oldrole = await interaction.message.guild.roles.cache.get(pingrole)
+      w.log.info('oldrole is: ' + oldrole)
+      if (oldrole != pingrole) {
+        // Role doesn't exist, give error to user
+        interaction.reply({ content: "There has been a problem with the alert config on this Sever. Please let a sever admin know.", ephemeral: true })
+      } else {
+        // Role exists. Apply it to user
+     const user = interaction.options.getMember('user')
+  user.roles.add(pingrole)
+  interaction.reply({ content: "you have been given the role", ephemeral: true })
+      }
+
+    }
+  } 
+  
+  
+  
+  
+  
+}
+  
+  
+  
 }

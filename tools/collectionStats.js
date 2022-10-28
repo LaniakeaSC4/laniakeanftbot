@@ -8,7 +8,7 @@ const magiceden = require('./magicedenRPC.js')//Magic Eden related commands are 
 //import sniper so we can restart it
 const sniper = require('../sniper/sniper-main.js')
 
-async function getCurrentFP() {
+async function updateStats() {
   w.log.info('Updating collection stats')
   //get collections
   var collections = await getCollectionAverages()
@@ -217,7 +217,7 @@ w.log.info('fp_3dchange = ' + fp_3dchange)
   //restart sniper to update collection stats available to snipe sender
   			await sniper.stop()
 				await sniper.initialise()
-} module.exports.getCurrentFP = getCurrentFP
+} module.exports.updateStats = updateStats
 
 var db = require('../clients/pgclient.js')
 async function getCollectionAverages() {

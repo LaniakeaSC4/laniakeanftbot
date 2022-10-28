@@ -38,9 +38,9 @@ client.on('ready', async () => {
   premium.validateServers()
   }, null, true)
   
-  var averageFP = require('./tools/collectionAverage.js')
-  var job_updateAverage = new CronJob('0 */12 * * *', function () { w.log.info('Cron: Updating averages')
-    averageFP.getCurrentFP() 
+  var collection_stats = require('./tools/collectionStats.js')
+  var job_updateStats = new CronJob('0 */12 * * *', function () { w.log.info('Cron: Updating collection stats')
+    collection_stats.getCurrentFP() 
   }, null, true)
 
 })//end client.on Ready
