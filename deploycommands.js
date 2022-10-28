@@ -10,7 +10,7 @@ const sql = require('./tools/commonSQL.js')//to get supported servers
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
 async function getActiveServers() {
-  var activeServers = await sql.getBotActiveStatus()
+  var activeServers = await sql.getBotActiveServers()
   return activeServers
 }
 
