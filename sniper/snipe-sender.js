@@ -143,7 +143,7 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 						"width": 75
 					},
 				  "footer": {
-						"text": "Search \"Snipe" + thiscollection + "\" for more snipes in this collection.\n" + raritydescription + ' snipes have list price <' + parseFloat(thislimit) + 'x the ' + pround(parseFloat(floorprice), 2)  + 'SOL floor price ' + + ' (<' + pround(parseFloat(thissnipeprice), 2) + 'SOL)' + "\nCollection Stats refreshed 01:00 and 13:00 UTC\nD: https://discord.gg/CgF7neAte2 | W: nftsniperbot.xyz"
+						"text": "Search \"Snipe" + thiscollection + "\" for more snipes in this collection.\n" + raritydescription + ' snipes have list price <' + parseFloat(thislimit) + 'x the ' + pround(parseFloat(floorprice), 2)  + ' SOL floor price ' + ' (<' + pround(parseFloat(thissnipeprice), 2) + ' SOL)' + "\nCollection Stats refreshed 00:00 and 12:00 UTC\nD: https://discord.gg/CgF7neAte2 | W: nftsniperbot.xyz"
 					}, 
 				}
 			]//end embed
