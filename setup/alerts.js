@@ -34,7 +34,7 @@ async function configPanel(interaction) {
   if (interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.ManageRoles)) {
     manageroles = 'Note: Laniakea Sniper Bot will require Manage Roles permission. Currently it **does** have this permission.'
 } else {
-  manageroles = '\n\nNote: Laniakea Sniper Bot will require Manage Roles permission. Currently it **does not** have this permission.'
+  manageroles = '\n\n**Note**: Laniakea Sniper Bot will require Manage Roles permission. Currently it **does not** have this permission.'
 }
 
   var replytext = ""
@@ -48,11 +48,11 @@ async function configPanel(interaction) {
       if (oldrole != pingrole) {
         // Role doesn't exist, safe to create
         w.log.info('Didnt find the DB role in guild')
-        replytext = "Snipe Alerts allow your users to opt-in using `/alert yes` to be given a discord role which the bot will mention for certain high value snipes.\n\nCurrently Alerts are sent for: Mythic rarity NFTs within 20% of floor price.\n\nAlerts are already enabled for this server. There was a saved role in our database, but it must have been deleted. Please press [Enable alerts] again to make a new alerts role which users can opt in to receive alerts" + manageroles
+        replytext = "Snipe Alerts allow your users to opt-in using `/alert yes` to be given a discord role which the bot will mention for certain high value snipes.\n\nCurrently Alerts are sent for: Mythic rarity NFTs within 20% of floor price.\n\nAlerts are already enabled for this server. There was a saved role in our database, but it must have been deleted. Please press [Enable alerts] again to make a new alerts role which users can opt in to receive alerts." + manageroles
       } else {
         // Role exists
         w.log.info('Found the DB role in guild')
-        replytext = "Snipe Alerts allow your users to opt-in using `/alert yes` to be given a discord role which the bot will mention for certain high value snipes.\n\nCurrently Alerts are sent for: Mythic rarity NFTs within 20% of floor price.\n\nAlerts are already enabled for this server. The Role is: <@&" + pingrole + ">" + manageroles
+        replytext = "Snipe Alerts allow your users to opt-in using `/alert yes` to be given a discord role which the bot will mention for certain high value snipes.\n\nCurrently Alerts are sent for: Mythic rarity NFTs within 20% of floor price.\n\nAlerts are already enabled for this server. The Role is: <@&" + pingrole + ">." + manageroles
       }
 
 
@@ -60,7 +60,7 @@ async function configPanel(interaction) {
 
     } else {//make a new pingrole. Somehow DB is blank? this should not happen
 
-      replytext = "Snipe Alerts allow your users to opt-in using `/alert yes` to be given a discord role which the bot will mention for certain high value snipes.\n\nCurrently Alerts are sent for: Mythic rarity NFTs within 20% of floor price.\n\nAthough alerts are enabled, there was no saved role in our database. Please press [Enable Alerts] again to create a new alert role which users can opt in to receive alerts" + manageroles
+      replytext = "Snipe Alerts allow your users to opt-in using `/alert yes` to be given a discord role which the bot will mention for certain high value snipes.\n\nCurrently Alerts are sent for: Mythic rarity NFTs within 20% of floor price.\n\nAthough alerts are enabled, there was no saved role in our database. Please press [Enable Alerts] again to create a new alert role which users can opt in to receive alerts." + manageroles
 
     }//end else pingrole was enabled but no role existed.
 
@@ -74,11 +74,11 @@ async function configPanel(interaction) {
       if (oldrole != pingrole) {
         // Role doesn't exist, safe to create
         w.log.info('Didnt find the DB role in guild')
-        replytext = "Snipe Alerts allow your users to opt-in using `/alert yes` to be given a discord role which the bot will mention for certain high value snipes.\n\nCurrently Alerts are sent for: Mythic rarity NFTs within 20% of floor price.\n\nAlerts not already enabled for this server. There was a saved role in our database, but it must have been deleted. Please press [Enable alerts] again to make a new alerts role which users can opt in to receive alerts" + manageroles
+        replytext = "Snipe Alerts allow your users to opt-in using `/alert yes` to be given a discord role which the bot will mention for certain high value snipes.\n\nCurrently Alerts are sent for: Mythic rarity NFTs within 20% of floor price.\n\nAlerts not already enabled for this server. There was a saved role in our database, but it must have been deleted. Please press [Enable alerts] again to make a new alerts role which users can opt in to receive alerts." + manageroles
       } else {
         // Role exists
         w.log.info('Found the DB role in guild')
-        replytext = "Snipe Alerts allow your users to opt-in using `/alert yes` to be given a discord role which the bot will mention for certain high value snipes.\n\nCurrently Alerts are sent for: Mythic rarity NFTs within 20% of floor price.\n\nAlerts are not already enabled for this server. However, a role was found: <@&" + pingrole + ">. To reenable use of this role press [Enable alerts]" + manageroles
+        replytext = "Snipe Alerts allow your users to opt-in using `/alert yes` to be given a discord role which the bot will mention for certain high value snipes.\n\nCurrently Alerts are sent for: Mythic rarity NFTs within 20% of floor price.\n\nAlerts are not already enabled for this server. However, a role was found: <@&" + pingrole + ">. To reenable use of this role press [Enable alerts]." + manageroles
       }
 
     } else {//there wasn't an exisiting pingrole. Make one and enable pingrole
