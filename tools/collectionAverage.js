@@ -5,6 +5,9 @@ const pround = (number, decimalPlaces) => Number(Math.round(Number(number + "e" 
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 const magiceden = require('./magicedenRPC.js')//Magic Eden related commands are in here
 
+//import sniper so we can restart it
+const sniper = require('../sniper/sniper-main.js')
+
 async function getCurrentFP() {
   w.log.info('Updating collection stats')
   //get collections
@@ -211,6 +214,9 @@ w.log.info('fp_3dchange = ' + fp_3dchange)
     await wait(1500)
 
   }
+  //restart sniper to update collection stats available to snipe sender
+  			await sniper.stop()
+				await sniper.initialise()
 } module.exports.getCurrentFP = getCurrentFP
 
 var db = require('../clients/pgclient.js')

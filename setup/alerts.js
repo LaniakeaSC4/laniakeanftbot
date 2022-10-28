@@ -28,6 +28,14 @@ async function configPanel(interaction) {
   //get current config for this server
   var pingrole = await sql.getData("servers", "serverid", interaction.message.guildId, "pingrole")
   var ping_enabled = await sql.getData("servers", "serverid", interaction.message.guildId, "enable_ping")
+  
+  //check if the bot had manage roles
+  var manageroles = ''
+  if (interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.ManageRoles)) {
+    manageroles = 'Note: Laniakea Sniper Bot will require Manage Roles permission. Currently it **does** have this permission.'
+} else {
+  manageroles = '\n\nNote: Laniakea Sniper Bot will require Manage Roles permission. Currently it **does not** have this permission.'
+}
 
   var replytext = ""
   if (ping_enabled === true) {
@@ -40,11 +48,11 @@ async function configPanel(interaction) {
       if (oldrole != pingrole) {
         // Role doesn't exist, safe to create
         w.log.info('Didnt find the DB role in guild')
-        replytext = "Alerts are already enabled for this server. There was a saved role in our database, but it must have been deleted. Please press [Enable alerts] again to make a new alerts role"
+        replytext = "Snipe Alerts allow your users to opt-in using `/alert yes` to be given a discord role which the bot will mention for certain high value snipes.\n\nCurrently Alerts are sent for: Mythic rarity NFTs within 20% of floor price.\n\nAlerts are already enabled for this server. There was a saved role in our database, but it must have been deleted. Please press [Enable alerts] again to make a new alerts role which users can opt in to receive alerts" + manageroles
       } else {
         // Role exists
         w.log.info('Found the DB role in guild')
-        replytext = "Alerts are already enabled for this server. The Role is: <@&" + pingrole + ">"
+        replytext = "Snipe Alerts allow your users to opt-in using `/alert yes` to be given a discord role which the bot will mention for certain high value snipes.\n\nCurrently Alerts are sent for: Mythic rarity NFTs within 20% of floor price.\n\nAlerts are already enabled for this server. The Role is: <@&" + pingrole + ">" + manageroles
       }
 
 
@@ -52,7 +60,7 @@ async function configPanel(interaction) {
 
     } else {//make a new pingrole. Somehow DB is blank? this should not happen
 
-      replytext = "Athough alerts are enabled, there was no saved role in our database. Please press [Enable Alerts] again"
+      replytext = "Snipe Alerts allow your users to opt-in using `/alert yes` to be given a discord role which the bot will mention for certain high value snipes.\n\nCurrently Alerts are sent for: Mythic rarity NFTs within 20% of floor price.\n\nAthough alerts are enabled, there was no saved role in our database. Please press [Enable Alerts] again to create a new alert role which users can opt in to receive alerts" + manageroles
 
     }//end else pingrole was enabled but no role existed.
 
@@ -66,28 +74,35 @@ async function configPanel(interaction) {
       if (oldrole != pingrole) {
         // Role doesn't exist, safe to create
         w.log.info('Didnt find the DB role in guild')
-        replytext = "Alerts not already enabled for this server. There was a saved role in our database, but it must have been deleted. Please press [Enable alerts] again to make a new alerts role"
+        replytext = "Snipe Alerts allow your users to opt-in using `/alert yes` to be given a discord role which the bot will mention for certain high value snipes.\n\nCurrently Alerts are sent for: Mythic rarity NFTs within 20% of floor price.\n\nAlerts not already enabled for this server. There was a saved role in our database, but it must have been deleted. Please press [Enable alerts] again to make a new alerts role which users can opt in to receive alerts" + manageroles
       } else {
         // Role exists
         w.log.info('Found the DB role in guild')
-        replytext = "Alerts are not already enabled for this server. However, a role was found: <@&" + pingrole + ">. To reenable use of this role press [Enable alerts]"
+        replytext = "Snipe Alerts allow your users to opt-in using `/alert yes` to be given a discord role which the bot will mention for certain high value snipes.\n\nCurrently Alerts are sent for: Mythic rarity NFTs within 20% of floor price.\n\nAlerts are not already enabled for this server. However, a role was found: <@&" + pingrole + ">. To reenable use of this role press [Enable alerts]" + manageroles
       }
 
     } else {//there wasn't an exisiting pingrole. Make one and enable pingrole
 
-      replytext = "Alerts are disabled and there is no exisitng config. Press [Enable Alerts] to get started."
+      replytext = "Snipe Alerts allow your users to opt-in using `/alert yes` to be given a discord role which the bot will mention for certain high value snipes.\n\nCurrently Alerts are sent for: Mythic rarity NFTs within 20% of floor price.\n\nAlerts are disabled and there is no exisitng config. Press [Enable Alerts] to get started. The bot will create a new role which users can then opt in to receiveing alerts." + manageroles
 
     }//end else pingrole wasn't enabled and role didn't exist
   }//end else pingrole not enabled
 
-  await interaction.reply({ content: replytext + "\n\nEnable or disable alerts?", components: [row], ephemeral: true })
+  await interaction.reply({ content: replytext, components: [row], ephemeral: true })
 } module.exports.configPanel = configPanel
 
 async function enableAlerts(interaction) {
   //let's get the fresh data again
   var pingrole = await sql.getData("servers", "serverid", interaction.message.guildId, "pingrole")
   var ping_enabled = await sql.getData("servers", "serverid", interaction.message.guildId, "enable_ping")
+  
+   //check if the bot had manage roles
+  var managerolepermission = false
+  if (interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.ManageRoles)) {
+    managerolepermission = true
+}
 
+if (managerolepermission === true ) {
   if (ping_enabled === true) {
     if (pingrole) {//enabled and existing. Check if role still exists and confirm back to the user that all is good
 
@@ -159,10 +174,21 @@ async function enableAlerts(interaction) {
 
     }//end else pingrole wasn't enabled and role didn't exist
   }//end else pingrole not enabled
+} else {
+  interaction.reply({ content: "Error: the bot requires the manage role permission to perform this action. Please grant the bot this permission and try again.", ephemeral: true })
+}
 }//end function
 module.exports.enableAlerts = enableAlerts
 
 async function disableAlerts(interaction) {
+    
+   //check if the bot had manage roles
+  var managerolepermission = false
+  if (interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.ManageRoles)) {
+    managerolepermission = true
+}
+
+if (managerolepermission === true ) {
   //disable alerts
   await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "enable_ping", false)
 
@@ -189,7 +215,9 @@ async function disableAlerts(interaction) {
     interaction.reply({ content: "Alerts have now been disabled for this server. You can now dismiss this message", ephemeral: true })
 
   }
-
+} else {
+  interaction.reply({ content: "Error: the bot requires the manage role permission to perform this action. Please grant the bot this permission and try again.", ephemeral: true })
+}
 
 }//end function
 module.exports.disableAlerts = disableAlerts
