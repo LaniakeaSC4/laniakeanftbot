@@ -396,4 +396,8 @@ client.on('interactionCreate', async interaction => {
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
   }
   
+  if (interaction.customId === 'alert-yes-button') {
+      alerts.addRole(interaction)
+  }
+  
 })//end on interactionCreate 

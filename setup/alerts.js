@@ -281,3 +281,4 @@ if (managerolepermission === true ) {
   
   
 }
+module.exports.addRole = addRole
