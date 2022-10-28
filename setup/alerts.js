@@ -264,8 +264,7 @@ if (managerolepermission === true ) {
         interaction.reply({ content: "There has been a problem with the alert config on this Sever. Please let a sever admin know.", ephemeral: true })
       } else {
         // Role exists. Apply it to user
-     const user = interaction.options.getMember('user')
-  user.roles.add(pingrole)
+     interaction.member.roles.add(pingrole) 
   interaction.reply({ content: "you have been given the role", ephemeral: true })
       }
 
