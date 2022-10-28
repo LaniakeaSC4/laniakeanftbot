@@ -111,13 +111,13 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 	//don't need server ID, channel ID is enough
 	if (delay) { await wait(delay) }//delay delivery if one was set
 	if (floor_history) {
-	floor_history.fp_5daverage = 'coming soon'
-	floor_history.fp_5dchange = 'coming soon'
-	floor_history.collection_24h_strength = 'coming soon'} else {
+	floor_history.fp_3daverage = 'coming soon'
+	floor_history.fp_3dchange = 'coming soon'
+	floor_history.collection_12h_strength = 'coming soon'} else {
 	  floor_history = {}
-	  floor_history.fp_5daverage = 'coming soon'
-	  floor_history.fp_5dchange = 'coming soon'
-	  floor_history.collection_24h_strength = 'coming soon'
+	  floor_history.fp_3daverage = 'coming soon'
+	  floor_history.fp_3dchange = 'coming soon'
+	  floor_history.collection_12h_strength = 'coming soon'
 	}
 	
 	//send it
@@ -139,7 +139,7 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 						},
 						{
 							"name": "📌 __Collection Stats__",
-							"value": "**5 Day avg FP**: " + floor_history?.fp_5daverage + "\n**5 Day FP change**: " + floor_history?.fp_5dchange + "\n**24h Strength**: " + floor_history?.collection_24h_strength,
+							"value": "**3 Day avg FP**: " + floor_history?.fp_3daverage + "\n**3 Day FP change**: " + floor_history?.fp_3dchange + "\n**12h Strength**: " + floor_history?.collection_12h_strength,
 							"inline": false
 						},
 					],
