@@ -38,7 +38,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 			*/
       
       //snipe ping may have come through as true, but let's see if this server has it enabled
-      w.log.info('snipe ping is: ' + snipe_ping)
+      w.log.info('snipe ping is: ' + snipe_ping + 'supportedservers[i].enable_ping is ' + supportedservers[i].enable_ping)
       if (supportedservers[i].enable_ping != true) { snipe_ping = false}
       //snipe ping is still true
       var thispingrole = ''
