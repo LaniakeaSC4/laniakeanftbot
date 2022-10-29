@@ -185,8 +185,9 @@ async function testifsnipe(raritydescription, thisprice, floorprice) {
         
         
         //check if this mythic is within 20% of FP. If so, send alert.
-        var alertlimit = floorprice + ((mythicsnipe - floorprice) * 0.2)
-        if (thisprice <= alertlimit) {
+        var mythicalertlimit = floorprice + ((mythicsnipe - floorprice) * 0.2)
+        w.log.info('mythicalertlimit: ' + mythicalertlimit + '. Thisprice: ' + thisprice)
+        if (thisprice <= mythicalertlimit) {
           resolve([raritydescription, mythicsnipe, mythiclimit, true])
         } else {//not within 20%. No alert.
         resolve([raritydescription, mythicsnipe, mythiclimit, false])
