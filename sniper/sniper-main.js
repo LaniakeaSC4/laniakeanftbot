@@ -108,7 +108,7 @@ async function startsniper() {
                 var floorprice = await magiceden.getFloorPrice(collections[k]['meslug'])
                 } catch (err) {
                   w.log.info('Error getting ME FP: ' + err)
-                  continue
+                  return
                 }
                 var thisfloorprice = pround(parseFloat(floorprice), 6)
                 var snipe = await testifsnipe(raritydescription, parseFloat(thisprice), parseFloat(thisfloorprice))
