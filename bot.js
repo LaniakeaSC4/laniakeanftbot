@@ -259,6 +259,14 @@ client.on('interactionCreate', async interaction => {
   if (interaction.customId === 'voteDown-modal') { vote.validateCollection(interaction, "down") }
 })//end on interactionCreate 
 
+//a guild role was deleted - do we care?
+client.on('roleDelete', async role => {
+  w.log.info('A role has been deleted in')
+  w.log.info(JSON.stringify(role))
+   //var serverdetails = await sql.getServerRow(channel.guildId)//get this server's details
+   
+})
+
 //channel in bot server was deleted - do we care?
 client.on('channelDelete', async channel => {
   w.log.info('Channel deleted in guild ' + channel.guildId + ' checking to see if its one of ours')
