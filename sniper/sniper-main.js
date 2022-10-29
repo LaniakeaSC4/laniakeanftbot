@@ -200,7 +200,7 @@ async function testifsnipe(raritydescription, thisprice, floorprice) {
         //check if this mythic is within 5% of FP. If so, send alert.
         var alertlimit = floorprice + ((legendarysnipe - floorprice) * 0.05)
         if (thisprice <= alertlimit) {
-          resolve([raritydescription, legendarysnipe, legendarylimit, false])
+          resolve([raritydescription, legendarysnipe, legendarylimit, true])
         } else {//not within 5%. No alert.
         resolve([raritydescription, legendarysnipe, legendarylimit, false])
         } 
@@ -211,7 +211,7 @@ async function testifsnipe(raritydescription, thisprice, floorprice) {
       } else if ((raritydescription === 'Epic') && (thisprice <= epicsnipe)) {
         resolve([raritydescription, epicsnipe, epiclimit,false])
       } else if ((raritydescription === 'Rare') && (thisprice <= raresnipe)) {
-        resolve([raritydescription, raresnipe, rarelimit,true])
+        resolve([raritydescription, raresnipe, rarelimit,false])
       } else {
         resolve(null)
       }
