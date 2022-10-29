@@ -137,6 +137,7 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 		const channel = await client.channels.fetch(thischannel)
 		channel.send({
 		  content : alertrole,
+		  allowedMentions: { parse: ['users', 'roles'], repliedUser: true }, 
 			embeds: [
 				{
 					"title": nftname,
