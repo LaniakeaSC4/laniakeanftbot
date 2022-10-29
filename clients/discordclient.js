@@ -8,6 +8,7 @@ module.exports = {
 		if (discordclient) return discordclient; // if it is already there, grab it here and return it
 		//else, set up new client, connect it and return it
 		discordclient = new Client({
+		  allowedMentions: { parse: ['users', 'roles'], repliedUser: true }, 
 			intents: [
 				GatewayIntentBits.Guilds,
 				GatewayIntentBits.GuildMessages,
