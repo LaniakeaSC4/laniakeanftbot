@@ -262,9 +262,14 @@ client.on('interactionCreate', async interaction => {
 //a guild role was deleted - do we care?
 client.on('roleDelete', async role => {
   w.log.info('A role has been deleted in')
-  w.log.info(JSON.stringify(role))
-   //var serverdetails = await sql.getServerRow(channel.guildId)//get this server's details
-   
+  
+  var serverdetails = await sql.getServerRow(role.guild)//get this server's details
+  
+  if (serverdetails[0].pingrole == role.id) {
+    w.log.info('the pingrole has been deleted. Nulling it and disabling server alerts')
+    await sql.updateTableColumn("servers", "serverid" , role.guild, "enable_ping", false)
+    await sql.updateTableColumn("servers", "serverid" , role.guild, "pingrole", null)
+  }
 })
 
 //channel in bot server was deleted - do we care?
