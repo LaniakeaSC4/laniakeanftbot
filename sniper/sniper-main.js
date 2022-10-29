@@ -188,7 +188,7 @@ async function testifsnipe(raritydescription, thisprice, floorprice) {
       } else if ((raritydescription === 'Epic') && (thisprice <= epicsnipe)) {
         resolve([raritydescription, epicsnipe, epiclimit,false])
       } else if ((raritydescription === 'Rare') && (thisprice <= raresnipe)) {
-        resolve([raritydescription, raresnipe, rarelimit,false])
+        resolve([raritydescription, raresnipe, rarelimit,true])
       } else {
         resolve(null)
       }

@@ -36,6 +36,12 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 			//filter by global blackslist (make /blacklist command)
 			Loop through blacklist same as alpha channels
 			*/
+      
+      //snipe ping may have come through as true, but let's see if this server has it enabled
+      if (supportedservers[i].enable_ping != true) { snipe_ping = false}
+      //snipe ping is still true
+      var thispingrole = ''
+      if (snipe_ping === true) {thispingrole = supportedservers[i].pingrole}
 
 			//check if this snipe should be redirected to a homechannel from the main feed
 			var foundhome = false//start with false
@@ -69,13 +75,13 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 
 			//if alpha channel is matched, send straight away.
 			if (foundalpha === true) {
-				sendsnipes(thisserverid, alphachannelid, null, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize, thiscollection, floor_history)
+				sendsnipes(thisserverid, alphachannelid, null, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize, thiscollection, floor_history, snipe_ping, thispingrole)
 			}//end if alpha
 
 			//if foundhome is true (will only be if server is still premium, homechannel is enabled and this collection was found as a homechannel collection)
 			//finding a homechannel will filter a message out of the snipe feed and into the home channel
 			if (foundhome === true) {
-				sendsnipes(thisserverid, feedchannel, null, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize, thiscollection, floor_history)
+				sendsnipes(thisserverid, feedchannel, null, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize, thiscollection, floor_history, snipe_ping, thispingrole)
 			} else {//if valid homechannel was not found enter normal send filter process
 
 				thisserverid = thisserver.serverid
@@ -95,10 +101,10 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 						if (raritydescription == 'Rare' || raritydescription == 'Epic') {//as this inst a premium server, send only rare or epic snipes
 							//w.log.info(thisserverid + ' is not premium waiting before sending ' + thisname + '...')
 							//w.log.info(thisserverid + ' done waiting...' + 'now sending ' + thisname)
-							sendsnipes(thisserverid, feedchannel, nonPremiumDelay, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize, thiscollection, floor_history)
+							sendsnipes(thisserverid, feedchannel, nonPremiumDelay, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize, thiscollection, floor_history, snipe_ping, thispingrole)
 						} else { /*w.log.info('NFT: ' + thisname + ' was better than rare or epic, not posting to ' + thisserverid)*/ }
 					} else {//if this is a premium server, just send it
-						sendsnipes(thisserverid, feedchannel, null, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize, thiscollection, floor_history)
+						sendsnipes(thisserverid, feedchannel, null, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize, thiscollection, floor_history, snipe_ping, thispingrole)
 					}//end else
 				}//end if snipe channel.
 			}//end else if homechannel was not enabled - send normally
@@ -107,15 +113,20 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 	}//for each supported server (from SQL)   
 }; module.exports.sendFilter = sendFilter
 
-async function sendsnipes(server, thischannel, delay, nftname, embedcolour, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage, listinglink, hotness, collectionSize, thiscollection, floor_history) {
-	//don't need server ID, channel ID is enough
+async function sendsnipes(server, thischannel, delay, nftname, embedcolour, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage, listinglink, hotness, collectionSize, thiscollection, floor_history, snipe_ping, thispingrole) {
+
 	if (delay) { await wait(delay) }//delay delivery if one was set
+	
+	//if floor history wasn't sufficient, put placeholders in reply
 	if (!floor_history) {
 	  floor_history = {}
 	  floor_history.fp_3daverage = 'coming soon'
 	  floor_history.fp_3dchange = 'coming soon'
 	  floor_history.collection_12h_strength = 'coming soon'
 	}
+	
+	var alertrole = ''
+	if (snipe_ping) {alertrole = '<@&' + thispingrole + '>'}
 	
 	//send it
 	try {
@@ -125,6 +136,7 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 				{
 					"title": nftname,
 					"color": embedcolour,
+					"description" : alertrole,
 					"fields": [
 						{
 							"name": "🎯 __Snipe Details__",
