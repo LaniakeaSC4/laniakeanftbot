@@ -104,7 +104,12 @@ async function startsniper() {
                 var collectionSize = await sql.getData("solanametaplex", "collectionkey", collections[k]['collectionkey'], 'collectioncount')
                 var raritydescription = await nfttools.getraritydescription(collectionSize, NFTdata.rarityRank)
                 var thisembedcolour = await nfttools.getembedcolour(raritydescription)
+                try {
                 var floorprice = await magiceden.getFloorPrice(collections[k]['meslug'])
+                } catch (err) {
+                  w.log.info('Error getting ME FP: ' + err)
+                  continue
+                }
                 var thisfloorprice = pround(parseFloat(floorprice), 6)
                 var snipe = await testifsnipe(raritydescription, parseFloat(thisprice), parseFloat(thisfloorprice))
 
@@ -127,7 +132,7 @@ async function startsniper() {
                 w.log.error('error getting nft data for ' + collections[k]['collectionkey'] + ' ' + thisnftid)
               }//end else if get nft data failed
             } else { w.log.error('error getting listing at magic Eden for this snipe test') }
-            await wait(25)//added a delay between loops so we are not sending too many requests to ME or our SQL DB
+            await wait(50)//added a delay between loops so we are not sending too many requests to ME or our SQL DB
           }//end else for a token we havnt seen before
         }//end for loop of each listing recieved
 
