@@ -245,14 +245,14 @@ async function addRole(interaction) {
   if (interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.ManageRoles)) {
     managerolepermission = true
   }
-
-if (managerolepermission === true ) {
+  
   //check if alerts are enabled and there is a valid alertrole
    //get current config for this server
   var pingrole = await sql.getData("servers", "serverid", interaction.message.guildId, "pingrole")
   var ping_enabled = await sql.getData("servers", "serverid", interaction.message.guildId, "enable_ping")
   
   if (ping_enabled === true) {
+    if (managerolepermission === true ) {
     if (pingrole) {//enabled and existing. Check if role still exists and confirm back to the user that all is good
 
       //check guild roles to see if it's still there
@@ -268,16 +268,32 @@ if (managerolepermission === true ) {
   interaction.reply({ content: "you have been given the role", ephemeral: true })
       }
 
-    }
-  } 
-  
-  
-  
-  
-  
-}
-  
-  
-  
+    } else { interaction.reply({ content: "Error: There is no saved role in Sniper bot database. Please tell a server admin.", ephemeral: true }) }
+  } else { interaction.reply({ content: "no manage permissions on bot", ephemeral: true }) } 
+
+} else { interaction.reply({ content: "Feature disabled by server owner", ephemeral: true }) } 
 }
 module.exports.addRole = addRole
+
+async function removeRole(interaction) {
+ 
+ //check if the bot had manage roles
+  var managerolepermission = false
+  if (interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.ManageRoles)) {
+    managerolepermission = true
+  }
+  
+  //check if alerts are enabled and there is a valid alertrole
+   //get current config for this server
+  var pingrole = await sql.getData("servers", "serverid", interaction.message.guildId, "pingrole")
+  
+  if (pingrole) {
+  if (managerolepermission === true ) {
+  if (interaction.member.roles.cache.some(role => role.id === pingrole)) {
+    interaction.member.roles.remove(pingrole)
+    interaction.reply({ content: "The alert role has been removed. You will no longer receive alerts.", ephemeral: true })
+  } else { interaction.reply({ content: "You did not seem to have this servers alert role. No action has been taken.", ephemeral: true }) }  
+  } else { interaction.reply({ content: "no manage permissions on bot", ephemeral: true }) } 
+} else { interaction.reply({ content: "Error: There is no saved role in Sniper bot database. Please tell a server admin.", ephemeral: true }) }
+}
+module.exports.removeRole = removeRole

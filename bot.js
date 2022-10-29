@@ -40,7 +40,7 @@ client.on('ready', async () => {
   
   var collection_stats = require('./tools/collectionStats.js')
   var job_updateStats = new CronJob('0 */12 * * *', function () { w.log.info('Cron: Updating collection stats')
-    collection_stats.getCurrentFP() 
+    collection_stats.updateStats() 
   }, null, true)
 
 })//end client.on Ready
@@ -398,6 +398,10 @@ client.on('interactionCreate', async interaction => {
   
   if (interaction.customId === 'alert-yes-button') {
       alerts.addRole(interaction)
+  }
+    
+  if (interaction.customId === 'alert-no-button') {
+      alerts.removeRole(interaction)
   }
   
 })//end on interactionCreate 
