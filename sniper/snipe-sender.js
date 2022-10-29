@@ -38,10 +38,12 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 			*/
       
       //snipe ping may have come through as true, but let's see if this server has it enabled
+      w.log.info('snipe ping is: ' + snipe_ping)
       if (supportedservers[i].enable_ping != true) { snipe_ping = false}
       //snipe ping is still true
       var thispingrole = ''
       if (snipe_ping === true) {thispingrole = supportedservers[i].pingrole}
+      w.log.info('snipe ping is now: ' + snipe_ping + '. Snipe role is: ' + thispingrole)
 
 			//check if this snipe should be redirected to a homechannel from the main feed
 			var foundhome = false//start with false
