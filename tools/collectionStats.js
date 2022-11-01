@@ -33,6 +33,7 @@ w.log.info('loop: ' + i)
     var fp_3dchange = 'Not enough data'
     var fp_7daverage = 0
     var sol_7daverage = 0
+    var fp_7dchange = 'Not enough data'
 
     //current collection fp
     var fpoutput
@@ -104,12 +105,12 @@ w.log.info('solchange is: ' + soloutput[0] + '/' + soloutput[1] + '=' + solchang
       if (solchange > 1) {
         sol_direction = 'increased'
         sol_percent = pround(((solchange - 1) * 100), 2) + '%'
-        if (pround(pround(((solchange - 1) * 100), 2) > 3)) { sol_significant = true }
+        if (pround(((solchange - 1) * 100), 2) > 3) { sol_significant = true }
       }
       if (solchange < 1) {
         sol_direction = 'decreased'
         sol_percent = pround((Math.abs((solchange - 1)) * 100), 2) + '%'
-        if (pround(pround((Math.abs((solchange - 1)) * 100), 2) > 3)) { sol_significant = true }
+        if (pround(((Math.abs((solchange - 1)) * 100), 2)) > 3) { sol_significant = true }
       }
       if (solchange === 1) {
         sol_direction = 'unchanged'
@@ -137,17 +138,17 @@ w.log.info('SOL direction is: ' + sol_direction + '. Percentage is: ' + sol_perc
 
       //calculate 3d fp change
       var fp_3dchangecalc = fpoutput[0] / fp_3daverage
+      var fp_3dchangeAmt = Math.abs(fp_3daverage - fpoutput[0])
 
       if (fp_3dchangecalc > 1) {
-        fp_3dchange = '+' + pround(((fp_3dchangecalc - 1) * 100), 2) + '%'
+        fp_3dchange = '+' + pround(((fp_3dchangecalc - 1) * 100), 2) + '% (' + fp_3dchangeAmt + ' SOL)'
       }
       if (fp_3dchangecalc < 1) {
-        fp_3dchange = '-' + pround((Math.abs((fp_3dchangecalc - 1)) * 100), 2) + '%'
+        fp_3dchange = '-' + pround((Math.abs((fp_3dchangecalc - 1)) * 100), 2) + '% (' + fp_3dchangeAmt + ' SOL)'
       }
       if (fp_3dchangecalc === 1) {
         fp_3dchange = '+0%'
-      }
-
+} 
       //if there had been significant change to fp
       if (fp_significant === true) {
 
@@ -217,7 +218,25 @@ w.log.info('SOL direction is: ' + sol_direction + '. Percentage is: ' + sol_perc
 
       }
 
-    }//if output length > 6
+    }//if output length > 5
+    
+    //if we have 7 days data
+    if (soloutput.length > 13 && fpoutput.length > 13) { 
+      
+      var fp_7dchangecalc = fpoutput[0] / fp_7daverage
+      var fp_7dchangeAmt = Math.abs(fp_7daverage - fpoutput[0])
+
+      if (fp_7dchangecalc > 1) {
+        fp_7dchange = '+' + pround(((fp_7dchangecalc - 1) * 100), 2) + '% (' + fp_7dchangeAmt + ' SOL)'
+      }
+      if (fp_7dchangecalc < 1) {
+        fp_7dchange = '-' + pround((Math.abs((fp_7dchangecalc - 1)) * 100), 2) + '% (' + fp_7dchangeAmt + ' SOL)'
+      }
+      if (fp_7dchangecalc === 1) {
+        fp_7dchange = '+0%'
+      }
+      
+    } 
 
     w.log.info('Collection strength for ' + collections[i].meslug + ' is: ' + collection_12h_strength + " FP history is: " + fpoutput.toString() + ". SOL history is: " + soloutput.toString() + ". 3d FP AVG is: " + fp_3daverage + ". Today\'s change on 3d AVG FP is: " + fp_3dchange)
 
@@ -225,11 +244,14 @@ w.log.info('SOL direction is: ' + sol_direction + '. Percentage is: ' + sol_perc
     dbstore['fp_history'] = fpoutput
     dbstore['sol_history'] = soloutput
     dbstore['collection_12h_strength'] = collection_12h_strength
+    
     dbstore['fp_3daverage'] = pround(fp_3daverage, 2)
     dbstore['sol_3daverage'] = pround(sol_3daverage, 2)
     dbstore['fp_3dchange'] = fp_3dchange
+    
     dbstore['fp_7daverage'] = fp_7daverage
     dbstore['sol_7daverage'] = sol_7daverage
+    dbstore['fp_7dchange'] = fp_7dchange
 
     await sql.updateTableColumn("solanametaplex", "meslug", collections[i].meslug, "floor_history", dbstore)
 
