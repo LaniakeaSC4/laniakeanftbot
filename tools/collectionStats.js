@@ -14,10 +14,10 @@ async function updateStats() {
   var collections = await getCollectionAverages()
   //get solana/usdt price from https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd
   var solprice = await getSolPrice()
- // w.log.info(JSON.stringify(collections))
-w.log.info('collections.meslug.length is ' + collections.length)
+  // w.log.info(JSON.stringify(collections))
+  w.log.info('collections.meslug.length is ' + collections.length)
   for (var i = 0; i < collections.length; i++) {
-w.log.info('loop: ' + i)
+    w.log.info('loop: ' + i)
 
     var solchange = 1
     var fpchange = 1
@@ -38,7 +38,7 @@ w.log.info('loop: ' + i)
     //current collection fp
     var fpoutput
     var thisfp = await magiceden.getFloorPrice(collections[i].meslug)
-    
+
     w.log.info('got this fp: ' + thisfp + 'with meslug: ' + collections[i].meslug)
 
     if (!collections[i].floor_history) {
@@ -47,24 +47,23 @@ w.log.info('loop: ' + i)
     } else {
       //copy old history to new
       fpoutput = collections[i].floor_history.fp_history
-      
+
       if (fpoutput.length > 5) {//if we have 3 days worth of data
-      var threeDayFpArr = fpoutput.slice(0,6)
-      //calculate average before pushing out oldest
-      fp_3daverage = threeDayFpArr.reduce((a, b) => a + b, 0) / threeDayFpArr.length
-      w.log.info("3 Day FP average calculated as: " + fp_3daverage)
+        var threeDayFpArr = fpoutput.slice(0, 6)
+        //calculate average before pushing out oldest
+        fp_3daverage = threeDayFpArr.reduce((a, b) => a + b, 0) / threeDayFpArr.length
+        w.log.info("3 Day FP average calculated as: " + fp_3daverage)
       }
-      
+
       if (fpoutput.length > 13) {//if we have 7 days worth of data
-      var sevenDayFpArr = fpoutput.slice(0,14)
-      //calculate average before pushing out oldest
-      fp_7daverage = sevenDayFpArr.reduce((a, b) => a + b, 0) / sevenDayFpArr.length
-      w.log.info("7 Day FP average calculated as: " + fp_7daverage)
+        var sevenDayFpArr = fpoutput.slice(0, 14)
+        //calculate average before pushing out oldest
+        fp_7daverage = sevenDayFpArr.reduce((a, b) => a + b, 0) / sevenDayFpArr.length
+        w.log.info("7 Day FP average calculated as: " + fp_7daverage)
       }
-      
+
       //push new
       fpoutput.unshift(thisfp)
-      
       if (fpoutput.length > 14) { fpoutput.pop() }
     }
 
@@ -75,33 +74,31 @@ w.log.info('loop: ' + i)
       soloutput = [solprice]
     } else {
       soloutput = collections[i].floor_history.sol_history
-      
+
       if (soloutput.length > 5) {//if we have 3 days worth of data
-      var threeDaySolArr = soloutput.slice(0,6)
-      //calculate average before pushing out oldest
-      sol_3daverage = threeDaySolArr.reduce((a, b) => a + b, 0) / threeDaySolArr.length
+        var threeDaySolArr = soloutput.slice(0, 6)
+        //calculate average before pushing out oldest
+        sol_3daverage = threeDaySolArr.reduce((a, b) => a + b, 0) / threeDaySolArr.length
       }
-      
-      
+
       if (soloutput.length > 13) {//if we have 7 days worth of data
-      var sevenDaySolArr = soloutput.slice(0,14)
-      //calculate average before pushing out oldest
-      sol_7daverage = sevenDaySolArr.reduce((a, b) => a + b, 0) / sevenDaySolArr.length
+        var sevenDaySolArr = soloutput.slice(0, 14)
+        //calculate average before pushing out oldest
+        sol_7daverage = sevenDaySolArr.reduce((a, b) => a + b, 0) / sevenDaySolArr.length
       }
-      
-      
+
       //push new
       soloutput.unshift(solprice)
       if (soloutput.length > 14) { soloutput.pop() }
     }
 
-//if we have 3 days data
+    //if we have 3 days data
     if (soloutput.length > 5 && fpoutput.length > 5) {
 
       //calculate snapshot sol change
       solchange = soloutput[0] / soloutput[1]
       solchange = pround(solchange, 4)
-w.log.info('solchange is: ' + soloutput[0] + '/' + soloutput[1] + '=' + solchange)
+      w.log.info('solchange is: ' + soloutput[0] + '/' + soloutput[1] + '=' + solchange)
       if (solchange > 1) {
         sol_direction = 'increased'
         sol_percent = pround(((solchange - 1) * 100), 2) + '%'
@@ -116,8 +113,8 @@ w.log.info('solchange is: ' + soloutput[0] + '/' + soloutput[1] + '=' + solchang
         sol_direction = 'unchanged'
         sol_percent = '0%'
       }
-      
-w.log.info('SOL direction is: ' + sol_direction + '. Percentage is: ' + sol_percent + '. Sol_significant is: ' + sol_significant)
+
+      w.log.info('SOL direction is: ' + sol_direction + '. Percentage is: ' + sol_percent + '. Sol_significant is: ' + sol_significant)
 
       //calculate FP snapshot change
       fpchange = fpoutput[0] / fpoutput[1]
@@ -138,7 +135,7 @@ w.log.info('SOL direction is: ' + sol_direction + '. Percentage is: ' + sol_perc
 
       //calculate 3d fp change
       var fp_3dchangecalc = fpoutput[0] / fp_3daverage
-      var fp_3dchangeAmt = Math.abs(fp_3daverage - fpoutput[0])
+      var fp_3dchangeAmt = pround(Math.abs(fp_3daverage - fpoutput[0]),2)
 
       if (fp_3dchangecalc > 1) {
         fp_3dchange = '+' + pround(((fp_3dchangecalc - 1) * 100), 2) + '% (' + fp_3dchangeAmt + ' SOL)'
@@ -148,14 +145,15 @@ w.log.info('SOL direction is: ' + sol_direction + '. Percentage is: ' + sol_perc
       }
       if (fp_3dchangecalc === 1) {
         fp_3dchange = '+0%'
-} 
+      }
+
       //if there had been significant change to fp
       if (fp_significant === true) {
 
         if (fp_direction === 'increased') {
-          
+
           if (sol_significant === true) {
-            
+
             if (sol_direction === 'increased') { collection_12h_strength = '↗️ Strong. FP +' + fp_percent + ' | SOL/USD +' + sol_percent }
             if (sol_direction === 'decreased') { collection_12h_strength = '⬆️ Strong. FP +' + fp_percent + ' | SOL/USD -' + sol_percent }
           } else {
@@ -176,7 +174,6 @@ w.log.info('SOL direction is: ' + sol_direction + '. Percentage is: ' + sol_perc
             collection_12h_strength = '↘️ Weak. FP -' + fp_percent + ' | SOL/USD ' + solsymbol_2 + sol_percent
           }
         }
-
       }
 
       //if there had been significant change to sol
@@ -203,7 +200,6 @@ w.log.info('SOL direction is: ' + sol_direction + '. Percentage is: ' + sol_perc
             collection_12h_strength = '↗️ Strong. FP ' + fpsymbol_2 + fp_percent + ' | SOL/USD -' + sol_percent
           }
         }
-
       }
 
       //if no significant changes
@@ -215,16 +211,14 @@ w.log.info('SOL direction is: ' + sol_direction + '. Percentage is: ' + sol_perc
         if (fp_direction === 'decreased') { fpsymbol = '-' } else { fpsymbol = '+' }
 
         collection_12h_strength = '➡️ Stable. FP ' + fpsymbol + fp_percent + ' | SOL/USD price ' + solsymbol + sol_percent + '.'
-
       }
-
     }//if output length > 5
-    
+
     //if we have 7 days data
-    if (soloutput.length > 13 && fpoutput.length > 13) { 
-      
+    if (soloutput.length > 13 && fpoutput.length > 13) {
+
       var fp_7dchangecalc = fpoutput[0] / fp_7daverage
-      var fp_7dchangeAmt = Math.abs(fp_7daverage - fpoutput[0])
+      var fp_7dchangeAmt = pround(Math.abs(fp_7daverage - fpoutput[0]),2)
 
       if (fp_7dchangecalc > 1) {
         fp_7dchange = '+' + pround(((fp_7dchangecalc - 1) * 100), 2) + '% (' + fp_7dchangeAmt + ' SOL)'
@@ -235,8 +229,7 @@ w.log.info('SOL direction is: ' + sol_direction + '. Percentage is: ' + sol_perc
       if (fp_7dchangecalc === 1) {
         fp_7dchange = '+0%'
       }
-      
-    } 
+    }
 
     w.log.info('Collection strength for ' + collections[i].meslug + ' is: ' + collection_12h_strength + " FP history is: " + fpoutput.toString() + ". SOL history is: " + soloutput.toString() + ". 3d FP AVG is: " + fp_3daverage + ". Today\'s change on 3d AVG FP is: " + fp_3dchange)
 
@@ -244,11 +237,11 @@ w.log.info('SOL direction is: ' + sol_direction + '. Percentage is: ' + sol_perc
     dbstore['fp_history'] = fpoutput
     dbstore['sol_history'] = soloutput
     dbstore['collection_12h_strength'] = collection_12h_strength
-    
+
     dbstore['fp_3daverage'] = pround(fp_3daverage, 2)
     dbstore['sol_3daverage'] = pround(sol_3daverage, 2)
     dbstore['fp_3dchange'] = fp_3dchange
-    
+
     dbstore['fp_7daverage'] = fp_7daverage
     dbstore['sol_7daverage'] = sol_7daverage
     dbstore['fp_7dchange'] = fp_7dchange
@@ -259,8 +252,8 @@ w.log.info('SOL direction is: ' + sol_direction + '. Percentage is: ' + sol_perc
 
   }
   //restart sniper to update collection stats available to snipe sender
-  			await sniper.stop()
-				await sniper.initialise()
+  await sniper.stop()
+  await sniper.initialise()
 } module.exports.updateStats = updateStats
 
 var db = require('../clients/pgclient.js')

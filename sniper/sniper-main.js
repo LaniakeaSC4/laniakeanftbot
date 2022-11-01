@@ -105,7 +105,7 @@ async function startsniper() {
                 var raritydescription = await nfttools.getraritydescription(collectionSize, NFTdata.rarityRank)
                 var thisembedcolour = await nfttools.getembedcolour(raritydescription)
                 try {
-                var floorprice = await magiceden.getFloorPrice(collections[k]['meslug'])
+                  var floorprice = await magiceden.getFloorPrice(collections[k]['meslug'])
                 } catch (err) {
                   w.log.info('Error getting ME FP: ' + err)
                   return
@@ -187,36 +187,25 @@ async function testifsnipe(raritydescription, thisprice, floorprice) {
       var raresnipe = rarelimit * floorprice
 
       if ((raritydescription === 'Mythic') && (thisprice <= mythicsnipe)) {
-        
-        
         //check if this mythic is within 20% of FP. If so, send alert.
         let alertlimit = floorprice * 1.2
         if (thisprice <= alertlimit) {
           resolve([raritydescription, mythicsnipe, mythiclimit, true])
         } else {//not within 20%. No alert.
-        resolve([raritydescription, mythicsnipe, mythiclimit, false])
-        } 
-        
-        //resolve([raritydescription, mythicsnipe, mythiclimit, false])
-        
+          resolve([raritydescription, mythicsnipe, mythiclimit, false])
+        }
       } else if ((raritydescription === 'Legendary') && (thisprice <= legendarysnipe)) {
-        
-        
-        //check if this mythic is within 5% of FP. If so, send alert.
+        //check if this legendary is within 5% of FP. If so, send alert.
         let alertlimit = floorprice * 1.05
         if (thisprice <= alertlimit) {
           resolve([raritydescription, legendarysnipe, legendarylimit, true])
         } else {//not within 5%. No alert.
-        resolve([raritydescription, legendarysnipe, legendarylimit, false])
-        } 
-        
-        //resolve([raritydescription, legendarysnipe, legendarylimit, false])
-
-
+          resolve([raritydescription, legendarysnipe, legendarylimit, false])
+        }
       } else if ((raritydescription === 'Epic') && (thisprice <= epicsnipe)) {
-        resolve([raritydescription, epicsnipe, epiclimit,false])
+        resolve([raritydescription, epicsnipe, epiclimit, false])
       } else if ((raritydescription === 'Rare') && (thisprice <= raresnipe)) {
-        resolve([raritydescription, raresnipe, rarelimit,false])
+        resolve([raritydescription, raresnipe, rarelimit, false])
       } else {
         resolve(null)
       }

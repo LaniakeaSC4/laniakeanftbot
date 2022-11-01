@@ -34,13 +34,15 @@ client.on('ready', async () => {
   //schedule cron job on startup to check if any premium servers have expired. Runs every 4h.
   var CronJob = require('cron').CronJob
   var premium = require('./tools/premium.js')
-  var job_validatePremium = new CronJob('0 */4 * * *', function () { w.log.info('Cron: Running Premium Check')
-  premium.validateServers()
+  var job_validatePremium = new CronJob('0 */4 * * *', function () {
+    w.log.info('Cron: Running Premium Check')
+    premium.validateServers()
   }, null, true)
-  
+
   var collection_stats = require('./tools/collectionStats.js')
-  var job_updateStats = new CronJob('0 */12 * * *', function () { w.log.info('Cron: Updating collection stats')
-    collection_stats.updateStats() 
+  var job_updateStats = new CronJob('0 */12 * * *', function () {
+    w.log.info('Cron: Updating collection stats')
+    collection_stats.updateStats()
   }, null, true)
 
 })//end client.on Ready
@@ -262,13 +264,13 @@ client.on('interactionCreate', async interaction => {
 //a guild role was deleted - do we care?
 client.on('roleDelete', async role => {
   w.log.info('A role has been deleted in')
-  
+
   var serverdetails = await sql.getServerRow(role.guild)//get this server's details
-  
+
   if (serverdetails[0].pingrole == role.id) {
     w.log.info('the pingrole has been deleted. Nulling it and disabling server alerts')
-    await sql.updateTableColumn("servers", "serverid" , role.guild, "enable_ping", false)
-    await sql.updateTableColumn("servers", "serverid" , role.guild, "pingrole", null)
+    await sql.updateTableColumn("servers", "serverid", role.guild, "enable_ping", false)
+    await sql.updateTableColumn("servers", "serverid", role.guild, "pingrole", null)
   }
 })
 
@@ -390,13 +392,13 @@ client.on('interactionCreate', async interaction => {
 //Configure alerts
 const alerts = require('./setup/alerts.js')
 client.on('interactionCreate', async interaction => {
-  
+
   if (interaction.customId === 'setupalerts-button') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
       alerts.configPanel(interaction)
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
   }
-  
+
   if (interaction.customId === 'enable_alerts-button') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
       alerts.enableAlerts(interaction)
@@ -408,13 +410,13 @@ client.on('interactionCreate', async interaction => {
       alerts.disableAlerts(interaction)
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
   }
-  
+
   if (interaction.customId === 'alert-yes-button') {
-      alerts.addRole(interaction)
+    alerts.addRole(interaction)
   }
-    
+
   if (interaction.customId === 'alert-no-button') {
-      alerts.removeRole(interaction)
+    alerts.removeRole(interaction)
   }
-  
+
 })//end on interactionCreate 
