@@ -168,6 +168,6 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 					}, 
 				}
 			]//end embed
-		}).catch((err) => { w.log.error('there was a message send error: ' + err) })//end message send
+		}).catch((err) => { w.log.error(server + ': there was a message send error: ' + err) })//end message send
 	} catch (err) { w.log.error('there was an nft sending error. Perhaps channel deleted? Error was: ' + err) }
 }//end sendsnipes function
