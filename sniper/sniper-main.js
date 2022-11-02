@@ -81,6 +81,7 @@ async function startsniper() {
             //w.log.info('SniperV2: New/updated ' + collections[k]['meslug'] + ' entry ' + thislistings[i].tokenMint + ' at price ' + thislistings[i].price)
             rebuildarrary.unshift(thislistings[i])//add the new entry to the start of the rebuild arrary so we can remember this one if we see it later
 
+            var seller = thislistings[i].seller
             var thisprice = pround(thislistings[i].price, 6)//set price of this lisitng
             var recievedtoken = await magiceden.getTokenDetails(thislistings[i].tokenMint)//added 25ms delay at the end of the loop to slow this down a little. Getting occasional me API and sql errors.
 
@@ -124,7 +125,7 @@ async function startsniper() {
                   //initialise servers if not already
                   if (!serversinitalized) { await snipersender.initaliseServers(); serversinitalized = true }
                   //send snipe into the send filter where server specific filters are applied (e.g. premium, price limits, etc)
-                  snipersender.sendFilter(thisname, collections[k]['collectionkey'], thisembedcolour, NFTdata.rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize, collections[k]['floor_history'], snipe_ping)
+                  snipersender.sendFilter(thisname, collections[k]['collectionkey'], thisembedcolour, NFTdata.rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize, collections[k]['floor_history'], snipe_ping,seller)
                   //save record of last seen time and floor price
                   lastSeen(collections[k]['collectionkey'], thisfloorprice)
                 } else { /* w.log.info('this was not a snipe') */ } //end if not false
