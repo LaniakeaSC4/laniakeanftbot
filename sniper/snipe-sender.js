@@ -149,12 +149,12 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 					"fields": [
 						{
 							"name": "🎯 __Snipe Details__",
-							"value": "**Rarity**: " + thisrarity + "/" + collectionSize + ' - ' + raritydescription + "\n**Hotness**: " + hotness + "\n" + sellerLink + "\n[Buy on Magic Eden](" + listinglink + ')\n',
+							"value": "**Rarity**: " + thisrarity + "/" + collectionSize + ' - ' + raritydescription + "\n**Hotness**: " + hotness + "\n**List price**: " + pround(parseFloat(thisprice), 3) + ' SOL\n**Current FP**: ' + pround(parseFloat(floorprice), 3) + " SOL\n" + sellerLink + "\n[Buy on Magic Eden](" + listinglink + ')\n',
 							"inline": false
 						},
 						{
-							"name": "📌 __Cost Analysis__",
-							"value": "\n**List price**: " + pround(parseFloat(thisprice), 3) + ' SOL\n**Current FP**: ' + pround(parseFloat(floorprice), 3) + " SOL\n" + "**3 Day avg FP**: " + floor_history?.fp_3daverage + "\n**7 Day avg FP**: " + floor_history?.fp_7daverage + "\n**FP now vs 3 Day avg**: " + floor_history?.fp_3dchange + "\n**FP now vs 7 Day avg**: " + floor_history?.fp_7dchange + "\n\n**Collection strength at last snapshot\n**" + floor_history?.collection_12h_strength,
+							"name": "📌 __Snapshot Analysis__",
+							"value": "**3 Day avg FP**: " + floor_history?.fp_3daverage + "\n**Snapshot FP vs 3 Day avg**: " + floor_history?.fp_3dchange + "\n**7 Day avg FP**: " + floor_history?.fp_7daverage + "\n**Snapshot FP vs 7 Day avg**: " + floor_history?.fp_7dchange + "\n\n**Collection strength at last snapshot\n**" + floor_history?.collection_12h_strength,
 							"inline": false
 						},
 					],
