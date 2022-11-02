@@ -38,7 +38,7 @@ module.exports = {
     //if yes
     //send the reply (including button row)
     if (managerolepermission === true ) {
-    await interaction.reply({ content: 'Would you like alerts?', components: [row], ephemeral: true })
+    await interaction.reply({ content: 'Snipe Alerts allow you to be given a discord role which the bot will mention for certain high value snipes.\n\nCurrently alerts are sent for:```Mythic rarity NFTs within 20% of floor price\nLegendary NFTs within 5% of floor price```\nWould you like alerts?', components: [row], ephemeral: true })
 } else {//if no, tell user to tell this admin
 await interaction.reply({ content: 'Unfortunately bot dosent have manage roles permissions', ephemeral: true })
   
