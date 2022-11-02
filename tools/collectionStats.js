@@ -37,6 +37,14 @@ async function updateStats() {
     var strengthemoji = ''
     var strengthdescription = ''
     var strength_ready = false
+    
+    var symbol_3dchange = ''
+    var percentage_3dchange = 0
+    var amount_3dchange = 0
+
+    var symbol_7dchange = ''
+    var percentage_7dchange = 0
+    var amount_7dchange = 0
 
     //current collection fp
     var fpoutput
@@ -138,15 +146,21 @@ async function updateStats() {
       //calculate 3d fp change
       var fp_3dchangecalc = fpoutput[0] / fp_3daverage
       var fp_3dchangeAmt = pround(Math.abs(fp_3daverage - fpoutput[0]), 2)
+      amount_3dchange = fp_3dchangeAmt
 
       if (fp_3dchangecalc > 1) {
         fp_3dchange = '+' + pround(((fp_3dchangecalc - 1) * 100), 2) + '% (' + fp_3dchangeAmt + ' SOL)'
+        symbol_3dchange = '+'
+        percentage_3dchange = pround(((fp_3dchangecalc - 1) * 100), 2)
       }
       if (fp_3dchangecalc < 1) {
         fp_3dchange = '-' + pround((Math.abs((fp_3dchangecalc - 1)) * 100), 2) + '% (' + fp_3dchangeAmt + ' SOL)'
+        symbol_3dchange = '-'
+        percentage_3dchange = pround((Math.abs((fp_3dchangecalc - 1)) * 100), 2)
       }
       if (fp_3dchangecalc === 1) {
         fp_3dchange = '+0%'
+        symbol_3dchange = '+'
       }
 
       //if there had been significant change to fp
@@ -281,15 +295,21 @@ async function updateStats() {
 
       var fp_7dchangecalc = fpoutput[0] / fp_7daverage
       var fp_7dchangeAmt = pround(Math.abs(fp_7daverage - fpoutput[0]), 2)
+      amount_7dchange = fp_7dchangeAmt
 
       if (fp_7dchangecalc > 1) {
         fp_7dchange = '+' + pround(((fp_7dchangecalc - 1) * 100), 2) + '% (' + fp_7dchangeAmt + ' SOL)'
+        symbol_7dchange = '+'
+        percentage_7dchange = pround(((fp_7dchangecalc - 1) * 100), 2)
       }
       if (fp_7dchangecalc < 1) {
         fp_7dchange = '-' + pround((Math.abs((fp_7dchangecalc - 1)) * 100), 2) + '% (' + fp_7dchangeAmt + ' SOL)'
+        symbol_7dchange = '-'
+        percentage_7dchange = pround((Math.abs((fp_7dchangecalc - 1)) * 100), 2)
       }
       if (fp_7dchangecalc === 1) {
         fp_7dchange = '+0%'
+        symbol_7dchange = '+'
       }
     }
 
@@ -310,6 +330,20 @@ async function updateStats() {
     dbstore.strength['fp_percent'] = fp_percent
     dbstore.strength['sol_symbol'] = solsymbol
     dbstore.strength['sol_percent'] = sol_percent
+    //
+
+    //new 3d change
+    dbstore['threeDayChange'] = {}
+    dbstore.threeDayChange['symbol_3dchange'] = symbol_3dchange
+    dbstore.threeDayChange['percentage_3dchange'] = percentage_3dchange
+    dbstore.threeDayChange['amount_3dchange'] = amount_3dchange
+    //
+
+    //new 7d change
+    dbstore['sevenDayChange'] = {}
+    dbstore.threeDayChange['symbol_7dchange'] = symbol_7dchange
+    dbstore.threeDayChange['percentage_7dchange'] = percentage_7dchange
+    dbstore.threeDayChange['amount_7dchange'] = amount_7dchange
     //
 
     //if there has been enough data to calculate 7D averages for this collection, store it. Else store N\A
