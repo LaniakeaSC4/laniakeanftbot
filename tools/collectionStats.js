@@ -14,10 +14,8 @@ async function updateStats() {
   var collections = await getCollectionAverages()
   //get solana/usdt price from https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd
   var solprice = await getSolPrice()
-  // w.log.info(JSON.stringify(collections))
-  w.log.info('collections.meslug.length is ' + collections.length)
+
   for (var i = 0; i < collections.length; i++) {
-    w.log.info('loop: ' + i)
 
     var solchange = 1
     var fpchange = 1
@@ -34,12 +32,17 @@ async function updateStats() {
     var fp_7daverage = 0
     var sol_7daverage = 0
     var fp_7dchange = 'Not enough data'
+    var solsymbol = ''
+    var fpsymbol = ''
+    var strengthemoji = ''
+    var strengthdescription = ''
+    var strength_ready = false
 
     //current collection fp
     var fpoutput
     var thisfp = await magiceden.getFloorPrice(collections[i].meslug)
 
-    w.log.info('got this fp: ' + thisfp + 'with meslug: ' + collections[i].meslug)
+    w.log.info('got this fp: ' + thisfp + ' with meslug: ' + collections[i].meslug)
 
     if (!collections[i].floor_history) {
       //if no old floor history, let's start one
@@ -94,11 +97,12 @@ async function updateStats() {
 
     //if we have 3 days data
     if (soloutput.length > 5 && fpoutput.length > 5) {
+      strength_ready = true
 
       //calculate snapshot sol change
       solchange = soloutput[0] / soloutput[1]
       solchange = pround(solchange, 4)
-      w.log.info('solchange is: ' + soloutput[0] + '/' + soloutput[1] + '=' + solchange)
+      
       if (solchange > 1) {
         sol_direction = 'increased'
         sol_percent = pround(((solchange - 1) * 100), 2) + '%'
@@ -113,8 +117,6 @@ async function updateStats() {
         sol_direction = 'unchanged'
         sol_percent = '0%'
       }
-
-      w.log.info('SOL direction is: ' + sol_direction + '. Percentage is: ' + sol_percent + '. Sol_significant is: ' + sol_significant)
 
       //calculate FP snapshot change
       fpchange = fpoutput[0] / fpoutput[1]
@@ -135,7 +137,7 @@ async function updateStats() {
 
       //calculate 3d fp change
       var fp_3dchangecalc = fpoutput[0] / fp_3daverage
-      var fp_3dchangeAmt = pround(Math.abs(fp_3daverage - fpoutput[0]),2)
+      var fp_3dchangeAmt = pround(Math.abs(fp_3daverage - fpoutput[0]), 2)
 
       if (fp_3dchangecalc > 1) {
         fp_3dchange = '+' + pround(((fp_3dchangecalc - 1) * 100), 2) + '% (' + fp_3dchangeAmt + ' SOL)'
@@ -154,24 +156,53 @@ async function updateStats() {
 
           if (sol_significant === true) {
 
-            if (sol_direction === 'increased') { collection_12h_strength = '↗️ Strong. FP +' + fp_percent + ' | SOL/USD +' + sol_percent }
-            if (sol_direction === 'decreased') { collection_12h_strength = '⬆️ Strong. FP +' + fp_percent + ' | SOL/USD -' + sol_percent }
+            if (sol_direction === 'increased') { 
+              collection_12h_strength = '↗️ Strong. FP +' + fp_percent + ' | SOL/USD +' + sol_percent 
+              strengthemoji = "↗️"
+              strengthdescription = "Strong"
+              fpsymbol = "+"
+              solsymbol = "+"
+            }
+            if (sol_direction === 'decreased') { 
+              collection_12h_strength = '⬆️ Strong. FP +' + fp_percent + ' | SOL/USD -' + sol_percent 
+              strengthemoji = "⬆️"
+              strengthdescription = "Strong"
+              fpsymbol = "+"
+              solsymbol = "-"
+            }
           } else {
             //if no significant change to SOL (just FP increase). Sol change can be insignficantly plus, minus or unchanged
-            var solsymbol_1 = ""; if (sol_direction === 'decreased') { solsymbol_1 = '-' } else { solsymbol_1 = '+' }
-            collection_12h_strength = '↗️ Strong. FP +' + fp_percent + ' | SOL/USD ' + solsymbol_1 + sol_percent
-            w.log.info('after the significant fp shift and the shift was in increase. Sol shift was not significant. So solsymbol_1 is ' + solsymbol_1)
+            if (sol_direction === 'decreased') { solsymbol = '-' } else { solsymbol = '+' }
+            collection_12h_strength = '↗️ Strong. FP +' + fp_percent + ' | SOL/USD ' + solsymbol + sol_percent
+            strengthemoji = "↗️"
+            strengthdescription = "Strong"
+            fpsymbol = "+"
           }
         }
 
         if (fp_direction === 'decreased') {
           if (sol_significant === true) {
-            if (sol_direction === 'increased') { collection_12h_strength = '⬇️ Weak. FP -' + fp_percent + ' | SOL/USD +' + sol_percent }
-            if (sol_direction === 'decreased') { collection_12h_strength = '↘️ Weak. FP -' + fp_percent + ' | SOL/USD -' + sol_percent }
+            if (sol_direction === 'increased') { 
+              collection_12h_strength = '⬇️ Weak. FP -' + fp_percent + ' | SOL/USD +' + sol_percent 
+              strengthemoji = "⬇️"
+              strengthdescription = "Weak"
+              fpsymbol = "-"
+              solsymbol = "+"
+            }
+            if (sol_direction === 'decreased') { 
+              collection_12h_strength = '↘️ Weak. FP -' + fp_percent + ' | SOL/USD -' + sol_percent 
+              strengthemoji = "↘️"
+              strengthdescription = "Weak"
+              fpsymbol = "-"
+              solsymbol = "-"
+            }
           } else {
             //if no significant change to SOL (just FP decrease). Sol change can be insignficantly plus, minus or unchanged
-            var solsymbol_2 = ""; if (sol_direction === 'decreased') { solsymbol_2 = '-' } else { solsymbol_2 = '+' }
-            collection_12h_strength = '↘️ Weak. FP -' + fp_percent + ' | SOL/USD ' + solsymbol_2 + sol_percent
+            if (sol_direction === 'decreased') { solsymbol = '-' } else { solsymbol = '+' }
+            collection_12h_strength = '↘️ Weak. FP -' + fp_percent + ' | SOL/USD ' + solsymbol + sol_percent
+            strengthemoji = "↘️"
+            strengthdescription = "Weak"
+            fpsymbol = "-"
           }
         }
       }
@@ -181,23 +212,53 @@ async function updateStats() {
 
         if (sol_direction === 'increased') {
           if (fp_significant === true) {
-            if (fp_direction === 'increased') { collection_12h_strength = '↗️ Strong. FP +' + fp_percent + ' | SOL/USD +' + sol_percent }
-            if (fp_direction === 'decreased') { collection_12h_strength = '⬇️ Weak. FP -' + fp_percent + ' | SOL/USD +' + sol_percent }
+            if (fp_direction === 'increased') { 
+              collection_12h_strength = '↗️ Strong. FP +' + fp_percent + ' | SOL/USD +' + sol_percent 
+              strengthemoji = "↗️"
+              strengthdescription = "Strong"
+              fpsymbol = "+"
+              solsymbol = "+"
+            }
+            if (fp_direction === 'decreased') {
+              collection_12h_strength = '⬇️ Weak. FP -' + fp_percent + ' | SOL/USD +' + sol_percent
+              strengthemoji = "⬇️"
+              strengthdescription = "Weak"
+              fpsymbol = "-"
+              solsymbol = "+"
+            }
           } else {
             //if significant change to SOL but no significant change to FP. FP change can be insignficantly plus, minus or unchanged
-            var fpsymbol_1 = ""; if (fp_direction === 'decreased') { fpsymbol_1 = '-' } else { fpsymbol_1 = '+' }
-            collection_12h_strength = '↘️ Weak. FP ' + fpsymbol_1 + fp_percent + ' | SOL/USD +' + sol_percent
+            if (fp_direction === 'decreased') { fpsymbol = '-' } else { fpsymbol = '+' }
+            collection_12h_strength = '↘️ Weak. FP ' + fpsymbol + fp_percent + ' | SOL/USD +' + sol_percent
+            strengthemoji = "↘️"
+            strengthdescription = "Weak"
+            solsymbol = "+"
           }
         }
 
         if (sol_direction === 'decreased') {
           if (fp_significant === true) {
-            if (fp_direction === 'increased') { collection_12h_strength = '⬆️ Strong. FP +' + fp_percent + ' | SOL/USD -' + sol_percent }
-            if (fp_direction === 'decreased') { collection_12h_strength = '↘️ Weak. FP -' + fp_percent + ' | SOL/USD -' + sol_percent }
+            if (fp_direction === 'increased') {
+              collection_12h_strength = '⬆️ Strong. FP +' + fp_percent + ' | SOL/USD -' + sol_percent
+              strengthemoji = "⬆️"
+              strengthdescription = "Strong"
+              fpsymbol = "+"
+              solsymbol = "-"
+            }
+            if (fp_direction === 'decreased') {
+              collection_12h_strength = '↘️ Weak. FP -' + fp_percent + ' | SOL/USD -' + sol_percent
+              strengthemoji = "↘️"
+              strengthdescription = "Weak"
+              fpsymbol = "-"
+              solsymbol = "-"
+            }
           } else {
             //if no significant change to SOL (just FP increase). Sol change can be insignficantly plus, minus or unchanged
-            var fpsymbol_2 = ""; if (fp_direction === 'decreased') { fpsymbol_2 = '-' } else { fpsymbol_2 = '+' }
-            collection_12h_strength = '↗️ Strong. FP ' + fpsymbol_2 + fp_percent + ' | SOL/USD -' + sol_percent
+            if (fp_direction === 'decreased') { fpsymbol = '-' } else { fpsymbol = '+' }
+            collection_12h_strength = '↗️ Strong. FP ' + fpsymbol + fp_percent + ' | SOL/USD -' + sol_percent
+            strengthemoji = '↗️'
+            strengthdescription = 'Strong'
+            solsymbol = "-"
           }
         }
       }
@@ -205,12 +266,13 @@ async function updateStats() {
       //if no significant changes
       if (sol_significant === false && fp_significant === false) {
 
-        var solsymbol = ''
-        var fpsymbol = ''
         if (sol_direction === 'decreased') { solsymbol = '-' } else { solsymbol = '+' }
         if (fp_direction === 'decreased') { fpsymbol = '-' } else { fpsymbol = '+' }
 
         collection_12h_strength = '➡️ Stable. FP ' + fpsymbol + fp_percent + ' | SOL/USD price ' + solsymbol + sol_percent + '.'
+        strengthemoji = '➡️'
+        strengthdescription = 'Stable'
+
       }
     }//if output length > 5
 
@@ -218,7 +280,7 @@ async function updateStats() {
     if (soloutput.length > 13 && fpoutput.length > 13) {
 
       var fp_7dchangecalc = fpoutput[0] / fp_7daverage
-      var fp_7dchangeAmt = pround(Math.abs(fp_7daverage - fpoutput[0]),2)
+      var fp_7dchangeAmt = pround(Math.abs(fp_7daverage - fpoutput[0]), 2)
 
       if (fp_7dchangecalc > 1) {
         fp_7dchange = '+' + pround(((fp_7dchangecalc - 1) * 100), 2) + '% (' + fp_7dchangeAmt + ' SOL)'
@@ -236,26 +298,46 @@ async function updateStats() {
     var dbstore = {}
     dbstore['fp_history'] = fpoutput
     dbstore['sol_history'] = soloutput
-    
+
     dbstore['collection_12h_strength'] = collection_12h_strength
-    
-    //new
+
+    //new strength
     dbstore['strength'] = {}
-    dbstore.strength['emoji'] = ''
-    dbstore.strength['description'] = ''
-    dbstore.strength['fp_symbol'] = ''
-    dbstore.strength['fp_amount'] = ''
-    dbstore.strength['emoji'] = ''
-    dbstore.strength['emoji'] = ''
-    dbstore.strength['emoji'] = ''
+    dbstore.strength['strength_ready'] = strength_ready
+    dbstore.strength['emoji'] = strengthemoji
+    dbstore.strength['description'] = strengthdescription
+    dbstore.strength['fp_symbol'] = fpsymbol
+    dbstore.strength['fp_percent'] = fp_percent
+    dbstore.strength['sol_symbol'] = solsymbol
+    dbstore.strength['sol_percent'] = sol_percent
     //
 
-    dbstore['fp_3daverage'] = pround(fp_3daverage, 2)
-    dbstore['sol_3daverage'] = pround(sol_3daverage, 2)
+    //if there has been enough data to calculate 7D averages for this collection, store it. Else store N\A
+    if (fp_3daverage != 0) {
+      dbstore['fp_3daverage'] = pround(fp_3daverage, 2)
+    } else {
+      dbstore['fp_3daverage'] = "N\\A"
+    }
+    if (sol_3daverage != 0) {
+      dbstore['sol_3daverage'] = pround(sol_3daverage, 2)
+    } else {
+      dbstore['sol_3daverage'] = "N\\A"
+    }
+    //this defaults to 'not enough data' string if it cant be populated. No need to recheck here
     dbstore['fp_3dchange'] = fp_3dchange
 
-    dbstore['fp_7daverage'] = fp_7daverage
-    dbstore['sol_7daverage'] = sol_7daverage
+    //if there has been enough data to calculate 7D averages for this collection, store it. Else store N\A
+    if (fp_7daverage != 0) {
+      dbstore['fp_7daverage'] = pround(fp_7daverage, 2)
+    } else {
+      dbstore['fp_7daverage'] = 'N\\A'
+    }
+    if (sol_7daverage != 0) {
+      dbstore['sol_7daverage'] = pround(sol_7daverage, 2)
+    } else {
+      dbstore['sol_7daverage'] = "N\\A"
+    }
+    //this defaults to 'not enough data' string if it cant be populated. No need to recheck here
     dbstore['fp_7dchange'] = fp_7dchange
 
     await sql.updateTableColumn("solanametaplex", "meslug", collections[i].meslug, "floor_history", dbstore)

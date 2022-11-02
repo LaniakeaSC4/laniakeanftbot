@@ -90,12 +90,7 @@ async function getMetaplexData(creatoraddress) {
     }//end else if we got metadata
   }//end for each fail
 
-  w.log.info('autoAdd1: storing metaplex data (with JSON) in DB')
-  try {
-    //log one to look at it
-    w.log.info('Debug loggin number 7')
-    w.log.info(JSON.stringify(withjson.data[7]))
-  } catch { w.log.info('autoAdd1: Error logging nft number 7') }
+  w.log.info('autoAdd1: returning metaplex data (with JSON)')
   return (withjson)
 }; module.exports.getMetaplexData = getMetaplexData
 
@@ -155,9 +150,6 @@ async function calculateTraitPercentages(metaplexdata) {
 async function combineTraitRarity(nftdata, traitdata, meslug, creatoraddress) {
 
   w.log.info('autoAdd3: Building final object with statistical rarity')
-
-  w.log.info('Debug loggin number 7')
-  w.log.info(JSON.stringify(nftdata.data[7]))
 
   var output = { "data": [] }//establish output object
 
@@ -258,7 +250,7 @@ async function combineTraitRarity(nftdata, traitdata, meslug, creatoraddress) {
       w.log.info(err)
     }//end catch error
   }//end for each NFT
-   w.log.info("autoAdd3: " + noidcount + " NFTs had no id. Saving them as ID 0 and disabling raritychecker for this collection")
+  w.log.info("autoAdd3: " + noidcount + " NFTs had no id. Saving them as ID 0 and disabling raritychecker for this collection")
   w.log.info('autoAdd3: ' + jsonerrors + '/' + nftdata.data.length + '(input size) gave JSON errors')
   w.log.info('autoAdd3: lenth is: ' + parseFloat(output.data.length) + '(output size) meslug clean is: ' + meslug.replace(/[^0-9a-z]/gi, '').toLowerCase())
 
