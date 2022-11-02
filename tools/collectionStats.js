@@ -236,7 +236,19 @@ async function updateStats() {
     var dbstore = {}
     dbstore['fp_history'] = fpoutput
     dbstore['sol_history'] = soloutput
+    
     dbstore['collection_12h_strength'] = collection_12h_strength
+    
+    //new
+    dbstore['strength'] = {}
+    dbstore.strength['emoji'] = ''
+    dbstore.strength['description'] = ''
+    dbstore.strength['fp_symbol'] = ''
+    dbstore.strength['fp_amount'] = ''
+    dbstore.strength['emoji'] = ''
+    dbstore.strength['emoji'] = ''
+    dbstore.strength['emoji'] = ''
+    //
 
     dbstore['fp_3daverage'] = pround(fp_3daverage, 2)
     dbstore['sol_3daverage'] = pround(sol_3daverage, 2)
