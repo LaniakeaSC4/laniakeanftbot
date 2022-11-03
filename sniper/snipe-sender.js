@@ -122,14 +122,14 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 	if (delay) { await wait(delay) }//delay delivery if one was set
 	
 	//if floor history wasn't sufficient, put placeholders in reply
-	if (!floor_history) {
+	//if (!floor_history) {
 	  floor_history = {}
 	  floor_history.fp_3daverage = 'coming soon'
 	  floor_history.fp_3dchange = 'coming soon'
 	  floor_history.fp_7dchange = 'coming soon'
 	  floor_history.fp_7daverage = 'coming soon'
 	  floor_history.collection_12h_strength = 'coming soon'
-	}
+	//}
 	
 	var alertrole = ''
 	if (thisping === true) {alertrole = '<@&' + thispingrole + '>'}
