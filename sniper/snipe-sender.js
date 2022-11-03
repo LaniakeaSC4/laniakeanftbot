@@ -134,7 +134,7 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 	var alertrole = ''
 	if (thisping === true) {alertrole = '<@&' + thispingrole + '>'}
 	
-	var sellerLink = 'Seller: [' + seller.slice(0,3) + '...' + seller.slice(-1) + '](https://magiceden.io/u/' + seller + ')'
+	var sellerLink = 'Seller: [' + seller.slice(0,3) + '...' + seller.slice(-2) + '](https://magiceden.io/u/' + seller + ')'
 	
 	//send it
 	try {
@@ -149,7 +149,7 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 					"fields": [
 						{
 							"name": "🎯 __Snipe Details__",
-							"value": "**Rarity**: " + thisrarity + "/" + collectionSize + ' - ' + raritydescription + "\n**Hotness**: " + hotness + "\n**List price**: " + pround(parseFloat(thisprice), 3) + ' SOL\n**Current FP**: ' + pround(parseFloat(floorprice), 3) + " SOL\n[Buy on Magic Eden](" + listinglink + ') | ' + sellerLink + '\n',
+							"value": "**Rarity**: " + thisrarity + "/" + collectionSize + ' - ' + raritydescription + "\n**Hotness**: " + hotness + "\n**List price**: " + pround(parseFloat(thisprice), 3) + ' SOL\n**Current FP**: ' + pround(parseFloat(floorprice), 3) + " SOL\n" + sellerLink + " | [Buy on Magic Eden](" + listinglink + ')\n',
 							"inline": false
 						},
 						{

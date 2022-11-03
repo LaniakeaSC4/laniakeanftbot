@@ -125,7 +125,7 @@ client.on('interactionCreate', async interaction => {
   try {
     await command.execute(interaction)//execute in command file
   } catch (error) {
-    w.log.info('There was an error processing a command in ' + interaction.message.guildId + ': ' + error)
+    w.log.info('There was an error processing a command in ' + interaction?.message.guildId + ': ' + error)
     //await interaction.reply({ content: 'There was an error (' + error + ' while executing this command!', ephemeral: true });
   }//end catch
 })//end on interactionCreate
