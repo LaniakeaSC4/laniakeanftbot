@@ -13,6 +13,8 @@ const sniper = require('./sniper-main.js')
 
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
+var math = require('mathjs')
+
 //fulladd - do all steps
 async function addNewNFT(creatoraddress, meslug) {
   w.log.info('autoAdd1: starting auto add. Getting metaplex data with JSON')
@@ -202,10 +204,17 @@ async function combineTraitRarity(nftdata, traitdata, meslug, creatoraddress) {
         }//end for each attribute
 
         //multiply the percentages together to get statistical rarity
-        var thisrarity = (parseFloat(thesepercentages[0]) * 10)//first % is the starting point (don't want 1 or 0)
+        var thisrarity = math.bignumber(thesepercentages[0])
         for (var k = 1; k < thesepercentages.length; k++) {//from k = 1
-          thisrarity = thisrarity * (parseFloat(thesepercentages[k]) * 10)//multiplying percentage 10x so we don't loose any resolution off the right side
+          thisrarity = math.multiply(thisrarity, math.bignumber(thesepercentages[k]))
         }//end for percentages
+        
+        //get bignumber ready for output
+        var multiplier = math.pow(math.abs(math.log10(thisrarity)), 10)
+        
+        thisrarity = math.multiply(thisrarity, multiplier)
+        
+        thisrarity = math.number(thisrarity)
 
         //these addresses are not always in the metadata. Set them if we can.
         var tokenAddress = ''
