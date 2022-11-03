@@ -161,6 +161,7 @@ async function combineTraitRarity(nftdata, traitdata, meslug, creatoraddress) {
   output['collectionCommonName'] = nftdata.data[0].name.substring(0, (nftdata.data[0].name.indexOf('#') - 1))
   output['collectionKey'] = nftdata.data[0].name.substring(0, (nftdata.data[0].name.indexOf('#') - 1)).toString().replace(/[^0-9a-z]/gi, '')
   output['description'] = nftdata.data[0].json.description
+  output['traitdata'] = traitdata
 
   //log any with null JSON. This shouldnt happen no we are retrying fails and excluding failed metadata requests
   /*
