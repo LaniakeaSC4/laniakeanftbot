@@ -58,7 +58,11 @@ async function updateStats() {
     } else {
       //copy old history to new
       fpoutput = collections[i].floor_history.fp_history
-
+      
+      //push new
+      fpoutput.unshift(thisfp)
+      if (fpoutput.length > 14) { fpoutput.pop() }
+      
       if (fpoutput.length > 5) {//if we have 3 days worth of data
         var threeDayFpArr = fpoutput.slice(0, 6)
         //calculate average before pushing out oldest
@@ -73,9 +77,7 @@ async function updateStats() {
         w.log.info("7 Day FP average calculated as: " + fp_7daverage)
       }
 
-      //push new
-      fpoutput.unshift(thisfp)
-      if (fpoutput.length > 14) { fpoutput.pop() }
+      
     }
 
     //get current sol price
@@ -85,6 +87,10 @@ async function updateStats() {
       soloutput = [solprice]
     } else {
       soloutput = collections[i].floor_history.sol_history
+      
+      //push new
+      soloutput.unshift(solprice)
+      if (soloutput.length > 14) { soloutput.pop() } 
 
       if (soloutput.length > 5) {//if we have 3 days worth of data
         var threeDaySolArr = soloutput.slice(0, 6)
@@ -98,9 +104,7 @@ async function updateStats() {
         sol_7daverage = sevenDaySolArr.reduce((a, b) => a + b, 0) / sevenDaySolArr.length
       }
 
-      //push new
-      soloutput.unshift(solprice)
-      if (soloutput.length > 14) { soloutput.pop() }
+      
     }
 
     //if we have 3 days data
@@ -343,7 +347,7 @@ async function updateStats() {
     dbstore['sevenDayChange'] = {}
     dbstore.sevenDayChange['symbol_7dchange'] = symbol_7dchange
     dbstore.sevenDayChange['percentage_7dchange'] = percentage_7dchange
-    dbstore.sevenDayChange['amount_7dchange'] = amount_7dchange
+    dbstore.tDayChange['amount_7dchange'] = amount_7dchange
     //
 
     //if there has been enough data to calculate 7D averages for this collection, store it. Else store N\A
