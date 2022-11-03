@@ -20,14 +20,14 @@ async function updatePremium(serverid, days, interaction) {
         w.log.info("Updating premium expiry for " + serverid + ". There was an exisiting lapsed expiry time, so expiry has been set to today plus " + days + " days (" + premiumexpire + ")")
         await sql.updateTableColumn("servers", "serverid", serverid, "premiumexpire", premiumexpire)
         await sql.updateTableColumn("servers", "serverid", serverid, "premium", true)//set premium to true since we are adding premium days
-        interaction.reply({ content: "Updating premium expiry for " + serverid + ". There was not an exisiting expiry time, so expiry has been set to today plus " + days + " days (" + premiumexpire + ")", ephemeral: true })
+        await interaction.reply({ content: "Updating premium expiry for " + serverid + ". There was not an exisiting expiry time, so expiry has been set to today plus " + days + " days (" + premiumexpire + ")", ephemeral: true })
       } else {//if sql time has not already passed/expired add days to it and store it
         expiretime.addDays(days)//add days to exisiting premiumexpire
         expiretime.toISOString()//convert to ISO string to save in sql
         w.log.info("Updating premium expiry for " + serverid + ". There was an exisiting expiry time " + sqltime + " and it has been updated to " + expiretime)
         await sql.updateTableColumn("servers", "serverid", serverid, "premiumexpire", expiretime)//save
         await sql.updateTableColumn("servers", "serverid", serverid, "premium", true)//premium should already be true, but let's be sure
-        interaction.reply({ content: "Updating premium expiry for " + serverid + ". There was an exisiting expiry time " + sqltime + " and it has been updated to " + expiretime, ephemeral: true })
+        await interaction.reply({ content: "Updating premium expiry for " + serverid + ". There was an exisiting expiry time " + sqltime + " and it has been updated to " + expiretime, ephemeral: true })
       }//end else
     } else {//if there wasnt an exisiting time, establish one
       var premiumexpire = new Date()//get todays date
@@ -36,7 +36,7 @@ async function updatePremium(serverid, days, interaction) {
       w.log.info("Updating premium expiry for " + serverid + ". There was not an exisiting expiry time, so expiry has been set to today plus " + days + " days (" + premiumexpire + ")")
       await sql.updateTableColumn("servers", "serverid", serverid, "premiumexpire", premiumexpire)
       await sql.updateTableColumn("servers", "serverid", serverid, "premium", true)
-      interaction.reply({ content: "Updating premium expiry for " + serverid + ". There was not an exisiting expiry time, so expiry has been set to today plus " + days + " days (" + premiumexpire + ")", ephemeral: true })
+      await interaction.reply({ content: "Updating premium expiry for " + serverid + ". There was not an exisiting expiry time, so expiry has been set to today plus " + days + " days (" + premiumexpire + ")", ephemeral: true })
     }//end else if no exisiting expiry time
   } else { return null }//return null if 0 days (or negative days) was specified
 } module.exports.update = updatePremium
