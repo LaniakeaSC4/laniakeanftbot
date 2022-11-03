@@ -347,7 +347,7 @@ async function updateStats() {
     dbstore['sevenDayChange'] = {}
     dbstore.sevenDayChange['symbol_7dchange'] = symbol_7dchange
     dbstore.sevenDayChange['percentage_7dchange'] = percentage_7dchange
-    dbstore.tDayChange['amount_7dchange'] = amount_7dchange
+    dbstore.sevenDayChange['amount_7dchange'] = amount_7dchange
     //
 
     //if there has been enough data to calculate 7D averages for this collection, store it. Else store N\A

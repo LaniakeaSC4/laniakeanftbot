@@ -44,7 +44,7 @@ client.on('ready', async () => {
     w.log.info('Cron: Updating collection stats')
     collection_stats.updateStats()
   }, null, true)
-
+  collection_stats.updateStats()
 })//end client.on Ready
 
 //=========================
