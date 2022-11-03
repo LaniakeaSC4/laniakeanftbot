@@ -18,7 +18,7 @@ async function initaliseServers() {
 }; module.exports.initaliseServers = initaliseServers
 
 //work out where to send them
-async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize, floor_history, snipe_ping,seller) {
+async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize, floor_history, snipe_ping, seller) {
 	for (i = 0; i < supportedservers.length; i++) {
 		if (supportedservers[i].inserver === true) {//only proceed if bot is in server
 			var thisserver = supportedservers[i]; var thisserverid = ''; var feedchannel = ''
@@ -36,17 +36,17 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 			//filter by global blackslist (make /blacklist command)
 			Loop through blacklist same as alpha channels
 			*/
-      
-      //snipe ping may have come through as true, but let's see if this server has it enabled
-      var thisping = false
-      var thispingrole = ''
-      if (supportedservers[i].enable_ping === true && snipe_ping === true) {
-        if (supportedservers[i].pingrole) {
-        thisping = true
-        thispingrole = supportedservers[i].pingrole
-        }
-      }
-      
+
+			//snipe ping may have come through as true, but let's see if this server has it enabled
+			var thisping = false
+			var thispingrole = ''
+			if (supportedservers[i].enable_ping === true && snipe_ping === true) {
+				if (supportedservers[i].pingrole) {
+					thisping = true
+					thispingrole = supportedservers[i].pingrole
+				}
+			}
+
 			//check if this snipe should be redirected to a homechannel from the main feed
 			var foundhome = false//start with false
 			if (thisserver.homechannel_enabled === true && thisserver.premium === true) {
@@ -120,28 +120,64 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 async function sendsnipes(server, thischannel, delay, nftname, embedcolour, thisrarity, raritydescription, thislimit, floorprice, thissnipeprice, thisprice, thisimage, listinglink, hotness, collectionSize, thiscollection, floor_history, thisping, thispingrole, seller) {
 
 	if (delay) { await wait(delay) }//delay delivery if one was set
-	
-	//if floor history wasn't sufficient, put placeholders in reply
-	//if (!floor_history) {
-	  floor_history = {}
-	  floor_history.fp_3daverage = 'coming soon'
-	  floor_history.fp_3dchange = 'coming soon'
-	  floor_history.fp_7dchange = 'coming soon'
-	  floor_history.fp_7daverage = 'coming soon'
-	  floor_history.collection_12h_strength = 'coming soon'
-	//}
-	
+
+	//if there is no floor history at all, handle all the missing pieces
+	if (!floor_history) {
+		floor_history = {}
+		floor_history.fp_3daverage = 'Not enough data'
+		//floor_history.fp_3dchange = 'coming soon'
+		//floor_history.fp_7dchange = 'coming soon'
+		floor_history.fp_7daverage = 'Not enough data'
+		//floor_history.collection_12h_strength = 'coming soon'
+
+		//new
+		floor_history['strength'] = {}
+		floor_history.strength['strength_ready'] = false
+
+		floor_history['threeDayChange'] = {}
+		floor_history.threeDayChange['symbol_3dchange'] = ""
+
+		floor_history['sevenDayChange'] = {}
+		floor_history.sevenDayChange['symbol_7dchange'] = ""
+
+	}
+
+	//build collection strength string
+	var strengthstring = ""
+	if (floor_history.strength.strength_ready === false) {//if strength calc is note ready fill in those blanks
+		strengthstring = "New collection. Not enough data"
+	} else {
+		strengthstring = floor_history.strength.emoji + " " + floor_history.strength.description + " | " + floor_history.strength.fp_symbol + floor_history.strength.fp_percent + " | SOL/USD " + floor_history.strength.sol_symbol + floor_history.strength.sol_percent
+	}
+
+	//build 3d change string
+	var threeDayChangeString = ""
+	if (floor_history.threeDayChange.symbol_3dchange === "") {//if no 3d change has yet been calculated (not enough history)
+		threeDayChangeString = "N\\A"
+	} else {
+		threeDayChangeString = floor_history.threeDayChange.symbol_3dchange + floor_history.threeDayChange.percentage_3dchange + "% (" + floor_history.threeDayChange.amount_3dchange + " SOL)"
+	}
+
+	//build 7d change string
+	var sevenDayChangeString = ""
+	if (floor_history.sevenDayChange.symbol_7dchange === "") {//if no 7d change has yet been calculated (not enough history)
+		sevenDayChangeString = "N\\A"
+	} else {
+		sevenDayChangeString = floor_history.sevenDayChange.symbol_7dchange + floor_history.sevenDayChange.percentage_7dchange + "% (" + floor_history.sevenDayChange.amount_7dchange + " SOL)"
+	}
+
+
 	var alertrole = ''
-	if (thisping === true) {alertrole = '<@&' + thispingrole + '>'}
-	
-	var sellerLink = 'Seller: [' + seller.slice(0,3) + '...' + seller.slice(-2) + '](https://magiceden.io/u/' + seller + ')'
-	
+	if (thisping === true) { alertrole = '<@&' + thispingrole + '>' }
+
+	var sellerLink = 'Seller: [' + seller.slice(0, 3) + '...' + seller.slice(-2) + '](https://magiceden.io/u/' + seller + ')'
+
 	//send it
 	try {
 		const channel = await client.channels.fetch(thischannel)
 		channel.send({
-		  content : alertrole,
-		  allowedMentions: { parse: ['users', 'roles'], repliedUser: true }, 
+			content: alertrole,
+			allowedMentions: { parse: ['users', 'roles'], repliedUser: true },
 			embeds: [
 				{
 					"title": nftname,
@@ -154,7 +190,7 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 						},
 						{
 							"name": "📌 __Snapshot Analysis__ (00:00 & 12:00 UTC)",
-							"value": "**3 Day avg FP**: " + floor_history?.fp_3daverage + " | " + "**7 Day avg FP**: " + floor_history?.fp_7daverage + "\n**Snapshot FP vs 3 Day avg**: " + floor_history?.fp_3dchange + "\n**Snapshot FP vs 7 Day avg**: " + floor_history?.fp_7dchange + "\n\n**Collection strength at last snapshot\n**" + floor_history?.collection_12h_strength,
+							"value": "**3 Day avg FP**: " + floor_history?.fp_3daverage + " | " + "**7 Day avg FP**: " + floor_history?.fp_7daverage + "\n**Snapshot FP vs 3 Day avg**: " + threeDayChangeString + "\n**Snapshot FP vs 7 Day avg**: " + sevenDayChangeString + "\n\n**Collection strength at last snapshot\n**" + strengthstring,
 							"inline": false
 						},
 					],
@@ -163,9 +199,9 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 						"height": 75,
 						"width": 75
 					},
-				  "footer": {
-						"text": "Search \"snipe" + thiscollection + "\" for more snipes in this collection.\n" + raritydescription + ' snipes are those listed for <' + parseFloat(thislimit) + 'x the ' + pround(parseFloat(floorprice), 2)  + ' SOL floor price ' + ' (<' + pround(parseFloat(thissnipeprice), 2) + ' SOL)' + "\nD: https://discord.gg/CgF7neAte2 | W: nftsniperbot.xyz"
-					}, 
+					"footer": {
+						"text": "Search \"snipe" + thiscollection + "\" for more snipes in this collection.\n" + raritydescription + ' snipes are those listed for <' + parseFloat(thislimit) + 'x the ' + pround(parseFloat(floorprice), 2) + ' SOL floor price ' + ' (<' + pround(parseFloat(thissnipeprice), 2) + ' SOL)' + "\nD: https://discord.gg/CgF7neAte2 | W: nftsniperbot.xyz"
+					},
 				}
 			]//end embed
 		}).catch((err) => { w.log.error(server + ': there was a message send error: ' + err) })//end message send
