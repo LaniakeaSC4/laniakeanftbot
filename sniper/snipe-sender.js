@@ -200,7 +200,7 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 						},
 						{
 							"name": "📌 __Snapshot Analysis__ (00:00 & 12:00 UTC)",
-							"value": "**Snapshot FP**: " + snapshotFPstring + "\n**3 Day avg FP**: " + floor_history?.fp_3daverage + " SOL | " + "**7 Day avg FP**: " + floor_history?.fp_7daverage + " SOL\n**Snapshot FP vs 3 Day avg**: " + threeDayChangeString + "\n**Snapshot FP vs 7 Day avg**: " + sevenDayChangeString + "\n\n**__Strength at last snapshot vs previous__**\n" + strengthstring,
+							"value": "**Snapshot FP**: " + snapshotFPstring + "\n**3 Day avg FP**: " + floor_history?.fp_3daverage + " SOL | " + "**7 Day avg FP**: " + floor_history?.fp_7daverage + " SOL\n**Snapshot FP vs 3 Day avg**: " + threeDayChangeString + "\n**Snapshot FP vs 7 Day avg**: " + sevenDayChangeString + "\n\n**__Strength at last 12h snapshot vs previous__**\n" + strengthstring,
 							"inline": false
 						},
 					],
@@ -210,7 +210,7 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 						"width": 75
 					},
 					"footer": {
-						"text": "Search \"snipe" + thiscollection + "\" for more snipes in this collection.\n" + raritydescription + ' snipes are those listed for <' + parseFloat(thislimit) + 'x the ' + pround(parseFloat(floorprice), 2) + ' SOL floor price ' + ' (<' + pround(parseFloat(thissnipeprice), 2) + ' SOL)' + "\n* Statistical rarity may differ between providers\nD: https://discord.gg/CgF7neAte2 | W: nftsniperbot.xyz"
+						"text": "Search \"snipe" + thiscollection + "\" for more snipes in this collection.\n" + raritydescription + ' snipes are those listed for <' + parseFloat(thislimit) + 'x the ' + pround(parseFloat(floorprice), 2) + ' SOL floor price ' + ' (<' + pround(parseFloat(thissnipeprice), 2) + ' SOL)' + "\n*statistical rarity may differ between providers\nD: https://discord.gg/CgF7neAte2 | W: nftsniperbot.xyz"
 					},
 				}
 			]//end embed
