@@ -134,7 +134,7 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 	var alertrole = ''
 	if (thisping === true) {alertrole = '<@&' + thispingrole + '>'}
 	
-	var sellerLink = 'Seller: [' + seller.slice(0,4) + '...' + seller.slice(-2) + '](https://magiceden.io/u/' + seller + ')'
+	var sellerLink = 'Seller: [' + seller.slice(0,3) + '...' + seller.slice(-1) + '](https://magiceden.io/u/' + seller + ')'
 	
 	//send it
 	try {
@@ -149,11 +149,11 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 					"fields": [
 						{
 							"name": "🎯 __Snipe Details__",
-							"value": "**Rarity**: " + thisrarity + "/" + collectionSize + ' - ' + raritydescription + "\n**Hotness**: " + hotness + "\n**List price**: " + pround(parseFloat(thisprice), 3) + ' SOL\n**Current FP**: ' + pround(parseFloat(floorprice), 3) + " SOL\n" + sellerLink + "\n[Buy on Magic Eden](" + listinglink + ')\n',
+							"value": "**Rarity**: " + thisrarity + "/" + collectionSize + ' - ' + raritydescription + "\n**Hotness**: " + hotness + "\n**List price**: " + pround(parseFloat(thisprice), 3) + ' SOL\n**Current FP**: ' + pround(parseFloat(floorprice), 3) + " SOL\n[Buy on Magic Eden](" + listinglink + ') | ' + sellerLink + '\n',
 							"inline": false
 						},
 						{
-							"name": "📌 __Snapshot Analysis__ (00:00 and 12:00 UTC)",
+							"name": "📌 __Snapshot Analysis__ (00:00 & 12:00 UTC)",
 							"value": "**3 Day avg FP**: " + floor_history?.fp_3daverage + " | " + "**7 Day avg FP**: " + floor_history?.fp_7daverage + "\n**Snapshot FP vs 3 Day avg**: " + floor_history?.fp_3dchange + "\n**Snapshot FP vs 7 Day avg**: " + floor_history?.fp_7dchange + "\n\n**Collection strength at last snapshot\n**" + floor_history?.collection_12h_strength,
 							"inline": false
 						},
