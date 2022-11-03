@@ -111,8 +111,8 @@ async function calculateTraitPercentages(metaplexdata) {
             subtype = metaplexdata.data[i].json.attributes[j].value//set subtype to it
           } else { subtype = 'none' }//else set it to "none" which essentially adds a count for it
 
-          if (maintype in traitPercentages) {//if maintype is already a key in the object
-            if (subtype in traitPercentages[maintype]) {//if maintype and subtype already exist, +1 to timesSeen and +1 to total count for that maintype
+          if (traitPercentages?.maintype != undefined) {//if maintype is already a key in the object
+            if (traitPercentages.maintype?.subtype != undefined) {//if maintype and subtype already exist, +1 to timesSeen and +1 to total count for that maintype
               traitPercentages[maintype][subtype]['timesSeen'] = traitPercentages[maintype][subtype]['timesSeen'] + 1
               traitPercentages[maintype]['totalcount'] = traitPercentages[maintype]['totalcount'] + 1
             } else {//maintype exists, but subtype does not. Create new subtype object and start at 1 timesSeen
@@ -143,6 +143,7 @@ async function calculateTraitPercentages(metaplexdata) {
   })//end for each maintype
 
   //store in DB
+  w.log.info(JSON.stringify(traitPercentages))
   return (traitPercentages)
 }; module.exports.calculateTraitPercentages = calculateTraitPercentages
 
