@@ -149,7 +149,7 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 	if (floor_history.strength.strength_ready === false) {//if strength calc is note ready fill in those blanks
 		strengthstring = "New collection. Not enough data"
 	} else {
-		strengthstring = floor_history.strength.emoji + " " + floor_history.strength.description + " | " + floor_history.strength.fp_symbol + floor_history.strength.fp_percent + " | SOL/USD " + floor_history.strength.sol_symbol + floor_history.strength.sol_percent
+		strengthstring = floor_history.strength.emoji + " " + floor_history.strength.description + ". FP " + floor_history.strength.fp_symbol + floor_history.strength.fp_percent + " | SOL/USD " + floor_history.strength.sol_symbol + floor_history.strength.sol_percent
 	}
 
 	//build 3d change string
@@ -195,12 +195,12 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 					"fields": [
 						{
 							"name": "🎯 __Snipe Details__",
-							"value": "**Rarity**: " + thisrarity + "/" + collectionSize + ' - ' + raritydescription + "\n**Hotness**: " + hotness + "\n**List price**: " + pround(parseFloat(thisprice), 3) + ' SOL\n**Current FP**: ' + pround(parseFloat(floorprice), 3) + " SOL\n" + sellerLink + " | [Buy on Magic Eden](" + listinglink + ')\n',
+							"value": "**Rarity**: " + thisrarity + "/" + collectionSize + ' - ' + raritydescription + "*\n**Hotness**: " + hotness + "\n**List price**: " + pround(parseFloat(thisprice), 3) + ' SOL\n**Current FP**: ' + pround(parseFloat(floorprice), 3) + " SOL\n" + sellerLink + " | [Buy on Magic Eden](" + listinglink + ')\n',
 							"inline": false
 						},
 						{
 							"name": "📌 __Snapshot Analysis__ (00:00 & 12:00 UTC)",
-							"value": "**Snapshot FP**: " + snapshotFPstring + "\n**3 Day avg FP**: " + floor_history?.fp_3daverage + " SOL | " + "**7 Day avg FP**: " + floor_history?.fp_7daverage + " SOL\n**Snapshot FP vs 3 Day avg**: " + threeDayChangeString + "\n**Snapshot FP vs 7 Day avg**: " + sevenDayChangeString + "\n\n💪 **__Strength at last snapshot vs previous__**\n" + strengthstring,
+							"value": "**Snapshot FP**: " + snapshotFPstring + "\n**3 Day avg FP**: " + floor_history?.fp_3daverage + " SOL | " + "**7 Day avg FP**: " + floor_history?.fp_7daverage + " SOL\n**Snapshot FP vs 3 Day avg**: " + threeDayChangeString + "\n**Snapshot FP vs 7 Day avg**: " + sevenDayChangeString + "\n\n**__Strength at last snapshot vs previous__**\n" + strengthstring,
 							"inline": false
 						},
 					],
@@ -210,7 +210,7 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 						"width": 75
 					},
 					"footer": {
-						"text": "Search \"snipe" + thiscollection + "\" for more snipes in this collection.\n" + raritydescription + ' snipes are those listed for <' + parseFloat(thislimit) + 'x the ' + pround(parseFloat(floorprice), 2) + ' SOL floor price ' + ' (<' + pround(parseFloat(thissnipeprice), 2) + ' SOL)' + "\nD: https://discord.gg/CgF7neAte2 | W: nftsniperbot.xyz"
+						"text": "Search \"snipe" + thiscollection + "\" for more snipes in this collection.\n" + raritydescription + ' snipes are those listed for <' + parseFloat(thislimit) + 'x the ' + pround(parseFloat(floorprice), 2) + ' SOL floor price ' + ' (<' + pround(parseFloat(thissnipeprice), 2) + ' SOL)' + "\n* Statistical rarity may differ between providers\nD: https://discord.gg/CgF7neAte2 | W: nftsniperbot.xyz"
 					},
 				}
 			]//end embed
