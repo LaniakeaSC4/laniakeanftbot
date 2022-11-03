@@ -140,6 +140,8 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 		floor_history['sevenDayChange'] = {}
 		floor_history.sevenDayChange['symbol_7dchange'] = ""
 
+		floor_history['fp_history'] = ['none']
+
 	}
 
 	//build collection strength string
@@ -155,7 +157,7 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 	if (floor_history.threeDayChange.symbol_3dchange === "") {//if no 3d change has yet been calculated (not enough history)
 		threeDayChangeString = "N\\A"
 	} else {
-		threeDayChangeString = floor_history.threeDayChange.symbol_3dchange + floor_history.threeDayChange.percentage_3dchange + "% (" + floor_history.threeDayChange.amount_3dchange + " SOL)"
+		threeDayChangeString = floor_history.threeDayChange.symbol_3dchange + floor_history.threeDayChange.percentage_3dchange + "% (" + floor_history.threeDayChange.symbol_3dchange + floor_history.threeDayChange.amount_3dchange + " SOL)"
 	}
 
 	//build 7d change string
@@ -163,7 +165,15 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 	if (floor_history.sevenDayChange.symbol_7dchange === "") {//if no 7d change has yet been calculated (not enough history)
 		sevenDayChangeString = "N\\A"
 	} else {
-		sevenDayChangeString = floor_history.sevenDayChange.symbol_7dchange + floor_history.sevenDayChange.percentage_7dchange + "% (" + floor_history.sevenDayChange.amount_7dchange + " SOL)"
+		sevenDayChangeString = floor_history.sevenDayChange.symbol_7dchange + floor_history.sevenDayChange.percentage_7dchange + "% (" + floor_history.sevenDayChange.symbol_7dchange + floor_history.sevenDayChange.amount_7dchange + " SOL)"
+	}
+
+	//build snapshot FP
+	var snapshotFPstring = ""
+	if (floor_history.fp_history[0] === "none"){
+		snapshotFPstring = "New collection. Not enough data"
+	} else {
+		snapshotFPstring = pround(floor_history.fp_history[0],2) + " SOL"
 	}
 
 
@@ -190,7 +200,7 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 						},
 						{
 							"name": "📌 __Snapshot Analysis__ (00:00 & 12:00 UTC)",
-							"value": "**3 Day avg FP**: " + floor_history?.fp_3daverage + " | " + "**7 Day avg FP**: " + floor_history?.fp_7daverage + "\n**Snapshot FP vs 3 Day avg**: " + threeDayChangeString + "\n**Snapshot FP vs 7 Day avg**: " + sevenDayChangeString + "\n\n**Collection strength at last snapshot\n**" + strengthstring,
+							"value": "**Snapshot FP**: " + snapshotFPstring + "\n**3 Day avg FP**: " + floor_history?.fp_3daverage + " SOL | " + "**7 Day avg FP**: " + floor_history?.fp_7daverage + " SOL\n**Snapshot FP vs 3 Day avg**: " + threeDayChangeString + "\n**Snapshot FP vs 7 Day avg**: " + sevenDayChangeString + "\n\n**Collection strength at last snapshot\n**" + strengthstring,
 							"inline": false
 						},
 					],
