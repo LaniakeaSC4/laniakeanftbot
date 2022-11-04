@@ -147,9 +147,9 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 	//build collection strength string
 	var strengthstring = ""
 	if (floor_history.strength.strength_ready === false) {//if strength calc is note ready fill in those blanks
-		strengthstring = "New collection. Not enough data"
+		strengthstring = "As this is a new collection, there is not enough data to assess collection strength."
 	} else {
-		strengthstring = floor_history.strength.emoji + " " + floor_history.strength.description + ". FP " + floor_history.strength.fp_symbol + floor_history.strength.fp_percent + " | SOL/USD " + floor_history.strength.sol_symbol + floor_history.strength.sol_percent
+		strengthstring = floor_history.strength.emoji + "At the last 12h snapshot vs the previous the collection strength was " + floor_history.strength.description + ". FP " + floor_history.strength.fp_symbol + floor_history.strength.fp_percent + " | SOL/USD " + floor_history.strength.sol_symbol + floor_history.strength.sol_percent + "."
 	}
 
 	//build 3d change string
@@ -157,8 +157,8 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 	if (floor_history.threeDayChange.symbol_3dchange === "") {//if no 3d change has yet been calculated (not enough history)
 		threeDayChangeString = "New collection. Not enough data for 3 day change. "
 	} else {
-		var fp3dchangedirection = ""; if (floor_history.threeDayChange.symbol_3dchange === "-") { fp3dchangedirection = "decreased" } else { fp3dchangedirection = "increased" }
-		threeDayChangeString = "\nIn the last **3 days** the collection FP has **" + fp3dchangedirection + "** by " + floor_history.threeDayChange.symbol_3dchange + floor_history.threeDayChange.amount_3dchange + " SOL (" + floor_history.threeDayChange.symbol_3dchange + floor_history.threeDayChange.percentage_3dchange + "%)"
+		var fp3dchangedirection = ""; if (floor_history.threeDayChange.symbol_3dchange === "-") { fp3dchangedirection = "lower" } else { fp3dchangedirection = "higher" }
+		threeDayChangeString = "At the last snapshot, collection FP was " + floor_history.threeDayChange.symbol_3dchange + floor_history.threeDayChange.amount_3dchange + " SOL (" + floor_history.threeDayChange.symbol_3dchange + floor_history.threeDayChange.percentage_3dchange + "%) **" + fp3dchangedirection + "** than 3 day average FP."
 	}
 
 	//build 7d change string
@@ -166,8 +166,8 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 	if (floor_history.sevenDayChange.symbol_7dchange === "") {//if no 7d change has yet been calculated (not enough history)
 		sevenDayChangeString = "."
 	} else {
-		var fp7dchangedirection = ""; if (floor_history.sevenDayChange.symbol_7dchange === "-") { fp7dchangedirection = "decreased" } else { fp7dchangedirection = "increased" }
-		sevenDayChangeString = ". Additionally, in the last **7 days** collection FP has **" + fp7dchangedirection + "** by " + floor_history.sevenDayChange.symbol_7dchange + floor_history.sevenDayChange.amount_7dchange + " SOL (" + floor_history.sevenDayChange.symbol_7dchange + floor_history.sevenDayChange.percentage_7dchange + "%)."
+		var fp7dchangedirection = ""; if (floor_history.sevenDayChange.symbol_7dchange === "-") { fp7dchangedirection = "lower" } else { fp7dchangedirection = "higher" }
+		sevenDayChangeString = ". Additionally, FP was " + floor_history.sevenDayChange.symbol_7dchange + floor_history.sevenDayChange.amount_7dchange + " SOL (" + floor_history.sevenDayChange.symbol_7dchange + floor_history.sevenDayChange.percentage_7dchange + "%). **" + fp7dchangedirection + "** than 7 day average FP."
 	}
 
 	//build snapshot FP
@@ -202,7 +202,7 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 						},
 						{
 							"name": "📌 __Snapshot Analysis__ (00:00 & 12:00 UTC)",
-							"value": "**Snapshot FP**: " + snapshotFPstring + "\n**3 Day avg FP**: " + floor_history?.fp_3daverage + " SOL | " + "**7 Day avg FP**: " + floor_history?.fp_7daverage + " SOL\n" + threeDayChangeString + sevenDayChangeString + "\n\n**__Strength at last 12h snapshot vs previous__**\n" + strengthstring,
+							"value": "**Snapshot FP**: " + snapshotFPstring + "\n**3 day avg FP**: " + floor_history?.fp_3daverage + " SOL | " + "**7 day avg FP**: " + floor_history?.fp_7daverage + " SOL\n\n" + strengthstring + "\n\n" + threeDayChangeString + sevenDayChangeString,
 							"inline": false
 						},
 					],
