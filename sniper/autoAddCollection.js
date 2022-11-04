@@ -224,18 +224,19 @@ async function combineTraitRarity(nftdata, traitdata, meslug, creatoraddress) {
       w.log.info(err)
     }//end catch error
   }//end for each NFT
-  
+  w.log.info('finishing adding big numbers to nfts')
   var toSort = output.data
   
   function sortNFT(a, b) {
    return math.subtract(a.statisticalRarity, b.statisticalRarity)
   }
-  
+  w.log.info('sorting nfts')
   var sorted = math.sort(toSort, sortNFT)
   
+  w.log.info('ranking nfts')
   for (i = 0; i < sorted.length; i++) { sorted[i]['rarityRank'] = (i + 1) 
     //delete bignumber to string
-    sorted[i].statisticalRarity = math.number(statisticalRarity)
+    sorted[i].statisticalRarity = math.number(sorted[i].statisticalRarity)
   }//add a rank value to object which will be output
   
   var newoutput = output//set output equal to what we got from DB
