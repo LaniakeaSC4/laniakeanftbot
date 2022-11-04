@@ -165,17 +165,7 @@ async function combineTraitRarity(nftdata, traitdata, meslug, creatoraddress) {
   output['description'] = nftdata.data[0].json.description
   output['traitdata'] = traitdata
 
-  //log any with null JSON. This shouldnt happen no we are retrying fails and excluding failed metadata requests
-  /*
-  for (var i = 0; i < nftdata.data.length; i++) {
-    if (nftdata.data[i].json == null) {
-      w.log.info('autoAdd3: there was a null json')
-      w.log.info(nftdata.data[i])
-    }
-  }*/
-
   var jsonerrors = 0
-  var noidcount = 0
   for (var i = 0; i < nftdata.data.length; i++) {//for each NFT
     var thesepercentages = []
 
@@ -205,8 +195,9 @@ async function combineTraitRarity(nftdata, traitdata, meslug, creatoraddress) {
 
         //multiply the percentages together to get statistical rarity
         var thisrarity = math.bignumber(thesepercentages[0])
-        for (var k = 1; k < thesepercentages.length; k++) {//from k = 1
-          thisrarity = math.multiply(thisrarity, math.bignumber(thesepercentages[k]))
+        var therest = thesepercentages.slice(1)
+        for (var k = 0; k < therest.length; k++) {//from k = 1
+          thisrarity = math.multiply(thisrarity, math.bignumber(therest[k]))
         }//end for percentages
         
         //get bignumber ready for output
@@ -216,45 +207,14 @@ async function combineTraitRarity(nftdata, traitdata, meslug, creatoraddress) {
         
         thisrarity = math.number(thisrarity)
 
-        //these addresses are not always in the metadata. Set them if we can.
-        var tokenAddress = ''
-        try { if (nftdata.data[i].address) { tokenAddress = nftdata.data[i].address } } catch { tokenAddress = 'not found' }
-        var mintAuthorityAddress = ''
-        try { if (nftdata.data[i].mint.mintAuthorityAddress) { mintAuthorityAddress = nftdata.data[i].mint.mintAuthorityAddress } } catch { mintAuthorityAddress = 'not found' }
-        var collectionAddress = ''
-        try { if (nftdata.data[i].collection.address) { collectionAddress = nftdata.data[i].collection.address } } catch { collectionAddress = 'not found' }
-        var metadataAddress = ''
-        try { if (nftdata.data[i].metadataAddress) { metadataAddress = nftdata.data[i].metadataAddress } } catch { metadataAddress = 'not found' }
-
-        //set true for this collection to be enabled for rarity checker (has NFT IDs)
-        output['raritychecker'] = true
-
-        //get nft ID from name
-        var thisnftid = 0
-        //regex last number in string
-        var regex = /(\d+)(?!.*\d)/
-        var matchid = nftdata.data[i].name.match(regex)
-
-        if (matchid) {
-          thisnftid = parseFloat(matchid[0])
-        } else {
-          output['raritychecker'] = false//this collection dosent use IDs in the name.
-          noidcount = noidcount + 1
-        }
-
         //now store the NFT with this info into out output object
         output.data[i] = {
-          "nftid": thisnftid,
           "name": nftdata.data[i].json.name,
           "statisticalRarity": thisrarity,
           "image": nftdata.data[i].json.image,
           "symbol": nftdata.data[i].json.symbol,
           "attributes": nftdata.data[i].json.attributes,
-          "uri": nftdata.data[i].uri,
-          "tokenAddress": tokenAddress,
-          "mintAuthorityAddress": mintAuthorityAddress,
-          "collectionAddress": collectionAddress,
-          "metadataAddress": metadataAddress
+          "tokenAddress": nftdata.data[i].address
         }//end output data load for this NFT
       } else { jsonerrors = jsonerrors + 1 }
     } catch (err) {
