@@ -31,11 +31,11 @@ async function addNewNFT(creatoraddress, meslug) {
   w.log.info('autoAdd3: Function returned size: ' + collectionSize + 'for key: ' + collectionkey)
 
 
-  w.log.info('autoAdd4: Trait rarity combined. Function also returned collectionsize: ' + collectionSize + ' and collectionkey ' + collectionkey + '. Now ranking NFTs')
-  var ranked = await rankNFTs(unrankedNFTs)
+  //w.log.info('autoAdd4: Trait rarity combined. Function also returned collectionsize: ' + collectionSize + ' and collectionkey ' + collectionkey + '. Now ranking NFTs')
+  //var ranked = await rankNFTs(unrankedNFTs)
 
   w.log.info('autoAdd5: NFTs have been ranked. Storing final object. Storing creatoraddress: ' + creatoraddress + ' collectionkey: ' + collectionkey + ' meslug: ' + meslug + ' collectioncount: ' + collectionSize + ' and final nft data')
-  await storeCollection(creatoraddress, collectionkey, meslug, collectionSize, ranked)
+  await storeCollection(creatoraddress, collectionkey, meslug, collectionSize, unrankedNFTs)
 
   w.log.info('autoAdd6: Restarting sniper')
   await sniper.stop()
@@ -200,13 +200,16 @@ async function combineTraitRarity(nftdata, traitdata, meslug, creatoraddress) {
           thisrarity = math.multiply(thisrarity, math.bignumber(therest[k]))
         }//end for percentages
         
+        /*
         //get bignumber ready for output
         var multiplier = math.pow(math.abs(math.log10(thisrarity)), 10)
         
         thisrarity = math.multiply(thisrarity, multiplier)
         
         thisrarity = math.number(thisrarity)
+        */
 
+        
         //now store the NFT with this info into out output object
         output.data[i] = {
           "name": nftdata.data[i].json.name,
@@ -221,12 +224,29 @@ async function combineTraitRarity(nftdata, traitdata, meslug, creatoraddress) {
       w.log.info(err)
     }//end catch error
   }//end for each NFT
-  w.log.info("autoAdd3: " + noidcount + " NFTs had no id. Saving them as ID 0 and disabling raritychecker for this collection")
+  
+  var toSort = output.data
+  
+  function sortNFT(a, b) {
+   return math.subtract(a.statisticalRarity, b.statisticalRarity)
+  }
+  
+  var sorted = math.sort(toSort, sortNFT)
+  
+  for (i = 0; i < sorted.length; i++) { sorted[i]['rarityRank'] = (i + 1) 
+    //delete bignumber to string
+    sorted[i].statisticalRarity = math.number(statisticalRarity)
+  }//add a rank value to object which will be output
+  
+  var newoutput = output//set output equal to what we got from DB
+  newoutput.data = []//clear just the data part (so we keep the other data)
+  newoutput.data = sorted//set the NFT data equal to the sorted data.
+  
   w.log.info('autoAdd3: ' + jsonerrors + '/' + nftdata.data.length + '(input size) gave JSON errors')
-  w.log.info('autoAdd3: lenth is: ' + parseFloat(output.data.length) + '(output size) meslug clean is: ' + meslug.replace(/[^0-9a-z]/gi, '').toLowerCase())
+  w.log.info('autoAdd3: lenth is: ' + parseFloat(newoutput.data.length) + '(output size) meslug clean is: ' + meslug.replace(/[^0-9a-z]/gi, '').toLowerCase())
 
   var returnthis = {}
-  returnthis['nft'] = output
+  returnthis['nft'] = newoutput
   returnthis['size'] = parseFloat(output.data.length)
   returnthis['key'] = meslug.replace(/[^0-9a-z]/gi, '').toLowerCase()
   //return [unranked nft object, collection count, collectionkey]
