@@ -155,25 +155,27 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 	//build 3d change string
 	var threeDayChangeString = ""
 	if (floor_history.threeDayChange.symbol_3dchange === "") {//if no 3d change has yet been calculated (not enough history)
-		threeDayChangeString = "N\\A"
+		threeDayChangeString = "New collection. Not enough data for 3 day change. "
 	} else {
-		threeDayChangeString = floor_history.threeDayChange.symbol_3dchange + floor_history.threeDayChange.percentage_3dchange + "% (" + floor_history.threeDayChange.symbol_3dchange + floor_history.threeDayChange.amount_3dchange + " SOL)"
+		var fp3dchangedirection = ""; if (floor_history.threeDayChange.symbol_3dchange === "-") { fp3dchangedirection = "decreased" } else { fp3dchangedirection = "increased" }
+		threeDayChangeString = "In the last **3 days** the floor price has **" + fp3dchangedirection + "** by " + floor_history.threeDayChange.symbol_3dchange + floor_history.threeDayChange.amount_3dchange + " SOL (" + floor_history.threeDayChange.symbol_3dchange + floor_history.threeDayChange.percentage_3dchange + "%)"
 	}
 
 	//build 7d change string
 	var sevenDayChangeString = ""
 	if (floor_history.sevenDayChange.symbol_7dchange === "") {//if no 7d change has yet been calculated (not enough history)
-		sevenDayChangeString = "N\\A"
+		sevenDayChangeString = "."
 	} else {
-		sevenDayChangeString = floor_history.sevenDayChange.symbol_7dchange + floor_history.sevenDayChange.percentage_7dchange + "% (" + floor_history.sevenDayChange.symbol_7dchange + floor_history.sevenDayChange.amount_7dchange + " SOL)"
+		var fp7dchangedirection = ""; if (floor_history.sevenDayChange.symbol_7dchange === "-") { fp7dchangedirection = "decreased" } else { fp7dchangedirection = "increased" }
+		sevenDayChangeString = ". Additionally, in the last **7 days** the floor price has **" + fp7dchangedirection + "** by " + floor_history.sevenDayChange.symbol_7dchange + floor_history.sevenDayChange.amount_7dchange + " SOL (" + floor_history.sevenDayChange.symbol_7dchange + floor_history.sevenDayChange.percentage_7dchange + "%)."
 	}
 
 	//build snapshot FP
 	var snapshotFPstring = ""
-	if (floor_history.fp_history[0] === "none"){
+	if (floor_history.fp_history[0] === "none") {
 		snapshotFPstring = "New collection. Not enough data"
 	} else {
-		snapshotFPstring = pround(floor_history.fp_history[0],2) + " SOL"
+		snapshotFPstring = pround(floor_history.fp_history[0], 2) + " SOL"
 	}
 
 
@@ -200,7 +202,7 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 						},
 						{
 							"name": "📌 __Snapshot Analysis__ (00:00 & 12:00 UTC)",
-							"value": "**Snapshot FP**: " + snapshotFPstring + "\n**3 Day avg FP**: " + floor_history?.fp_3daverage + " SOL | " + "**7 Day avg FP**: " + floor_history?.fp_7daverage + " SOL\n**Snapshot FP vs 3 Day avg**: " + threeDayChangeString + "\n**Snapshot FP vs 7 Day avg**: " + sevenDayChangeString + "\n\n**__Strength at last 12h snapshot vs previous__**\n" + strengthstring,
+							"value": "**Snapshot FP**: " + snapshotFPstring + "\n**3 Day avg FP**: " + floor_history?.fp_3daverage + " SOL | " + "**7 Day avg FP**: " + floor_history?.fp_7daverage + " SOL\n" + threeDayChangeString + sevenDayChangeString + "\n\n**__Strength at last 12h snapshot vs previous__**\n" + strengthstring,
 							"inline": false
 						},
 					],
