@@ -147,9 +147,9 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 	//build collection strength string
 	var strengthstring = ""
 	if (floor_history.strength.strength_ready === false) {//if strength calc is note ready fill in those blanks
-		strengthstring = "As this is a new collection, there is not enough data to assess collection strength. "
+		strengthstring = "📊 As this is a new collection, there is not enough data to assess collection strength. "
 	} else {
-		strengthstring = "📊 At the last 12h snapshot collection strength was: **" + floor_history.strength.description + "** " + floor_history.strength.emoji + " (FP " + floor_history.strength.fp_symbol + floor_history.strength.fp_percent + " & SOL/USD " + floor_history.strength.sol_symbol + floor_history.strength.sol_percent + ") vs the previous snapshot. "
+		strengthstring = "📊 At last 12h snapshot collection was: " +  floor_history.strength.emoji + " **" + floor_history.strength.description + "**" + " (FP " + floor_history.strength.fp_symbol + floor_history.strength.fp_percent + " & SOL/USD " + floor_history.strength.sol_symbol + floor_history.strength.sol_percent + ") vs the previous snapshot. "
 	}
 
 	//build 3d change string
@@ -202,7 +202,7 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 						},
 						{
 							"name": "📌 __Snapshot Analysis__ (00:00 & 12:00 UTC)",
-							"value": "**Snapshot FP**: " + snapshotFPstring + "\n**__3 day avg FP**: " + floor_history?.fp_3daverage + " SOL | " + "**7 day avg FP**: " + floor_history?.fp_7daverage + " SOL__\n\n" + strengthstring + threeDayChangeString + sevenDayChangeString,
+							"value": "**Snapshot FP**: " + snapshotFPstring + "\n**3 day avg FP**: " + floor_history?.fp_3daverage + " SOL | " + "**7 day avg FP**: " + floor_history?.fp_7daverage + " SOL\n\n" + strengthstring + threeDayChangeString + sevenDayChangeString,
 							"inline": false
 						},
 					],
