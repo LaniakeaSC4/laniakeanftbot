@@ -158,7 +158,7 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 		threeDayChangeString = "New collection. Not enough data for 3 day change. "
 	} else {
 		var fp3dchangedirection = ""; if (floor_history.threeDayChange.symbol_3dchange === "-") { fp3dchangedirection = "decreased" } else { fp3dchangedirection = "increased" }
-		threeDayChangeString = "In the last **3 days** the floor price has **" + fp3dchangedirection + "** by " + floor_history.threeDayChange.symbol_3dchange + floor_history.threeDayChange.amount_3dchange + " SOL (" + floor_history.threeDayChange.symbol_3dchange + floor_history.threeDayChange.percentage_3dchange + "%)"
+		threeDayChangeString = "\nIn the last **3 days** the collection FP has **" + fp3dchangedirection + "** by " + floor_history.threeDayChange.symbol_3dchange + floor_history.threeDayChange.amount_3dchange + " SOL (" + floor_history.threeDayChange.symbol_3dchange + floor_history.threeDayChange.percentage_3dchange + "%)"
 	}
 
 	//build 7d change string
@@ -167,7 +167,7 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 		sevenDayChangeString = "."
 	} else {
 		var fp7dchangedirection = ""; if (floor_history.sevenDayChange.symbol_7dchange === "-") { fp7dchangedirection = "decreased" } else { fp7dchangedirection = "increased" }
-		sevenDayChangeString = ". Additionally, in the last **7 days** the floor price has **" + fp7dchangedirection + "** by " + floor_history.sevenDayChange.symbol_7dchange + floor_history.sevenDayChange.amount_7dchange + " SOL (" + floor_history.sevenDayChange.symbol_7dchange + floor_history.sevenDayChange.percentage_7dchange + "%)."
+		sevenDayChangeString = ". Additionally, in the last **7 days** collection FP has **" + fp7dchangedirection + "** by " + floor_history.sevenDayChange.symbol_7dchange + floor_history.sevenDayChange.amount_7dchange + " SOL (" + floor_history.sevenDayChange.symbol_7dchange + floor_history.sevenDayChange.percentage_7dchange + "%)."
 	}
 
 	//build snapshot FP
