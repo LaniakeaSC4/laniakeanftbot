@@ -4,6 +4,13 @@ Gets all NFTs by verified creator address from quiknode (private RPC), then comp
 autoAddCollection does not save state between each step and instead passes data function to function
 
 */
+import { create, all } from 'mathjs';
+const config = {
+    precision: 128
+  };
+const math = create(all, config)
+
+
 
 const { Metaplex, keypairIdentity, bundlrStorage } = require("@metaplex-foundation/js")
 const { Connection, Keypair, PublicKey } = require("@solana/web3.js")
@@ -13,7 +20,7 @@ const sniper = require('./sniper-main.js')
 
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
-var math = require('mathjs')
+//var math = require('mathjs')
 
 //fulladd - do all steps
 async function addNewNFT(creatoraddress, meslug) {
@@ -163,11 +170,6 @@ async function calculateTraitPercentages(metaplexdata) {
 
 //addstep3 - get the nft and trait % data from SQL (added with getMetaplexData) and calculate the statistical rarity of each nft
 async function combineTraitRarity(nftdata, traitdata, meslug, creatoraddress) {
-
-  //set 128 significant figures precision
-  math.config({
-    precision: 128
-  })
   
   w.log.info('autoAdd3: Building final object with statistical rarity')
 
