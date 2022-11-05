@@ -26,15 +26,15 @@ module.exports = {
         .setDescription('Which collection? For list of collections use /supportedcollections')
         .setRequired(true))
     .addStringOption(option =>
-      option.setName('nftid')
-        .setDescription('Which NFT # in the collection?')
+      option.setName('tokenaddress')
+        .setDescription('Token Address?')
         .setRequired(true)),
 
   //when command is triggered, do this
   async execute(interaction) {
 
     //get the inputs from the command
-    var collectionKey = interaction.options.getString('collectionkey'); var nftid = interaction.options.getString('nftid')
+    var collectionKey = interaction.options.getString('collectionkey'); var tokenAddress = interaction.options.getString('tokenaddress')
     var supportedcollections = await sql.getSupportedCollections()//set supported collections from sql
 
     //check if collection is supported
@@ -47,7 +47,7 @@ module.exports = {
     }//end for
 
     if (validcollection) {//check if the user has typed a valid collection in the database
-      rarityembed = await raritychecker.check(collectionKey, nftid)//check rarity
+      rarityembed = await raritychecker.check(collectionKey, tokenAddress)//check rarity
       if (rarityembed) {//if an embed is returned, reply with it
         await interaction.reply({ embeds: rarityembed })
       } else {//if collection was present, but there was some error with this particular NFT
