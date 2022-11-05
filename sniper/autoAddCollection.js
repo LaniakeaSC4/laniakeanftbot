@@ -4,7 +4,7 @@ Gets all NFTs by verified creator address from quiknode (private RPC), then comp
 autoAddCollection does not save state between each step and instead passes data function to function
 
 */
-import { create, all } from 'mathjs';
+const { create, all } = require('mathjs')
 const config = {
     precision: 128
   };
