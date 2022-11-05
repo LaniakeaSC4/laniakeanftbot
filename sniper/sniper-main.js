@@ -115,6 +115,12 @@ async function startsniper() {
                 var snipe = await testifsnipe(raritydescription, parseFloat(thisprice), parseFloat(thisfloorprice))
 
                 if (snipe) {//after testing, if this one was a snipe...
+                  var lastfloor = sql.getData("solanametaplex", "collectionkey", collections[k]['collectionkey'], "lastfloor")
+                  var floordrop = 0
+                  if (thisfloorprice < lastfloor) {
+                    floordrop = lastfloor - thisfloorprice
+                  }
+                  
                   var thissnipeprice = parseFloat(snipe[1])
                   var thislimit = parseFloat(snipe[2])
                   var snipe_ping = snipe[3]
@@ -125,9 +131,9 @@ async function startsniper() {
                   //initialise servers if not already
                   if (!serversinitalized) { await snipersender.initaliseServers(); serversinitalized = true }
                   //send snipe into the send filter where server specific filters are applied (e.g. premium, price limits, etc)
-                  snipersender.sendFilter(thisname, collections[k]['collectionkey'], thisembedcolour, NFTdata.rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize, collections[k]['floor_history'], snipe_ping,seller)
+                  snipersender.sendFilter(thisname, collections[k]['collectionkey'], thisembedcolour, NFTdata.rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize, collections[k]['floor_history'], snipe_ping,seller,floordrop)
                   //save record of last seen time and floor price
-                  lastSeen(collections[k]['collectionkey'], thisfloorprice)
+                  await lastSeen(collections[k]['collectionkey'], thisfloorprice)
                 } else { /* w.log.info('this was not a snipe') */ } //end if not false
               } else {//end else if we got data from ME
                 w.log.error('error getting nft data for ' + collections[k]['collectionkey'] + ' ' + thisnftid)
