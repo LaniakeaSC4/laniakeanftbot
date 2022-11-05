@@ -44,9 +44,19 @@ async function addNewNFT(creatoraddress, meslug) {
 }; module.exports.addNewNFT = addNewNFT
 
 //addstep1
+var swapper = 0
 async function getMetaplexData(creatoraddress) {
+  
   //establish connection
-  const connection = new Connection(process.env.QUICKNODE2)
+  const connection;
+  if (swapper === 0){
+    connection = new Connection(process.env.QUICKNODE)
+    swapper = 1
+  } else {
+    connection = new Connection(process.env.QUICKNODE2)
+    swapper = 0
+  }
+  
   const wallet = Keypair.generate()
   const metaplex = Metaplex.make(connection)
     .use(keypairIdentity(wallet))
