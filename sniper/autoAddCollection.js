@@ -48,7 +48,7 @@ var swapper = 0
 async function getMetaplexData(creatoraddress) {
   
   //establish connection
-  const connection;
+  var connection;
   if (swapper === 0){
     w.log.info('autoAdd1: Using RPC connection 1')
     connection = new Connection(process.env.QUICKNODE)
