@@ -50,9 +50,11 @@ async function getMetaplexData(creatoraddress) {
   //establish connection
   const connection;
   if (swapper === 0){
+    w.log.info('autoAdd1: Using RPC connection 1')
     connection = new Connection(process.env.QUICKNODE)
     swapper = 1
   } else {
+    w.log.info('autoAdd1: Using RPC connection 2')
     connection = new Connection(process.env.QUICKNODE2)
     swapper = 0
   }
@@ -162,6 +164,11 @@ async function calculateTraitPercentages(metaplexdata) {
 //addstep3 - get the nft and trait % data from SQL (added with getMetaplexData) and calculate the statistical rarity of each nft
 async function combineTraitRarity(nftdata, traitdata, meslug, creatoraddress) {
 
+  //set 128 significant figures precision
+  math.config({
+    precision: 128
+  })
+  
   w.log.info('autoAdd3: Building final object with statistical rarity')
 
   var output = { "data": [] }//establish output object
