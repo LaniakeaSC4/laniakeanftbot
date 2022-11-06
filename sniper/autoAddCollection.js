@@ -183,7 +183,7 @@ go through again and check all nfts have each maintype if not inject that mainty
           
           //preTraitPercentages[j][l] is a particular subtype. Loop through nft subtypes for
           
-          if (!(preTraitPercentages[j][l] in metaplexdata.data[i].json.attributes[k])){//if this subtype in the matched maintype in preTraitPercentages is not in thr matched maintype [k] in thr nft
+          if (metaplexdata.data[i].json.attributes[k]?.[preTraitPercentages[j][l]] === undefined){//if this subtype in the matched maintype in preTraitPercentages is not in thr matched maintype [k] in thr nft
           
           w.log.info(preTraitPercentages[j][l]+' was not found in ' + metaplexdata.data[i].name)
           
