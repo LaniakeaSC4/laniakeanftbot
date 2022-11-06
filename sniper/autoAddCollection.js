@@ -171,17 +171,23 @@ go through again and check all nfts have each maintype if not inject that mainty
 
     try {
       
-      for (var j = 0; j < traitPercentages.length; j++) { //for each traitPercentages maintype
+      for (var j = 0; j < traitPercentages.length; j++) { //for each traitPercentages maintype - hat
         
         for (var k = 0;k < metaplexdata.data[i].json.attributes;k++) {//for each nft maintype find same maintype in nft data
           
           if (traitPercentages[j] == metaplexdata.data[i].json.attributes[k]) {//if we found the matching maintype check if all the traitPercentages subtypes exist in this nft. Otherwise add as 'none'
           
+          //traitPercentages[j] and metaplexdata.data[i].json.attributes[k] should be the same maintype
+          
           for (var l = 0;traitPercentages[j].length;l++){//for each subtype of this traitPercentages maintype
+          
+          //traitPercentages[j][l] is a particular subtype. Loop through nft subtypes for
           
           if (!(traitPercentages[j][l] in metaplexdata.data[i].json.attributes[k])){//if this subtype in the matched maintype in traitPercentages is not in thr matched maintype [k] in thr nft
           
-          metaplexdata.data[i].json.attributes[k][traitPercentages[j][l]] = 'none'
+          //push into attributes
+          var missingAtt = { "trait_type" : traitPercentages[j][l], "value" : 'none'} 
+          metaplexdata.data[i].json.attributes[k].push(missingAtt)
             
           }
             
