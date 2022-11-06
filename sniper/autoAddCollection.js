@@ -170,15 +170,31 @@ go through again and check all nfts have each maintype if not inject that mainty
   for (var i = 0; i < metaplexdata.data.length; i++) {//for each nft in the metaplex data
 
     try {
-      if (metaplexdata.data[i].json) {//if there is JSON metadata. This shouldnt happen now we retry fails.
-        for (var j = 0; j < traitPercentages.length; j++) { //for each attribute of this NFT
+      
+      for (var j = 0; j < traitPercentages.length; j++) { //for each traitPercentages maintype
         
-        if (!(traitPercentages[j] in metaplexdata.data[i].json.attributes)) {
-          metaplexdata.data[i].json.attributes [traitPercentages[j]] = 'none'
-        }//end if trait not in hson
+        for (var k = 0;k < metaplexdata.data[i].json.attributes;k++) {//for each nft maintype find same maintype in nft data
+          
+          if (traitPercentages[j] == metaplexdata.data[i].json.attributes[k]) {//if we found the matching maintype check if all the traitPercentages subtypes exist in this nft. Otherwise add as 'none'
+          
+          for (var l = 0;traitPercentages[j].length;l++){//for each subtype of this traitPercentages maintype
+          
+          if (!(traitPercentages[j][l] in metaplexdata.data[i].json.attributes[k])){//if this subtype in the matched maintype in traitPercentages is not in thr matched maintype [k] in thr nft
+          
+          metaplexdata.data[i].json.attributes[k][traitPercentages[j][l]] = 'none'
+            
+          }
+            
+          }
+            
+            
+          }
+        } 
+      
         
-        }//end for trait %.length
-      } //end if json data       
+        
+        
+        }//end
    
     } catch (err) {
       w.log.info('autoAdd2: Error finding traits: ' + err)
