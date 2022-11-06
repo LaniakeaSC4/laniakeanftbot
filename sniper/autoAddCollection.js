@@ -165,12 +165,12 @@ go through all nfts and collect all the maintypes
 go through again and check all nfts have each maintype if not inject that maintype with value 'none'
 
 */
-var maintypes = preTraitPercentages.keys()
+
 //loop through nfts to add missing traits to nfts as 'none''
   for (var i = 0; i < metaplexdata.data.length; i++) {//for each nft in the metaplex data
     
     //get all possible traits
-    var maintypes = preTraitPercentages.keys()
+    var maintypes = Object.keys(preTraitPercentages) 
       
       var thesetraits = []//fill with the maintypes this has
       for (var j = 0;j < metaplexdata.data[i].json.attributes.length;j++) {
