@@ -118,41 +118,109 @@ async function getMetaplexData(creatoraddress) {
 //addstep2 - gets the metaplex data and caculates the percentages of each trait. Stores as seperate object in DB
 async function calculateTraitPercentages(metaplexdata) {
 
-  w.log.info('autoAdd2: Calculating trait percentages')
-  var traitPercentages = {}//establish output object
+ w.log.info('autoAdd2: Calculating trait percentages')
+ 
+ //build initial trait percentages objects to see what traits we have
+ var traitPercentages = {}//establish output object
+for (var i = 0; i < metaplexdata.data.length; i++) { //for each nft in the metaplex data
 
+  try {
+    if (metaplexdata.data[i].json) { //if there is JSON metadata. This shouldnt happen now we retry fails.
+      for (var j = 0; j < metaplexdata.data[i].json.attributes.length; j++) { //for each attribute of this NFT
+        var maintype = metaplexdata.data[i].json.attributes[j].trait_type
+        var subtype = ''
+        if (metaplexdata.data[i].json.attributes[j].value.toString()) { //if the atribute has a value (not sure why it wouldn't or why I added this!)
+          subtype = metaplexdata.data[i].json.attributes[j].value //set subtype to it
+        } else { subtype = 'none' } //else set it to "none" which essentially adds a count for it
+
+        if (maintype in traitPercentages) { //if maintype is already a key in the object
+          if (subtype in traitPercentages[maintype]) { //if maintype and subtype already exist, +1 to timesSeen and +1 to total count for that maintype
+            traitPercentages[maintype][subtype]['timesSeen'] = traitPercentages[maintype][subtype]['timesSeen'] + 1
+            traitPercentages[maintype]['totalcount'] = traitPercentages[maintype]['totalcount'] + 1
+          } else { //maintype exists, but subtype does not. Create new subtype object and start at 1 timesSeen
+            traitPercentages[maintype][subtype] = {}
+            traitPercentages[maintype][subtype]['timesSeen'] = 1
+            traitPercentages[maintype]['totalcount'] = traitPercentages[maintype]['totalcount'] + 1 //maintype already existed, so we can add 1 to it
+          }
+        } else { //if maintype isnt already a key, subtype won't exist either first create the objects, then start at 1 timesSeen and totalcount
+          traitPercentages[maintype] = {}
+          traitPercentages[maintype][subtype] = {}
+          traitPercentages[maintype][subtype]['timesSeen'] = 1
+          traitPercentages[maintype]['totalcount'] = 1
+        } //end else
+      } //end for each trait
+    } else { throw 'autoAdd2: var i = ' + i + ' var j = ' + j + ' maintype is: ' + maintype + 'subtype is: ' + subtype + ' for ' + metaplexdata.data[i].name }
+  } catch (err) {
+    w.log.info('autoAdd2: Error finding traits: ' + err)
+  } //end catch error
+} //end for each nft
+
+
+
+
+/*
+
+go through all nfts and collect all the maintypes
+
+go through again and check all nfts have each maintype if not inject that maintype with value 'none'
+
+*/
+
+//loop through nfts to add missing traits to nfts as 'none''
   for (var i = 0; i < metaplexdata.data.length; i++) {//for each nft in the metaplex data
 
     try {
       if (metaplexdata.data[i].json) {//if there is JSON metadata. This shouldnt happen now we retry fails.
-        for (var j = 0; j < metaplexdata.data[i].json.attributes.length; j++) { //for each attribute of this NFT
-          var maintype = metaplexdata.data[i].json.attributes[j].trait_type
-          var subtype = ''
-          if (metaplexdata.data[i].json.attributes[j].value.toString()) {//if the atribute has a value (not sure why it wouldn't or why I added this!)
-            subtype = metaplexdata.data[i].json.attributes[j].value//set subtype to it
-          } else { subtype = 'none' }//else set it to "none" which essentially adds a count for it
-
-          if (maintype in traitPercentages) {//if maintype is already a key in the object
-            if (subtype in traitPercentages[maintype]) {//if maintype and subtype already exist, +1 to timesSeen and +1 to total count for that maintype
-              traitPercentages[maintype][subtype]['timesSeen'] = traitPercentages[maintype][subtype]['timesSeen'] + 1
-              traitPercentages[maintype]['totalcount'] = traitPercentages[maintype]['totalcount'] + 1
-            } else {//maintype exists, but subtype does not. Create new subtype object and start at 1 timesSeen
-              traitPercentages[maintype][subtype] = {}
-              traitPercentages[maintype][subtype]['timesSeen'] = 1
-              traitPercentages[maintype]['totalcount'] = traitPercentages[maintype]['totalcount'] + 1//maintype already existed, so we can add 1 to it
-            }
-          } else {//if maintype isnt already a key, subtype won't exist either first create the objects, then start at 1 timesSeen and totalcount
-            traitPercentages[maintype] = {}
-            traitPercentages[maintype][subtype] = {}
-            traitPercentages[maintype][subtype]['timesSeen'] = 1
-            traitPercentages[maintype]['totalcount'] = 1
-          }//end else
-        }//end for each trait
-      } else { throw 'autoAdd2: var i = ' + i + ' var j = ' + j + ' maintype is: ' + maintype + 'subtype is: ' + subtype + ' for ' + metaplexdata.data[i].name }
+        for (var j = 0; j < traitPercentages.length; j++) { //for each attribute of this NFT
+        
+        if (!(traitPercentages[j] in metaplexdata.data[i].json)) {
+          metaplexdata.data[i].json[traitPercentages[j]] = 'none'
+        }//end if trait not in hson
+        
+        }//end for trait %.length
+      } //end if json data       
+   
     } catch (err) {
       w.log.info('autoAdd2: Error finding traits: ' + err)
     }//end catch error
   }//end for each nft
+
+
+//rebuild trait percentages now we have the nones
+ var traitPercentages = {}//establish output object
+for (var i = 0; i < metaplexdata.data.length; i++) { //for each nft in the metaplex data
+
+  try {
+    if (metaplexdata.data[i].json) { //if there is JSON metadata. This shouldnt happen now we retry fails.
+      for (var j = 0; j < metaplexdata.data[i].json.attributes.length; j++) { //for each attribute of this NFT
+        var maintype = metaplexdata.data[i].json.attributes[j].trait_type
+        var subtype = ''
+        if (metaplexdata.data[i].json.attributes[j].value.toString()) { //if the atribute has a value (not sure why it wouldn't or why I added this!)
+          subtype = metaplexdata.data[i].json.attributes[j].value //set subtype to it
+        } else { subtype = 'none' } //else set it to "none" which essentially adds a count for it
+
+        if (maintype in traitPercentages) { //if maintype is already a key in the object
+          if (subtype in traitPercentages[maintype]) { //if maintype and subtype already exist, +1 to timesSeen and +1 to total count for that maintype
+            traitPercentages[maintype][subtype]['timesSeen'] = traitPercentages[maintype][subtype]['timesSeen'] + 1
+            traitPercentages[maintype]['totalcount'] = traitPercentages[maintype]['totalcount'] + 1
+          } else { //maintype exists, but subtype does not. Create new subtype object and start at 1 timesSeen
+            traitPercentages[maintype][subtype] = {}
+            traitPercentages[maintype][subtype]['timesSeen'] = 1
+            traitPercentages[maintype]['totalcount'] = traitPercentages[maintype]['totalcount'] + 1 //maintype already existed, so we can add 1 to it
+          }
+        } else { //if maintype isnt already a key, subtype won't exist either first create the objects, then start at 1 timesSeen and totalcount
+          traitPercentages[maintype] = {}
+          traitPercentages[maintype][subtype] = {}
+          traitPercentages[maintype][subtype]['timesSeen'] = 1
+          traitPercentages[maintype]['totalcount'] = 1
+        } //end else
+      } //end for each trait
+    } else { throw 'autoAdd2: var i = ' + i + ' var j = ' + j + ' maintype is: ' + maintype + 'subtype is: ' + subtype + ' for ' + metaplexdata.data[i].name }
+  } catch (err) {
+    w.log.info('autoAdd2: Error finding traits: ' + err)
+  } //end catch error
+} //end for each nft
+
 
   //work out percentages
   Object.keys(traitPercentages).forEach(maintype => {//for each maintype
@@ -162,6 +230,20 @@ async function calculateTraitPercentages(metaplexdata) {
       }//end if not 'timesSeen'
     })//end for each subtype
   })//end for each maintype
+
+
+//for traits that exist in the collection but are not on all nfts add 'none'
+
+
+
+
+
+
+
+
+
+
+
 
   //store in DB
   w.log.info(JSON.stringify(traitPercentages))
