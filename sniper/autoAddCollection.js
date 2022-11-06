@@ -23,7 +23,7 @@ const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 //var math = require('mathjs')
 
 //fulladd - do all steps
-async function addNewNFT(creatoraddress, meslug) {
+async function addNewNFT(creatoraddress, meslug, extraBlockList) {
   w.log.info('autoAdd1: starting auto add. Getting metaplex data with JSON')
   var withJSON = await getMetaplexData(creatoraddress)
 
@@ -31,7 +31,7 @@ async function addNewNFT(creatoraddress, meslug) {
   var traitPercentages = await calculateTraitPercentages(withJSON)
 
   w.log.info('autoAdd3: Calculated trait percentages. Combining trait rarities with NFT data')
-  var step3data = await combineTraitRarity(withJSON, traitPercentages, meslug, creatoraddress)
+  var step3data = await combineTraitRarity(withJSON, traitPercentages, meslug, creatoraddress, extraBlockList)
   var unrankedNFTs = step3data.nft
   var collectionSize = step3data.size
   var collectionkey = step3data.key
@@ -173,8 +173,8 @@ go through again and check all nfts have each maintype if not inject that mainty
       if (metaplexdata.data[i].json) {//if there is JSON metadata. This shouldnt happen now we retry fails.
         for (var j = 0; j < traitPercentages.length; j++) { //for each attribute of this NFT
         
-        if (!(traitPercentages[j] in metaplexdata.data[i].json)) {
-          metaplexdata.data[i].json[traitPercentages[j]] = 'none'
+        if (!(traitPercentages[j] in metaplexdata.data[i].json.attributes)) {
+          metaplexdata.data[i].json.attributes [traitPercentages[j]] = 'none'
         }//end if trait not in hson
         
         }//end for trait %.length
@@ -222,6 +222,9 @@ for (var i = 0; i < metaplexdata.data.length; i++) { //for each nft in the metap
 } //end for each nft
 
 
+
+//add per collection blocks
+
   //work out percentages
   Object.keys(traitPercentages).forEach(maintype => {//for each maintype
     Object.keys(traitPercentages[maintype]).forEach(subtype => {//go into each subtype
@@ -251,7 +254,7 @@ for (var i = 0; i < metaplexdata.data.length; i++) { //for each nft in the metap
 }; module.exports.calculateTraitPercentages = calculateTraitPercentages
 
 //addstep3 - get the nft and trait % data from SQL (added with getMetaplexData) and calculate the statistical rarity of each nft
-async function combineTraitRarity(nftdata, traitdata, meslug, creatoraddress) {
+async function combineTraitRarity(nftdata, traitdata, meslug, creatoraddress, extraBlockList) {
   
   w.log.info('autoAdd3: Building final object with statistical rarity')
 
@@ -265,6 +268,16 @@ async function combineTraitRarity(nftdata, traitdata, meslug, creatoraddress) {
   output['collectionKey'] = nftdata.data[0].name.substring(0, (nftdata.data[0].name.indexOf('#') - 1)).toString().replace(/[^0-9a-z]/gi, '')
   output['description'] = nftdata.data[0].json.description
   output['traitdata'] = traitdata
+  
+  //establish blocklist
+  var globalblocklist = ['rarity rank',"sequence", "generation", "collection"]
+  var blocklist = []
+  if (extraBlockList.length > 0) {
+  var blocklist = globalblocklist.concat(extraBlockList)
+  } else {
+    blocklist = globalblocklist
+  }
+  //push case specific blocks to list
 
   var jsonerrors = 0
   for (var i = 0; i < nftdata.data.length; i++) {//for each NFT
@@ -286,8 +299,12 @@ async function combineTraitRarity(nftdata, traitdata, meslug, creatoraddress) {
               } else { subtype = 'none' }
 
               //push percentage into an arrary
+              if (blocklist.includes(maintype.toLowerCase()) === false) {
+              
               var thispercentage = traitdata[maintype][subtype]['percentage']
               thesepercentages.push(thispercentage)
+              }//end if not on blocklist
+              
             } else { throw 'autoAdd3: var i = ' + i + ' var j = ' + j + '.  maintype is a ' + typeof maintype + ': ' + maintype + '. subtype is a ' + typeof subtype + ': ' + subtype }
           } catch (err) {
             w.log.info('autoAdd3: Error finding traits: ' + err)
