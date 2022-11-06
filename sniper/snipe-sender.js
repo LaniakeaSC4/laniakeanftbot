@@ -186,7 +186,7 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 	
 	var paperhands = ''
 	if (floordrop != 0) {
-	  paperhands = ' 🧻👐 Paperhands just dropped the FP by ' + floordrop + ' SOL'
+	  paperhands = '🧻👐 Paperhands! This NFT just dropped the FP by ' + pround(floordrop, 2) + ' SOL 👐🧻'
 	}
 
 	//send it
