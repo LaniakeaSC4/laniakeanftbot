@@ -187,7 +187,7 @@ var maintypes = preTraitPercentages.keys()
     }
    
     
-    }//end catch error
+    
   }//end for each nft
 w.log.info('logging preTrait')
 w.log.info(JSON.stringify(preTraitPercentages))
