@@ -165,47 +165,28 @@ go through all nfts and collect all the maintypes
 go through again and check all nfts have each maintype if not inject that maintype with value 'none'
 
 */
-
+var maintypes = preTraitPercentages.keys()
 //loop through nfts to add missing traits to nfts as 'none''
   for (var i = 0; i < metaplexdata.data.length; i++) {//for each nft in the metaplex data
-
-    try {
+    
+    //get all possible traits
+    var maintypes = preTraitPercentages.keys()
       
-      for (var j = 0; j < preTraitPercentages.length; j++) { //for each preTraitPercentages maintype - hat
-        
-        for (var k = 0;k < metaplexdata.data[i].json.attributes;k++) {//for each nft maintype find same maintype in nft data
-          
-          if (preTraitPercentages[j] == metaplexdata.data[i].json.attributes[k]) {//if we found the matching maintype check if all the preTraitPercentages subtypes exist in this nft. Otherwise add as 'none'
-          
-          //preTraitPercentages[j] and metaplexdata.data[i].json.attributes[k] should be the same maintype
-          
-          for (var l = 0;preTraitPercentages[j].length;l++){//for each subtype of this preTraitPercentages maintype
-          
-          //preTraitPercentages[j][l] is a particular subtype. Loop through nft subtypes for
-          
-          if (metaplexdata.data[i].json.attributes[k]?.[preTraitPercentages[j][l]] === undefined){//if this subtype in the matched maintype in preTraitPercentages is not in thr matched maintype [k] in thr nft
-          
-          w.log.info(preTraitPercentages[j][l]+' was not found in ' + metaplexdata.data[i].name)
-          
-          //push into attributes
-          var missingAtt = { "trait_type" : preTraitPercentages[j][l], "value" : 'none'} 
-          metaplexdata.data[i].json.attributes[k].push(missingAtt)
-            
-          }
-            
-          }
-            
-            
-          }
-        } 
-      
-        
-        
-        
-        }//end
+      var thesetraits = []//fill with the maintypes this has
+      for (var j = 0;j < metaplexdata.data[i].json.attributes.length;j++) {
+        thesetraits.push(metaplexdata.data[i].json.attributes[j].trait_type)
+      }
    
-    } catch (err) {
-      w.log.info('autoAdd2: Error finding traits: ' + err)
+    let missingTraits = maintypes.filter(x => !thesetraits.includes(x))
+    
+    for (var k = 0;k < missingTraits.length;k++){
+      //for each missing maintype trait
+      var missing = { "trait_type" : missingTraits[k], "value" : "none"}
+      metaplexdata.data[i].json.attributes.push(missing)
+      
+    }
+   
+    
     }//end catch error
   }//end for each nft
 w.log.info('logging preTrait')
