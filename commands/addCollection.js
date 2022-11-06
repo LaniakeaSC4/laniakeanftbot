@@ -12,7 +12,7 @@ module.exports = {
 		.setName('addcollection')
 		.setDescription('Laniakea#3683 only')
 		.addStringOption(option =>
-			option.setName('VCA')
+			option.setName('vca')
 				.setRequired(true))
 		.addStringOption(option =>
 			option.setName('meslug')
@@ -32,7 +32,7 @@ module.exports = {
 			
 		await interaction.reply({ content: "Command recieved. Adding new collection to database", ephemeral: true })
 				
-		var vca = interaction.options.getString('VCA');
+		var vca = interaction.options.getString('vca');
 		var meslug = interaction.options.getString('meslug')
 		
 		var extraBlockList = []
