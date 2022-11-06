@@ -13,12 +13,15 @@ module.exports = {
 		.setDescription('Laniakea#3683 only')
 		.addStringOption(option =>
 			option.setName('vca')
+				.setDescription('vca')
 				.setRequired(true))
 		.addStringOption(option =>
 			option.setName('meslug')
+				.setDescription('meslug')
 				.setRequired(true))
 		.addStringOption(option =>
 			option.setName('bl')
+				.setDescription('bl')
 				.setRequired(false)),
 
 	//when command is triggered, do this
