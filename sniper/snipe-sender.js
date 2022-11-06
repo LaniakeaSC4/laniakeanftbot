@@ -185,15 +185,15 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 	var sellerLink = '**Seller**: [' + seller.slice(0, 3) + '...' + seller.slice(-2) + '](https://magiceden.io/u/' + seller + ')'
 	
 	var paperhands = ''
-	if (floordrop != 0) {
-	  paperhands = '🧻👐 Paperhands! This NFT just dropped the FP by ' + pround(floordrop, 2) + ' SOL 👐🧻'
+	if (floordrop > 0.01) {
+	  paperhands = ' (🧻👐 FP -' + pround(floordrop, 2) + ' SOL)'
 	}
 
 	//send it
 	try {
 		const channel = await client.channels.fetch(thischannel)
 		channel.send({
-			content: alertrole + paperhands,
+			content: alertrole,
 			allowedMentions: { parse: ['users', 'roles'], repliedUser: true },
 			embeds: [
 				{
@@ -202,7 +202,7 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 					"fields": [
 						{
 							"name": "🎯 __Snipe Details__",
-							"value": "**Rarity**: " + thisrarity + "/" + collectionSize + ' - ' + raritydescription + "*\n**Hotness**: " + hotness + "\n**List price**: " + pround(parseFloat(thisprice), 3) + ' SOL\n**Current FP**: ' + pround(parseFloat(floorprice), 3) + " SOL\n" + sellerLink + " | [Buy on Magic Eden](" + listinglink + ')\n',
+							"value": "**Rarity**: " + thisrarity + "/" + collectionSize + ' - ' + raritydescription + "*\n**Hotness**: " + hotness + "\n**List price**: " + pround(parseFloat(thisprice), 3) + ' SOL' + paperhands + '\n**Current FP**: ' + pround(parseFloat(floorprice), 3) + " SOL\n" + sellerLink + " | [Buy on Magic Eden](" + listinglink + ')\n',
 							"inline": false
 						},
 						{
