@@ -167,7 +167,7 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 		sevenDayChangeString = "."
 	} else {
 		var fp7dchangedirection = ""; if (floor_history.sevenDayChange.symbol_7dchange === "-") { fp7dchangedirection = "dropped" } else { fp7dchangedirection = "increased" }
-		sevenDayChangeString = "**7 Day MA**: " + fp7dchangedirection + " " + floor_history.sevenDayChange.symbol_7dchange + floor_history.sevenDayChange.amount_7dchange + " SOL (" + floor_history.sevenDayChange.symbol_7dchange + floor_history.sevenDayChange.percentage_7dchange + "%)"
+		sevenDayChangeString = "\n**7 Day MA**: " + fp7dchangedirection + " " + floor_history.sevenDayChange.symbol_7dchange + floor_history.sevenDayChange.amount_7dchange + " SOL (" + floor_history.sevenDayChange.symbol_7dchange + floor_history.sevenDayChange.percentage_7dchange + "%)"
 	}
 
 	//build snapshot FP
