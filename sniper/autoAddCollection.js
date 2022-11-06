@@ -76,7 +76,7 @@ async function getMetaplexData(creatoraddress) {
   w.log.info('autoAdd1: getting metadata from RPC - should take about 1 minute per 100 NFTs in collection')
   const metadata = await metaplex.nfts().findAllByCreator({ "creator": creatorkey }).run()
 
-  w.log.info('autoAdd1: adding NFT JSON to the ' + metadata.length + ' NFTs we recieved - 1 API request per 65ms')
+  w.log.info('autoAdd1: adding NFT JSON to the ' + metadata.length + ' NFTs we recieved - 1 API request per 80ms')
   var withjson = { "data": [], "fails": [] }
   var heartbeat = 0//start at 0 and count for each NFT. Send log every 50
 
@@ -86,8 +86,8 @@ async function getMetaplexData(creatoraddress) {
     if (thisnft.json != null) {//if the response did indeed have metadata
       withjson.data.push(thisnft)//add it to the final object
       heartbeat = heartbeat + 1//count up heartbeat logger
-      if ((heartbeat % 50) == 0) { w.log.info('autoAdd1: I\'ve sent ' + heartbeat + ' json load requests') }//console log every 50 requests (so we know process is alive)
-      await wait(100)//wait to slow API requests.
+      if ((heartbeat % 100) == 0) { w.log.info('autoAdd1: I\'ve sent ' + heartbeat + ' json load requests') }//console log every 50 requests (so we know process is alive)
+      await wait(80)//wait to slow API requests.
     } else {//if recieved NFT didnt have metadata, we can retry is. push it to a fail object.
       w.log.info('autoAdd1: ' + thisnft.name + ' failed to add JSON. Pushing metadata[i] to fail list')
       withjson.fails.push(metadata[i])
@@ -104,7 +104,7 @@ async function getMetaplexData(creatoraddress) {
       w.log.info('autoAdd1: ' + thisnft.name + ' got data on retry')
       withjson.data.push(thisnft)
       heartbeat = heartbeat + 1
-      if ((heartbeat % 5) == 0) { w.log.info('autoAdd1: I\'ve sent ' + heartbeat + ' json load requests') }
+      if ((heartbeat % 5) == 0) { w.log.info('autoAdd1: I\'ve sent ' + heartbeat + ' json fail load requests') }
       await wait(80)//wait to slow API requests.
     } else {
       w.log.info("autoAdd1: failed to add JSON twice. " + thisnft.name + " will not be in final obj.data")
@@ -156,16 +156,6 @@ for (var i = 0; i < metaplexdata.data.length; i++) { //for each nft in the metap
 } //end for each nft
 
 
-
-
-/*
-
-go through all nfts and collect all the maintypes
-
-go through again and check all nfts have each maintype if not inject that maintype with value 'none'
-
-*/
-
 //loop through nfts to add missing traits to nfts as 'none''
   for (var i = 0; i < metaplexdata.data.length; i++) {//for each nft in the metaplex data
     
@@ -189,8 +179,6 @@ go through again and check all nfts have each maintype if not inject that mainty
     
     
   }//end for each nft
-w.log.info('logging preTrait')
-w.log.info(JSON.stringify(preTraitPercentages))
 
 //rebuild trait percentages now we have the nones
  var traitPercentages = {}//establish output object
@@ -255,7 +243,6 @@ for (var i = 0; i < metaplexdata.data.length; i++) { //for each nft in the metap
 
 
   //store in DB
-  w.log.info(JSON.stringify(traitPercentages))
   return (traitPercentages)
 }; module.exports.calculateTraitPercentages = calculateTraitPercentages
 
