@@ -207,7 +207,7 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 						},
 						{
 							"name": floor_history.strength.emoji + " __Snapshot Analysis__ (00:00 & 12:00 UTC)",
-							"value": "**Snapshot FP**: " + snapshotFPstring + "\n**3 day avg FP**: " + floor_history?.fp_3daverage + " SOL | " + "**7 day avg FP**: " + floor_history?.fp_7daverage + " SOL\n" + threeDayChangeString + sevenDayChangeString + strengthstring,
+							"value": "**Last snapshot FP**: " + snapshotFPstring + "\n**3 day avg FP**: " + floor_history?.fp_3daverage + " SOL | " + "**7 day avg FP**: " + floor_history?.fp_7daverage + " SOL\n" + threeDayChangeString + sevenDayChangeString + strengthstring,
 							"inline": false
 						},
 					],
