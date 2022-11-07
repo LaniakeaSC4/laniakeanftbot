@@ -149,7 +149,7 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 	if (floor_history.strength.strength_ready === false) {//if strength calc is note ready fill in those blanks
 		strengthstring = "📊 As this is a new collection, there is not enough data to assess collection strength. "
 	} else {
-		strengthstring = "**FP vs SOL**: " + floor_history.strength.description + ". FP " + floor_history.strength.fp_symbol + floor_history.strength.fp_percent + " vs SOL/USD " + floor_history.strength.sol_symbol + floor_history.strength.sol_percent
+		strengthstring = "\n**FP vs SOL**: " + floor_history.strength.description + ". FP " + floor_history.strength.fp_symbol + floor_history.strength.fp_percent + " vs SOL/USD " + floor_history.strength.sol_symbol + floor_history.strength.sol_percent
 	}
 
 	//build 3d change string
@@ -158,7 +158,7 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 		threeDayChangeString = "As this is a new collection we don\'t yet have a 3 day average to compare to"
 	} else {
 		var fp3dchangedirection = ""; if (floor_history.threeDayChange.symbol_3dchange === "-") { fp3dchangedirection = "dropped" } else { fp3dchangedirection = "increased" }
-		threeDayChangeString = "\n**3 Day MA**: " + fp3dchangedirection + " " + floor_history.threeDayChange.symbol_3dchange + floor_history.threeDayChange.amount_3dchange + " SOL (" + floor_history.threeDayChange.symbol_3dchange + floor_history.threeDayChange.percentage_3dchange + "%)"
+		threeDayChangeString = "**3 Day MA**: " + fp3dchangedirection + " " + floor_history.threeDayChange.symbol_3dchange + floor_history.threeDayChange.amount_3dchange + " SOL (" + floor_history.threeDayChange.symbol_3dchange + floor_history.threeDayChange.percentage_3dchange + "%)"
 	}
 
 	//build 7d change string
