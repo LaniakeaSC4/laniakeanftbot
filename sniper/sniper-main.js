@@ -132,13 +132,13 @@ async function startsniper() {
                   if (!serversinitalized) { await snipersender.initaliseServers(); serversinitalized = true }
                   //send snipe into the send filter where server specific filters are applied (e.g. premium, price limits, etc)
                   snipersender.sendFilter(thisname, collections[k]['collectionkey'], thisembedcolour, NFTdata.rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize, collections[k]['floor_history'], snipe_ping,seller,floordrop)
-                  //save record of last seen time and floor price
-                  await lastSeen(collections[k]['collectionkey'], thisfloorprice)
                 } else { /* w.log.info('this was not a snipe') */ } //end if not false
               } else {//end else if we got data from ME
                 w.log.error('error getting nft data for ' + collections[k]['collectionkey'] + ' ' + thisnftid)
               }//end else if get nft data failed
             } else { w.log.error('error getting listing at magic Eden for this snipe test') }
+            //save record of last seen time and floor price
+            await lastSeen(collections[k]['collectionkey'], thisfloorprice)
             await wait(50)//added a delay between loops so we are not sending too many requests to ME or our SQL DB
           }//end else for a token we havnt seen before
         }//end for loop of each listing recieved
