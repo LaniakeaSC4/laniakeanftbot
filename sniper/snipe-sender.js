@@ -184,10 +184,10 @@ async function sendsnipes(server, thischannel, delay, nftname, embedcolour, this
 
 	var sellerLink = '**Seller**: [' + seller.slice(0, 3) + '...' + seller.slice(-2) + '](https://magiceden.io/u/' + seller + ')'
 	
-	var paperhands = ''/*
+	var paperhands = ''
 	if (floordrop > 0.01) {
 	  paperhands = ' (🧻👐 FP -' + pround(floordrop, 2) + ' SOL)'
-	}*/
+	}
 
 	//send it
 	try {

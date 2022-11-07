@@ -117,7 +117,7 @@ async function startsniper() {
                 if (snipe) {//after testing, if this one was a snipe...
                   var lastfloor = await sql.getData("solanametaplex", "collectionkey", collections[k]['collectionkey'], "lastfloor")
                   var floordrop = 0
-                  if (thisfloorprice < lastfloor) {
+                  if (thisfloorprice < lastfloor && thisfloorprice == thisprice) {
                     floordrop = lastfloor - thisfloorprice
                   }
                   
