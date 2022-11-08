@@ -120,7 +120,7 @@ async function startsniper() {
                   if (thisfloorprice < lastfloor && thisfloorprice == thisprice) {
                     floordrop = lastfloor - thisfloorprice
                   }
-                  
+
                   var thissnipeprice = parseFloat(snipe[1])
                   var thislimit = parseFloat(snipe[2])
                   var snipe_ping = snipe[3]
@@ -131,7 +131,7 @@ async function startsniper() {
                   //initialise servers if not already
                   if (!serversinitalized) { await snipersender.initaliseServers(); serversinitalized = true }
                   //send snipe into the send filter where server specific filters are applied (e.g. premium, price limits, etc)
-                  snipersender.sendFilter(thisname, collections[k]['collectionkey'], thisembedcolour, NFTdata.rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize, collections[k]['floor_history'], snipe_ping,seller,floordrop)
+                  snipersender.sendFilter(thisname, collections[k]['collectionkey'], thisembedcolour, NFTdata.rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize, collections[k]['floor_history'], snipe_ping, seller, floordrop)
                 } else { /* w.log.info('this was not a snipe') */ } //end if not false
               } else {//end else if we got data from ME
                 w.log.error('error getting nft data for ' + collections[k]['collectionkey'] + ' ' + thisnftid)
