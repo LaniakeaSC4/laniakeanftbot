@@ -9,7 +9,7 @@ const sql = require('../tools/commonSQL.js')//common sql related commands are in
 //global var to hold supported collections. Populated in homechannelsetup1. Accessed in homechannelsetup3
 var supportedcollections = {}
 //Global var to hold valid/supported collections user is adding to this homechannel
-var homecollections = { "enabled": {} }
+var thisNewChannel = { "enabled": {} }
 
 //Main /setup message has a "set up home channel" button. When pressed, send this setup panel
 async function addChannelMain(interaction) {
@@ -88,12 +88,51 @@ async function addChannelMain(interaction) {
 	})
 } module.exports.addChannelMain = addChannelMain
 
-//2nd fialogue for setup of this particualr channel
+
+//2nd dialogue for setup of this particualr channel
+async function newChannel(interaction) {
+//build a new button row for the command reply
+const row = new ActionRowBuilder()
+.addComponents(
+	new ButtonBuilder()
+		.setCustomId('addAlphaCol-button')
+		.setLabel('Add Collection')
+		.setStyle(ButtonStyle.Primary),
+).addComponents(
+	new ButtonBuilder()
+		.setCustomId('doneAlphaCh-button')
+		.setLabel('Done')
+		.setStyle(ButtonStyle.Secondary),
+)
+
+await interaction.reply({ 
+	embeds: [
+		{
+			"title": "🎯 __Alpha Channel Setup__ ",
+			"color": parseInt('0x9901f6', 16),
+			"description" : "Adding new channel",
+			"fields": [
+				{
+					"name": "Adding",
+					"value": 'None yet',
+					"inline": false
+				},
+			],
+			"footer": {
+				"text": "D: https://discord.gg/CgF7neAte2 | W: nftsniperbot.xyz"
+			},
+		}
+	],//end embed
+	ephemeral: true 
+})
+
+} module.exports.newChannel = newChannel
+
 
 //when "Add Collection" is pressed, show a modal to capture the ME address
 async function sendModal(interaction) {
 	const modal = new ModalBuilder()
-		.setCustomId('submithome-modal')
+		.setCustomId('submitAlpha-modal')
 		.setTitle('Enter Magic Eden Link to collection')
 		.addComponents([
 			new ActionRowBuilder().addComponents(
@@ -121,13 +160,32 @@ async function validateCollection(interaction) {
 	var found = false//start as false
 	for (var i = 0; i < supportedcollections.length; i++) {//loop supported collections recieved from SQL
 		if (supportedcollections[i].collectionkey === meslug) {//if collection entered by user is found in our supported collections
-			if (!homecollections.enabled[interaction.message.guildId].includes(meslug)) {//only if we haven't already added this one
+			if (!thisNewChannel.enabled[interaction.message.guildId].includes(meslug)) {//only if we haven't already added this one
 				found = true
-				homecollections.enabled[interaction.message.guildId].push(meslug)//push it to the homecollections. We will gather them up here while the user enters them.
+				thisNewChannel.enabled[interaction.message.guildId].push(meslug)//push it to the thisNewChannel. We will gather them up here while the user enters them.
 				//update interaction to list the ones they have added so far
-				interaction.update({ content: "__**Home Channel Setup**__\n\nHome Channel allows you to select multiple collections (e.g. Collections for your NFT project) for which snipes of **any rarity** will go into a dedicated \'Home channel\'. If you have Snipe Feed enabled, collections you add to your home channel will be redirected from the Snipe Feed into your Home Channel. You can add multiple collections, but you may only have one Home Channel.\n\nPress **[Add collection]** below and enter the Magic Eden link to the collection you would like to add to your Home Channel. When you have added all the collections you wish to be in your Home Channel, press [Done].\n\nAdding: **" + homecollections.enabled[interaction.message.guildId].toString() + "**", ephemeral: true })
+				interaction.update({ 
+					embeds: [
+						{
+							"title": "🎯 __Alpha Channel Setup__ ",
+							"color": parseInt('0x9901f6', 16),
+							"description" : "Adding new channel",
+							"fields": [
+								{
+									"name": "Adding",
+									"value": thisNewChannel.enabled[interaction.message.guildId].toString(),
+									"inline": false
+								},
+							],
+							"footer": {
+								"text": "D: https://discord.gg/CgF7neAte2 | W: nftsniperbot.xyz"
+							},
+						}
+					],//end embed
+					ephemeral: true 
+				})
 				break//if we have found it, dont need to loop more
-			} else { found = true; interaction.update({ content: "__**Home Channel Setup**__\n\nHome Channel allows you to select multiple collections (e.g. Collections for your NFT project) for which snipes of **any rarity** will go into a dedicated \'Home channel\'. If you have Snipe Feed enabled, collections you add to your home channel will be redirected from the Snipe Feed into your Home Channel. You can add multiple collections, but you may only have one Home Channel.\n\nPress **[Add Collection]** below and enter the Magic Eden link to the collection you would like to add to your Home Channel. When you have added all the collections you wish to be in your Home Channel, press [Done].\n\nAdding: **" + homecollections.enabled[interaction.message.guildId].toString() + "**", ephemeral: true }) }//set found to true as it was found, just a duplicate. Avoids not found error.
+			} else { found = true; interaction.update({ content: "__**Home Channel Setup**__\n\nHome Channel allows you to select multiple collections (e.g. Collections for your NFT project) for which snipes of **any rarity** will go into a dedicated \'Home channel\'. If you have Snipe Feed enabled, collections you add to your home channel will be redirected from the Snipe Feed into your Home Channel. You can add multiple collections, but you may only have one Home Channel.\n\nPress **[Add Collection]** below and enter the Magic Eden link to the collection you would like to add to your Home Channel. When you have added all the collections you wish to be in your Home Channel, press [Done].\n\nAdding: **" + thisNewChannel.enabled[interaction.message.guildId].toString() + "**", ephemeral: true }) }//set found to true as it was found, just a duplicate. Avoids not found error.
 		}//end if
 	}//end for
 
@@ -138,12 +196,12 @@ async function validateCollection(interaction) {
 } module.exports.validateCollection = validateCollection
 
 async function done(interaction) {
-	if (homecollections.enabled[interaction.message.guildId].length != 0) {
+	if (thisNewChannel.enabled[interaction.message.guildId].length != 0) {
 
 		//create home channel if not already existing
 		setupchannel(interaction)
-		var storecollections = { "enabled": homecollections.enabled[interaction.message.guildId] }
-		homecollections.enabled[interaction.message.guildId] = []//blank this after storage
+		var storecollections = { "enabled": thisNewChannel.enabled[interaction.message.guildId] }
+		thisNewChannel.enabled[interaction.message.guildId] = []//blank this after storage
 		//save validated supported collections gathered from user
 		await sql.updateTableColumn('servers', 'serverid', interaction.message.guildId, 'homechannel_collections', storecollections)
 		//enable homechannel mode
