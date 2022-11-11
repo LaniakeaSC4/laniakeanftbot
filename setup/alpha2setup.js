@@ -107,6 +107,9 @@ async function newChannel(interaction) {
 				.setStyle(ButtonStyle.Secondary),
 		)
 
+	//reset config vars for any previous setup for this server
+	thisNewChannel.enabled[interaction.guildId] = []
+
 	await interaction.reply({
 		embeds: [
 			{
@@ -188,7 +191,28 @@ async function validateCollection(interaction) {
 					ephemeral: true
 				})
 				break//if we have found it, dont need to loop more
-			} else { found = true; interaction.update({ content: "__**Home Channel Setup**__\n\nHome Channel allows you to select multiple collections (e.g. Collections for your NFT project) for which snipes of **any rarity** will go into a dedicated \'Home channel\'. If you have Snipe Feed enabled, collections you add to your home channel will be redirected from the Snipe Feed into your Home Channel. You can add multiple collections, but you may only have one Home Channel.\n\nPress **[Add Collection]** below and enter the Magic Eden link to the collection you would like to add to your Home Channel. When you have added all the collections you wish to be in your Home Channel, press [Done].\n\nAdding: **" + thisNewChannel.enabled[interaction.guildId].toString() + "**", ephemeral: true }) }//set found to true as it was found, just a duplicate. Avoids not found error.
+			} else {
+				found = true; interaction.update({//set found to true as it was found, just a duplicate. Avoids not found error.
+					embeds: [
+						{
+							"title": "🎯 __Alpha Channel Setup__ ",
+							"color": parseInt('0x9901f6', 16),
+							"description": "Adding new channel",
+							"fields": [
+								{
+									"name": "Adding",
+									"value": thisNewChannel.enabled[interaction.guildId].toString(),
+									"inline": false
+								},
+							],
+							"footer": {
+								"text": "D: https://discord.gg/CgF7neAte2 | W: nftsniperbot.xyz"
+							},
+						}
+					],//end embed
+					ephemeral: true
+				})
+			}
 		}//end if
 	}//end for
 
@@ -201,19 +225,26 @@ async function validateCollection(interaction) {
 async function done(interaction) {
 	if (thisNewChannel.enabled[interaction.message.guildId].length != 0) {
 
-		//create home channel if not already existing
-		setupchannel(interaction)
-		var storecollections = { "enabled": thisNewChannel.enabled[interaction.message.guildId] }
-		thisNewChannel.enabled[interaction.message.guildId] = []//blank this after storage
-		//save validated supported collections gathered from user
-		await sql.updateTableColumn('servers', 'serverid', interaction.message.guildId, 'homechannel_collections', storecollections)
-		//enable homechannel mode
-		await sql.updateTableColumn('servers', 'serverid', interaction.message.guildId, 'homechannel_enabled', true)
-		//reply success message
-		await interaction.reply({ content: "Changes saved. All snipes for the collections you added will now redirect to your Home Channel. You can now dismiss this message.", ephemeral: true })
+		//create alpha channel if not already existing
+		var newID = await setupchannel(interaction)
 
-	} else {
-		await interaction.reply({ content: "As you did not identify any collections, no changes have been made to your Home Channel setup. You can now dismiss this message.", ephemeral: true })
+		if (newID != null) {
+			//get current config
+			var oldconfig = await sql.getData("servers", "serverid", interaction.guildId, "alphaconfig")
+			var theseSlugs = thisNewChannel.enabled[interaction.guildId]
+
+			//add this config to it
+
+			//store it
+			var newconfig = { "enabled": thisNewChannel.enabled[interaction.message.guildId] }
+			thisNewChannel.enabled[interaction.message.guildId] = []//blank this after storage
+
+			//reply success message
+			await interaction.reply({ content: "Changes saved. All snipes for the collections you added will now redirect to this Alpha Channel. You can now dismiss this message.", ephemeral: true })
+
+		} else {
+			await interaction.reply({ content: "As you did not identify any collections, no changes have been made to your Alpha Channel setup. You can now dismiss this message.", ephemeral: true })
+		}
 	}
 } module.exports.done = done
 
@@ -234,19 +265,20 @@ async function setupchannel(interaction) {
 	}//end for
 
 	if (validserver) {//if a supported server and currently premium
-		w.log.info('setting up home channel for guild ' + guildid)
+		w.log.info('setting up new alpha channel for guild ' + guildid)
 		const guild = await client.guilds.fetch(guildid)
 
 		//get saved sniper channels (if any)
 		const existingchannels = await sql.getServerRow(guildid)//need to add the home channel to the sql function
+
+
 		var channelcheck = {
-			"snipecategory": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "LANIAKEA SNIPER BOT", "servercolumn": "snipecategory" },
-			"homechannel": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "Home Channel", "servercolumn": "homechannel_id" }
+			"snipecategory": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "LANIAKEA SNIPER BOT", "servercolumn": "snipecategory" }
 		}
+
 
 		//if any of the channels are found in SQL, update channelcheck to say we have found them
 		if (existingchannels[0].snipecategory) { channelcheck.snipecategory.dbfound = true; channelcheck.snipecategory.db_cid = existingchannels[0].snipecategory }
-		if (existingchannels[0].homechannel_id) { channelcheck.homechannel.dbfound = true; channelcheck.homechannel.db_cid = existingchannels[0].homechannel_id }
 
 		//get the guild channels to see if our saved ones still exist
 		await guild.channels.fetch()
@@ -260,12 +292,6 @@ async function setupchannel(interaction) {
 							channelcheck.snipecategory.server_cid = channel.id
 							channelcheck.snipecategory.verified = true
 						}//end if match category channel
-						if (channel.id === channelcheck.homechannel.db_cid) {
-							w.log.info('Found the saved homechannel channel')
-							channelcheck.homechannel.serverfound = true
-							channelcheck.homechannel.server_cid = channel.id
-							channelcheck.homechannel.verified = true
-						}//end if match home channel
 					}//end if a channel is recieved (not null) from discord. Can be null if bot has no access to any channels
 				})//end forEach
 
@@ -303,23 +329,17 @@ async function setupchannel(interaction) {
 					//get the category channel object so we can add children
 					w.log.info('fetching category channel')
 					const laniakeacategory = await client.channels.fetch(channelcheck.snipecategory.server_cid)
-					for (const key in channelcheck) {
-						if (key != 'snipecategory') {//we have created the category already
-							if (channelcheck[key].verified === false) {//if this one isnt verified as present
-								guild.channels.create({
-									name: channelcheck[key].name,
-									type: ChannelType.GuildText,
-									parent: laniakeacategory
-								}).then(async newchannel => {
-									w.log.info('created new channel ' + newchannel.name + ' it\'s ID is: ' + newchannel.id)
-									channelcheck.snipecategory.server_cid = newchannel.id//save category channel ID to we can add children
-									await sql.updateTableColumn('servers', 'serverid', guildid, channelcheck[key].servercolumn, newchannel.id)
-								})
-							}//end if not verified as present
-						}//end if not sniper category
-					}//end for key in channelcheck
+
+					guild.channels.create({
+						name: "alpha-channel",
+						type: ChannelType.GuildText,
+						parent: laniakeacategory
+					}).then(async newchannel => {
+						w.log.info('created new channel ' + newchannel.name + ' it\'s ID is: ' + newchannel.id)
+						return newchannel.id
+					})
+
 				}//end createchildren function
 			})//end then for fetched channels
-		return 'complete'
 	} else { return null }//end if valid server
 }//end setupchannel
