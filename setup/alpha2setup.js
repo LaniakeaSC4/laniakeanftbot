@@ -46,7 +46,7 @@ async function addChannelMain(interaction) {
 	var alphaconfig = await sql.getData("servers", "serverid", interaction.guildId, "alphaconfig")
 	
 	var alphaEnabled = alphaconfig.enabled
-	var currentChannels = ''
+	var currentChannels = 'test'
 	var channelCount = 1
 	for (var i = 0;i < alphaconfig.channels.length;i++) {
 	  var theseChannels = ''
