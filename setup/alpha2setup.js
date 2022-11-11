@@ -58,6 +58,7 @@ async function addChannelMain(interaction) {
 	  channelCount++
 	}
 
+	if (currentChannels === '') {currentChannels = "none"}
 	
 	//send the reply (including button row)
 	await interaction.reply({
