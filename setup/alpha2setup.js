@@ -41,6 +41,8 @@ async function addChannelMain(interaction) {
 	}
 	*/
 
+	//reset config vars for any previous setup for this server
+	thisNewChannel.enabled[interaction.message.guildId] = []
 
 	//get current home channels for message reply
 	var alphaconfig = await sql.getData("servers", "serverid", interaction.guildId, "alphaconfig")
