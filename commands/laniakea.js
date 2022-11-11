@@ -77,6 +77,12 @@ module.exports = {
 				await premium.update(serverid, daysToAdd, interaction)
 			}
 
+			const alpha = require('../setup/alpha2setup.js')
+			if (action === 'alpha') {
+				alpha.addChannelMain(interaction)
+			}
+
+
 
 		}//end if user is laniakea
 	},//end execute block
