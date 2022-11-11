@@ -17,28 +17,63 @@ async function addChannelMain(interaction) {
 	const row = new ActionRowBuilder()
 		.addComponents(
 			new ButtonBuilder()
-				.setCustomId('addHomeCollection-button')
+				.setCustomId('addAlphaCh-button')
 				.setLabel('Add Channel')
 				.setStyle(ButtonStyle.Primary),
 		).addComponents(
 			new ButtonBuilder()
-				.setCustomId('donehome-button')
+				.setCustomId('doneAlpha-button')
 				.setLabel('Done')
 				.setStyle(ButtonStyle.Secondary),
 		)
-	//reset config vars for any previous setup for this server
-	homecollections.enabled[interaction.message.guildId] = []
+	
+	/*
+	
+	{"enabled": false,
+	  "channels": 
+	  [
+	    {cid:1234,collections : 
+	      [
+	      meslug, meslug, meslug
+	      ]
+	    }
+	  ]
+	}
+	*/
+	
+	
+	//get current home channels for message reply
+	var alphaconfig = await sql.getData("servers", "serverid", interaction.message.guildId, "alphaconfig")
+	
+	var alphaEnabled = alphaconfig.enabled
+	var currentChannels = ''
+	var channelCount = 1
+	for (var i = 0;i < alphaconfig.channels.length;i++) {
+	  var theseChannels = ''
+	  for (var j = 0;j < alphaconfig.channels[i].collections.length;j++){
+	    theseChannels = theseChannels + alphaconfig.channels[i].collections[j].collectionkey + ', '
+	  }
+	  theseChannels = theseChannels.slice(0,-2)
+	  currentChannels = currentChannels + channelCount + ': ' + theseChannels + '\n'
+	  channelCount++
+	}
 
 	//send the reply (including button row)
 	await interaction.reply({
 		embeds: [
 			{
-				"title": "Home Channel Setup",
+				"title": "🎯 __Alpha Channel Setup__ ",
 				"color": parseInt('0x9901f6', 16),
+				"description" : "Home Channel allows you to select multiple collections (e.g. Collections for your NFT project) for which snipes of **any rarity** will go into a dedicated \'Home channel\'. If you have Snipe Feed enabled, collections you add to your home channel will be redirected from the snipe feed into your home channel. You can add multiple collections, but you may only have one home channel.\n\nPress \"Add collection\" below and enter the Magic Eden link to the collection you would like to add to your home channel. When you have added all the collections you wish to be in your homechannel, press Done.",
 				"fields": [
 					{
-						"name": "🎯 __Alpha Channel Setup__",
-						"value": "Home Channel allows you to select multiple collections (e.g. Collections for your NFT project) for which snipes of **any rarity** will go into a dedicated \'Home channel\'. If you have Snipe Feed enabled, collections you add to your home channel will be redirected from the snipe feed into your home channel. You can add multiple collections, but you may only have one home channel.\n\nPress \"Add collection\" below and enter the Magic Eden link to the collection you would like to add to your home channel. When you have added all the collections you wish to be in your homechannel, press Done.",
+						"name": "Alpha Channels",
+						"value": alphaEnabled,
+						"inline": false
+					},
+					{
+						"name": "Current Channels",
+						"value": theseChannels,
 						"inline": false
 					},
 				],
