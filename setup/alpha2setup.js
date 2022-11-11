@@ -58,6 +58,7 @@ async function addChannelMain(interaction) {
 	  channelCount++
 	}
 
+	
 	//send the reply (including button row)
 	await interaction.reply({
 		embeds: [
@@ -73,7 +74,7 @@ async function addChannelMain(interaction) {
 					},
 					{
 						"name": "Current Channels",
-						"value": theseChannels,
+						"value": currentChannels,
 						"inline": false
 					},
 				],
