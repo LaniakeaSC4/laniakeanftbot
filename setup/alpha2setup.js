@@ -45,8 +45,8 @@ async function addChannelMain(interaction) {
 	//get current home channels for message reply
 	var alphaconfig = await sql.getData("servers", "serverid", interaction.guildId, "alphaconfig")
 	
-	var alphaEnabled = alphaconfig.enabled
-	var currentChannels = 'test'
+	var alphaEnabled = alphaconfig.enabled.toString()
+	var currentChannels = ''
 	var channelCount = 1
 	for (var i = 0;i < alphaconfig.channels.length;i++) {
 	  var theseChannels = ''
