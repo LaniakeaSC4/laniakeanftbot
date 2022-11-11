@@ -421,3 +421,28 @@ client.on('interactionCreate', async interaction => {
   }
 
 })//end on interactionCreate 
+
+//New alpha config
+const alpha = require('../setup/alpha2setup.js')
+client.on('interactionCreate', async interaction => {
+
+  if (interaction.customId === 'addAlphaCh-button') {
+    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
+      alpha.newChannel(interaction)
+    } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
+  }
+
+  if (interaction.customId === 'addAlphaCol-button') {
+    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
+      alpha.sendModal(interaction)
+    } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
+  }
+
+    //when modal is submitted, validate input
+    if (interaction.customId === 'submitAlpha-modal') {
+      if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
+        alpha.validateCollection(interaction)
+      } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
+    }//end if button is 'submithome-modal'
+
+})//end on interactionCreate 
