@@ -423,7 +423,7 @@ client.on('interactionCreate', async interaction => {
 })//end on interactionCreate 
 
 //New alpha config
-const alpha = require('../setup/alpha2setup.js')
+const alpha = require('./setup/alpha2setup.js')
 client.on('interactionCreate', async interaction => {
 
   if (interaction.customId === 'addAlphaCh-button') {
