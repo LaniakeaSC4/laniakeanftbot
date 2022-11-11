@@ -161,9 +161,9 @@ async function validateCollection(interaction) {
 	var found = false//start as false
 	for (var i = 0; i < supportedcollections.length; i++) {//loop supported collections recieved from SQL
 		if (supportedcollections[i].collectionkey === meslug) {//if collection entered by user is found in our supported collections
-			if (!thisNewChannel.enabled[interaction.message.guildId].includes(meslug)) {//only if we haven't already added this one
+			if (!thisNewChannel.enabled[interaction.guildId].includes(meslug)) {//only if we haven't already added this one
 				found = true
-				thisNewChannel.enabled[interaction.message.guildId].push(meslug)//push it to the thisNewChannel. We will gather them up here while the user enters them.
+				thisNewChannel.enabled[interaction.guildId].push(meslug)//push it to the thisNewChannel. We will gather them up here while the user enters them.
 				//update interaction to list the ones they have added so far
 				interaction.update({
 					embeds: [
@@ -174,7 +174,7 @@ async function validateCollection(interaction) {
 							"fields": [
 								{
 									"name": "Adding",
-									"value": thisNewChannel.enabled[interaction.message.guildId].toString(),
+									"value": thisNewChannel.enabled[interaction.guildId].toString(),
 									"inline": false
 								},
 							],
@@ -186,7 +186,7 @@ async function validateCollection(interaction) {
 					ephemeral: true
 				})
 				break//if we have found it, dont need to loop more
-			} else { found = true; interaction.update({ content: "__**Home Channel Setup**__\n\nHome Channel allows you to select multiple collections (e.g. Collections for your NFT project) for which snipes of **any rarity** will go into a dedicated \'Home channel\'. If you have Snipe Feed enabled, collections you add to your home channel will be redirected from the Snipe Feed into your Home Channel. You can add multiple collections, but you may only have one Home Channel.\n\nPress **[Add Collection]** below and enter the Magic Eden link to the collection you would like to add to your Home Channel. When you have added all the collections you wish to be in your Home Channel, press [Done].\n\nAdding: **" + thisNewChannel.enabled[interaction.message.guildId].toString() + "**", ephemeral: true }) }//set found to true as it was found, just a duplicate. Avoids not found error.
+			} else { found = true; interaction.update({ content: "__**Home Channel Setup**__\n\nHome Channel allows you to select multiple collections (e.g. Collections for your NFT project) for which snipes of **any rarity** will go into a dedicated \'Home channel\'. If you have Snipe Feed enabled, collections you add to your home channel will be redirected from the Snipe Feed into your Home Channel. You can add multiple collections, but you may only have one Home Channel.\n\nPress **[Add Collection]** below and enter the Magic Eden link to the collection you would like to add to your Home Channel. When you have added all the collections you wish to be in your Home Channel, press [Done].\n\nAdding: **" + thisNewChannel.enabled[interaction.guildId].toString() + "**", ephemeral: true }) }//set found to true as it was found, just a duplicate. Avoids not found error.
 		}//end if
 	}//end for
 
