@@ -227,8 +227,8 @@ async function done(interaction) {
 
 		//create alpha channel if not already existing
 		var newID = await setupchannel(interaction)
-
-		if (newID != null) {
+w.log.info('newID was returned as ' + newID)
+		if (newID) {
 			//get current config
 			var config = await sql.getData("servers", "serverid", interaction.guildId, "alphaconfig")
 			var theseSlugs = thisNewChannel.enabled[interaction.guildId]
