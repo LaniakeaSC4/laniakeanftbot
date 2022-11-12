@@ -445,4 +445,11 @@ client.on('interactionCreate', async interaction => {
       } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
     }//end if button is 'submithome-modal'
 
+ //alpha done
+    if (interaction.customId === 'doneAlphaCh-button') {
+      if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
+        alpha.done(interaction)
+      } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
+    }//end if button is 'submithome-modal'
+
 })//end on interactionCreate 
