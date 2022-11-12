@@ -42,9 +42,6 @@ async function addChannelMain(interaction) {
 	//get current home channels for message reply
 	var alphaconfig = await sql.getData("servers", "serverid", interaction.guildId, "alphaconfig")
 
-	var alphaEnabled = alphaconfig.enabled.toString()
-	if (alphaEnabled = 'false') {alphaEnabled = 'Disabled'} 
-if (alphaEnabled = 'true') {alphaEnabled = 'Enabled'} 
 	
 	var currentChannels = ''
 	var channelCount = 1
@@ -68,11 +65,6 @@ if (alphaEnabled = 'true') {alphaEnabled = 'Enabled'}
 				"color": parseInt('0x9901f6', 16),
 				"description": "Alpha Channels allow you to select one or more collections for which snipes of **any rarity** will be redirected into a dedicated \'Alpha channel\'. \n\nPress \"Add Alpha Channel\" below to begin creating a new Alpha channel.",
 				"fields": [
-					{
-						"name": "Alpha Channels are:",
-						"value": alphaEnabled,
-						"inline": false
-					},
 					{
 						"name": "Current Alpha Channels",
 						"value": currentChannels,
