@@ -53,7 +53,7 @@ async function addChannelMain(interaction) {
 	for (var i = 0; i < alphaconfig.channels.length; i++) {
 		var theseChannels = ''
 		for (var j = 0; j < alphaconfig.channels[i].collections.length; j++) {
-			theseChannels = theseChannels + alphaconfig.channels[i].collections[j].collectionkey + ', '
+			theseChannels = theseChannels + alphaconfig.channels[i].collections[j] + ', '
 		}
 		theseChannels = theseChannels.slice(0, -2)
 		currentChannels = currentChannels + channelCount + ': ' + theseChannels + '\n'
