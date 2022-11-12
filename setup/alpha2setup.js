@@ -286,8 +286,8 @@ async function setupchannel(interaction) {
 		if (existingchannels[0].snipecategory) { channelcheck.snipecategory.dbfound = true; channelcheck.snipecategory.db_cid = existingchannels[0].snipecategory }
 
 		//get the guild channels to see if our saved ones still exist
-		await guild.channels.fetch()
-			.then(async channels => {
+	var channels =	await guild.channels.fetch()
+			
 				channels.forEach(async channel => {
 					if (channel) {
 						//check for the channels in server
@@ -303,7 +303,7 @@ async function setupchannel(interaction) {
 				//first check and create the category channel
 				if (channelcheck.snipecategory.verified === false) {
 					w.log.info('Category channel was not found - creating it')
-					guild.channels.create({
+					var newchannel = await guild.channels.create({
 						name: channelcheck.snipecategory.name,
 						type: ChannelType.GuildCategory,
 						permissionOverwrites: [
@@ -316,14 +316,14 @@ async function setupchannel(interaction) {
 								allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages],
 							},
 						]
-					}).then(async newchannel => {
+					})
 						w.log.info('created new category channel it\'s ID is:')
 						w.log.info(newchannel.id)
 						channelcheck.snipecategory.server_cid = newchannel.id//save category channel ID to we can add children
 						await sql.updateTableColumn('servers', 'serverid', guildid, 'snipecategory', newchannel.id)
-					}).then(async result => {
+					
 						createchildren()
-					})//end then create children after cat channel
+					
 				} else {
 					w.log.info('Category channel already existed')
 					createchildren()
@@ -335,16 +335,16 @@ async function setupchannel(interaction) {
 					w.log.info('fetching category channel')
 					const laniakeacategory = await client.channels.fetch(channelcheck.snipecategory.server_cid)
 
-					guild.channels.create({
+					var newchannel = await guild.channels.create({
 						name: "alpha-channel",
 						type: ChannelType.GuildText,
 						parent: laniakeacategory
-					}).then(async newchannel => {
+					})
 						w.log.info('created new channel ' + newchannel.name + ' it\'s ID is: ' + newchannel.id)
 						return newchannel.id
-					})
+					
 
 				}//end createchildren function
-			})//end then for fetched channels
+			
 	} else { return null }//end if valid server
 }//end setupchannel
