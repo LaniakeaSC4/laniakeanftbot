@@ -230,13 +230,18 @@ async function done(interaction) {
 
 		if (newID != null) {
 			//get current config
-			var oldconfig = await sql.getData("servers", "serverid", interaction.guildId, "alphaconfig")
+			var config = await sql.getData("servers", "serverid", interaction.guildId, "alphaconfig")
 			var theseSlugs = thisNewChannel.enabled[interaction.guildId]
 
 			//add this config to it
+			config.channels.push({
+			  "channelID" : newID,
+			  "collections" : [theseSlugs]
+			})
 
 			//store it
-			var newconfig = { "enabled": thisNewChannel.enabled[interaction.message.guildId] }
+			await sql.updateTableColumn('servers', 'serverid', interaction.guildId, 'alphaconfig', config)
+			
 			thisNewChannel.enabled[interaction.message.guildId] = []//blank this after storage
 
 			//reply success message
