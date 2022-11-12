@@ -227,7 +227,7 @@ async function done(interaction) {
 
 		//create alpha channel if not already existing
 		var newID = await setupchannel(interaction)
-w.log.info('newID was returned as ' + newID)
+w.log.info('newID was returned as ' + newID.id)
 		if (newID) {
 			//get current config
 			var config = await sql.getData("servers", "serverid", interaction.guildId, "alphaconfig")
@@ -235,7 +235,7 @@ w.log.info('newID was returned as ' + newID)
 
 			//add this config to it
 			config.channels.push({
-			  "channelID" : newID,
+			  "channelID" : newID.id,
 			  "collections" : [theseSlugs]
 			})
 
@@ -341,7 +341,7 @@ async function setupchannel(interaction) {
 						parent: laniakeacategory
 					})
 						w.log.info('created new channel ' + newchannel.name + ' it\'s ID is: ' + newchannel.id)
-						return newchannel.id
+						return newchannel
 					
 
 				}//end createchildren function
