@@ -32,11 +32,6 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 			//filter out snipes below global minimum list price (e.g. less than 2 sol)
 			if (parseFloat(thisprice) < parseFloat(supportedservers[i].min_price) || parseFloat(thisprice) >= parseFloat(supportedservers[i].max_price)) { continue }
 
-			/*
-			//filter by global blackslist (make /blacklist command)
-			Loop through blacklist same as alpha channels
-			*/
-
 			//snipe ping may have come through as true, but let's see if this server has it enabled
 			var thisping = false
 			var thispingrole = ''
@@ -81,6 +76,39 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 			if (foundalpha === true) {
 				sendsnipes(thisserverid, alphachannelid, null, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize, thiscollection, floor_history, thisping, thispingrole, seller, floordrop)
 			}//end if alpha
+			
+			
+			
+		//send to new alpha channels
+			if (thisserver.alphaconfig.channels.length != 0 && thisserver.premium === true) {//if there is an alpha channel config and server is premium
+				for (var k = 0; k < thisserver.alphaconfig.channels.length; k++) {//for each alpha channel (for this server)
+				for (var m = 0;m < thisserver.alphaconfig.channels[k].length;m++) {
+				  
+				  if (thisserver.alphaconfig.channels[k][m] === thiscollection) {//if match this collection
+						
+						alphachannelid = thisserver.alphaconfig.channels[k].channelID
+						
+						sendsnipes(thisserverid, alphachannelid, null, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize, thiscollection, floor_history, thisping, thispingrole, seller, floordrop)
+						
+						
+						
+						break//no need to go through the rest of this alpha channels collections
+					}//end if match this collection
+				  
+				}
+					
+				}//end for enabled alpha channels 
+			}//end if this server is premium and has an alpha config
+
+			
+			
+			
+			
+			
+			
+			
+			
+			
 
 			//if foundhome is true (will only be if server is still premium, homechannel is enabled and this collection was found as a homechannel collection)
 			//finding a homechannel will filter a message out of the snipe feed and into the home channel
