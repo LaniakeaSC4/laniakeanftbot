@@ -226,7 +226,7 @@ w.log.info('newID was returned as ' + newID)
 			//add this config to it
 			config.channels.push({
 			  "channelID" : newID,
-			  "collections" : [theseSlugs]
+			  "collections" : theseSlugs
 			})
 
 			//store it
