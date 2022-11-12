@@ -113,10 +113,10 @@ async function newChannel(interaction) {
 			{
 				"title": "🎯 __Alpha Channel Setup 2__ ",
 				"color": parseInt('0x9901f6', 16),
-				"description": "",
+				"description": "Press [Add Collection] below and enter a Magic Eden link to a supported collection you would like in this alpha channel. For a list of supported collections please use `/supportedcollections`. When you have added all the collections you wish for this alpha channel, press [Done]",
 				"fields": [
 					{
-						"name": "Press [Add Collection] below and enter a Magic Eden link to a supported collection you would like in this alpha channel. For a list of supported collections please use `/supportedcollections`. When you have added all the collections you wish for this alpha channel, press [Done]",
+						"name": "Creating Channel for",
 						"value": 'None yet',
 						"inline": false
 					},
