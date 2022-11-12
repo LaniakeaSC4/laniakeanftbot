@@ -152,7 +152,7 @@ async function getSupportedServers() {
   return new Promise((resolve, reject) => {
     var pgclient = db.getClient()
 
-    var querystring = "SELECT serverid,raresnipes,epicsnipes,legendarysnipes,mythicsnipes,homechannel_enabled,homechannel_id,homechannel_collections,premium,inserver, alpha_channels,singlefeedmode,rare_enabled,epic_enabled,legendary_enabled,mythic_enabled,min_price,max_price,pingrole,enable_ping FROM servers"
+    var querystring = "SELECT serverid,raresnipes,epicsnipes,legendarysnipes,mythicsnipes,homechannel_enabled,homechannel_id,homechannel_collections,premium,inserver, alpha_channels,singlefeedmode,rare_enabled,epic_enabled,legendary_enabled,mythic_enabled,min_price,max_price,pingrole,enable_ping,alphaconfig FROM servers"
 
     pgclient.query(querystring, (err, res) => {
       if (err) throw err

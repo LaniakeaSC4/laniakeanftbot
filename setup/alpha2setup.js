@@ -93,8 +93,8 @@ async function newChannel(interaction) {
 		).addComponents(
 			new ButtonBuilder()
 				.setCustomId('doneAlphaCh-button')
-				.setLabel('Done')
-				.setStyle(ButtonStyle.Secondary),
+				.setLabel('Create')
+				.setStyle(ButtonStyle.Success),
 		)
 
 	//reset config vars for any previous setup for this server
@@ -105,7 +105,7 @@ async function newChannel(interaction) {
 			{
 				"title": "🎯 __Alpha Channel Setup 2__ ",
 				"color": parseInt('0x9901f6', 16),
-				"description": "Press [Add Collection] below and enter a Magic Eden link to a supported collection you would like in this alpha channel. For a list of supported collections please use `/supportedcollections`. When you have added all the collections you wish for this alpha channel, press [Done]",
+				"description": "Press [Add Collection] below and enter a Magic Eden link to a supported collection you would like in this alpha channel. For a list of supported collections please use `/supportedcollections`. When you have added all the collections you wish for this alpha channel, press [Create] to create the channel",
 				"fields": [
 					{
 						"name": "Creating Channel for",
