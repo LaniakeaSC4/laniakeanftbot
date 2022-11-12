@@ -18,7 +18,7 @@ async function addChannelMain(interaction) {
 		.addComponents(
 			new ButtonBuilder()
 				.setCustomId('addAlphaCh-button')
-				.setLabel('Add Alpha Channel')
+				.setLabel('Add Channel')
 				.setStyle(ButtonStyle.Primary),
 		)
 
@@ -43,6 +43,9 @@ async function addChannelMain(interaction) {
 	var alphaconfig = await sql.getData("servers", "serverid", interaction.guildId, "alphaconfig")
 
 	var alphaEnabled = alphaconfig.enabled.toString()
+	if (alphaEnabled = 'false') {alphaEnabled = 'Disabled'} 
+if (alphaEnabled = 'true') {alphaEnabled = 'Enabled'} 
+	
 	var currentChannels = ''
 	var channelCount = 1
 	for (var i = 0; i < alphaconfig.channels.length; i++) {
@@ -63,15 +66,15 @@ async function addChannelMain(interaction) {
 			{
 				"title": "🎯 __Alpha Channel Setup 1__ ",
 				"color": parseInt('0x9901f6', 16),
-				"description": "Alpha Channels allow you to select one or more collections for which snipes of **any rarity** will be redirected into a dedicated \'Alpha channel\'. \nPress \"Add collection\" below to begin creating a new Alpha channel.",
+				"description": "Alpha Channels allow you to select one or more collections for which snipes of **any rarity** will be redirected into a dedicated \'Alpha channel\'. \n\nPress \"Add Alpha Channel\" below to begin creating a new Alpha channel.",
 				"fields": [
 					{
-						"name": "Alpha Channels",
+						"name": "Alpha Channels are:",
 						"value": alphaEnabled,
 						"inline": false
 					},
 					{
-						"name": "Current Channels",
+						"name": "Current Alpha Channels",
 						"value": currentChannels,
 						"inline": false
 					},
