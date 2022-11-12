@@ -227,7 +227,7 @@ async function done(interaction) {
 
 		//create alpha channel if not already existing
 		var newID = await setupchannel(interaction)
-w.log.info('newID was returned as ' + newID.id)
+w.log.info('newID was returned as ' + newID)
 		if (newID) {
 			//get current config
 			var config = await sql.getData("servers", "serverid", interaction.guildId, "alphaconfig")
@@ -235,7 +235,7 @@ w.log.info('newID was returned as ' + newID.id)
 
 			//add this config to it
 			config.channels.push({
-			  "channelID" : newID.id,
+			  "channelID" : newID,
 			  "collections" : [theseSlugs]
 			})
 
@@ -322,11 +322,13 @@ async function setupchannel(interaction) {
 						channelcheck.snipecategory.server_cid = newchannel.id//save category channel ID to we can add children
 						await sql.updateTableColumn('servers', 'serverid', guildid, 'snipecategory', newchannel.id)
 					
-						await createchildren()
+						var newID = await createchildren()
+						return newID
 					
 				} else {
 					w.log.info('Category channel already existed')
-					await createchildren()
+					var newID = await createchildren()
+					return newID
 				}//end else
 
 				//create children channels under the category. For home channel, only will be one child
@@ -341,7 +343,7 @@ async function setupchannel(interaction) {
 						parent: laniakeacategory
 					})
 						w.log.info('created new channel ' + newchannel.name + ' it\'s ID is: ' + newchannel.id)
-						return newchannel
+						return newchannel.id
 					
 
 				}//end createchildren function
