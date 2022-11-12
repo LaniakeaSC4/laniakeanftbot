@@ -18,13 +18,8 @@ async function addChannelMain(interaction) {
 		.addComponents(
 			new ButtonBuilder()
 				.setCustomId('addAlphaCh-button')
-				.setLabel('Add Channel')
+				.setLabel('Add Alpha Channel')
 				.setStyle(ButtonStyle.Primary),
-		).addComponents(
-			new ButtonBuilder()
-				.setCustomId('doneAlpha-button')
-				.setLabel('Done')
-				.setStyle(ButtonStyle.Secondary),
 		)
 
 	/*
@@ -66,9 +61,9 @@ async function addChannelMain(interaction) {
 	await interaction.reply({
 		embeds: [
 			{
-				"title": "🎯 __Alpha Channel Setup__ ",
+				"title": "🎯 __Alpha Channel Setup 1__ ",
 				"color": parseInt('0x9901f6', 16),
-				"description": "Home Channel allows you to select multiple collections (e.g. Collections for your NFT project) for which snipes of **any rarity** will go into a dedicated \'Home channel\'. If you have Snipe Feed enabled, collections you add to your home channel will be redirected from the snipe feed into your home channel. You can add multiple collections, but you may only have one home channel.\n\nPress \"Add collection\" below and enter the Magic Eden link to the collection you would like to add to your home channel. When you have added all the collections you wish to be in your homechannel, press Done.",
+				"description": "Alpha Channels allow you to select one or more collections for which snipes of **any rarity** will be redirected into a dedicated \'Alpha channel\'. \nPress \"Add collection\" below to begin creating a new Alpha channel.",
 				"fields": [
 					{
 						"name": "Alpha Channels",
@@ -113,12 +108,12 @@ async function newChannel(interaction) {
 	await interaction.reply({
 		embeds: [
 			{
-				"title": "🎯 __Alpha Channel Setup__ ",
+				"title": "🎯 __Alpha Channel Setup 2__ ",
 				"color": parseInt('0x9901f6', 16),
-				"description": "Adding new channel",
+				"description": "",
 				"fields": [
 					{
-						"name": "Adding",
+						"name": "Press [Add Collection] below and enter a Magic Eden link to a supported collection you would like in this alpha channel. For a list of supported collections please use `/supportedcollections`. When you have added all the collections you wish for this alpha channel, press [Done]",
 						"value": 'None yet',
 						"inline": false
 					},

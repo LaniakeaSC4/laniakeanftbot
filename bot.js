@@ -328,6 +328,26 @@ client.on('channelDelete', async channel => {
     await sql.updateTableColumn('servers', 'serverid', channel.guildId, "homechannel_enabled", false)
     snipersender.initaliseServers()
   }//end if home channel
+  
+  //check if it was a new alpha channel
+  var newalphafound = false//we are going to check if it was an alpha channel. Start as false.
+  if (serverdetails[0].alphaconfig) {//if there is an alpha config
+    for (var i = 0; i < serverdetails[0].alphaconfig.channels.length; i++) {//for each config
+      if (serverdetails[0].alphaconfig.channels[i]['channelID'] === channel.id) {//if it matches the deleted channel
+        w.log.info('matched the deleted channel to an new alpha channel. Deleting that from the config')
+        newalphafound = true
+        //splice out the deleted channel from the config
+        serverdetails[0].alphaconfig.channels.splice(i, 1)
+        //save updates config in sql
+        await sql.updateTableColumn('servers', 'serverid', channel.guildId, "alphaconfig", serverdetails[0].alphaconfig)
+        break//dont need to loop through further alpha configs
+      }//end if we have found a setup matching the current collectionkey
+    }//end for each alpha channel config object
+  }//end if there is an exisiting config
+
+  if (newalphafound === false) { w.log.info('deleted channel didn\'t match a new alpha channel') }
+  
+  
 })//end on channelDelete event
 
 //Global config
@@ -450,6 +470,6 @@ client.on('interactionCreate', async interaction => {
       if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
         alpha.done(interaction)
       } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
-    }//end if button is 'submithome-modal'
+    }//end if button is alpha done
 
 })//end on interactionCreate 
