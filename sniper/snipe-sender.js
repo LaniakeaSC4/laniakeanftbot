@@ -81,13 +81,11 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 			
 		//send to new alpha channels
 			if (thisserver.alphaconfig.channels.length != 0 && thisserver.premium === true) {//if there is an alpha channel config and server is premium
-			w.log.info('a server had alpha channels')
+		
 				for (var k = 0; k < thisserver.alphaconfig.channels.length; k++) {//for each alpha channel (for this server)
-				w.log.info('it had a channel')
-				for (var m = 0;m < thisserver.alphaconfig.channels[k].length;m++) {
-				  w.log.info('the channel had a collection')
-				  w.log.info('meslug is: ' + thisserver.alphaconfig.channels[k][m] + '. Thiscollection is: ' + thiscollection)
-				  if (thisserver.alphaconfig.channels[k][m] === thiscollection) {//if match this collection
+				for (var m = 0;m < thisserver.alphaconfig.channels[k].collections.length;m++) {
+				  w.log.info('meslug is: ' + thisserver.alphaconfig.channels[k].collections[m] + '. Thiscollection is: ' + thiscollection)
+				  if (thisserver.alphaconfig.channels[k].collections[m] === thiscollection) {//if match this collection
 						
 						alphachannelid = thisserver.alphaconfig.channels[k].channelID
 						
