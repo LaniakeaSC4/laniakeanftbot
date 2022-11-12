@@ -322,11 +322,11 @@ async function setupchannel(interaction) {
 						channelcheck.snipecategory.server_cid = newchannel.id//save category channel ID to we can add children
 						await sql.updateTableColumn('servers', 'serverid', guildid, 'snipecategory', newchannel.id)
 					
-						createchildren()
+						await createchildren()
 					
 				} else {
 					w.log.info('Category channel already existed')
-					createchildren()
+					await createchildren()
 				}//end else
 
 				//create children channels under the category. For home channel, only will be one child
