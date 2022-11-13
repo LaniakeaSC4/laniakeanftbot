@@ -3,7 +3,7 @@ const client = discord.getClient()
 const { ChannelType, PermissionFlagsBits, PermissionsBitField,
 	ModalBuilder, ActionRowBuilder, TextInputBuilder,
 	TextInputStyle, ButtonBuilder, ButtonStyle } = require('discord.js')
-
+const snipersender = require('../sniper/snipe-sender.js')
 const w = require('../tools/winston.js')
 const sql = require('../tools/commonSQL.js')//common sql related commands are in here
 
