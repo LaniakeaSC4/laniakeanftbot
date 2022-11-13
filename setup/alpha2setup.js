@@ -211,6 +211,15 @@ async function validateCollection(interaction) {
 } module.exports.validateCollection = validateCollection
 
 async function done(interaction) {
+  
+  const nextrow = new ActionRowBuilder()
+		.addComponents(
+			new ButtonBuilder()
+				.setCustomId('alphaNextBtn')
+				.setLabel('Next >>')
+				.setStyle(ButtonStyle.Secondary),
+		)
+  
 	if (thisNewChannel.enabled[interaction.message.guildId].length != 0) {
 
 		//create alpha channel if not already existing
@@ -232,13 +241,7 @@ w.log.info('newID was returned as ' + newID)
 			
 			thisNewChannel.enabled[interaction.message.guildId] = []//blank this after storage
 
-const nextrow = new ActionRowBuilder()
-		.addComponents(
-			new ButtonBuilder()
-				.setCustomId('alphaNextBtn')
-				.setLabel('Next >>')
-				.setStyle(ButtonStyle.Secondary),
-		)
+
 
 			//reply success message
 			await interaction.reply({ content: "Changes saved. All snipes for the collections you added will now redirect to this Alpha Channel. You can now dismiss this message or proceed to next setup step.", ephemeral: true, components: [nextrow] })
