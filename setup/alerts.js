@@ -26,12 +26,7 @@ async function configPanel(interaction) {
         .setCustomId('disable_alerts-button')
         .setLabel('Disable Alerts')
         .setStyle(ButtonStyle.Primary),
-    ).addComponents(
-		  new ButtonBuilder()
-		  .setCustomId('setupDoneBtn')
-		  .setLabel('Done')
-		  .setStyle(ButtonStyle.Secondary),
-		)
+    )
   //send the reply (including button row)
 
   //get current config for this server
@@ -101,7 +96,7 @@ async function configPanel(interaction) {
 				"color": parseInt('0x9901f6', 16),
 				"description": replytext,
 				"footer": {
-					"text": "Setup 5/5. To complete setup, press [Done]."
+					"text": "Setup 5/5. When you have finished alerts config setup is complete."
 				},
 			}
 		],//end embed

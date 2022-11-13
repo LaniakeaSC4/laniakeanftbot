@@ -18,8 +18,8 @@ async function addChannelMain(interaction) {
 		.addComponents(
 			new ButtonBuilder()
 				.setCustomId('addAlphaCh-button')
-				.setLabel('Add Channel')
-				.setStyle(ButtonStyle.Primary),
+				.setLabel('New Channel')
+				.setStyle(ButtonStyle.Success),
 		).addComponents(
 			new ButtonBuilder()
 				.setCustomId('alphaNextBtn')
@@ -71,9 +71,6 @@ async function addChannelMain(interaction) {
 	})
 } module.exports.addChannelMain = addChannelMain
 
-
-//2nd dialogue for setup of this particualr channel
-async function newChannel(interaction) {
 	//build a new button row for the command reply
 	const row = new ActionRowBuilder()
 		.addComponents(
@@ -92,6 +89,9 @@ async function newChannel(interaction) {
 				.setLabel('Next')
 				.setStyle(ButtonStyle.Secondary),
 		)
+
+//2nd dialogue for setup of this particualr channel
+async function newChannel(interaction) {
 
 	//reset config vars for any previous setup for this server
 	thisNewChannel.enabled[interaction.guildId] = []
@@ -159,7 +159,7 @@ async function validateCollection(interaction) {
 				interaction.update({
 					embeds: [
 						{
-							"title": "🎯 __Alpha Channel Setup__ ",
+							"title": "🎯 __Alpha Channel Setup 2__ ",
 							"color": parseInt('0x9901f6', 16),
 							"description": "Press [Add Collection] below and enter a Magic Eden link to a supported collection you would like in this alpha channel. For a list of supported collections please use `/supportedcollections`. When you have added all the collections you wish for this alpha channel, press [Create] to create the channel.",
 							"fields": [
@@ -174,14 +174,15 @@ async function validateCollection(interaction) {
 							},
 						}
 					],//end embed
-					ephemeral: true
+					ephemeral: true, 
+					components: [row]
 				})
 				break//if we have found it, dont need to loop more
 			} else {
 				found = true; interaction.update({//set found to true as it was found, just a duplicate. Avoids not found error.
 					embeds: [
 						{
-							"title": "🎯 __Alpha Channel Setup__ ",
+							"title": "🎯 __Alpha Channel Setup 2__ ",
 							"color": parseInt('0x9901f6', 16),
 							"description": "Press [Add Collection] below and enter a Magic Eden link to a supported collection you would like in this alpha channel. For a list of supported collections please use `/supportedcollections`. When you have added all the collections you wish for this alpha channel, press [Create] to create the channel.",
 							"fields": [
@@ -196,7 +197,8 @@ async function validateCollection(interaction) {
 							},
 						}
 					],//end embed
-					ephemeral: true
+					ephemeral: true, 
+					components: [row]
 				})
 			}
 		}//end if
@@ -230,11 +232,19 @@ w.log.info('newID was returned as ' + newID)
 			
 			thisNewChannel.enabled[interaction.message.guildId] = []//blank this after storage
 
+const nextrow = new ActionRowBuilder()
+		.addComponents(
+			new ButtonBuilder()
+				.setCustomId('alphaNextBtn')
+				.setLabel('Next')
+				.setStyle(ButtonStyle.Secondary),
+		)
+
 			//reply success message
-			await interaction.reply({ content: "Changes saved. All snipes for the collections you added will now redirect to this Alpha Channel. You can now dismiss this message.", ephemeral: true })
+			await interaction.reply({ content: "Changes saved. All snipes for the collections you added will now redirect to this Alpha Channel. You can now dismiss this message or proceed to next setup step.", ephemeral: true, components: [nextrow] })
 
 		} else {
-			await interaction.reply({ content: "As you did not identify any collections, no changes have been made to your Alpha Channel setup. You can now dismiss this message.", ephemeral: true })
+			await interaction.reply({ content: "As you did not identify any collections, no changes have been made to your Alpha Channel setup. You can now dismiss this message or proceed to next setup step.", ephemeral: true, components: [nextrow]})
 		}
 	}
 } module.exports.done = done
@@ -249,7 +259,7 @@ async function setupchannel(interaction) {
 		if (supportedservers[i].serverid === guildid) {
 			if (supportedservers[i].premium === true) {//home channel is always premium
 				validserver = true
-				w.log.info('matched premium server in our database during homechannel setup: ' + guildid)
+				w.log.info('matched premium server in our database during alpha setup: ' + guildid)
 				break
 			}//end if premium
 		}//end if
