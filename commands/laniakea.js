@@ -34,34 +34,7 @@ module.exports = {
 	async execute(interaction) {
 		var action = interaction.options.getString('action'); var data = interaction.options.getString('data')
 
-		//for adding new metaplex collections
-
-		//Add collection with staged storage in SQL
-		const metaplex = require('../sniper/stageAddCollection.js')
-		//Add collection without storing stages in sql
-		const addcollection2 = require('../sniper/autoAddCollection.js')
-
 		if (interaction.member.user.id === "684896787655557216") {
-			if (action === ('stageadd' || 'addstep1' || 'addstep2' || 'addstep3' || 'addstep4' || 'addstep5')) {
-				await interaction.reply({ content: "Command recieved. Adding new collection to database", ephemeral: true })
-				var meslug = ''
-				if (interaction.options.getString('extradata')) { meslug = interaction.options.getString('extradata') } //if there is extra data, set meslug to it
-				if (action === 'fulladd') { await metaplex.addNewNFT(data, meslug) }
-				if (action === 'addstep1') { await metaplex.getMetaplexData(data) }
-				if (action === 'addstep2') { await metaplex.calculateTraitPercentages(data) }
-				if (action === 'addstep3') { await metaplex.combineTraitRarity(data, meslug) }
-				if (action === 'addstep4') { await metaplex.rankNFTs(data) }
-				if (action === 'addstep5') { await metaplex.cleanupDatabase(data) }
-			}//end if one of the stages
-
-			if (action === 'autoadd') {
-				await interaction.reply({ content: "Command recieved. Adding new collection to database", ephemeral: true })
-				var meslug = ''
-				if (interaction.options.getString('extradata')) {
-					meslug = interaction.options.getString('extradata')
-					await addcollection2.addNewNFT(data, meslug)
-				}//end if there is extradata (meslug)
-			}//end if action is autoadd
 
 			//restart the sniper intervals
 			if (action === 'restart') {
@@ -76,14 +49,6 @@ module.exports = {
 				if (interaction.options.getString('extradata')) { daysToAdd = parseFloat(interaction.options.getString('extradata')) } //if there is extra data, set daysToAdd to it
 				await premium.update(serverid, daysToAdd, interaction)
 			}
-
-			const alpha = require('../setup/alpha2setup.js')
-			if (action === 'alpha') {
-				alpha.addChannelMain(interaction)
-			}
-
-
-
 		}//end if user is laniakea
 	},//end execute block
 }//end module.exports

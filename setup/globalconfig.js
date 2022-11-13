@@ -156,7 +156,7 @@ async function configPrices(interaction) {
 			{
 				"title": "🔥 __Feed Setup 3__ ",
 				"color": parseInt('0x9901f6', 16),
-				"description": "If you would like to set a minimum or maximum (or both) list price for the snipes sent to your server you can do so below. When your done, you can dismiss this message.",
+				"description": "If you would like to set a minimum or maximum (or both) list price for the snipes sent to your server you can do so below. When your done, you can dismiss this message or ores [Next] to move on to next setup step.",
 				"footer": {
 					"text": "Setup 4/5. To move on to next setup step press [Next]"
 				},

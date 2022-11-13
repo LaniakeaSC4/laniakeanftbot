@@ -1,3 +1,4 @@
+/*
 var discord = require('../clients/discordclient.js')
 const client = discord.getClient()
 const { ChannelType, PermissionFlagsBits, PermissionsBitField,
@@ -205,3 +206,4 @@ async function setupchannel(interaction) {
 		return 'complete'
 	} else { return null }//end if valid server
 }//end setupchannel
+*/

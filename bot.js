@@ -266,6 +266,7 @@ client.on('channelDelete', async channel => {
   w.log.info('Channel deleted in guild ' + channel.guildId + ' checking to see if its one of ours')
   var serverdetails = await sql.getServerRow(channel.guildId)//get this server's details
 
+/*
   //check if it was an alpha channel
   var alphafound = false//we are going to check if it was an alpha channel. Start as false.
   if (serverdetails[0].alpha_channels) {//if there is an alpha config
@@ -283,6 +284,7 @@ client.on('channelDelete', async channel => {
   }//end if there is an exisiting config
 
   if (alphafound === false) { w.log.info('deleted channel didn\'t match an alpha channel') }
+  */
 
   //check if it was any of the main snipe channels. Null it in database. Snipe sender checks for null
   if (channel.id === serverdetails[0].raresnipes) {
@@ -306,6 +308,7 @@ client.on('channelDelete', async channel => {
     snipersender.initaliseServers()
   }//end if mythic
 
+/*
   //check if it was the home channel
   if (channel.id === serverdetails[0].homechannel_id) {
     w.log.info('homechannel was deleted from server ' + serverdetails[0].servername + '. Nulling id in our database, deleting config and disabling')
@@ -314,6 +317,7 @@ client.on('channelDelete', async channel => {
     await sql.updateTableColumn('servers', 'serverid', channel.guildId, "homechannel_enabled", false)
     snipersender.initaliseServers()
   }//end if home channel
+  */
   
   //check if it was a new alpha channel
   var newalphafound = false//we are going to check if it was an alpha channel. Start as false.
@@ -330,8 +334,6 @@ client.on('channelDelete', async channel => {
       }//end if we have found a setup matching the current collectionkey
     }//end for each alpha channel config object
   }//end if there is an exisiting config
-
-  if (newalphafound === false) { w.log.info('deleted channel didn\'t match a new alpha channel') }
   
   
 })//end on channelDelete event
@@ -457,7 +459,7 @@ if (interaction.customId === 'feedNextBtn') {
       if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
         alpha.validateCollection(interaction)
       } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
-    }//end if button is 'submithome-modal'
+    }//end if button is 'submitAlpha-modal'
 
  //alpha done
     if (interaction.customId === 'doneAlphaCh-button') {
