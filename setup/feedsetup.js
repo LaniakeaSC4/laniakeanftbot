@@ -11,7 +11,7 @@ const successrow = new ActionRowBuilder()
 .addComponents(
     new ButtonBuilder()
     .setCustomId('feedNextBtn')
-    .setLabel('Next')
+    .setLabel('Next >>')
     .setStyle(ButtonStyle.Secondary),
   )
 var successReply = {
@@ -45,7 +45,7 @@ async function whichMode(interaction) {
 		).addComponents(
 		  new ButtonBuilder()
 		  .setCustomId('feedNextBtn')
-		  .setLabel('Next')
+		  .setLabel('Next >>')
 		  .setStyle(ButtonStyle.Secondary),
 		)
 	//send the reply (including button row)

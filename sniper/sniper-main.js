@@ -25,7 +25,6 @@ var legendarylimit = 7.5
 var epiclimit = 2.5
 var rarelimit = 1.25
 
-//initaliseSniperCollections fills this with serverid,raresnipes,epicsnipes,legendarysnipes,mythicsnipes,homechannel_enabled,homechannel_id,homechannel_collections,premium,inserver FROM servers
 var supportedservers = []
 
 const initaliseSniperCollections = async () => {

@@ -79,7 +79,7 @@ const nextrow = new ActionRowBuilder()
 .addComponents(
     new ButtonBuilder()
     .setCustomId('raritiesNextBtn')
-    .setLabel('Next')
+    .setLabel('Next >>')
     .setStyle(ButtonStyle.Secondary),
   )
 
@@ -147,7 +147,7 @@ async function configPrices(interaction) {
 		).addComponents(
     new ButtonBuilder()
     .setCustomId('limitsNextBtn')
-    .setLabel('Next')
+    .setLabel('Next >>')
     .setStyle(ButtonStyle.Secondary),
   )
 

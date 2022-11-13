@@ -41,7 +41,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 					thispingrole = supportedservers[i].pingrole
 				}
 			}
-
+/*
 			//check if this snipe should be redirected to a homechannel from the main feed
 			var foundhome = false//start with false
 			if (thisserver.homechannel_enabled === true && thisserver.premium === true) {
@@ -55,9 +55,10 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 							foundhome = true//set true, we found a homechannel
 						}//end if there is a homechannel id
 						break//no need to loop further
-					} else {/*w.log.info('No homechannel match for this collection on this server')*/ }
+					} else {w.log.info('No homechannel match for this collection on this server') }
 				}//end loop through saved home channels
 			}//end if homechannel is enabled and server is premium
+			
 
 			//check if this server has this collection enabled for an alpha channel send a duplicate there
 			var foundalpha = false; var alphachannelid = ''
@@ -76,7 +77,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 			if (foundalpha === true) {
 				sendsnipes(thisserverid, alphachannelid, null, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize, thiscollection, floor_history, thisping, thispingrole, seller, floordrop)
 			}//end if alpha
-			
+			*/
 			
 			var foundalpha2 = false
 		//send to new alpha channels
@@ -113,10 +114,11 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 
 			//if foundhome is true (will only be if server is still premium, homechannel is enabled and this collection was found as a homechannel collection)
 			//finding a homechannel will filter a message out of the snipe feed and into the home channel
+			/*
 			if (foundhome === true) {
 				sendsnipes(thisserverid, feedchannel, null, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize, thiscollection, floor_history, thisping, thispingrole, seller, floordrop)
 			} else {//if valid homechannel was not found enter normal send filter process
-
+*/
 				thisserverid = thisserver.serverid
 				//check if single feed mode is enabled
 				if (thisserver.singlefeedmode === true) {//if it is, use the raresnipes channel
@@ -140,7 +142,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 						sendsnipes(thisserverid, feedchannel, null, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize, thiscollection, floor_history, thisping, thispingrole, seller, floordrop)
 					}//end else
 				}//end if snipe channel.
-			}//end else if homechannel was not enabled - send normally
+			//}//end else if homechannel was not enabled - send normally
 
 		}//if bot is active in this server
 	}//for each supported server (from SQL)   

@@ -23,7 +23,7 @@ async function addChannelMain(interaction) {
 		).addComponents(
 			new ButtonBuilder()
 				.setCustomId('alphaNextBtn')
-				.setLabel('Next')
+				.setLabel('Next >>')
 				.setStyle(ButtonStyle.Secondary),
 		)
 
@@ -86,7 +86,7 @@ async function addChannelMain(interaction) {
 		).addComponents(
 			new ButtonBuilder()
 				.setCustomId('alphaNextBtn')
-				.setLabel('Next')
+				.setLabel('Next >>')
 				.setStyle(ButtonStyle.Secondary),
 		)
 
@@ -236,17 +236,17 @@ const nextrow = new ActionRowBuilder()
 		.addComponents(
 			new ButtonBuilder()
 				.setCustomId('alphaNextBtn')
-				.setLabel('Next')
+				.setLabel('Next >>')
 				.setStyle(ButtonStyle.Secondary),
 		)
 
 			//reply success message
 			await interaction.reply({ content: "Changes saved. All snipes for the collections you added will now redirect to this Alpha Channel. You can now dismiss this message or proceed to next setup step.", ephemeral: true, components: [nextrow] })
-
+} 
 		} else {
 			await interaction.reply({ content: "As you did not identify any collections, no changes have been made to your Alpha Channel setup. You can now dismiss this message or proceed to next setup step.", ephemeral: true, components: [nextrow]})
 		}
-	}
+	
 } module.exports.done = done
 
 async function setupchannel(interaction) {
