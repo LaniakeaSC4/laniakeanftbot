@@ -7,6 +7,7 @@ const { ChannelType, PermissionFlagsBits, PermissionsBitField,
 const w = require('../tools/winston.js')
 const sql = require('../tools/commonSQL.js')//common sql related commands are in here
 
+/*
 //respond to global config button press
 async function configPanel(interaction) {
 	//build a new button row for the command reply
@@ -26,7 +27,7 @@ async function configPanel(interaction) {
 	//send the reply (including button row)
 	await interaction.reply({ content: "What would you like to configure?\n\n__Configure Rarities__\n Enabled or Disable particular rarities (e.g. All Rare Snipes) from all other bot functions.\n\n__Configure Price Limits__\nSet min/max prices for the snipes delivered to your server", components: [row], ephemeral: true })
 } module.exports.configPanel = configPanel
-
+*/
 /*
 Configure Rarities
 Globally enable/disable rarity classes

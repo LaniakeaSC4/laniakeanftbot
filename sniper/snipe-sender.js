@@ -84,7 +84,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 		
 				for (var k = 0; k < thisserver.alphaconfig.channels.length; k++) {//for each alpha channel (for this server)
 				for (var m = 0;m < thisserver.alphaconfig.channels[k].collections.length;m++) {
-				  w.log.info('meslug is: ' + thisserver.alphaconfig.channels[k].collections[m] + '. Thiscollection is: ' + thiscollection)
+				  
 				  if (thisserver.alphaconfig.channels[k].collections[m] === thiscollection) {//if match this collection
 						
 						alphachannelid = thisserver.alphaconfig.channels[k].channelID

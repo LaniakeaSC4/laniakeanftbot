@@ -139,10 +139,12 @@ const permissionerror = { content: 'Sorry, you do not have permissions to run th
 const feedsetup = require('./setup/feedsetup.js')
 client.on('interactionCreate', async interaction => {
 
+/*
   //Main feed setup pressed from main setup dialogue 
   if (interaction.customId === 'feedsetup-button') {
     await feedsetup.whichMode(interaction)
   }//end if button is 'feedsetup-button'
+  */
 
   if (interaction.customId === 'standardfeed-button') {
     //interaction.deferReply({ ephemeral: true })
@@ -156,6 +158,7 @@ client.on('interactionCreate', async interaction => {
 
 })//end on interactionCreate
 
+/*
 //home channel setup
 const homesetup = require('./setup/homesetup.js')
 client.on('interactionCreate', async interaction => {
@@ -228,6 +231,7 @@ client.on('interactionCreate', async interaction => {
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }//if not laniakea
   }//end if button is 'submitAddAlpha-modal'
 })//end on interactionCreate for alpha setup
+*/
 
 //=============================
 //==== Other interactions  ====
@@ -335,15 +339,17 @@ client.on('channelDelete', async channel => {
 //Global config
 const globalconfig = require('./setup/globalconfig.js')
 client.on('interactionCreate', async interaction => {
+  /*
   //main globalconfig button on main setup dialogue. Replied with global config panel
   if (interaction.customId === 'globalconfig-button') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
       globalconfig.configPanel(interaction)
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
   }//end if button is 'globalconfig-button'
+  */
 
   //config rarity - when config rarities is pressed, respond with choice of rarities to enable/disable
-  if (interaction.customId === 'configrarity-button') {
+  if (interaction.customId === 'alphaNextBtn') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
       globalconfig.configRarities(interaction)
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
@@ -358,7 +364,7 @@ client.on('interactionCreate', async interaction => {
   }//end if it's one of those buttons
 
   //config price - when config prices is pessed on global config panel
-  if (interaction.customId === 'configPrice-button') {
+  if (interaction.customId === 'raritiesNextBtn') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
       globalconfig.configPrices(interaction)
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
@@ -396,7 +402,7 @@ client.on('interactionCreate', async interaction => {
 const alerts = require('./setup/alerts.js')
 client.on('interactionCreate', async interaction => {
 
-  if (interaction.customId === 'setupalerts-button') {
+  if (interaction.customId === 'limitsNextBtn') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
       alerts.configPanel(interaction)
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
@@ -427,6 +433,12 @@ client.on('interactionCreate', async interaction => {
 //New alpha config
 const alpha = require('./setup/alpha2setup.js')
 client.on('interactionCreate', async interaction => {
+
+if (interaction.customId === 'feedNextBtn') {
+    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
+      alpha.addChannelMain(interaction)
+    } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
+  }
 
   if (interaction.customId === 'addAlphaCh-button') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels

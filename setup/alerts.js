@@ -26,7 +26,12 @@ async function configPanel(interaction) {
         .setCustomId('disable_alerts-button')
         .setLabel('Disable Alerts')
         .setStyle(ButtonStyle.Primary),
-    )
+    ).addComponents(
+		  new ButtonBuilder()
+		  .setCustomId('setupDoneBtn')
+		  .setLabel('Done')
+		  .setStyle(ButtonStyle.Secondary),
+		)
   //send the reply (including button row)
 
   //get current config for this server
@@ -89,7 +94,18 @@ async function configPanel(interaction) {
     }//end else pingrole wasn't enabled and role didn't exist
   }//end else pingrole not enabled
 
-  await interaction.reply({ content: replytext, components: [row], ephemeral: true })
+  await interaction.reply({
+    embeds: [
+			{
+				"title": "🔔 __Alerts Setup 1__ ",
+				"color": parseInt('0x9901f6', 16),
+				"description": replytext,
+				"footer": {
+					"text": "Setup 5/5. To complete setup, press [Done]."
+				},
+			}
+		],//end embed
+    components: [row], ephemeral: true })
 } module.exports.configPanel = configPanel
 
 async function enableAlerts(interaction) {
