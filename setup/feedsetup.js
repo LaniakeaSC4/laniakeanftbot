@@ -7,6 +7,27 @@ const snipersender = require('../sniper/snipe-sender.js')
 const w = require('../tools/winston.js')
 const sql = require('../tools/commonSQL.js')//common sql related commands are in here
 
+const successrow = new ActionRowBuilder()
+.addComponents(
+    new ButtonBuilder()
+    .setCustomId('feedNextBtn')
+    .setLabel('Next')
+    .setStyle(ButtonStyle.Secondary),
+  )
+var successReply = {
+		embeds: [
+			{
+				"title": "🔥 __Feed Setup 2__ ",
+				"color": parseInt('0x9901f6', 16),
+				"description": "Setup complete. Your Snipe Feed channel will now start receiving snipes! Default permissions are deny @\'everyone, please now configure access to the Snipe Feed channels for your users. Please also confirm the bot has send permissions on the Snipe Feed channels.",
+				"footer": {
+					"text": "Setup 1/5. To move on to next setup step press [Next]"
+				},
+			}
+		],//end embed
+		components: [successrow], ephemeral: true,
+	} 
+
 //Main feed setup dialogue. Does the user want single channel mode? 
 async function whichMode(interaction) {
 	//build a new button row for the command reply
@@ -33,7 +54,7 @@ async function whichMode(interaction) {
 			{
 				"title": "🔥 __Feed Setup 1__ ",
 				"color": parseInt('0x9901f6', 16),
-				"description": "Snipe Feed gives your users a scrolling feed of amazing NFT deals. Choose between [Single Feed] (all snipes in one channel) mode or [Multi Feed] mode which splits Snipes into separate Rare, Epic, Legendary and Mythic channels so your users know the best channel to watch. Limit access to higher rarity snipes for higher ranked users in your server! Laniakea Sniper Bot allows give your the control to show the hottest deals to your biggest holders.Press one of the setup buttons below to create a new channel category and new channels to recieve a feed of snipes for **all** supported collections. __🌟 Legendary and Mythic snipes for premium servers only.__ If channels already exist (by ID) it won\'t be recreated. Default permissions on these channels will be; deny @\'everyone and allow @\'laniakea Bot. You are free to rename the channels and add member permissions (remember to give the bot send permissions!)",
+				"description": "Snipe Feed gives your users a scrolling feed of amazing NFT deals. Choose between **[Single Feed]** (all snipes in one channel) mode or [Multi Feed] mode which splits Snipes into separate Rare, Epic, Legendary and Mythic discord channels so your users know the best channel to watch. Show the hottest deals to your biggest holders!\n\nPress one of the setup buttons below to create a new channel category and new channels to recieve a feed of snipes for **all** supported collections. \n\nLegendary and Mythic snipes for premium servers only. If channels already exist (by ID) it won\'t be recreated. Default permissions on these channels will be; deny @\'everyone and allow @\'laniakea Bot. You are free to rename the channels and add member permissions (remember to give the bot send permissions!)",
 				"fields": [
 					{
 						"name": "Current Mode",
@@ -156,7 +177,7 @@ async function start(interaction, feedmode) {
 						await createchildren(guildid)
 						
 						    snipersender.initaliseServers()//rebuild the snipe sender object so it has the new channel
-     await interaction.reply({ content: 'Setup complete. Your Snipe Feed channel will now start receiving snipes! Default permissions are deny @\'everyone, please now configure access to the Snipe Feed channels for your users. Please also confirm the bot has send permissions on the Snipe Feed channels.', ephemeral: true })
+     await interaction.reply(successReply)
 					
 				} else {
 					w.log.info('Category channel already existed')
@@ -164,7 +185,7 @@ async function start(interaction, feedmode) {
 					      w.log.info('setup status was sucessful')
       //await wait(5000)//give time for channels to be created
       snipersender.initaliseServers()//rebuild the snipe sender object so it has the new channel
-     await interaction.reply({ content: 'Setup complete. Your Snipe Feed channel will now start receiving snipes! Default permissions are deny @\'everyone, please now configure access to the Snipe Feed channels for your users. Please also confirm the bot has send permissions on the Snipe Feed channels.', ephemeral: true })
+     await interaction.reply(successReply)
 
 				}//end else
 
