@@ -78,7 +78,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 			}//end if alpha
 			
 			
-			
+			var foundalpha2 = false
 		//send to new alpha channels
 			if (thisserver.alphaconfig.channels.length != 0 && thisserver.premium === true) {//if there is an alpha channel config and server is premium
 		
@@ -88,7 +88,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 				  if (thisserver.alphaconfig.channels[k].collections[m] === thiscollection) {//if match this collection
 						
 						alphachannelid = thisserver.alphaconfig.channels[k].channelID
-						
+						foundalpha2 = true
 						sendsnipes(thisserverid, alphachannelid, null, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize, thiscollection, floor_history, thisping, thispingrole, seller, floordrop)
 						
 						
@@ -104,7 +104,7 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 			
 			
 			
-			
+			if (foundalpha2 === true) {return} 
 			
 			
 			

@@ -17,7 +17,7 @@ const successrow = new ActionRowBuilder()
 var successReply = {
 		embeds: [
 			{
-				"title": "🔥 __Feed Setup 2__ ",
+				"title": "🔥 __Feed Setup 1__ ",
 				"color": parseInt('0x9901f6', 16),
 				"description": "Setup complete. Your Snipe Feed channel will now start receiving snipes! Default permissions are deny @\'everyone, please now configure access to the Snipe Feed channels for your users. Please also confirm the bot has send permissions on the Snipe Feed channels.",
 				"footer": {
@@ -54,7 +54,7 @@ async function whichMode(interaction) {
 			{
 				"title": "🔥 __Feed Setup 1__ ",
 				"color": parseInt('0x9901f6', 16),
-				"description": "Snipe Feed gives your users a scrolling feed of amazing NFT deals. Choose between **[Single Feed]** (all snipes in one channel) mode or [Multi Feed] mode which splits Snipes into separate Rare, Epic, Legendary and Mythic discord channels so your users know the best channel to watch. Show the hottest deals to your biggest holders!\n\nPress one of the setup buttons below to create a new channel category and new channels to recieve a feed of snipes for **all** supported collections. \n\nLegendary and Mythic snipes for premium servers only. If channels already exist (by ID) it won\'t be recreated. Default permissions on these channels will be; deny @\'everyone and allow @\'laniakea Bot. You are free to rename the channels and add member permissions (remember to give the bot send permissions!)",
+				"description": "Snipe Feed gives your users a scrolling feed of amazing NFT deals. Choose between **[Single Feed]** (all snipes in one channel) mode or **[Multi Feed]** mode which splits Snipes into separate Rare, Epic, Legendary and Mythic discord channels so your users know the best channel to watch. Show the hottest deals to your biggest holders!\n\nPress one of the setup buttons below to create a new channel category and new channels to recieve a feed of snipes for **all** supported collections. \n\nLegendary and Mythic snipes for premium servers only. If channels already exist (by ID) it won\'t be recreated. Default permissions on these channels will be; deny @\'everyone and allow @\'laniakea Bot. You are free to rename the channels and add member permissions (remember to give the bot send permissions!)",
 				"fields": [
 					{
 						"name": "Current Mode",
