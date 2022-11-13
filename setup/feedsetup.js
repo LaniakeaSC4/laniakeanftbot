@@ -14,16 +14,40 @@ async function whichMode(interaction) {
 		.addComponents(
 			new ButtonBuilder()
 				.setCustomId('standardfeed-button')
-				.setLabel('Enable Standard Feed')
+				.setLabel('Multi Feed')
 				.setStyle(ButtonStyle.Primary),
 		).addComponents(
 			new ButtonBuilder()
 				.setCustomId('singlefeed-button')
-				.setLabel('Enable Single Feed')
+				.setLabel('Single Feed')
 				.setStyle(ButtonStyle.Primary),
+		).addComponents(
+		  new ButtonBuilder()
+		  .setCustomId('feedNextBtn')
+		  .setLabel('Next')
+		  .setStyle(ButtonStyle.Secondary),
 		)
 	//send the reply (including button row)
-	await interaction.reply({ content: "**__Which feed mode would you like?__**\n\n\"**Standard Feed**\" mode will create 4 channels (as below) and seperate snipes into those 4 channels depending on NFT rarity. This mode allows you to control access to the highest rarity snipes to your biggest holders by granting access to those channels.\n\n```LANIAKEA SNIPER BOT\n|-rare-snipes\n|-epic-snipes\n|-legendary-snipes🌟\n|-mythic-snipes🌟```\n\"**Single Feed**\" mode will only create one channel and deliver **all** snipes to that channel regardless of rarity. In this mode, you will have less discord channels to manage, but the feed will scroll fast.\n\nIf you switch from Standard Feed mode to Single Feed mode, all snipes will start being delivered to the Rare-Snipes channel. If you switch from Singlee Feed mode to Standard Feed mode, the Single Feed channel will start recieving Rare snipes only and Epic, Legendary and Mythic channels will be created for those Snipes.\n\n🌟 In both modes Legendary and Mythic snipes are a premium feature. Rare and Epic snipes will also be delivered with a delay behind premium servers.", components: [row], ephemeral: true })
+	await interaction.reply({
+		embeds: [
+			{
+				"title": "🔥 __Feed Setup 1__ ",
+				"color": parseInt('0x9901f6', 16),
+				"description": "Snipe Feed gives your users a scrolling feed of amazing NFT deals. Choose between [Single Feed] (all snipes in one channel) mode or [Multi Feed] mode which splits Snipes into separate Rare, Epic, Legendary and Mythic channels so your users know the best channel to watch. Limit access to higher rarity snipes for higher ranked users in your server! Laniakea Sniper Bot allows give your the control to show the hottest deals to your biggest holders.Press one of the setup buttons below to create a new channel category and new channels to recieve a feed of snipes for **all** supported collections. __🌟 Legendary and Mythic snipes for premium servers only.__ If channels already exist (by ID) it won\'t be recreated. Default permissions on these channels will be; deny @\'everyone and allow @\'laniakea Bot. You are free to rename the channels and add member permissions (remember to give the bot send permissions!)",
+				"fields": [
+					{
+						"name": "Current Mode",
+						"value": "Write this code",
+						"inline": false
+					},
+				],
+				"footer": {
+					"text": "Setup 1/5. To move on to next setup step press [Next]"
+				},
+			}
+		],//end embed
+		components: [row], ephemeral: true,
+	})
 } module.exports.whichMode = whichMode
 
 async function start(interaction, feedmode) {
@@ -69,8 +93,7 @@ async function start(interaction, feedmode) {
 		if (existingchannels[0].mythicsnipes) { channelcheck.mythicsnipes.dbfound = true; channelcheck.mythicsnipes.db_cid = existingchannels[0].mythicsnipes }
 
 		//get the guild channels to see if our saved ones still exist
-		await guild.channels.fetch()
-			.then(async channels => {
+		var channels = await guild.channels.fetch()
 				channels.forEach(async channel => {
 					if (channel) {
 						//check for the channels in server. If channel wasnt found db_cid would be null. Incorrect or null means serverfound wont get updated to true.
@@ -111,7 +134,7 @@ async function start(interaction, feedmode) {
 				//first check and create the category channel
 				if (channelcheck.snipecategory.verified === false) {
 					w.log.info('Category channel was not found - creating it')
-					guild.channels.create({
+					var newchannel = await guild.channels.create({
 						name: channelcheck.snipecategory.name,
 						type: ChannelType.GuildCategory,
 						permissionOverwrites: [
@@ -124,17 +147,25 @@ async function start(interaction, feedmode) {
 								allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages],
 							},
 						]
-					}).then(async newchannel => {
+					})//creare
 						w.log.info('created new category channel it\'s ID is:')
 						w.log.info(newchannel.id)
 						channelcheck.snipecategory.server_cid = newchannel.id//save category channel ID to we can add children
 						await sql.updateTableColumn('servers', 'serverid', guildid, 'snipecategory', newchannel.id)
-					}).then(async result => {
+					
 						await createchildren(guildid)
-					})
+						
+						    snipersender.initaliseServers()//rebuild the snipe sender object so it has the new channel
+     await interaction.Reply({ content: 'Setup complete. Your Snipe Feed channel will now start receiving snipes! Default permissions are deny @\'everyone, please now configure access to the Snipe Feed channels for your users. Please also confirm the bot has send permissions on the Snipe Feed channels.', ephemeral: true })
+					
 				} else {
 					w.log.info('Category channel already existed')
 					await createchildren(guildid)
+					      w.log.info('setup status was sucessful')
+      //await wait(5000)//give time for channels to be created
+      snipersender.initaliseServers()//rebuild the snipe sender object so it has the new channel
+     await interaction.Reply({ content: 'Setup complete. Your Snipe Feed channel will now start receiving snipes! Default permissions are deny @\'everyone, please now configure access to the Snipe Feed channels for your users. Please also confirm the bot has send permissions on the Snipe Feed channels.', ephemeral: true })
+
 				}//end else
 
 				async function createchildren(guildid) {
@@ -149,14 +180,14 @@ async function start(interaction, feedmode) {
 								if (channelcheck[key].verified === false) {//if this one isnt verified as present
 									//only create premium channels if premium server
 									if (thisserver.premium === true || channelcheck[key].premium === false) {
-										guild.channels.create({
+										var newchannel = await guild.channels.create({
 											name: channelcheck[key].name,
 											type: ChannelType.GuildText,
 											parent: laniakeacategory
-										}).then(async newchannel => {
+										})
 											w.log.info('created new channel ' + newchannel.name + ' it\'s ID is: ' + newchannel.id)
 											await sql.updateTableColumn('servers', 'serverid', guildid, channelcheck[key].servercolumn, newchannel.id)
-										})//end then
+											return newchannel.id
 									}//end if premium
 								}//end if verified was false
 							}//end if key isnt snipecategory
@@ -165,19 +196,18 @@ async function start(interaction, feedmode) {
 						sql.updateTableColumn('servers', 'serverid', guildid, 'singlefeedmode', true)
 						//if there wasn't already a raresnipes channel
 						if (channelcheck.raresnipes.verified === false) {
-							guild.channels.create({
+							var newchannel = await guild.channels.create({
 								name: "Snipe-Feed",
 								type: ChannelType.GuildText,
 								parent: laniakeacategory
-							}).then(async newchannel => {
+							})
 								w.log.info('created new channel ' + newchannel.name + ' it\'s ID is: ' + newchannel.id)
 								//save channel id in raresnipes column. That's where single mode snipes are always sent.
 								await sql.updateTableColumn('servers', 'serverid', guildid, channelcheck.raresnipes.servercolumn, newchannel.id)
-							})//end then
+								return newchannel.id 
 						}//end if raresnipes verified === false
 					}//end else feedmode wasn't multichannel
 				}//end createchildren
-			})//end then after get channels
-		return true
+
 	} else { return null }//end if valid server
 } module.exports.start = start

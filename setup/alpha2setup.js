@@ -20,21 +20,12 @@ async function addChannelMain(interaction) {
 				.setCustomId('addAlphaCh-button')
 				.setLabel('Add Channel')
 				.setStyle(ButtonStyle.Primary),
+		).addComponents(
+			new ButtonBuilder()
+				.setCustomId('alphaNextBtn')
+				.setLabel('Next')
+				.setStyle(ButtonStyle.Secondary),
 		)
-
-	/*
-	
-	{"enabled": false,
-	  "channels": 
-	  [
-		{cid:1234,collections : 
-		  [
-		  meslug, meslug, meslug
-		  ]
-		}
-	  ]
-	}
-	*/
 
 	//reset config vars for any previous setup for this server
 	thisNewChannel.enabled[interaction.guildId] = []
@@ -72,7 +63,7 @@ async function addChannelMain(interaction) {
 					},
 				],
 				"footer": {
-					"text": "D: https://discord.gg/CgF7neAte2 | W: nftsniperbot.xyz"
+					"text": "Setup 2/5. To move on to next setup step press [Next]"
 				},
 			}
 		],//end embed
@@ -95,6 +86,11 @@ async function newChannel(interaction) {
 				.setCustomId('doneAlphaCh-button')
 				.setLabel('Create')
 				.setStyle(ButtonStyle.Success),
+		).addComponents(
+			new ButtonBuilder()
+				.setCustomId('alphaNextBtn')
+				.setLabel('Next')
+				.setStyle(ButtonStyle.Secondary),
 		)
 
 	//reset config vars for any previous setup for this server
@@ -105,7 +101,7 @@ async function newChannel(interaction) {
 			{
 				"title": "🎯 __Alpha Channel Setup 2__ ",
 				"color": parseInt('0x9901f6', 16),
-				"description": "Press [Add Collection] below and enter a Magic Eden link to a supported collection you would like in this alpha channel. For a list of supported collections please use `/supportedcollections`. When you have added all the collections you wish for this alpha channel, press [Create] to create the channel",
+				"description": "Press [Add Collection] below and enter a Magic Eden link to a supported collection you would like in this alpha channel. For a list of supported collections please use `/supportedcollections`. When you have added all the collections you wish for this alpha channel, press [Create] to create the channel.",
 				"fields": [
 					{
 						"name": "Creating Channel for",
@@ -114,7 +110,7 @@ async function newChannel(interaction) {
 					},
 				],
 				"footer": {
-					"text": "D: https://discord.gg/CgF7neAte2 | W: nftsniperbot.xyz"
+					"text": "Setup 2/5. To move on to next setup step press [Next]"
 				},
 			}
 		],//end embed
@@ -165,7 +161,7 @@ async function validateCollection(interaction) {
 						{
 							"title": "🎯 __Alpha Channel Setup__ ",
 							"color": parseInt('0x9901f6', 16),
-							"description": "Adding new channel",
+							"description": "Press [Add Collection] below and enter a Magic Eden link to a supported collection you would like in this alpha channel. For a list of supported collections please use `/supportedcollections`. When you have added all the collections you wish for this alpha channel, press [Create] to create the channel.",
 							"fields": [
 								{
 									"name": "Adding",
@@ -174,7 +170,7 @@ async function validateCollection(interaction) {
 								},
 							],
 							"footer": {
-								"text": "D: https://discord.gg/CgF7neAte2 | W: nftsniperbot.xyz"
+								"text": "Setup 2/5. To move on to next setup step press [Next]"
 							},
 						}
 					],//end embed
@@ -187,7 +183,7 @@ async function validateCollection(interaction) {
 						{
 							"title": "🎯 __Alpha Channel Setup__ ",
 							"color": parseInt('0x9901f6', 16),
-							"description": "Adding new channel",
+							"description": "Press [Add Collection] below and enter a Magic Eden link to a supported collection you would like in this alpha channel. For a list of supported collections please use `/supportedcollections`. When you have added all the collections you wish for this alpha channel, press [Create] to create the channel.",
 							"fields": [
 								{
 									"name": "Adding",
@@ -196,7 +192,7 @@ async function validateCollection(interaction) {
 								},
 							],
 							"footer": {
-								"text": "D: https://discord.gg/CgF7neAte2 | W: nftsniperbot.xyz"
+								"text": "Setup 2/5. To move on to next setup step press [Next]"
 							},
 						}
 					],//end embed

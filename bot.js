@@ -145,31 +145,13 @@ client.on('interactionCreate', async interaction => {
   }//end if button is 'feedsetup-button'
 
   if (interaction.customId === 'standardfeed-button') {
-    interaction.deferReply({ ephemeral: true })
-    var setupstatus = await feedsetup.start(interaction, "multichannel")//creates category and 4 sniper channels if the ones in database dont already exist.
-    if (setupstatus) {
-      w.log.info('setup status was sucessful')
-      await wait(5000)//give time for channels to be created
-      snipersender.initaliseServers()//rebuild snipe sender object so it includes the new channels
-      interaction.editReply({ content: 'Setup complete. Your Snipe Feed channels will now start receiving snipes! Default permissions are deny @\'everyone, please now configure access to the Snipe Feed channels for your users. Please also confirm the bot has send permissions on the Snipe Feed channels.', ephemeral: true })
-    } else {
-      w.log.info('there was an error during a setup attempt')
-      interaction.reply({ content: 'There was a setup error. If your seeing this please contact Laniakea#3683 with the time the error occurred.', ephemeral: true })
-    }//end else there is an error
+    //interaction.deferReply({ ephemeral: true })
+    await feedsetup.start(interaction, "multichannel")//creates category and 4 sniper channels if the ones in database dont already exist.
   }//end if button is 'standardfeed-button'
 
   if (interaction.customId === 'singlefeed-button') {
-    interaction.deferReply({ ephemeral: true })
-    var setupstatus = await feedsetup.start(interaction, "singlechannel")//creates category and 4 sniper channels if the ones in database dont already exist.
-    if (setupstatus) {
-      w.log.info('setup status was sucessful')
-      await wait(5000)//give time for channels to be created
-      snipersender.initaliseServers()//rebuild the snipe sender object so it has the new channel
-      interaction.editReply({ content: 'Setup complete. Your Snipe Feed channel will now start receiving snipes! Default permissions are deny @\'everyone, please now configure access to the Snipe Feed channels for your users. Please also confirm the bot has send permissions on the Snipe Feed channels.', ephemeral: true })
-    } else {
-      w.log.info('there was an error during a setup attempt')
-      interaction.reply({ content: 'There was a setup error. If your seeing this please contact Laniakea#3683 with the time the error occurred.', ephemeral: true })
-    }//end else there was an error
+    //interaction.deferReply({ ephemeral: true })
+    await feedsetup.start(interaction, "singlechannel")//creates category and 4 sniper channels if the ones in database dont already exist.
   }//end if button is 'singlefeed-button'
 
 })//end on interactionCreate
