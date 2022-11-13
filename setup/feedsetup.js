@@ -156,7 +156,7 @@ async function start(interaction, feedmode) {
 						await createchildren(guildid)
 						
 						    snipersender.initaliseServers()//rebuild the snipe sender object so it has the new channel
-     await interaction.Reply({ content: 'Setup complete. Your Snipe Feed channel will now start receiving snipes! Default permissions are deny @\'everyone, please now configure access to the Snipe Feed channels for your users. Please also confirm the bot has send permissions on the Snipe Feed channels.', ephemeral: true })
+     await interaction.reply({ content: 'Setup complete. Your Snipe Feed channel will now start receiving snipes! Default permissions are deny @\'everyone, please now configure access to the Snipe Feed channels for your users. Please also confirm the bot has send permissions on the Snipe Feed channels.', ephemeral: true })
 					
 				} else {
 					w.log.info('Category channel already existed')
@@ -164,7 +164,7 @@ async function start(interaction, feedmode) {
 					      w.log.info('setup status was sucessful')
       //await wait(5000)//give time for channels to be created
       snipersender.initaliseServers()//rebuild the snipe sender object so it has the new channel
-     await interaction.Reply({ content: 'Setup complete. Your Snipe Feed channel will now start receiving snipes! Default permissions are deny @\'everyone, please now configure access to the Snipe Feed channels for your users. Please also confirm the bot has send permissions on the Snipe Feed channels.', ephemeral: true })
+     await interaction.reply({ content: 'Setup complete. Your Snipe Feed channel will now start receiving snipes! Default permissions are deny @\'everyone, please now configure access to the Snipe Feed channels for your users. Please also confirm the bot has send permissions on the Snipe Feed channels.', ephemeral: true })
 
 				}//end else
 
