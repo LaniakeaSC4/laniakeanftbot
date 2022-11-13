@@ -92,7 +92,7 @@ async function configPanel(interaction) {
   await interaction.reply({
     embeds: [
 			{
-				"title": "🔔 __Alerts Setup 1__ ",
+				"title": "🔔 __Alerts Setup__",
 				"color": parseInt('0x9901f6', 16),
 				"description": replytext,
 				"footer": {
@@ -133,7 +133,7 @@ async function enableAlerts(interaction) {
          await interaction.reply({ 
             embeds: [
 			{
-				"title": "🔔 __Alerts Setup 2__ ",
+				"title": "🔔 __Alerts Setup__",
 				"color": parseInt('0x9901f6', 16),
 				"description": "Created a new alert role to replace the deleted one: <@&" + newrole.id + ">. Your users can now opt in to this role with `/alerts` (make sure the bot has manage roles permission)",
 				"footer": {
@@ -150,7 +150,7 @@ async function enableAlerts(interaction) {
             
             embeds: [
 			{
-				"title": "🔔 __Alerts Setup 2__ ",
+				"title": "🔔 __Alerts Setup__",
 				"color": parseInt('0x9901f6', 16),
 				"description": "No action taken. Alerts are already enabled for this server. The Role is: <@&" + pingrole + ">. Your users can now opt in to this role with `/alerts` (make sure the bot has manage roles permission)",
 				"footer": {
@@ -172,7 +172,7 @@ async function enableAlerts(interaction) {
           
           embeds: [
 			{
-				"title": "🔔 __Alerts Setup 2__ ",
+				"title": "🔔 __Alerts Setup__",
 				"color": parseInt('0x9901f6', 16),
 				"description": "Alerts were enabled for this server, but there was no saved role. Created a new alert role: <@&" + newrole.id + ">. Your users can now opt in to this role with `/alerts` (make sure the bot has manage roles permission)",
 				"footer": {
@@ -205,7 +205,7 @@ async function enableAlerts(interaction) {
             
             embeds: [
 			{
-				"title": "🔔 __Alerts Setup 2__ ",
+				"title": "🔔 __Alerts Setup__",
 				"color": parseInt('0x9901f6', 16),
 				"description": "Alerts have now been enabled for this server. There was an exisitng saved role, but it must have been deleted. Created a new alert role: <@&" + newrole.id + ">. Your users can now opt in to this role with `/alerts` (make sure the bot has manage roles permission)",
 				"footer": {
@@ -225,7 +225,7 @@ async function enableAlerts(interaction) {
             
             embeds: [
 			{
-				"title": "🔔 __Alerts Setup 2__ ",
+				"title": "🔔 __Alerts Setup__",
 				"color": parseInt('0x9901f6', 16),
 				"description": "Alerts have now been enabled for this server. There was an exisitng role, so it has been reused: <@&" + pingrole + ">. Your users can now opt in to this role with `/alerts` (make sure the bot has manage roles permission)",
 				"footer": {
@@ -249,7 +249,7 @@ async function enableAlerts(interaction) {
           
           embeds: [
 			{
-				"title": "🔔 __Alerts Setup 2__ ",
+				"title": "🔔 __Alerts Setup__",
 				"color": parseInt('0x9901f6', 16),
 				"description": "Alerts are now enabled for this server. Created a new alert role: <@&" + newrole.id + ">. Your users can now opt in to this role with `/alerts` (make sure the bot has manage roles permission)",
 				"footer": {
@@ -267,7 +267,7 @@ async function enableAlerts(interaction) {
       
       embeds: [
 			{
-				"title": "🔔 __Alerts Setup 2__ ",
+				"title": "🔔 __Alerts Setup__",
 				"color": parseInt('0x9901f6', 16),
 				"description": "Error: the bot requires the manage role permission to perform this action. Please grant the bot this permission and try again.",
 				"footer": {
@@ -307,7 +307,7 @@ async function disableAlerts(interaction) {
           
           embeds: [
 			{
-				"title": "🔔 __Alerts Setup 2__ ",
+				"title": "🔔 __Alerts Setup__",
 				"color": parseInt('0x9901f6', 16),
 				"description": "Alerts have now been disabled for this server. Users will no longer recieve pings. We have a saved alert role in our database, but it looks like you have already deleted it from the server. To re-enable in future please run `/setup` again.",
 				"footer": {
@@ -325,7 +325,7 @@ async function disableAlerts(interaction) {
           
           embeds: [
 			{
-				"title": "🔔 __Alerts Setup 2__ ",
+				"title": "🔔 __Alerts Setup__",
 				"color": parseInt('0x9901f6', 16),
 				"description": "Alerts have now been disabled for this server. Users will no longer recieve pings. There was an exisitng role: <@&" + pingrole + ">. You can now delete this, or leave it and it will be reused if your later renable alerts",
 				"footer": {
@@ -343,7 +343,7 @@ async function disableAlerts(interaction) {
         
       embeds: [
 			{
-				"title": "🔔 __Alerts Setup 2__ ",
+				"title": "🔔 __Alerts Setup__",
 				"color": parseInt('0x9901f6', 16),
 				"description": "Alerts have now been disabled for this server. Users will no longer recieve pings. You can now dismiss this message",
 				"footer": {
@@ -360,7 +360,7 @@ async function disableAlerts(interaction) {
       
       embeds: [
 			{
-				"title": "🔔 __Alerts Setup 2__ ",
+				"title": "🔔 __Alerts Setup__",
 				"color": parseInt('0x9901f6', 16),
 				"description": "Error: the bot requires the manage role permission to perform this action. Please grant the bot this permission and try again.",
 				"footer": {

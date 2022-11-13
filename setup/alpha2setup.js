@@ -54,7 +54,7 @@ async function addChannelMain(interaction) {
 			{
 				"title": "🎯 __Alpha Channel Setup 1__ ",
 				"color": parseInt('0x9901f6', 16),
-				"description": "Alpha Channels allow you to select one or more collections for which snipes of **any rarity** will be redirected into a dedicated \'Alpha channel\'. \n\nPress \"Add Alpha Channel\" below to begin creating a new Alpha channel.",
+				"description": "Alpha Channels allow you to select one or more collections for which snipes of **any rarity** will be redirected into a dedicated \'**Alpha channel**\'. \n\nPress **[New Channel]** below to begin creating a new Alpha channel.",
 				"fields": [
 					{
 						"name": "Current Alpha Channels",
@@ -101,7 +101,7 @@ async function newChannel(interaction) {
 			{
 				"title": "🎯 __Alpha Channel Setup 2__ ",
 				"color": parseInt('0x9901f6', 16),
-				"description": "Press [Add Collection] below and enter a Magic Eden link to a supported collection you would like in this alpha channel. For a list of supported collections please use `/supportedcollections`. When you have added all the collections you wish for this alpha channel, press [Create] to create the channel.",
+				"description": "Press **[Add Collection]** below and enter a Magic Eden link to a supported collection you would like in this alpha channel. For a list of supported collections please use `/supportedcollections`. When you have added all the collections you wish for this alpha channel, press [Create] to create the channel.",
 				"fields": [
 					{
 						"name": "Creating Channel for",
@@ -161,7 +161,7 @@ async function validateCollection(interaction) {
 						{
 							"title": "🎯 __Alpha Channel Setup 2__ ",
 							"color": parseInt('0x9901f6', 16),
-							"description": "Press [Add Collection] below and enter a Magic Eden link to a supported collection you would like in this alpha channel. For a list of supported collections please use `/supportedcollections`. When you have added all the collections you wish for this alpha channel, press [Create] to create the channel.",
+							"description": "Press **[Add Collection]** below and enter a Magic Eden link to a supported collection you would like in this alpha channel. For a list of supported collections please use `/supportedcollections`. When you have added all the collections you wish for this alpha channel, press [Create] to create the channel.",
 							"fields": [
 								{
 									"name": "Adding",
@@ -184,7 +184,7 @@ async function validateCollection(interaction) {
 						{
 							"title": "🎯 __Alpha Channel Setup 2__ ",
 							"color": parseInt('0x9901f6', 16),
-							"description": "Press [Add Collection] below and enter a Magic Eden link to a supported collection you would like in this alpha channel. For a list of supported collections please use `/supportedcollections`. When you have added all the collections you wish for this alpha channel, press [Create] to create the channel.",
+							"description": "Press **[Add Collection]** below and enter a Magic Eden link to a supported collection you would like in this alpha channel. For a list of supported collections please use `/supportedcollections`. When you have added all the collections you wish for this alpha channel, press [Create] to create the channel.",
 							"fields": [
 								{
 									"name": "Adding",

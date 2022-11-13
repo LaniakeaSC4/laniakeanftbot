@@ -87,7 +87,7 @@ const nextrow = new ActionRowBuilder()
 	await interaction.reply({
 		embeds: [
 			{
-				"title": "🔥 __Feed Setup 2__ ",
+				"title": "🌟 __Global Rarity Filter__ ",
 				"color": parseInt('0x9901f6', 16),
 				"description": "It is possible to disables entire classes of snipes (e.g. Disable all Rare Snipes).\n\nWhat snipes would you like to enable or disable? Note: this change **is global** and will start/stop the selected snipe rarity for all other services (e.g. Alpha Channels, Snipe Feed, Home Channel). Disabled rarities will still be available to the rarity chacker.\n\n1️⃣ Enable Rare Snipes\n2️⃣ Enable Epic Snipes\n3️⃣ Enable Legendary Snipes\n4️⃣ Enable Mythic Snipes\n\n5️⃣ Disable All Rare Snipes\n6️⃣ Disable All Epic Snipes\n7️⃣ Disable all Legendary Snipes\n8️⃣ Disable Mythic Snipes\n\nWhen your finished you can dismiss this message.",
 				"footer": {
@@ -154,7 +154,7 @@ async function configPrices(interaction) {
 	await interaction.reply({
 	  embeds: [
 			{
-				"title": "🔥 __Feed Setup 3__ ",
+				"title": "💯 __Global Price Filter__ ",
 				"color": parseInt('0x9901f6', 16),
 				"description": "If you would like to set a minimum or maximum (or both) list price for the snipes sent to your server you can do so below. When your done, you can dismiss this message or ores [Next] to move on to next setup step.",
 				"footer": {
