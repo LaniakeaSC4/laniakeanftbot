@@ -47,20 +47,10 @@ async function addNewNFT(creatoraddress, meslug, extraBlockList) {
 }; module.exports.addNewNFT = addNewNFT
 
 //addstep1
-var swapper = 0
 async function getMetaplexData(creatoraddress) {
 
   //establish connection
-  var connection;
-  if (swapper === 0) {
-    w.log.info('autoAdd1: Using RPC connection 1')
-    connection = new Connection(process.env.QUICKNODE)
-    swapper = 1
-  } else {
-    w.log.info('autoAdd1: Using RPC connection 2')
-    connection = new Connection(process.env.QUICKNODE2)
-    swapper = 0
-  }
+  var connection = new Connection(process.env.QUICKNODE)
 
   const wallet = Keypair.generate()
   const metaplex = Metaplex.make(connection)
