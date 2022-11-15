@@ -75,13 +75,13 @@ async function configRarities(interaction) {
 		.addComponents([button1, button2, button3, button4])
 	let buttonRow2 = new ActionRowBuilder()
 		.addComponents([button5, button6, button7, button8])
-const nextrow = new ActionRowBuilder()
-.addComponents(
-    new ButtonBuilder()
-    .setCustomId('raritiesNextBtn')
-    .setLabel('Next >>')
-    .setStyle(ButtonStyle.Secondary),
-  )
+	const nextrow = new ActionRowBuilder()
+		.addComponents(
+			new ButtonBuilder()
+				.setCustomId('raritiesNextBtn')
+				.setLabel('Next >>')
+				.setStyle(ButtonStyle.Secondary),
+		)
 
 	//send the reply (including button rows)
 	await interaction.reply({
@@ -145,14 +145,14 @@ async function configPrices(interaction) {
 				.setLabel('Set Max Price')
 				.setStyle(ButtonStyle.Primary),
 		).addComponents(
-    new ButtonBuilder()
-    .setCustomId('limitsNextBtn')
-    .setLabel('Next >>')
-    .setStyle(ButtonStyle.Secondary),
-  )
+			new ButtonBuilder()
+				.setCustomId('limitsNextBtn')
+				.setLabel('Next >>')
+				.setStyle(ButtonStyle.Secondary),
+		)
 
 	await interaction.reply({
-	  embeds: [
+		embeds: [
 			{
 				"title": "💯 __Global Price Filter__ ",
 				"color": parseInt('0x9901f6', 16),

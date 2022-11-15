@@ -8,25 +8,25 @@ const w = require('../tools/winston.js')
 const sql = require('../tools/commonSQL.js')//common sql related commands are in here
 
 const successrow = new ActionRowBuilder()
-.addComponents(
-    new ButtonBuilder()
-    .setCustomId('feedNextBtn')
-    .setLabel('Next >>')
-    .setStyle(ButtonStyle.Secondary),
-  )
+	.addComponents(
+		new ButtonBuilder()
+			.setCustomId('feedNextBtn')
+			.setLabel('Next >>')
+			.setStyle(ButtonStyle.Secondary),
+	)
 var successReply = {
-		embeds: [
-			{
-				"title": "🔥 __Feed Setup 1__ ",
-				"color": parseInt('0x9901f6', 16),
-				"description": "Setup complete. Your Snipe Feed channel(s) will now start receiving snipes!\n\nDefault permissions are **deny** @\'everyone, please now configure access to the Snipe Feed channels for your users. Please also confirm the bot has send permissions on the Snipe Feed channel(s).",
-				"footer": {
-					"text": "Setup 1/5. To move on to next setup step press [Next]"
-				},
-			}
-		],//end embed
-		components: [successrow], ephemeral: true,
-	} 
+	embeds: [
+		{
+			"title": "🔥 __Feed Setup 1__ ",
+			"color": parseInt('0x9901f6', 16),
+			"description": "Setup complete. Your Snipe Feed channel(s) will now start receiving snipes!\n\nDefault permissions are **deny** @\'everyone, please now configure access to the Snipe Feed channels for your users. Please also confirm the bot has send permissions on the Snipe Feed channel(s).",
+			"footer": {
+				"text": "Setup 1/5. To move on to next setup step press [Next]"
+			},
+		}
+	],//end embed
+	components: [successrow], ephemeral: true,
+}
 
 //Main feed setup dialogue. Does the user want single channel mode? 
 async function whichMode(interaction) {
@@ -43,10 +43,10 @@ async function whichMode(interaction) {
 				.setLabel('Single Feed')
 				.setStyle(ButtonStyle.Primary),
 		).addComponents(
-		  new ButtonBuilder()
-		  .setCustomId('feedNextBtn')
-		  .setLabel('Next >>')
-		  .setStyle(ButtonStyle.Secondary),
+			new ButtonBuilder()
+				.setCustomId('feedNextBtn')
+				.setLabel('Next >>')
+				.setStyle(ButtonStyle.Secondary),
 		)
 	//send the reply (including button row)
 	await interaction.reply({
@@ -115,120 +115,120 @@ async function start(interaction, feedmode) {
 
 		//get the guild channels to see if our saved ones still exist
 		var channels = await guild.channels.fetch()
-				channels.forEach(async channel => {
-					if (channel) {
-						//check for the channels in server. If channel wasnt found db_cid would be null. Incorrect or null means serverfound wont get updated to true.
-						//verified gets set true if both server and SQL are found and matched. If not, we will recreate
-						if (channel.id === channelcheck.snipecategory.db_cid) {
-							w.log.info('Found the saved category channel')
-							channelcheck.snipecategory.serverfound = true
-							channelcheck.snipecategory.server_cid = channel.id
-							channelcheck.snipecategory.verified = true
-						}//end if category
-						if (channel.id === channelcheck.raresnipes.db_cid) {
-							w.log.info('Found the saved raresnipes channel')
-							channelcheck.raresnipes.serverfound = true
-							channelcheck.raresnipes.server_cid = channel.id
-							channelcheck.raresnipes.verified = true
-						}//end if rare
-						if (channel.id === channelcheck.epicsnipes.db_cid) {
-							w.log.info('Found the saved epicsnipes channel')
-							channelcheck.epicsnipes.serverfound = true
-							channelcheck.epicsnipes.server_cid = channel.id
-							channelcheck.epicsnipes.verified = true
-						}//end if epic
-						if (channel.id === channelcheck.legendarysnipes.db_cid) {
-							w.log.info('Found the saved legendarysnipes channel')
-							channelcheck.legendarysnipes.serverfound = true
-							channelcheck.legendarysnipes.server_cid = channel.id
-							channelcheck.legendarysnipes.verified = true
-						}//end if legendary
-						if (channel.id === channelcheck.mythicsnipes.db_cid) {
-							w.log.info('Found the saved mythicsnipes channel')
-							channelcheck.mythicsnipes.serverfound = true
-							channelcheck.mythicsnipes.server_cid = channel.id
-							channelcheck.mythicsnipes.verified = true
-						}//end if mythic
-					}//end if a channel is recieved (not null) from discord. Can be null if bot has no access to any channels
-				})//end channels for each
+		channels.forEach(async channel => {
+			if (channel) {
+				//check for the channels in server. If channel wasnt found db_cid would be null. Incorrect or null means serverfound wont get updated to true.
+				//verified gets set true if both server and SQL are found and matched. If not, we will recreate
+				if (channel.id === channelcheck.snipecategory.db_cid) {
+					w.log.info('Found the saved category channel')
+					channelcheck.snipecategory.serverfound = true
+					channelcheck.snipecategory.server_cid = channel.id
+					channelcheck.snipecategory.verified = true
+				}//end if category
+				if (channel.id === channelcheck.raresnipes.db_cid) {
+					w.log.info('Found the saved raresnipes channel')
+					channelcheck.raresnipes.serverfound = true
+					channelcheck.raresnipes.server_cid = channel.id
+					channelcheck.raresnipes.verified = true
+				}//end if rare
+				if (channel.id === channelcheck.epicsnipes.db_cid) {
+					w.log.info('Found the saved epicsnipes channel')
+					channelcheck.epicsnipes.serverfound = true
+					channelcheck.epicsnipes.server_cid = channel.id
+					channelcheck.epicsnipes.verified = true
+				}//end if epic
+				if (channel.id === channelcheck.legendarysnipes.db_cid) {
+					w.log.info('Found the saved legendarysnipes channel')
+					channelcheck.legendarysnipes.serverfound = true
+					channelcheck.legendarysnipes.server_cid = channel.id
+					channelcheck.legendarysnipes.verified = true
+				}//end if legendary
+				if (channel.id === channelcheck.mythicsnipes.db_cid) {
+					w.log.info('Found the saved mythicsnipes channel')
+					channelcheck.mythicsnipes.serverfound = true
+					channelcheck.mythicsnipes.server_cid = channel.id
+					channelcheck.mythicsnipes.verified = true
+				}//end if mythic
+			}//end if a channel is recieved (not null) from discord. Can be null if bot has no access to any channels
+		})//end channels for each
 
-				//first check and create the category channel
-				if (channelcheck.snipecategory.verified === false) {
-					w.log.info('Category channel was not found - creating it')
-					var newchannel = await guild.channels.create({
-						name: channelcheck.snipecategory.name,
-						type: ChannelType.GuildCategory,
-						permissionOverwrites: [
-							{
-								id: guild.roles.everyone,
-								deny: [PermissionFlagsBits.ViewChannel],
-							},
-							{
-								id: '996170261353222219',//the bot ID
-								allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages],
-							},
-						]
-					})//creare
-						w.log.info('created new category channel it\'s ID is:')
-						w.log.info(newchannel.id)
-						channelcheck.snipecategory.server_cid = newchannel.id//save category channel ID to we can add children
-						await sql.updateTableColumn('servers', 'serverid', guildid, 'snipecategory', newchannel.id)
-					
-						await createchildren(guildid)
-						
-						    snipersender.initaliseServers()//rebuild the snipe sender object so it has the new channel
-     await interaction.reply(successReply)
-					
-				} else {
-					w.log.info('Category channel already existed')
-					await createchildren(guildid)
-					      w.log.info('setup status was sucessful')
-      //await wait(5000)//give time for channels to be created
-      snipersender.initaliseServers()//rebuild the snipe sender object so it has the new channel
-     await interaction.reply(successReply)
+		//first check and create the category channel
+		if (channelcheck.snipecategory.verified === false) {
+			w.log.info('Category channel was not found - creating it')
+			var newchannel = await guild.channels.create({
+				name: channelcheck.snipecategory.name,
+				type: ChannelType.GuildCategory,
+				permissionOverwrites: [
+					{
+						id: guild.roles.everyone,
+						deny: [PermissionFlagsBits.ViewChannel],
+					},
+					{
+						id: '996170261353222219',//the bot ID
+						allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages],
+					},
+				]
+			})//creare
+			w.log.info('created new category channel it\'s ID is:')
+			w.log.info(newchannel.id)
+			channelcheck.snipecategory.server_cid = newchannel.id//save category channel ID to we can add children
+			await sql.updateTableColumn('servers', 'serverid', guildid, 'snipecategory', newchannel.id)
 
-				}//end else
+			await createchildren(guildid)
 
-				async function createchildren(guildid) {
-					//get the category channel object so we can add children
-					w.log.info('fetching category channel')
-					const laniakeacategory = await client.channels.fetch(channelcheck.snipecategory.server_cid)
+			snipersender.initaliseServers()//rebuild the snipe sender object so it has the new channel
+			await interaction.reply(successReply)
 
-					if (feedmode === 'multichannel') {
-						sql.updateTableColumn('servers', 'serverid', guildid, 'singlefeedmode', false)
-						for (const key in channelcheck) {
-							if (key != 'snipecategory') {//we have created the category already
-								if (channelcheck[key].verified === false) {//if this one isnt verified as present
-									//only create premium channels if premium server
-									if (thisserver.premium === true || channelcheck[key].premium === false) {
-										var newchannel = await guild.channels.create({
-											name: channelcheck[key].name,
-											type: ChannelType.GuildText,
-											parent: laniakeacategory
-										})
-											w.log.info('created new channel ' + newchannel.name + ' it\'s ID is: ' + newchannel.id)
-											await sql.updateTableColumn('servers', 'serverid', guildid, channelcheck[key].servercolumn, newchannel.id)
-											return newchannel.id
-									}//end if premium
-								}//end if verified was false
-							}//end if key isnt snipecategory
-						}//end for each key in channelcheck
-					} else {//else, if feedmode wasn't multichannel
-						sql.updateTableColumn('servers', 'serverid', guildid, 'singlefeedmode', true)
-						//if there wasn't already a raresnipes channel
-						if (channelcheck.raresnipes.verified === false) {
-							var newchannel = await guild.channels.create({
-								name: "Snipe-Feed",
-								type: ChannelType.GuildText,
-								parent: laniakeacategory
-							})
+		} else {
+			w.log.info('Category channel already existed')
+			await createchildren(guildid)
+			w.log.info('setup status was sucessful')
+			//await wait(5000)//give time for channels to be created
+			snipersender.initaliseServers()//rebuild the snipe sender object so it has the new channel
+			await interaction.reply(successReply)
+
+		}//end else
+
+		async function createchildren(guildid) {
+			//get the category channel object so we can add children
+			w.log.info('fetching category channel')
+			const laniakeacategory = await client.channels.fetch(channelcheck.snipecategory.server_cid)
+
+			if (feedmode === 'multichannel') {
+				sql.updateTableColumn('servers', 'serverid', guildid, 'singlefeedmode', false)
+				for (const key in channelcheck) {
+					if (key != 'snipecategory') {//we have created the category already
+						if (channelcheck[key].verified === false) {//if this one isnt verified as present
+							//only create premium channels if premium server
+							if (thisserver.premium === true || channelcheck[key].premium === false) {
+								var newchannel = await guild.channels.create({
+									name: channelcheck[key].name,
+									type: ChannelType.GuildText,
+									parent: laniakeacategory
+								})
 								w.log.info('created new channel ' + newchannel.name + ' it\'s ID is: ' + newchannel.id)
-								//save channel id in raresnipes column. That's where single mode snipes are always sent.
-								await sql.updateTableColumn('servers', 'serverid', guildid, channelcheck.raresnipes.servercolumn, newchannel.id)
-								return newchannel.id 
-						}//end if raresnipes verified === false
-					}//end else feedmode wasn't multichannel
-				}//end createchildren
+								await sql.updateTableColumn('servers', 'serverid', guildid, channelcheck[key].servercolumn, newchannel.id)
+								return newchannel.id
+							}//end if premium
+						}//end if verified was false
+					}//end if key isnt snipecategory
+				}//end for each key in channelcheck
+			} else {//else, if feedmode wasn't multichannel
+				sql.updateTableColumn('servers', 'serverid', guildid, 'singlefeedmode', true)
+				//if there wasn't already a raresnipes channel
+				if (channelcheck.raresnipes.verified === false) {
+					var newchannel = await guild.channels.create({
+						name: "Snipe-Feed",
+						type: ChannelType.GuildText,
+						parent: laniakeacategory
+					})
+					w.log.info('created new channel ' + newchannel.name + ' it\'s ID is: ' + newchannel.id)
+					//save channel id in raresnipes column. That's where single mode snipes are always sent.
+					await sql.updateTableColumn('servers', 'serverid', guildid, channelcheck.raresnipes.servercolumn, newchannel.id)
+					return newchannel.id
+				}//end if raresnipes verified === false
+			}//end else feedmode wasn't multichannel
+		}//end createchildren
 
 	} else { return null }//end if valid server
 } module.exports.start = start

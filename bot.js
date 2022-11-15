@@ -44,7 +44,7 @@ client.on('ready', async () => {
     w.log.info('Cron: Updating collection stats')
     collection_stats.updateStats()
   }, null, true)
-  
+
 })//end client.on Ready
 
 //=========================
@@ -139,12 +139,12 @@ const permissionerror = { content: 'Sorry, you do not have permissions to run th
 const feedsetup = require('./setup/feedsetup.js')
 client.on('interactionCreate', async interaction => {
 
-/*
-  //Main feed setup pressed from main setup dialogue 
-  if (interaction.customId === 'feedsetup-button') {
-    await feedsetup.whichMode(interaction)
-  }//end if button is 'feedsetup-button'
-  */
+  /*
+    //Main feed setup pressed from main setup dialogue 
+    if (interaction.customId === 'feedsetup-button') {
+      await feedsetup.whichMode(interaction)
+    }//end if button is 'feedsetup-button'
+    */
 
   if (interaction.customId === 'standardfeed-button') {
     //interaction.deferReply({ ephemeral: true })
@@ -266,25 +266,25 @@ client.on('channelDelete', async channel => {
   w.log.info('Channel deleted in guild ' + channel.guildId + ' checking to see if its one of ours')
   var serverdetails = await sql.getServerRow(channel.guildId)//get this server's details
 
-/*
-  //check if it was an alpha channel
-  var alphafound = false//we are going to check if it was an alpha channel. Start as false.
-  if (serverdetails[0].alpha_channels) {//if there is an alpha config
-    for (var i = 0; i < serverdetails[0].alpha_channels.enabled.length; i++) {//for each config
-      if (serverdetails[0].alpha_channels.enabled[i]['channelid'] === channel.id) {//if it matches the deleted channel
-        w.log.info('matched the deleted channel to an alpha channel. Deleting that from the config')
-        alphafound = true
-        //splice out the deleted channel from the config
-        serverdetails[0].alpha_channels.enabled.splice(i, 1)
-        //save updates config in sql
-        await sql.updateTableColumn('servers', 'serverid', channel.guildId, "alpha_channels", serverdetails[0].alpha_channels)
-        break//dont need to loop through further alpha configs
-      }//end if we have found a setup matching the current collectionkey
-    }//end for each alpha channel config object
-  }//end if there is an exisiting config
-
-  if (alphafound === false) { w.log.info('deleted channel didn\'t match an alpha channel') }
-  */
+  /*
+    //check if it was an alpha channel
+    var alphafound = false//we are going to check if it was an alpha channel. Start as false.
+    if (serverdetails[0].alpha_channels) {//if there is an alpha config
+      for (var i = 0; i < serverdetails[0].alpha_channels.enabled.length; i++) {//for each config
+        if (serverdetails[0].alpha_channels.enabled[i]['channelid'] === channel.id) {//if it matches the deleted channel
+          w.log.info('matched the deleted channel to an alpha channel. Deleting that from the config')
+          alphafound = true
+          //splice out the deleted channel from the config
+          serverdetails[0].alpha_channels.enabled.splice(i, 1)
+          //save updates config in sql
+          await sql.updateTableColumn('servers', 'serverid', channel.guildId, "alpha_channels", serverdetails[0].alpha_channels)
+          break//dont need to loop through further alpha configs
+        }//end if we have found a setup matching the current collectionkey
+      }//end for each alpha channel config object
+    }//end if there is an exisiting config
+  
+    if (alphafound === false) { w.log.info('deleted channel didn\'t match an alpha channel') }
+    */
 
   //check if it was any of the main snipe channels. Null it in database. Snipe sender checks for null
   if (channel.id === serverdetails[0].raresnipes) {
@@ -308,17 +308,17 @@ client.on('channelDelete', async channel => {
     snipersender.initaliseServers()
   }//end if mythic
 
-/*
-  //check if it was the home channel
-  if (channel.id === serverdetails[0].homechannel_id) {
-    w.log.info('homechannel was deleted from server ' + serverdetails[0].servername + '. Nulling id in our database, deleting config and disabling')
-    await sql.updateTableColumn('servers', 'serverid', channel.guildId, "homechannel_id", null)
-    await sql.updateTableColumn('servers', 'serverid', channel.guildId, "homechannel_collections", null)
-    await sql.updateTableColumn('servers', 'serverid', channel.guildId, "homechannel_enabled", false)
-    snipersender.initaliseServers()
-  }//end if home channel
-  */
-  
+  /*
+    //check if it was the home channel
+    if (channel.id === serverdetails[0].homechannel_id) {
+      w.log.info('homechannel was deleted from server ' + serverdetails[0].servername + '. Nulling id in our database, deleting config and disabling')
+      await sql.updateTableColumn('servers', 'serverid', channel.guildId, "homechannel_id", null)
+      await sql.updateTableColumn('servers', 'serverid', channel.guildId, "homechannel_collections", null)
+      await sql.updateTableColumn('servers', 'serverid', channel.guildId, "homechannel_enabled", false)
+      snipersender.initaliseServers()
+    }//end if home channel
+    */
+
   //check if it was a new alpha channel
   var newalphafound = false//we are going to check if it was an alpha channel. Start as false.
   if (serverdetails[0].alphaconfig) {//if there is an alpha config
@@ -334,8 +334,8 @@ client.on('channelDelete', async channel => {
       }//end if we have found a setup matching the current collectionkey
     }//end for each alpha channel config object
   }//end if there is an exisiting config
-  
-  
+
+
 })//end on channelDelete event
 
 //Global config
@@ -436,7 +436,7 @@ client.on('interactionCreate', async interaction => {
 const alpha = require('./setup/alpha2setup.js')
 client.on('interactionCreate', async interaction => {
 
-if (interaction.customId === 'feedNextBtn') {
+  if (interaction.customId === 'feedNextBtn') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
       alpha.addChannelMain(interaction)
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
@@ -454,18 +454,18 @@ if (interaction.customId === 'feedNextBtn') {
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
   }
 
-    //when modal is submitted, validate input
-    if (interaction.customId === 'submitAlpha-modal') {
-      if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
-        alpha.validateCollection(interaction)
-      } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
-    }//end if button is 'submitAlpha-modal'
+  //when modal is submitted, validate input
+  if (interaction.customId === 'submitAlpha-modal') {
+    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
+      alpha.validateCollection(interaction)
+    } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
+  }//end if button is 'submitAlpha-modal'
 
- //alpha done
-    if (interaction.customId === 'doneAlphaCh-button') {
-      if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
-        alpha.done(interaction)
-      } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
-    }//end if button is alpha done
+  //alpha done
+  if (interaction.customId === 'doneAlphaCh-button') {
+    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
+      alpha.done(interaction)
+    } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
+  }//end if button is alpha done
 
 })//end on interactionCreate 

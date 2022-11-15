@@ -33,7 +33,7 @@ async function addChannelMain(interaction) {
 	//get current home channels for message reply
 	var alphaconfig = await sql.getData("servers", "serverid", interaction.guildId, "alphaconfig")
 
-	
+
 	var currentChannels = ''
 	var channelCount = 1
 	for (var i = 0; i < alphaconfig.channels.length; i++) {
@@ -71,24 +71,24 @@ async function addChannelMain(interaction) {
 	})
 } module.exports.addChannelMain = addChannelMain
 
-	//build a new button row for the command reply
-	const row = new ActionRowBuilder()
-		.addComponents(
-			new ButtonBuilder()
-				.setCustomId('addAlphaCol-button')
-				.setLabel('Add Collection')
-				.setStyle(ButtonStyle.Primary),
-		).addComponents(
-			new ButtonBuilder()
-				.setCustomId('doneAlphaCh-button')
-				.setLabel('Create')
-				.setStyle(ButtonStyle.Success),
-		).addComponents(
-			new ButtonBuilder()
-				.setCustomId('alphaNextBtn')
-				.setLabel('Next >>')
-				.setStyle(ButtonStyle.Secondary),
-		)
+//build a new button row for the command reply
+const row = new ActionRowBuilder()
+	.addComponents(
+		new ButtonBuilder()
+			.setCustomId('addAlphaCol-button')
+			.setLabel('Add Collection')
+			.setStyle(ButtonStyle.Primary),
+	).addComponents(
+		new ButtonBuilder()
+			.setCustomId('doneAlphaCh-button')
+			.setLabel('Create')
+			.setStyle(ButtonStyle.Success),
+	).addComponents(
+		new ButtonBuilder()
+			.setCustomId('alphaNextBtn')
+			.setLabel('Next >>')
+			.setStyle(ButtonStyle.Secondary),
+	)
 
 //2nd dialogue for setup of this particualr channel
 async function newChannel(interaction) {
@@ -174,7 +174,7 @@ async function validateCollection(interaction) {
 							},
 						}
 					],//end embed
-					ephemeral: true, 
+					ephemeral: true,
 					components: [row]
 				})
 				break//if we have found it, dont need to loop more
@@ -197,7 +197,7 @@ async function validateCollection(interaction) {
 							},
 						}
 					],//end embed
-					ephemeral: true, 
+					ephemeral: true,
 					components: [row]
 				})
 			}
@@ -211,20 +211,20 @@ async function validateCollection(interaction) {
 } module.exports.validateCollection = validateCollection
 
 async function done(interaction) {
-  
-  const nextrow = new ActionRowBuilder()
+
+	const nextrow = new ActionRowBuilder()
 		.addComponents(
 			new ButtonBuilder()
 				.setCustomId('alphaNextBtn')
 				.setLabel('Next >>')
 				.setStyle(ButtonStyle.Secondary),
 		)
-  
+
 	if (thisNewChannel.enabled[interaction.message.guildId].length != 0) {
 
 		//create alpha channel if not already existing
 		var newID = await setupchannel(interaction)
-w.log.info('newID was returned as ' + newID)
+		w.log.info('newID was returned as ' + newID)
 		if (newID) {
 			//get current config
 			var config = await sql.getData("servers", "serverid", interaction.guildId, "alphaconfig")
@@ -232,24 +232,24 @@ w.log.info('newID was returned as ' + newID)
 
 			//add this config to it
 			config.channels.push({
-			  "channelID" : newID,
-			  "collections" : theseSlugs
+				"channelID": newID,
+				"collections": theseSlugs
 			})
 
 			//store it
 			await sql.updateTableColumn('servers', 'serverid', interaction.guildId, 'alphaconfig', config)
-			
+
 			thisNewChannel.enabled[interaction.message.guildId] = []//blank this after storage
 
 
 
 			//reply success message
 			await interaction.reply({ content: "Changes saved. All snipes for the collections you added will now redirect to this Alpha Channel. You can now dismiss this message or proceed to next setup step.", ephemeral: true, components: [nextrow] })
-} 
-		} else {
-			await interaction.reply({ content: "As you did not identify any collections, no changes have been made to your Alpha Channel setup. You can now dismiss this message or proceed to next setup step.", ephemeral: true, components: [nextrow]})
 		}
-	
+	} else {
+		await interaction.reply({ content: "As you did not identify any collections, no changes have been made to your Alpha Channel setup. You can now dismiss this message or proceed to next setup step.", ephemeral: true, components: [nextrow] })
+	}
+
 } module.exports.done = done
 
 async function setupchannel(interaction) {
@@ -285,67 +285,67 @@ async function setupchannel(interaction) {
 		if (existingchannels[0].snipecategory) { channelcheck.snipecategory.dbfound = true; channelcheck.snipecategory.db_cid = existingchannels[0].snipecategory }
 
 		//get the guild channels to see if our saved ones still exist
-	var channels =	await guild.channels.fetch()
-			
-				channels.forEach(async channel => {
-					if (channel) {
-						//check for the channels in server
-						if (channel.id === channelcheck.snipecategory.db_cid) {
-							w.log.info('Found the saved category channel')
-							channelcheck.snipecategory.serverfound = true
-							channelcheck.snipecategory.server_cid = channel.id
-							channelcheck.snipecategory.verified = true
-						}//end if match category channel
-					}//end if a channel is recieved (not null) from discord. Can be null if bot has no access to any channels
-				})//end forEach
+		var channels = await guild.channels.fetch()
 
-				//first check and create the category channel
-				if (channelcheck.snipecategory.verified === false) {
-					w.log.info('Category channel was not found - creating it')
-					var newchannel = await guild.channels.create({
-						name: channelcheck.snipecategory.name,
-						type: ChannelType.GuildCategory,
-						permissionOverwrites: [
-							{
-								id: guild.roles.everyone,
-								deny: [PermissionFlagsBits.ViewChannel],
-							},
-							{
-								id: '996170261353222219',//the bot ID
-								allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages],
-							},
-						]
-					})
-						w.log.info('created new category channel it\'s ID is:')
-						w.log.info(newchannel.id)
-						channelcheck.snipecategory.server_cid = newchannel.id//save category channel ID to we can add children
-						await sql.updateTableColumn('servers', 'serverid', guildid, 'snipecategory', newchannel.id)
-					
-						var newID = await createchildren()
-						return newID
-					
-				} else {
-					w.log.info('Category channel already existed')
-					var newID = await createchildren()
-					return newID
-				}//end else
+		channels.forEach(async channel => {
+			if (channel) {
+				//check for the channels in server
+				if (channel.id === channelcheck.snipecategory.db_cid) {
+					w.log.info('Found the saved category channel')
+					channelcheck.snipecategory.serverfound = true
+					channelcheck.snipecategory.server_cid = channel.id
+					channelcheck.snipecategory.verified = true
+				}//end if match category channel
+			}//end if a channel is recieved (not null) from discord. Can be null if bot has no access to any channels
+		})//end forEach
 
-				//create children channels under the category. For home channel, only will be one child
-				async function createchildren() {
-					//get the category channel object so we can add children
-					w.log.info('fetching category channel')
-					const laniakeacategory = await client.channels.fetch(channelcheck.snipecategory.server_cid)
+		//first check and create the category channel
+		if (channelcheck.snipecategory.verified === false) {
+			w.log.info('Category channel was not found - creating it')
+			var newchannel = await guild.channels.create({
+				name: channelcheck.snipecategory.name,
+				type: ChannelType.GuildCategory,
+				permissionOverwrites: [
+					{
+						id: guild.roles.everyone,
+						deny: [PermissionFlagsBits.ViewChannel],
+					},
+					{
+						id: '996170261353222219',//the bot ID
+						allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages],
+					},
+				]
+			})
+			w.log.info('created new category channel it\'s ID is:')
+			w.log.info(newchannel.id)
+			channelcheck.snipecategory.server_cid = newchannel.id//save category channel ID to we can add children
+			await sql.updateTableColumn('servers', 'serverid', guildid, 'snipecategory', newchannel.id)
 
-					var newchannel = await guild.channels.create({
-						name: "alpha-channel",
-						type: ChannelType.GuildText,
-						parent: laniakeacategory
-					})
-						w.log.info('created new channel ' + newchannel.name + ' it\'s ID is: ' + newchannel.id)
-						return newchannel.id
-					
+			var newID = await createchildren()
+			return newID
 
-				}//end createchildren function
-			
+		} else {
+			w.log.info('Category channel already existed')
+			var newID = await createchildren()
+			return newID
+		}//end else
+
+		//create children channels under the category. For home channel, only will be one child
+		async function createchildren() {
+			//get the category channel object so we can add children
+			w.log.info('fetching category channel')
+			const laniakeacategory = await client.channels.fetch(channelcheck.snipecategory.server_cid)
+
+			var newchannel = await guild.channels.create({
+				name: "alpha-channel",
+				type: ChannelType.GuildText,
+				parent: laniakeacategory
+			})
+			w.log.info('created new channel ' + newchannel.name + ' it\'s ID is: ' + newchannel.id)
+			return newchannel.id
+
+
+		}//end createchildren function
+
 	} else { return null }//end if valid server
 }//end setupchannel

@@ -91,16 +91,17 @@ async function configPanel(interaction) {
 
   await interaction.reply({
     embeds: [
-			{
-				"title": "🔔 __Alerts Setup__",
-				"color": parseInt('0x9901f6', 16),
-				"description": replytext,
-				"footer": {
-					"text": "Setup 5/5. When you have finished configuration of alerts config setup is complete."
-				},
-			}
-		],//end embed
-    components: [row], ephemeral: true })
+      {
+        "title": "🔔 __Alerts Setup__",
+        "color": parseInt('0x9901f6', 16),
+        "description": replytext,
+        "footer": {
+          "text": "Setup 5/5. When you have finished configuration of alerts config setup is complete."
+        },
+      }
+    ],//end embed
+    components: [row], ephemeral: true
+  })
 } module.exports.configPanel = configPanel
 
 async function enableAlerts(interaction) {
@@ -130,35 +131,37 @@ async function enableAlerts(interaction) {
           w.log.info('EnableAlerts1: New role ID is: ' + newrole.id)
           await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "pingrole", newrole.id)
           await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "enable_ping", true)
-         await interaction.reply({ 
+          await interaction.reply({
             embeds: [
-			{
-				"title": "🔔 __Alerts Setup__",
-				"color": parseInt('0x9901f6', 16),
-				"description": "Created a new alert role to replace the deleted one: <@&" + newrole.id + ">. Your users can now opt in to this role with `/alerts` (make sure the bot has manage roles permission)",
-				"footer": {
-					"text": "Setup 5/5. When you have finished configuration of alerts config setup is complete."
-				},
-			}
-		],//end embed
-     ephemeral: true })
+              {
+                "title": "🔔 __Alerts Setup__",
+                "color": parseInt('0x9901f6', 16),
+                "description": "Created a new alert role to replace the deleted one: <@&" + newrole.id + ">. Your users can now opt in to this role with `/alerts` (make sure the bot has manage roles permission)",
+                "footer": {
+                  "text": "Setup 5/5. When you have finished configuration of alerts config setup is complete."
+                },
+              }
+            ],//end embed
+            ephemeral: true
+          })
 
         } else {
           // Role exists
           w.log.info('Found the DB role in guild')
-          await interaction.reply({ 
-            
+          await interaction.reply({
+
             embeds: [
-			{
-				"title": "🔔 __Alerts Setup__",
-				"color": parseInt('0x9901f6', 16),
-				"description": "No action taken. Alerts are already enabled for this server. The Role is: <@&" + pingrole + ">. Your users can now opt in to this role with `/alerts` (make sure the bot has manage roles permission)",
-				"footer": {
-					"text": "Setup 5/5. When you have finished configuration of alerts config setup is complete."
-				},
-			}
-		],//end embed
-         ephemeral: true })
+              {
+                "title": "🔔 __Alerts Setup__",
+                "color": parseInt('0x9901f6', 16),
+                "description": "No action taken. Alerts are already enabled for this server. The Role is: <@&" + pingrole + ">. Your users can now opt in to this role with `/alerts` (make sure the bot has manage roles permission)",
+                "footer": {
+                  "text": "Setup 5/5. When you have finished configuration of alerts config setup is complete."
+                },
+              }
+            ],//end embed
+            ephemeral: true
+          })
         }
 
       } else {//make a new pingrole. Somehow DB is blank? this should not happen
@@ -168,20 +171,21 @@ async function enableAlerts(interaction) {
         w.log.info('EnableAlerts1: New role ID is: ' + newrole.id)
         await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "pingrole", newrole.id)
         await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "enable_ping", true)
-        await interaction.reply({ 
-          
+        await interaction.reply({
+
           embeds: [
-			{
-				"title": "🔔 __Alerts Setup__",
-				"color": parseInt('0x9901f6', 16),
-				"description": "Alerts were enabled for this server, but there was no saved role. Created a new alert role: <@&" + newrole.id + ">. Your users can now opt in to this role with `/alerts` (make sure the bot has manage roles permission)",
-				"footer": {
-					"text": "Setup 5/5. When you have finished configuration of alerts config setup is complete."
-				},
-			}
-		],//end embed
-          
-           ephemeral: true })
+            {
+              "title": "🔔 __Alerts Setup__",
+              "color": parseInt('0x9901f6', 16),
+              "description": "Alerts were enabled for this server, but there was no saved role. Created a new alert role: <@&" + newrole.id + ">. Your users can now opt in to this role with `/alerts` (make sure the bot has manage roles permission)",
+              "footer": {
+                "text": "Setup 5/5. When you have finished configuration of alerts config setup is complete."
+              },
+            }
+          ],//end embed
+
+          ephemeral: true
+        })
 
       }//end else pingrole was enabled but no role existed.
 
@@ -201,40 +205,42 @@ async function enableAlerts(interaction) {
           w.log.info('EnableAlerts1: New role ID is: ' + newrole.id)
           await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "pingrole", newrole.id)
           await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "enable_ping", true)
-         await interaction.reply({ 
-            
+          await interaction.reply({
+
             embeds: [
-			{
-				"title": "🔔 __Alerts Setup__",
-				"color": parseInt('0x9901f6', 16),
-				"description": "Alerts have now been enabled for this server. There was an exisitng saved role, but it must have been deleted. Created a new alert role: <@&" + newrole.id + ">. Your users can now opt in to this role with `/alerts` (make sure the bot has manage roles permission)",
-				"footer": {
-					"text": "Setup 5/5. When you have finished configuration of alerts config setup is complete."
-				},
-			}
-		],//end embed
-            
-            
-            ephemeral: true })
+              {
+                "title": "🔔 __Alerts Setup__",
+                "color": parseInt('0x9901f6', 16),
+                "description": "Alerts have now been enabled for this server. There was an exisitng saved role, but it must have been deleted. Created a new alert role: <@&" + newrole.id + ">. Your users can now opt in to this role with `/alerts` (make sure the bot has manage roles permission)",
+                "footer": {
+                  "text": "Setup 5/5. When you have finished configuration of alerts config setup is complete."
+                },
+              }
+            ],//end embed
+
+
+            ephemeral: true
+          })
 
         } else {
           // Role exists
           w.log.info('Found the DB role in guild. Lets just re-enable it')
           await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "enable_ping", true)
-          await interaction.reply({ 
-            
+          await interaction.reply({
+
             embeds: [
-			{
-				"title": "🔔 __Alerts Setup__",
-				"color": parseInt('0x9901f6', 16),
-				"description": "Alerts have now been enabled for this server. There was an exisitng role, so it has been reused: <@&" + pingrole + ">. Your users can now opt in to this role with `/alerts` (make sure the bot has manage roles permission)",
-				"footer": {
-					"text": "Setup 5/5. When you have finished configuration of alerts config setup is complete."
-				},
-			}
-		],//end embed
-            
-             ephemeral: true })
+              {
+                "title": "🔔 __Alerts Setup__",
+                "color": parseInt('0x9901f6', 16),
+                "description": "Alerts have now been enabled for this server. There was an exisitng role, so it has been reused: <@&" + pingrole + ">. Your users can now opt in to this role with `/alerts` (make sure the bot has manage roles permission)",
+                "footer": {
+                  "text": "Setup 5/5. When you have finished configuration of alerts config setup is complete."
+                },
+              }
+            ],//end embed
+
+            ephemeral: true
+          })
 
         }
 
@@ -245,38 +251,40 @@ async function enableAlerts(interaction) {
         w.log.info('EnableAlerts1: New role ID is: ' + newrole.id)
         await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "pingrole", newrole.id)
         await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "enable_ping", true)
-       await interaction.reply({ 
-          
+        await interaction.reply({
+
           embeds: [
-			{
-				"title": "🔔 __Alerts Setup__",
-				"color": parseInt('0x9901f6', 16),
-				"description": "Alerts are now enabled for this server. Created a new alert role: <@&" + newrole.id + ">. Your users can now opt in to this role with `/alerts` (make sure the bot has manage roles permission)",
-				"footer": {
-					"text": "Setup 5/5. When you have finished configuration of alerts config setup is complete."
-				},
-			}
-		],//end embed
-          
-           ephemeral: true })
+            {
+              "title": "🔔 __Alerts Setup__",
+              "color": parseInt('0x9901f6', 16),
+              "description": "Alerts are now enabled for this server. Created a new alert role: <@&" + newrole.id + ">. Your users can now opt in to this role with `/alerts` (make sure the bot has manage roles permission)",
+              "footer": {
+                "text": "Setup 5/5. When you have finished configuration of alerts config setup is complete."
+              },
+            }
+          ],//end embed
+
+          ephemeral: true
+        })
 
       }//end else pingrole wasn't enabled and role didn't exist
     }//end else pingrole not enabled
   } else {
-    await interaction.reply({ 
-      
+    await interaction.reply({
+
       embeds: [
-			{
-				"title": "🔔 __Alerts Setup__",
-				"color": parseInt('0x9901f6', 16),
-				"description": "Error: the bot requires the manage role permission to perform this action. Please grant the bot this permission and try again.",
-				"footer": {
-					"text": "Setup 5/5. When you have finished configuration of alerts config setup is complete."
-				},
-			}
-		],//end embed
-      
-      ephemeral: true })
+        {
+          "title": "🔔 __Alerts Setup__",
+          "color": parseInt('0x9901f6', 16),
+          "description": "Error: the bot requires the manage role permission to perform this action. Please grant the bot this permission and try again.",
+          "footer": {
+            "text": "Setup 5/5. When you have finished configuration of alerts config setup is complete."
+          },
+        }
+      ],//end embed
+
+      ephemeral: true
+    })
   }
 }//end function
 module.exports.enableAlerts = enableAlerts
@@ -303,73 +311,77 @@ async function disableAlerts(interaction) {
       w.log.info('oldrole is: ' + oldrole)
       if (oldrole != pingrole) {
 
-       await interaction.reply({ 
-          
+        await interaction.reply({
+
           embeds: [
-			{
-				"title": "🔔 __Alerts Setup__",
-				"color": parseInt('0x9901f6', 16),
-				"description": "Alerts have now been disabled for this server. Users will no longer recieve pings. We have a saved alert role in our database, but it looks like you have already deleted it from the server. To re-enable in future please run `/setup` again.",
-				"footer": {
-					"text": "Setup 5/5. When you have finished configuration of alerts config setup is complete."
-				},
-			}
-		],//end embed
-          
-          ephemeral: true })
+            {
+              "title": "🔔 __Alerts Setup__",
+              "color": parseInt('0x9901f6', 16),
+              "description": "Alerts have now been disabled for this server. Users will no longer recieve pings. We have a saved alert role in our database, but it looks like you have already deleted it from the server. To re-enable in future please run `/setup` again.",
+              "footer": {
+                "text": "Setup 5/5. When you have finished configuration of alerts config setup is complete."
+              },
+            }
+          ],//end embed
+
+          ephemeral: true
+        })
         await sql.updateTableColumn("servers", "serverid", interaction.message.guildId, "pingrole", null)
 
       } else {
         // Role exists
-      await interaction.reply({ 
-          
+        await interaction.reply({
+
           embeds: [
-			{
-				"title": "🔔 __Alerts Setup__",
-				"color": parseInt('0x9901f6', 16),
-				"description": "Alerts have now been disabled for this server. Users will no longer recieve pings. There was an exisitng role: <@&" + pingrole + ">. You can now delete this, or leave it and it will be reused if your later renable alerts",
-				"footer": {
-					"text": "Setup 5/5. When you have finished configuration of alerts config setup is complete."
-				},
-			}
-		],//end embed
-          
-          ephemeral: true })
+            {
+              "title": "🔔 __Alerts Setup__",
+              "color": parseInt('0x9901f6', 16),
+              "description": "Alerts have now been disabled for this server. Users will no longer recieve pings. There was an exisitng role: <@&" + pingrole + ">. You can now delete this, or leave it and it will be reused if your later renable alerts",
+              "footer": {
+                "text": "Setup 5/5. When you have finished configuration of alerts config setup is complete."
+              },
+            }
+          ],//end embed
+
+          ephemeral: true
+        })
 
       }
     } else {
 
-      await interaction.reply({ 
-        
-      embeds: [
-			{
-				"title": "🔔 __Alerts Setup__",
-				"color": parseInt('0x9901f6', 16),
-				"description": "Alerts have now been disabled for this server. Users will no longer recieve pings. You can now dismiss this message",
-				"footer": {
-					"text": "Setup 5/5. When you have finished configuration of alerts config setup is complete."
-				},
-			}
-		],//end embed
-       
-        ephemeral: true })
+      await interaction.reply({
+
+        embeds: [
+          {
+            "title": "🔔 __Alerts Setup__",
+            "color": parseInt('0x9901f6', 16),
+            "description": "Alerts have now been disabled for this server. Users will no longer recieve pings. You can now dismiss this message",
+            "footer": {
+              "text": "Setup 5/5. When you have finished configuration of alerts config setup is complete."
+            },
+          }
+        ],//end embed
+
+        ephemeral: true
+      })
 
     }
   } else {
-    await interaction.reply({ 
-      
+    await interaction.reply({
+
       embeds: [
-			{
-				"title": "🔔 __Alerts Setup__",
-				"color": parseInt('0x9901f6', 16),
-				"description": "Error: the bot requires the manage role permission to perform this action. Please grant the bot this permission and try again.",
-				"footer": {
-					"text": "Setup 5/5. When you have finished configuration of alerts config setup is complete."
-				},
-			}
-		],//end embed
-      
-      ephemeral: true })
+        {
+          "title": "🔔 __Alerts Setup__",
+          "color": parseInt('0x9901f6', 16),
+          "description": "Error: the bot requires the manage role permission to perform this action. Please grant the bot this permission and try again.",
+          "footer": {
+            "text": "Setup 5/5. When you have finished configuration of alerts config setup is complete."
+          },
+        }
+      ],//end embed
+
+      ephemeral: true
+    })
   }
 
 }//end function
@@ -413,7 +425,7 @@ async function addRole(interaction) {
         } else {
           // Role exists. Apply it to user
           await interaction.member.roles.add(pingrole)
-         await interaction.reply({ content: "You have been now been given the alert role for this server. When a high value snipe occurs you will recieve a discord ping.", ephemeral: true })
+          await interaction.reply({ content: "You have been now been given the alert role for this server. When a high value snipe occurs you will recieve a discord ping.", ephemeral: true })
         }
 
       } else { await interaction.reply({ content: "Error: There is no saved role in Sniper bot database. Please tell a server admin.", ephemeral: true }) }

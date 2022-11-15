@@ -37,7 +37,7 @@ async function updateStats() {
     var strengthemoji = ''
     var strengthdescription = ''
     var strength_ready = false
-    
+
     var symbol_3dchange = ''
     var percentage_3dchange = 0
     var amount_3dchange = 0
@@ -58,11 +58,11 @@ async function updateStats() {
     } else {
       //copy old history to new
       fpoutput = collections[i].floor_history.fp_history
-      
+
       //push new
       fpoutput.unshift(thisfp)
       if (fpoutput.length > 14) { fpoutput.pop() }
-      
+
       if (fpoutput.length > 5) {//if we have 3 days worth of data
         var threeDayFpArr = fpoutput.slice(0, 6)
         //calculate average before pushing out oldest
@@ -77,7 +77,7 @@ async function updateStats() {
         w.log.info("7 Day FP average calculated as: " + fp_7daverage)
       }
 
-      
+
     }
 
     //get current sol price
@@ -87,10 +87,10 @@ async function updateStats() {
       soloutput = [solprice]
     } else {
       soloutput = collections[i].floor_history.sol_history
-      
+
       //push new
       soloutput.unshift(solprice)
-      if (soloutput.length > 14) { soloutput.pop() } 
+      if (soloutput.length > 14) { soloutput.pop() }
 
       if (soloutput.length > 5) {//if we have 3 days worth of data
         var threeDaySolArr = soloutput.slice(0, 6)
@@ -104,7 +104,7 @@ async function updateStats() {
         sol_7daverage = sevenDaySolArr.reduce((a, b) => a + b, 0) / sevenDaySolArr.length
       }
 
-      
+
     }
 
     //if we have 3 days data
@@ -114,7 +114,7 @@ async function updateStats() {
       //calculate snapshot sol change
       solchange = soloutput[0] / soloutput[1]
       solchange = pround(solchange, 4)
-      
+
       if (solchange > 1) {
         sol_direction = 'increased'
         sol_percent = pround(((solchange - 1) * 100), 2) + '%'
@@ -174,15 +174,15 @@ async function updateStats() {
 
           if (sol_significant === true) {
 
-            if (sol_direction === 'increased') { 
-              collection_12h_strength = '↗️ Strong. FP +' + fp_percent + ' | SOL/USD +' + sol_percent 
+            if (sol_direction === 'increased') {
+              collection_12h_strength = '↗️ Strong. FP +' + fp_percent + ' | SOL/USD +' + sol_percent
               strengthemoji = "↗️"
               strengthdescription = "Strong"
               fpsymbol = "+"
               solsymbol = "+"
             }
-            if (sol_direction === 'decreased') { 
-              collection_12h_strength = '⬆️ Strong. FP +' + fp_percent + ' | SOL/USD -' + sol_percent 
+            if (sol_direction === 'decreased') {
+              collection_12h_strength = '⬆️ Strong. FP +' + fp_percent + ' | SOL/USD -' + sol_percent
               strengthemoji = "⬆️"
               strengthdescription = "Strong"
               fpsymbol = "+"
@@ -200,15 +200,15 @@ async function updateStats() {
 
         if (fp_direction === 'decreased') {
           if (sol_significant === true) {
-            if (sol_direction === 'increased') { 
-              collection_12h_strength = '⬇️ Weak. FP -' + fp_percent + ' | SOL/USD +' + sol_percent 
+            if (sol_direction === 'increased') {
+              collection_12h_strength = '⬇️ Weak. FP -' + fp_percent + ' | SOL/USD +' + sol_percent
               strengthemoji = "⬇️"
               strengthdescription = "Weak"
               fpsymbol = "-"
               solsymbol = "+"
             }
-            if (sol_direction === 'decreased') { 
-              collection_12h_strength = '↘️ Weak. FP -' + fp_percent + ' | SOL/USD -' + sol_percent 
+            if (sol_direction === 'decreased') {
+              collection_12h_strength = '↘️ Weak. FP -' + fp_percent + ' | SOL/USD -' + sol_percent
               strengthemoji = "↘️"
               strengthdescription = "Weak"
               fpsymbol = "-"
@@ -230,8 +230,8 @@ async function updateStats() {
 
         if (sol_direction === 'increased') {
           if (fp_significant === true) {
-            if (fp_direction === 'increased') { 
-              collection_12h_strength = '↗️ Strong. FP +' + fp_percent + ' | SOL/USD +' + sol_percent 
+            if (fp_direction === 'increased') {
+              collection_12h_strength = '↗️ Strong. FP +' + fp_percent + ' | SOL/USD +' + sol_percent
               strengthemoji = "↗️"
               strengthdescription = "Strong"
               fpsymbol = "+"

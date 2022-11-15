@@ -64,7 +64,7 @@ async function validateServers() {
       await sql.updateTableColumn("servers", "serverid", supportedservers[i].serverid, "premiumexpire", newpremiumexpire)
     }//end else if there was no expire time
   }//end for each server
-} module.exports.validateServers = validateServers 
+} module.exports.validateServers = validateServers
 
 var db = require('../clients/pgclient.js')
 //get premium expiry time of a particular server
