@@ -33,9 +33,6 @@ async function addNewNFT(creatoraddress, meslug, extraBlockList) {
   var unrankedNFTs = step3data.nft
   var collectionSize = step3data.size
   var collectionkey = step3data.key
-  w.log.info('autoAdd3: Function returned size: ' + collectionSize + 'for key: ' + collectionkey)
-
-  //w.log.info('autoAdd4: Trait rarity combined. Function also returned collectionsize: ' + collectionSize + ' and collectionkey ' + collectionkey + '. Now ranking NFTs')
 
   w.log.info('autoAdd5: NFTs have been ranked. Storing final object. Storing creatoraddress: ' + creatoraddress + ' collectionkey: ' + collectionkey + ' meslug: ' + meslug + ' collectioncount: ' + collectionSize + ' and final nft data')
   await storeCollection(creatoraddress, collectionkey, meslug, collectionSize, unrankedNFTs)

@@ -39,6 +39,7 @@ client.on('ready', async () => {
     premium.validateServers()
   }, null, true)
 
+//schedule cron job to update collection stats every 12h
   var collection_stats = require('./tools/collectionStats.js')
   var job_updateStats = new CronJob('0 */12 * * *', function () {
     w.log.info('Cron: Updating collection stats')
@@ -350,7 +351,7 @@ client.on('interactionCreate', async interaction => {
   }//end if button is 'globalconfig-button'
   */
 
-  //config rarity - when config rarities is pressed, respond with choice of rarities to enable/disable
+  //respond with config rarities from alpha channel config next button respond with choice of rarities to enable/disable
   if (interaction.customId === 'alphaNextBtn') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
       globalconfig.configRarities(interaction)
@@ -404,6 +405,7 @@ client.on('interactionCreate', async interaction => {
 const alerts = require('./setup/alerts.js')
 client.on('interactionCreate', async interaction => {
 
+//alerts panel launched from limits setup panel
   if (interaction.customId === 'limitsNextBtn') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
       alerts.configPanel(interaction)
@@ -436,18 +438,21 @@ client.on('interactionCreate', async interaction => {
 const alpha = require('./setup/alpha2setup.js')
 client.on('interactionCreate', async interaction => {
 
+//next button from feed setup begins alpha channel setup
   if (interaction.customId === 'feedNextBtn') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
       alpha.addChannelMain(interaction)
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
   }
 
+//add new channel button
   if (interaction.customId === 'addAlphaCh-button') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
       alpha.newChannel(interaction)
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
   }
 
+//add collections to new channel button
   if (interaction.customId === 'addAlphaCol-button') {
     if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
       alpha.sendModal(interaction)

@@ -15,7 +15,7 @@ async function updateStats() {
   //get solana/usdt price from https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd
   var solprice = await getSolPrice()
 
-  for (var i = 0; i < collections.length; i++) {
+  for (var i = 0; i < collections.length; i++) {//for each supported collection
 
     var solchange = 1
     var fpchange = 1
@@ -50,8 +50,6 @@ async function updateStats() {
     var fpoutput
     var thisfp = await magiceden.getFloorPrice(collections[i].meslug)
 
-    w.log.info('got this fp: ' + thisfp + ' with meslug: ' + collections[i].meslug)
-
     if (!collections[i].floor_history) {
       //if no old floor history, let's start one
       fpoutput = [thisfp]
@@ -59,26 +57,23 @@ async function updateStats() {
       //copy old history to new
       fpoutput = collections[i].floor_history.fp_history
 
-      //push new
-      fpoutput.unshift(thisfp)
-      if (fpoutput.length > 14) { fpoutput.pop() }
+      //push new and if too long pop 1
+      fpoutput.unshift(thisfp); if (fpoutput.length > 14) { fpoutput.pop() }
 
       if (fpoutput.length > 5) {//if we have 3 days worth of data
+      //push out oldest data point
         var threeDayFpArr = fpoutput.slice(0, 6)
-        //calculate average before pushing out oldest
+        //calculate average
         fp_3daverage = threeDayFpArr.reduce((a, b) => a + b, 0) / threeDayFpArr.length
-        w.log.info("3 Day FP average calculated as: " + fp_3daverage)
-      }
+      }//end if > 5 data points
 
       if (fpoutput.length > 13) {//if we have 7 days worth of data
+      //push out oldest data point
         var sevenDayFpArr = fpoutput.slice(0, 14)
-        //calculate average before pushing out oldest
+        //calculate average
         fp_7daverage = sevenDayFpArr.reduce((a, b) => a + b, 0) / sevenDayFpArr.length
-        w.log.info("7 Day FP average calculated as: " + fp_7daverage)
-      }
-
-
-    }
+      }//end if > 13 data points
+    }//end else there was existing data
 
     //get current sol price
     var soloutput
@@ -88,28 +83,27 @@ async function updateStats() {
     } else {
       soloutput = collections[i].floor_history.sol_history
 
-      //push new
-      soloutput.unshift(solprice)
-      if (soloutput.length > 14) { soloutput.pop() }
+      //push new and if too long pop 1
+      soloutput.unshift(solprice); if (soloutput.length > 14) { soloutput.pop() }
 
       if (soloutput.length > 5) {//if we have 3 days worth of data
+      //push out oldest data point
         var threeDaySolArr = soloutput.slice(0, 6)
-        //calculate average before pushing out oldest
+        //calculate average
         sol_3daverage = threeDaySolArr.reduce((a, b) => a + b, 0) / threeDaySolArr.length
-      }
+      }//end if > 5 data points
 
       if (soloutput.length > 13) {//if we have 7 days worth of data
+      //push out oldest data point
         var sevenDaySolArr = soloutput.slice(0, 14)
-        //calculate average before pushing out oldest
+        //calculate average
         sol_7daverage = sevenDaySolArr.reduce((a, b) => a + b, 0) / sevenDaySolArr.length
-      }
-
-
-    }
+      }//end if greater than 13 data points
+    }//end else there was existing data
 
     //if we have 3 days data
     if (soloutput.length > 5 && fpoutput.length > 5) {
-      strength_ready = true
+      strength_ready = true//signify that we have enough data to show something for this collection
 
       //calculate snapshot sol change
       solchange = soloutput[0] / soloutput[1]
@@ -195,8 +189,8 @@ async function updateStats() {
             strengthemoji = "↗️"
             strengthdescription = "Strong"
             fpsymbol = "+"
-          }
-        }
+          }//end if significant change to SOL
+        }//end if fp direction is increase
 
         if (fp_direction === 'decreased') {
           if (sol_significant === true) {
@@ -221,7 +215,7 @@ async function updateStats() {
             strengthemoji = "↘️"
             strengthdescription = "Weak"
             fpsymbol = "-"
-          }
+          }//end else no significant change to sol
         }
       }
 
