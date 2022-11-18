@@ -64,7 +64,7 @@ async function getMetaplexData(creatoraddress) {
   var heartbeat = 0//start at 0 and count for each NFT. Send log every 50
 
   for (var i = 0; i < metadata.length; i++) {//for each of the recieved NFTs (without metadata)
-    var thisnft = await metaplex.nfts().load({ "metadata": metadata[i] }).run()//request NFT metadata
+    var thisnft = await metaplex.nfts().load({ "metadata": metadata[i] })//request NFT metadata
 
     if (thisnft.json != null) {//if the response did indeed have metadata
       withjson.data.push(thisnft)//add it to the final object
