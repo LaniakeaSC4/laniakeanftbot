@@ -57,7 +57,7 @@ async function getMetaplexData(creatoraddress) {
   var creatorkey = new PublicKey(creatoraddress)//make the verified creator address into a public key
 
   w.log.info('autoAdd1: getting initial from RPC (without traits/JSON))')
-  const metadata = await metaplex.nfts().findAllByCreator({ "creator": creatorkey }).run()
+  const metadata = await metaplex.nfts().findAllByCreator({ "creator": creatorkey })
 
   w.log.info('autoAdd1: adding NFT JSON to the ' + metadata.length + ' NFTs we recieved - 1 API request per 100ms')
   var withjson = { "data": [], "fails": [] }
@@ -82,7 +82,7 @@ async function getMetaplexData(creatoraddress) {
   var heartbeat = 0
   var fail = 0
   while (withjson.fails.length > 0) {
-    var thisnft = await metaplex.nfts().load({ "metadata": withjson.fails[fail] }).run()//request NFT metadata
+    var thisnft = await metaplex.nfts().load({ "metadata": withjson.fails[fail] })//request NFT metadata
 
     if (thisnft.json != null) {//if we got metadata
       w.log.info('autoAdd1: ' + thisnft.name + ' got data on retry')
