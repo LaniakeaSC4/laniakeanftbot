@@ -41,48 +41,10 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 					thispingrole = supportedservers[i].pingrole
 				}
 			}
-			/*
-						//check if this snipe should be redirected to a homechannel from the main feed
-						var foundhome = false//start with false
-						if (thisserver.homechannel_enabled === true && thisserver.premium === true) {
-							//w.log.info('homechannel was enabled for ' + thisserver.serverid)
-							//check if this snipe needs to go into a home channel
-							for (var j = 0; j < thisserver.homechannel_collections.enabled.length; j++) {//for enabled homechannel collections (could be 0)
-								if (thisserver.homechannel_collections.enabled[j] == thiscollection) {//if we match on meslug
-									if (thisserver.homechannel_id) {//if there is a homechannel ID (perhaps there are defined home collections, but channel has been deleted)
-										thisserverid = thisserver.serverid//this is the server where we are going to send it
-										feedchannel = thisserver.homechannel_id//this is (home)channel we should send it to
-										foundhome = true//set true, we found a homechannel
-									}//end if there is a homechannel id
-									break//no need to loop further
-								} else {w.log.info('No homechannel match for this collection on this server') }
-							}//end loop through saved home channels
-						}//end if homechannel is enabled and server is premium
-						
-			
-						//check if this server has this collection enabled for an alpha channel send a duplicate there
-						var foundalpha = false; var alphachannelid = ''
-						if (thisserver.alpha_channels != null && thisserver.premium === true) {//if there is an alpha channel config and server is premium
-							for (var k = 0; k < thisserver.alpha_channels.enabled.length; k++) {//for each enables alpha channel (for this server)
-								if (thisserver.alpha_channels.enabled[k].meslug === thiscollection) {//if match this collection
-									foundalpha = true
-									alphachannelid = thisserver.alpha_channels.enabled[k].channelid//save the alpha channel id for sending
-									//w.log.info('Matched an alpha channel for this snipe we should send it to channel: ' + thisserver.alpha_channels.enabled[k].channelid)
-									break
-								}//end if match this collection
-							}//end for enabled alpha channels 
-						}//end if this server is premium and has an alpha config
-			
-						//if alpha channel is matched, send straight away.
-						if (foundalpha === true) {
-							sendsnipes(thisserverid, alphachannelid, null, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize, thiscollection, floor_history, thisping, thispingrole, seller, floordrop)
-						}//end if alpha
-						*/
 
 			var foundalpha2 = false
 			//send to new alpha channels
 			if (thisserver.alphaconfig.channels.length != 0 && thisserver.premium === true) {//if there is an alpha channel config and server is premium
-
 				for (var k = 0; k < thisserver.alphaconfig.channels.length; k++) {//for each alpha channel (for this server)
 					for (var m = 0; m < thisserver.alphaconfig.channels[k].collections.length; m++) {
 
@@ -91,34 +53,14 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 							alphachannelid = thisserver.alphaconfig.channels[k].channelID
 							foundalpha2 = true
 							sendsnipes(thisserverid, alphachannelid, null, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize, thiscollection, floor_history, thisping, thispingrole, seller, floordrop)
-
-
-
 							break//no need to go through the rest of this alpha channels collections
 						}//end if match this collection
-
 					}
-
 				}//end for enabled alpha channels 
 			}//end if this server is premium and has an alpha config
 
-
-
-
 			if (foundalpha2 === true) { return }
 
-
-
-
-
-
-			//if foundhome is true (will only be if server is still premium, homechannel is enabled and this collection was found as a homechannel collection)
-			//finding a homechannel will filter a message out of the snipe feed and into the home channel
-			/*
-			if (foundhome === true) {
-				sendsnipes(thisserverid, feedchannel, null, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize, thiscollection, floor_history, thisping, thispingrole, seller, floordrop)
-			} else {//if valid homechannel was not found enter normal send filter process
-*/
 			thisserverid = thisserver.serverid
 			//check if single feed mode is enabled
 			if (thisserver.singlefeedmode === true) {//if it is, use the raresnipes channel
@@ -142,8 +84,6 @@ async function sendFilter(thisname, thiscollection, thisembedcolour, rarityRank,
 					sendsnipes(thisserverid, feedchannel, null, thisname, thisembedcolour, rarityRank, raritydescription, thislimit, thisfloorprice, thissnipeprice, thisprice, thisimage, thislistinglink, hotness, collectionSize, thiscollection, floor_history, thisping, thispingrole, seller, floordrop)
 				}//end else
 			}//end if snipe channel.
-			//}//end else if homechannel was not enabled - send normally
-
 		}//if bot is active in this server
 	}//for each supported server (from SQL)   
 }; module.exports.sendFilter = sendFilter

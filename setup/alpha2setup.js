@@ -6,12 +6,11 @@ const { ChannelType, PermissionFlagsBits, PermissionsBitField,
 const w = require('../tools/winston.js')
 const sql = require('../tools/commonSQL.js')//common sql related commands are in here
 
-//global var to hold supported collections. Populated in homechannelsetup1. Accessed in homechannelsetup3
+//global var to hold supported collections.
 var supportedcollections = {}
-//Global var to hold valid/supported collections user is adding to this homechannel
+//Global var to hold valid/supported collections user is adding to this alpha channel
 var thisNewChannel = { "enabled": {} }
 
-//Main /setup message has a "set up home channel" button. When pressed, send this setup panel
 async function addChannelMain(interaction) {
 	//build a new button row for the command reply
 	const row = new ActionRowBuilder()
@@ -30,7 +29,7 @@ async function addChannelMain(interaction) {
 	//reset config vars for any previous setup for this server
 	thisNewChannel.enabled[interaction.guildId] = []
 
-	//get current home channels for message reply
+	//get current alphaconfig for message reply
 	var alphaconfig = await sql.getData("servers", "serverid", interaction.guildId, "alphaconfig")
 
 
@@ -141,7 +140,7 @@ async function sendModal(interaction) {
 	await interaction.showModal(modal)
 } module.exports.sendModal = sendModal
 
-//function to process the input from the modal sent in homechannelsetup2
+//function to process the input from the modal sent
 async function validateCollection(interaction) {
 	const response = interaction.fields.getTextInputValue('collection-input')//get modal input text
 	var meslug = response.substring(response.lastIndexOf('magiceden.io/marketplace/') + 25).replace(/[^0-9a-z]/gi, '')//find the end slug and clean it (same process as cleaning to colleciton key in SQL)
@@ -260,7 +259,7 @@ async function setupchannel(interaction) {
 	var validserver = false
 	for (var i = 0; i < supportedservers.length; i++) {
 		if (supportedservers[i].serverid === guildid) {
-			if (supportedservers[i].premium === true) {//home channel is always premium
+			if (supportedservers[i].premium === true) {//alpha channel is always premium
 				validserver = true
 				w.log.info('matched premium server in our database during alpha setup: ' + guildid)
 				break
@@ -273,8 +272,7 @@ async function setupchannel(interaction) {
 		const guild = await client.guilds.fetch(guildid)
 
 		//get saved sniper channels (if any)
-		const existingchannels = await sql.getServerRow(guildid)//need to add the home channel to the sql function
-
+		const existingchannels = await sql.getServerRow(guildid)
 
 		var channelcheck = {
 			"snipecategory": { "dbfound": false, "serverfound": false, "db_cid": '', "server_cid": '', "verified": false, "name": "LANIAKEA SNIPER BOT", "servercolumn": "snipecategory" }
@@ -330,7 +328,7 @@ async function setupchannel(interaction) {
 			return newID
 		}//end else
 
-		//create children channels under the category. For home channel, only will be one child
+		//create children channels under the category
 		async function createchildren() {
 			//get the category channel object so we can add children
 			w.log.info('fetching category channel')

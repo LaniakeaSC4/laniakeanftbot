@@ -140,13 +140,6 @@ const permissionerror = { content: 'Sorry, you do not have permissions to run th
 const feedsetup = require('./setup/feedsetup.js')
 client.on('interactionCreate', async interaction => {
 
-  /*
-    //Main feed setup pressed from main setup dialogue 
-    if (interaction.customId === 'feedsetup-button') {
-      await feedsetup.whichMode(interaction)
-    }//end if button is 'feedsetup-button'
-    */
-
   if (interaction.customId === 'standardfeed-button') {
     //interaction.deferReply({ ephemeral: true })
     await feedsetup.start(interaction, "multichannel")//creates category and 4 sniper channels if the ones in database dont already exist.
@@ -158,81 +151,6 @@ client.on('interactionCreate', async interaction => {
   }//end if button is 'singlefeed-button'
 
 })//end on interactionCreate
-
-/*
-//home channel setup
-const homesetup = require('./setup/homesetup.js')
-client.on('interactionCreate', async interaction => {
-  //home setup on main /setup dialogue is pressed
-  //replies to main dialogue button press with home setup dialogue asking which collections to add. Had Add and Done buttons
-  if (interaction.customId === 'starthomesetup-button') {
-    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
-      //if server is premium
-      var serverconfig = await sql.getServerRow(interaction.message.guildId)
-      if (serverconfig[0].premium === true) {
-        homesetup.whichCollections(interaction)
-      } else { interaction.reply({ content: 'Home Channel is a premium feature. This server is not premium. For more details on premium please contact @Laniakea#3683.', ephemeral: true }) }
-    } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
-  }//end if button is 'starthomesetup-button'
-
-  //when add collection is pressed. Send a modal for collection input
-  if (interaction.customId === 'addHomeCollection-button') {
-    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
-      homesetup.sendModal(interaction)
-    } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
-  }//end if button is 'addHomeCollection-button'
-
-  //when modal is submitted, validate input
-  if (interaction.customId === 'submithome-modal') {
-    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
-      homesetup.validateCollection(interaction)
-    } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
-  }//end if button is 'submithome-modal'
-
-  //when user is finished add home collections
-  if (interaction.customId === 'donehome-button') {
-    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
-      homesetup.done(interaction)
-    } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
-  }//end if button is 'donehome-button'
-})//end on interactionCreate for home setup
-
-//alpha setup
-const alphasetup = require('./setup/alphasetup.js')
-client.on('interactionCreate', async interaction => {
-  //show the main setup dialogue for alpha setup
-  if (interaction.customId === 'startalphasetup-button') {
-    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) { //only if you have manage channels
-      //if server is premium
-      var serverconfig = await sql.getServerRow(interaction.message.guildId)
-      if (serverconfig[0].premium === true) {
-        alphasetup.replyMainSetup(interaction)
-      } else { interaction.reply({ content: 'Alpha Channels are a premium feature. This server is not premium. For more details on premium please contact @Laniakea#3683.', ephemeral: true }) }
-    } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }//if not laniakea
-  }//end if startalphasetup-button
-
-  //show add alpha modal
-  if (interaction.customId === 'addAlpha-button') {
-    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) { //only if you have manage channels
-      alphasetup.sendAddModal(interaction)
-    } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }//if not laniakea
-  }//end show add alpha modal
-
-  //show add alpha modal
-  if (interaction.customId === 'removeAlpha-modal') {
-    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) { //only if you have manage channels
-      alphasetup.sendRemoveModal(interaction)
-    } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }//if not laniakea
-  }//end show add alpha modal
-
-  //validate and if valid create alpha channel
-  if (interaction.customId === 'addAlpha-modal') {
-    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) { //only if you have manage channels
-      alphasetup.validateCollection(interaction)
-    } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }//if not laniakea
-  }//end if button is 'submitAddAlpha-modal'
-})//end on interactionCreate for alpha setup
-*/
 
 //=============================
 //==== Other interactions  ====
@@ -267,26 +185,6 @@ client.on('channelDelete', async channel => {
   w.log.info('Channel deleted in guild ' + channel.guildId + ' checking to see if its one of ours')
   var serverdetails = await sql.getServerRow(channel.guildId)//get this server's details
 
-  /*
-    //check if it was an alpha channel
-    var alphafound = false//we are going to check if it was an alpha channel. Start as false.
-    if (serverdetails[0].alpha_channels) {//if there is an alpha config
-      for (var i = 0; i < serverdetails[0].alpha_channels.enabled.length; i++) {//for each config
-        if (serverdetails[0].alpha_channels.enabled[i]['channelid'] === channel.id) {//if it matches the deleted channel
-          w.log.info('matched the deleted channel to an alpha channel. Deleting that from the config')
-          alphafound = true
-          //splice out the deleted channel from the config
-          serverdetails[0].alpha_channels.enabled.splice(i, 1)
-          //save updates config in sql
-          await sql.updateTableColumn('servers', 'serverid', channel.guildId, "alpha_channels", serverdetails[0].alpha_channels)
-          break//dont need to loop through further alpha configs
-        }//end if we have found a setup matching the current collectionkey
-      }//end for each alpha channel config object
-    }//end if there is an exisiting config
-  
-    if (alphafound === false) { w.log.info('deleted channel didn\'t match an alpha channel') }
-    */
-
   //check if it was any of the main snipe channels. Null it in database. Snipe sender checks for null
   if (channel.id === serverdetails[0].raresnipes) {
     w.log.info('Raresnipes channel was deleted from server ' + serverdetails[0].servername + '. Nulling it in our database')
@@ -309,17 +207,6 @@ client.on('channelDelete', async channel => {
     snipersender.initaliseServers()
   }//end if mythic
 
-  /*
-    //check if it was the home channel
-    if (channel.id === serverdetails[0].homechannel_id) {
-      w.log.info('homechannel was deleted from server ' + serverdetails[0].servername + '. Nulling id in our database, deleting config and disabling')
-      await sql.updateTableColumn('servers', 'serverid', channel.guildId, "homechannel_id", null)
-      await sql.updateTableColumn('servers', 'serverid', channel.guildId, "homechannel_collections", null)
-      await sql.updateTableColumn('servers', 'serverid', channel.guildId, "homechannel_enabled", false)
-      snipersender.initaliseServers()
-    }//end if home channel
-    */
-
   //check if it was a new alpha channel
   var newalphafound = false//we are going to check if it was an alpha channel. Start as false.
   if (serverdetails[0].alphaconfig) {//if there is an alpha config
@@ -335,21 +222,11 @@ client.on('channelDelete', async channel => {
       }//end if we have found a setup matching the current collectionkey
     }//end for each alpha channel config object
   }//end if there is an exisiting config
-
-
 })//end on channelDelete event
 
 //Global config
 const globalconfig = require('./setup/globalconfig.js')
 client.on('interactionCreate', async interaction => {
-  /*
-  //main globalconfig button on main setup dialogue. Replied with global config panel
-  if (interaction.customId === 'globalconfig-button') {
-    if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels, true)) {//only if you have manage channels
-      globalconfig.configPanel(interaction)
-    } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
-  }//end if button is 'globalconfig-button'
-  */
 
   //respond with config rarities from alpha channel config next button respond with choice of rarities to enable/disable
   if (interaction.customId === 'alphaNextBtn') {
@@ -431,7 +308,6 @@ client.on('interactionCreate', async interaction => {
   if (interaction.customId === 'alert-no-button') {
     alerts.removeRole(interaction)
   }
-
 })//end on interactionCreate 
 
 //New alpha config
@@ -472,5 +348,4 @@ client.on('interactionCreate', async interaction => {
       alpha.done(interaction)
     } else { await interaction.reply({ content: permissionerror, ephemeral: true }) }
   }//end if button is alpha done
-
 })//end on interactionCreate 
