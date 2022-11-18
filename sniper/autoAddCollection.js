@@ -56,10 +56,10 @@ async function getMetaplexData(creatoraddress) {
 
   var creatorkey = new PublicKey(creatoraddress)//make the verified creator address into a public key
 
-  w.log.info('autoAdd1: getting metadata from RPC - should take about 1 minute per 100 NFTs in collection')
+  w.log.info('autoAdd1: getting initial from RPC (without traits/JSON))')
   const metadata = await metaplex.nfts().findAllByCreator({ "creator": creatorkey }).run()
 
-  w.log.info('autoAdd1: adding NFT JSON to the ' + metadata.length + ' NFTs we recieved - 1 API request per 80ms')
+  w.log.info('autoAdd1: adding NFT JSON to the ' + metadata.length + ' NFTs we recieved - 1 API request per 100ms')
   var withjson = { "data": [], "fails": [] }
   var heartbeat = 0//start at 0 and count for each NFT. Send log every 50
 
@@ -70,7 +70,7 @@ async function getMetaplexData(creatoraddress) {
       withjson.data.push(thisnft)//add it to the final object
       heartbeat = heartbeat + 1//count up heartbeat logger
       if ((heartbeat % 100) == 0) { w.log.info('autoAdd1: I\'ve sent ' + heartbeat + ' json load requests') }//console log every 50 requests (so we know process is alive)
-      await wait(80)//wait to slow API requests.
+      await wait(100)//wait to slow API requests.
     } else {//if recieved NFT didnt have metadata, we can retry is. push it to a fail object.
       w.log.info('autoAdd1: ' + thisnft.name + ' failed to add JSON. Pushing metadata[i] to fail list')
       withjson.fails.push(metadata[i])
@@ -80,20 +80,24 @@ async function getMetaplexData(creatoraddress) {
   //retry the fails - only one retry, should probably do at least a 2nd retry (or more?)
   w.log.info('autoAdd1: retrying ' + withjson.fails.length + ' fails')
   var heartbeat = 0
-  for (var i = 0; i < withjson.fails.length; i++) {//loop hrough fails object
-    var thisnft = await metaplex.nfts().load({ "metadata": withjson.fails[i] }).run()//request NFT metadata
+  var fail = 0
+  while (withjson.fails.length > 0) {
+    var thisnft = await metaplex.nfts().load({ "metadata": withjson.fails[fail] }).run()//request NFT metadata
 
     if (thisnft.json != null) {//if we got metadata
       w.log.info('autoAdd1: ' + thisnft.name + ' got data on retry')
       withjson.data.push(thisnft)
+      withjson.fails.pop(withjson.fails[fail])
+      fail++//add one to fail
       heartbeat = heartbeat + 1
-      if ((heartbeat % 5) == 0) { w.log.info('autoAdd1: I\'ve sent ' + heartbeat + ' json fail load requests') }
-      await wait(80)//wait to slow API requests.
+      if ((heartbeat % 5) == 0) { w.log.info('autoAdd1: I\'ve sent ' + heartbeat + ' JSON fail load requests') }
     } else {
-      w.log.info("autoAdd1: failed to add JSON twice. " + thisnft.name + " will not be in final obj.data")
-    }//end else if we got metadata
+      w.log.info('autoAdd1: ' + thisnft.name + ' failed to get JSON. Trying again')
+    }
+    await wait(100)//wait to slow API requests.
   }//end for each fail
-
+  
+  w.log.info('autoAdd1: Completed ' + heartbeat + " retries")
   w.log.info('autoAdd1: returning metaplex data (with JSON)')
   return (withjson)
 }; module.exports.getMetaplexData = getMetaplexData
