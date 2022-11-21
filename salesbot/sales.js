@@ -63,29 +63,44 @@ async function getActivities() {
 		w.log.info(collections[i].meslug)
 		//get activities
 		var magicactivities = await getMEactivities(collections[i].meslug, 10)
-		//await wait(1000)
-		w.log.info('got activities. logging them')
-		w.log.info(JSON.stringify(magicactivities[0]))
+		var newactivities = magicactivities
+
+		//
 
 		//cut recieved activities down to just the new ones
 		var oldactivities = collections[i].me_activities
-		for (var j = 0; j < magicactivities.length; j++) {
+		for (var j = 0; j < newactivities.length; j++) {
 			for (var k = 0; k < oldactivities.length; k++) {
-				if (magicactivities[j].signature === oldactivities[k].signature) {
-					magicactivities.pop(magicactivities[j])
+				if (newactivities[j].signature === oldactivities[k].signature) {
+					newactivities.pop(newactivities[j])
 				}//end if
 			}//end for each old avtivities
 		}//end for each recieved activity
 
-		w.log.info('Saveing these new activities; ')
-		w.log.info(JSON.stringify(magicactivities))
-		await saveActivities(collections[i].meslug,JSON.stringify(magicactivities))
+		//add newactivities to oldactivities
+		var storeActivities = newactivities.concat(oldactivities)//add actual new ones to old ones
+		storeActivities = storeActivities.slice(0, 20)//keep last 20
 
+		w.log.info('Saveing up to 20 activities. This time it is ' + storeActivities.length + ' activities')
+		
+		await saveActivities(collections[i].meslug, JSON.stringify(storeActivities))
 
+		//loop through new activities and filter down to just the buys
+		for (var m = 0; m < newactivities.length; m++) {
+			if (newactivities[m].type != "buyNow") {
+				newactivities.pop(newactivities[m])
+			}
+		}
+
+		w.log.info('These are the new buys:')
+		w.log.info(JSON.stringify(storeActivities))
 
 		for (var l = 0; l < collections[i].servers.data.length; l++) {//for each server signed up to that collection
 			w.log.info(JSON.stringify(collections[i].servers.data[l]))
 		}
+
+		await wait(2000)
+		
 	}
 
 } module.exports.getActivities = getActivities
