@@ -17,7 +17,13 @@ async function sqlGetCollections() {
 
 async function go() {
 
-	var fromsql = await sqlGetCollections()
-	w.log.info(JSON.stringify(fromsql))
+	var collections = await sqlGetCollections()
+
+	for (var i = 0; i < collections.servers.length; i++) {//for each sql row (collection)
+		w.log.info(collections.servers[i].meslug)
+		for (var j = 0; j < collections.servers[i].data.length; j++) {//for each server signed up to that collection
+			w.log.info(JSON.stringify(ccollections.servers[i].data[j]))
+		}
+	}
 
 } module.exports.go = go
