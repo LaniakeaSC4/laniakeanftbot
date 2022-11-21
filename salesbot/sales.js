@@ -33,7 +33,7 @@ async function getMEactivities(collection, number) {
 		resp.on('end', () => {
 
 			var thislistings = JSON.parse(data)
-			w.log.info(hislistings)
+			w.log.info(thislistings)
 			return thislistings//return the recieved X listings
 
 		})
