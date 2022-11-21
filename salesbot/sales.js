@@ -93,14 +93,14 @@ async function getActivities() {
 		}
 
 		w.log.info('These are the new buys:')
-		w.log.info(JSON.stringify(storeActivities))
+		w.log.info(JSON.stringify(newactivities))
 
 		for (var l = 0; l < collections[i].servers.data.length; l++) {//for each server signed up to that collection
 			w.log.info(JSON.stringify(collections[i].servers.data[l]))
 		}
 
 		await wait(2000)
-		
+
 	}
 
 } module.exports.getActivities = getActivities
