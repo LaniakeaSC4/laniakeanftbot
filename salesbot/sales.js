@@ -73,7 +73,7 @@ async function getActivities() {
 			for (var k = 0; k < oldactivities.length; k++) {
 				try {
 					if (newactivities[j].signature === oldactivities[k].signature) {
-						newactivities.pop(newactivities[j])
+						newactivities.splice(newactivities[j],1)
 					}//end if
 				} catch { w.log.info('newactivities[j].signature is: ' + newactivities[j]?.signature + ". oldactivities[k].signature is: " + oldactivities[k]?.signature) }
 			}//end for each old avtivities
