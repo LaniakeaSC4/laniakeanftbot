@@ -49,6 +49,14 @@ module.exports = {
 				if (interaction.options.getString('extradata')) { daysToAdd = parseFloat(interaction.options.getString('extradata')) } //if there is extra data, set daysToAdd to it
 				await premium.update(serverid, daysToAdd, interaction)
 			}
+
+			//restart the sniper intervals
+			const sales = require('../salesbot/sales.js')
+			if (action === 'sales') {
+				await interaction.reply({ content: "Logging Sales", ephemeral: true })
+				await sales.go()
+			}
+
 		}//end if user is laniakea
 	},//end execute block
 }//end module.exports
