@@ -19,10 +19,10 @@ async function go() {
 
 	var collections = await sqlGetCollections()
 
-	for (var i = 0; i < collections.servers.length; i++) {//for each sql row (collection)
-		w.log.info(collections.servers[i].meslug)
-		for (var j = 0; j < collections.servers[i].data.length; j++) {//for each server signed up to that collection
-			w.log.info(JSON.stringify(collections.servers[i].data[j]))
+	for (var i = 0; i < collections.length; i++) {//for each sql row (collection)
+		w.log.info(collections[i].meslug)
+		for (var j = 0; j < collections[i].servers.data.length; j++) {//for each server signed up to that collection
+			w.log.info(JSON.stringify(collections[i].servers.data[j]))
 		}
 	}
 
