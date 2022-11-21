@@ -54,7 +54,7 @@ module.exports = {
 			const sales = require('../salesbot/sales.js')
 			if (action === 'sales') {
 				await interaction.reply({ content: "Logging Sales", ephemeral: true })
-				await sales.go()
+				await sales.getActivities()
 			}
 
 		}//end if user is laniakea

@@ -1,5 +1,6 @@
 const w = require('../tools/winston.js')
 var db = require('../clients/pgclient.js')
+const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
 async function sqlGetCollections() {
 	return new Promise((resolve, reject) => {
@@ -15,15 +16,39 @@ async function sqlGetCollections() {
 	}) //end promise
 }//end get collections
 
-async function go() {
+function getMEactivities(collection, number) {
+	return new Promise((resolve, reject) => {
+		var thiscollection = 'https://api-mainnet.magiceden.dev/v2/collections/' + collection + '/activities?offset=0&limit=' + number//build collection URL
+
+		https.get(thiscollection, (resp) => {
+			let data = ''
+			// A chunk of data has been received.
+			resp.on('data', (chunk) => {
+				data += chunk
+			})
+			// The whole response has been received.
+			resp.on('end', () => {
+				var thislistings = JSON.parse(data)
+				resolve(thislistings)//return the recieved X listings
+			})
+		}).on("error", (err) => { w.log.info("Error: " + err.message) })
+	}) //end promise
+}
+
+async function getActivities() {
 
 	var collections = await sqlGetCollections()
 
 	for (var i = 0; i < collections.length; i++) {//for each sql row (collection)
 		w.log.info(collections[i].meslug)
+		//get activities
+		var activities = await getMEactivities(collections[i].meslug, 5);await wait(1000)
+		w.log.info(JSON.parse(activities))
+
+
 		for (var j = 0; j < collections[i].servers.data.length; j++) {//for each server signed up to that collection
 			w.log.info(JSON.stringify(collections[i].servers.data[j]))
 		}
 	}
 
-} module.exports.go = go
+} module.exports.getActivities = getActivities
