@@ -33,7 +33,7 @@ function getMEactivities(collection, number) {
 		resp.on('end', () => {
 
 			var thislistings = JSON.parse(data)
-			w.log.info(thislistings)
+			w.log.info(JSON.stringify(thislistings))
 			resolve(thislistings)//return the recieved X listings
 
 		})
@@ -51,7 +51,7 @@ async function getActivities() {
 		var activities = await getMEactivities(collections[i].meslug, 5)
 		//await wait(1000)
 		w.log.info('got activities. logging them')
-		w.log.info(activities)
+		w.log.info(JSON.stringify(activities))
 
 
 		for (var j = 0; j < collections[i].servers.data.length; j++) {//for each server signed up to that collection
