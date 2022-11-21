@@ -44,7 +44,7 @@ async function getActivities() {
 		w.log.info(collections[i].meslug)
 		//get activities
 		var activities = await getMEactivities(collections[i].meslug, 5);await wait(1000)
-		w.log.info(JSON.parse(activities))
+		w.log.info(activities)
 
 
 		for (var j = 0; j < collections[i].servers.data.length; j++) {//for each server signed up to that collection
