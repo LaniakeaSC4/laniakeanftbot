@@ -17,7 +17,7 @@ async function sqlGetCollections() {
 	}) //end promise
 }//end get collections
 
-function getMEactivities(collection, number) {
+async function getMEactivities(collection, number) {
 	return new Promise((resolve, reject) => {
 		var thiscollection = 'https://api-mainnet.magiceden.dev/v2/collections/' + collection + '/activities?offset=0&limit=' + number//build collection URL
 
@@ -43,7 +43,8 @@ async function getActivities() {
 	for (var i = 0; i < collections.length; i++) {//for each sql row (collection)
 		w.log.info(collections[i].meslug)
 		//get activities
-		var activities = await getMEactivities(collections[i].meslug, 5);await wait(1000)
+		var activities = await getMEactivities(collections[i].meslug, 5)
+		//await wait(1000)
 		w.log.info(activities)
 
 
