@@ -87,7 +87,9 @@ async function getActivities() {
 
 		await saveActivities(collections[i].meslug, JSON.stringify(storeActivities))
 
-		//loop through new activities and filter down to just the buys
+		//loop through new activities and filter down to just the buys]
+		w.log.info('newactivities.length is ' + newactivities.length)
+		w.log.info('newactivities.length[0] is ' + newactivities.length[0])
 		for (var m = 0; m < newactivities.length; m++) {
 			if (newactivities[m].type != "buyNow") {
 				newactivities.splice(newactivities[m],1)
