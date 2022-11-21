@@ -22,7 +22,7 @@ async function saveActivities(meslug, activities) {
 		var pgclient = db.getClient()
 
 		//update this table to add this data to this column where this key matches the table's primary key
-		var querystring = "UPDATE sales SET me_activiies = $1 WHERE meslug = '" + meslug + "'"
+		var querystring = "UPDATE sales SET me_activities = $1 WHERE meslug = '" + meslug + "'"
 		var querydata = [activities]
 
 		pgclient.query(querystring, querydata, (err, res) => {
