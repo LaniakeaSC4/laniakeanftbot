@@ -90,7 +90,7 @@ async function getActivities() {
 		//loop through new activities and filter down to just the buys
 		for (var m = 0; m < newactivities.length; m++) {
 			if (newactivities[m].type != "buyNow") {
-				newactivities.pop(newactivities[m])
+				newactivities.splice(newactivities[m],1)
 			}
 		}
 
