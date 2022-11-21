@@ -79,7 +79,7 @@ async function getActivities() {
 
 		w.log.info('Saveing these new activities; ')
 		w.log.info(JSON.stringify(magicactivities))
-		await saveActivities(collections[i].meslug,magicactivities)
+		await saveActivities(collections[i].meslug,JSON.stringify(magicactivities))
 
 
 
