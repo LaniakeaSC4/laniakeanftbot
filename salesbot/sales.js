@@ -17,8 +17,8 @@ async function sqlGetCollections() {
 	}) //end promise
 }//end get collections
 
-async function getMEactivities(collection, number) {
-
+function getMEactivities(collection, number) {
+	return new Promise((resolve, reject) => {
 	var thiscollection = 'https://api-mainnet.magiceden.dev/v2/collections/' + collection + '/activities?offset=0&limit=' + number//build collection URL
 	w.log.info('getting: ' + thiscollection)
 	//https://api-mainnet.magiceden.dev/v2/collections/crypto_coral_tribe/activities?offset=0&limit=5
@@ -34,10 +34,11 @@ async function getMEactivities(collection, number) {
 
 			var thislistings = JSON.parse(data)
 			w.log.info(thislistings)
-			return thislistings//return the recieved X listings
+			resolve(thislistings)//return the recieved X listings
 
 		})
 	}).on("error", (err) => { w.log.info("Error: " + err.message) })
+}) //end promise
 }
 
 async function getActivities() {
@@ -49,6 +50,7 @@ async function getActivities() {
 		//get activities
 		var activities = await getMEactivities(collections[i].meslug, 5)
 		//await wait(1000)
+		w.log.info('got activities. logging them')
 		w.log.info(activities)
 
 
