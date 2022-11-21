@@ -17,26 +17,27 @@ async function sqlGetCollections() {
 	}) //end promise
 }//end get collections
 
-function getMEactivities(collection, number) {
-	return new Promise((resolve, reject) => {
-		var thiscollection = 'https://api-mainnet.magiceden.dev/v2/collections/' + collection + '/activities?offset=0&limit=' + number//build collection URL
-		w.log.info('getting: ' + thiscollection)
-		//https://api-mainnet.magiceden.dev/v2/collections/crypto_coral_tribe/activities?offset=0&limit=5
+async function getMEactivities(collection, number) {
 
-		https.get(thiscollection, (resp) => {
-			let data = ''
-			// A chunk of data has been received.
-			resp.on('data', (chunk) => {
-				data += chunk
-			})
-			// The whole response has been received.
-			resp.on('end', () => {
-				w.log.info(JSON.parse(data))
-				var thislistings = JSON.parse(data)
-				resolve(thislistings)//return the recieved X listings
-			})
-		}).on("error", (err) => { w.log.info("Error: " + err.message) })
-	}) //end promise
+	var thiscollection = 'https://api-mainnet.magiceden.dev/v2/collections/' + collection + '/activities?offset=0&limit=' + number//build collection URL
+	w.log.info('getting: ' + thiscollection)
+	//https://api-mainnet.magiceden.dev/v2/collections/crypto_coral_tribe/activities?offset=0&limit=5
+
+	https.get(thiscollection, (resp) => {
+		let data = ''
+		// A chunk of data has been received.
+		resp.on('data', (chunk) => {
+			data += chunk
+		})
+		// The whole response has been received.
+		resp.on('end', () => {
+
+			var thislistings = JSON.parse(data)
+			w.log.info(hislistings)
+			return thislistings//return the recieved X listings
+
+		})
+	}).on("error", (err) => { w.log.info("Error: " + err.message) })
 }
 
 async function getActivities() {
