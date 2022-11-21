@@ -71,9 +71,11 @@ async function getActivities() {
 		var oldactivities = collections[i].me_activities
 		for (var j = 0; j < newactivities.length; j++) {
 			for (var k = 0; k < oldactivities.length; k++) {
-				if (newactivities[j].signature === oldactivities[k].signature) {
-					newactivities.pop(newactivities[j])
-				}//end if
+				try {
+					if (newactivities[j].signature === oldactivities[k].signature) {
+						newactivities.pop(newactivities[j])
+					}//end if
+				} catch { w.log.info('newactivities[j].signature is: ' + newactivities[j]?.signature + ". oldactivities[k].signature is: " + oldactivities[k]?.signature) }
 			}//end for each old avtivities
 		}//end for each recieved activity
 
@@ -82,7 +84,7 @@ async function getActivities() {
 		storeActivities = storeActivities.slice(0, 20)//keep last 20
 
 		w.log.info('Saveing up to 20 activities. This time it is ' + storeActivities.length + ' activities')
-		
+
 		await saveActivities(collections[i].meslug, JSON.stringify(storeActivities))
 
 		//loop through new activities and filter down to just the buys
