@@ -108,7 +108,7 @@ async function getActivities() {
 		}
 
 		w.log.info('These are the new buys:')
-		w.log.info(buys.toString())
+		w.log.info(JSON.stringify(buys))
 
 		for (var l = 0; l < collections[i].servers.data.length; l++) {//for each server signed up to that collection
 			w.log.info(JSON.stringify(collections[i].servers.data[l]))
