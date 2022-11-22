@@ -66,7 +66,8 @@ async function getActivities() {
 		var magicactivities = await getMEactivities(collections[i].meslug, 50)
 		var newactivities = magicactivities
 		w.log.info('typeof newactivities: ' + typeof newactivities)
-		w.log.info(newactivities[0].signature)
+		w.log.info('length of newactivities is: ' + newactivities.length)
+		w.log.info('signature 0 is: ' + newactivities[0].signature)
 		//
 
 		//cut recieved activities down to just the new ones
@@ -77,17 +78,20 @@ async function getActivities() {
 			for (var k = 0; k < oldactivities.length; k++) {
 				try {
 					if (newactivities[j].signature === oldactivities[k].signature) {
-						newactivities.splice(newactivities[j], 1)
+						w.log.info('Splicing ' + j + ' as it was a match')
+						newactivities.splice(j, 1)
 					}//end if
 				} catch { w.log.info('newactivities[j].signature is: ' + newactivities[j]?.signature + ". oldactivities[k].signature is: " + oldactivities[k]?.signature) }
 			}//end for each old avtivities
 		}//end for each recieved activity
 
+		w.log.info('length of newactivities is now: ' + newactivities.length)
+
 		//add newactivities to oldactivities
 		var storeActivities = newactivities.concat(oldactivities)//add actual new ones to old ones
 		storeActivities = storeActivities.slice(0, 100)//keep last 20
 
-		w.log.info('Saveing up to 20 activities. This time it is ' + storeActivities.length + ' activities')
+		w.log.info('Saveing up to 50 activities. This time it is ' + storeActivities.length + ' activities')
 
 		await saveActivities(collections[i].meslug, JSON.stringify(storeActivities))
 
