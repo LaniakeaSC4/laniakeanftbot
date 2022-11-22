@@ -97,7 +97,7 @@ async function getActivities() {
 		for (var m = 0; m < newactivities.length; m++) {
 			w.log.info('type is: ' + newactivities[m].type)
 			if (newactivities[m].type != "buyNow") {
-				newactivities.splice(newactivities[m], 1)
+				newactivities.splice(m, 1)
 			}
 		}
 
