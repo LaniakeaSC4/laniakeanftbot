@@ -77,6 +77,8 @@ async function getActivities() {
 		    salesActivities.push(newactivities[s])
 		  }
 		}
+		w.log.info('salesactivities.length is: ' + salesActivities.length)
+		w.log.info(JSON.stringify(salesActivities[0]))
 		
 		var oldactivities = collections[i].me_activities
 		var newSales = []

@@ -93,7 +93,7 @@ async function getMetaplexData(creatoraddress) {
       heartbeat = heartbeat + 1
       if ((heartbeat % 5) == 0) { w.log.info('autoAdd1: I\'ve sent ' + heartbeat + ' JSON fail load requests') }
     } else {
-      w.log.info('autoAdd1: ' + thisnft.name + ' failed to get JSON. Trying again')
+      w.log.info('autoAdd1: ' + thisnft.name + ' failed to get JSON. Trying again. Retry count is:' + thisnft.retrycount)
       thisnft.retrycount = thisnft.retrycount + 1
       if (thisnft.retrycount === 5) {//if we have tried this 6 times
         withjson.fails.pop(withjson.fails[fail])//pop it
