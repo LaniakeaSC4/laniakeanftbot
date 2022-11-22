@@ -80,6 +80,7 @@ async function getActivities() {
 					if (newactivities[j].signature === oldactivities[k].signature) {
 						w.log.info('Splicing ' + j + ' as it was a match')
 						newactivities.splice(j, 1)
+						break
 					}//end if
 				} catch { w.log.info('newactivities[j].signature is: ' + newactivities[j]?.signature + ". oldactivities[k].signature is: " + oldactivities[k]?.signature) }
 			}//end for each old avtivities
