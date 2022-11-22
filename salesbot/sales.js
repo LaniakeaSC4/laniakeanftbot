@@ -65,7 +65,8 @@ async function getActivities() {
 		//get activities
 		var magicactivities = await getMEactivities(collections[i].meslug, 10)
 		var newactivities = magicactivities
-
+		w.log.info('typeof newactivities: ' + typeof newactivities)
+		w.log.info(newactivities[0])
 		//
 
 		//cut recieved activities down to just the new ones
@@ -74,7 +75,7 @@ async function getActivities() {
 			for (var k = 0; k < oldactivities.length; k++) {
 				try {
 					if (newactivities[j].signature === oldactivities[k].signature) {
-						newactivities.splice(newactivities[j],1)
+						newactivities.splice(newactivities[j], 1)
 					}//end if
 				} catch { w.log.info('newactivities[j].signature is: ' + newactivities[j]?.signature + ". oldactivities[k].signature is: " + oldactivities[k]?.signature) }
 			}//end for each old avtivities
@@ -94,7 +95,7 @@ async function getActivities() {
 		for (var m = 0; m < newactivities.length; m++) {
 			w.log.info('type is: ' + newactivities[m].type)
 			if (newactivities[m].type != "buyNow") {
-				newactivities.splice(newactivities[m],1)
+				newactivities.splice(newactivities[m], 1)
 			}
 		}
 
