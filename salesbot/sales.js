@@ -63,7 +63,7 @@ async function getActivities() {
 	for (var i = 0; i < collections.length; i++) {//for each sql row (collection)
 		w.log.info(collections[i].meslug)
 		//get activities
-		var magicactivities = await getMEactivities(collections[i].meslug, 10)
+		var magicactivities = await getMEactivities(collections[i].meslug, 50)
 		var newactivities = magicactivities
 		w.log.info('typeof newactivities: ' + typeof newactivities)
 		w.log.info(newactivities[0].signature)
@@ -85,24 +85,25 @@ async function getActivities() {
 
 		//add newactivities to oldactivities
 		var storeActivities = newactivities.concat(oldactivities)//add actual new ones to old ones
-		storeActivities = storeActivities.slice(0, 20)//keep last 20
+		storeActivities = storeActivities.slice(0, 100)//keep last 20
 
 		w.log.info('Saveing up to 20 activities. This time it is ' + storeActivities.length + ' activities')
 
 		await saveActivities(collections[i].meslug, JSON.stringify(storeActivities))
 
-		//loop through new activities and filter down to just the buys]
+		//loop through new activities and filter out the buys
+		var buys = []
 		w.log.info('newactivities.length is ' + newactivities.length)
-		w.log.info('newactivities[0] is ' + newactivities[0])
+		
 		for (var m = 0; m < newactivities.length; m++) {
 			w.log.info('type is: ' + newactivities[m].type)
-			if (newactivities[m].type != "buyNow") {
-				newactivities.splice(m, 1)
+			if (newactivities[m].type === "buyNow") {
+				buys.push(newactivities[m])
 			}
 		}
 
 		w.log.info('These are the new buys:')
-		w.log.info(JSON.stringify(newactivities))
+		w.log.info(buys)
 
 		for (var l = 0; l < collections[i].servers.data.length; l++) {//for each server signed up to that collection
 			w.log.info(JSON.stringify(collections[i].servers.data[l]))
