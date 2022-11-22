@@ -66,7 +66,7 @@ async function getActivities() {
 		var magicactivities = await getMEactivities(collections[i].meslug, 10)
 		var newactivities = magicactivities
 		w.log.info('typeof newactivities: ' + typeof newactivities)
-		w.log.info(newactivities[0])
+		w.log.info(JSON.stringify(newactivities[0]))
 		//
 
 		//cut recieved activities down to just the new ones
