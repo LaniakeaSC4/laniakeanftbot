@@ -66,12 +66,14 @@ async function getActivities() {
 		var magicactivities = await getMEactivities(collections[i].meslug, 10)
 		var newactivities = magicactivities
 		w.log.info('typeof newactivities: ' + typeof newactivities)
-		w.log.info(JSON.stringify(newactivities[0]))
+		w.log.info(newactivities[0].signature)
 		//
 
 		//cut recieved activities down to just the new ones
 		var oldactivities = collections[i].me_activities
 		for (var j = 0; j < newactivities.length; j++) {
+			w.log.info('J is: ' + j)
+			w.log.info(newactivities[j]?.signature)
 			for (var k = 0; k < oldactivities.length; k++) {
 				try {
 					if (newactivities[j].signature === oldactivities[k].signature) {
