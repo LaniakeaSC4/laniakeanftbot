@@ -72,13 +72,14 @@ async function getActivities() {
 
 		//cut recieved activities down to just the new ones
 		var oldactivities = collections[i].me_activities
-		for (var j = 0; j < newactivities.length; j++) {
+		for (var j = 0; j < newactivities.length; j++) {//for each new activity
 			await wait(50)
 			for (var k = 0; k < oldactivities.length; k++) {
 				try {
-					if (newactivities[j].signature === oldactivities[k].signature) {
-						w.log.info('Splicing ' + newactivities[j].signature + ' as it was a match')
+					if (newactivities[j].signature === oldactivities[k].signature || newactivities[j].type != "buyNow") {
+						w.log.info('Splicing ' + newactivities[j].signature + ' as it was a signature match or type wasnt buynow. Type is: ' + newactivities[j].type)
 						newactivities.splice(j, 1)
+						w.log.info('newactivities length is: ' + newactivities.length)
 						break
 					}//end if
 				} catch { w.log.info('newactivities[j].signature is: ' + newactivities[j]?.signature + ". oldactivities[k].signature is: " + oldactivities[k]?.signature) }
