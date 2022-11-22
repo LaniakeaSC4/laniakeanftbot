@@ -84,17 +84,20 @@ async function getActivities() {
 		var newSales = []
 		for (var j = 0; j < salesActivities.length; j++) {//for each sale
 			await wait(50)
+			var found = false
 			for (var k = 0; k < oldactivities.length; k++) {
 				try {
 					if (oldactivities[k].findkey === salesActivities[j].findkey)  {
 						w.log.info('Matched: ' + oldactivities[k].findkey )
+						found = true
 						break
 					} else {
 						w.log.info('did not match ' + salesActivities[j].findkey + ' is it new?')
-						newSales.push(salesActivities[j])
 					}
 				} catch { w.log.info('newactivities[j].tokenMint is: ' + newactivities[j]?.tokenMint + ". oldactivities[k].tokenMint is: " + oldactivities[k]?.tokenMint) }
 			}//end for each old avtivities
+			if (found === false) {	newSales.push(salesActivities[j])
+			  	}
 		}//end for each recieved activity
 
 		w.log.info('length of newSales is: ' + newSales.length)
