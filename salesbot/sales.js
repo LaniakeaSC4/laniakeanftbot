@@ -69,35 +69,43 @@ async function getActivities() {
 		w.log.info('length of newactivities is: ' + newactivities.length)
 		w.log.info('tokenMint 0 is: ' + newactivities[0].tokenMint)
 		//
-
-		//cut recieved activities down to just the new ones
+		
+		var salesActivities = []
+		for (var s = 0;s < newactivities.length;s++){
+		  if (newactivities[s].type == "buyNow"){
+		    newactivities[s]['findkey'] = newactivities[s].type + newactivities[s].tokenMint + newactivities[s].price
+		    salesActivities.push(newactivities[s])
+		  }
+		}
+		
 		var oldactivities = collections[i].me_activities
-		for (var j = 0; j < newactivities.length; j++) {//for each new activity
+		var newSales = []
+		for (var j = 0; j < salesActivities.length; j++) {//for each sale
 			await wait(50)
 			for (var k = 0; k < oldactivities.length; k++) {
 				try {
-					if (((newactivities[j].tokenMint === oldactivities[k].tokenMint) && (newactivities[j].blockTime === oldactivities[k].blockTime)) || newactivities[j].type != "buyNow") {
-						w.log.info('Splicing ' + newactivities[j].tokenMint + ' as it was a tokenMint match or type wasnt buynow. Type is: ' + newactivities[j].type)
-						newactivities.splice(j, 1)
-						w.log.info('newactivities length is: ' + newactivities.length)
+					if (oldactivities[k].findkey === salesActivities[j].findkey)  {
+						w.log.info('Matched: ' + oldactivities[k].findkey )
 						break
 					} else {
-						w.log.info(newactivities[j].tokenMint + ' didnt get filtered is it new?')
+						w.log.info('did not match ' + salesActivities[j].findkey + ' is it new?')
+						newSales.push(salesActivities[j])
 					}
 				} catch { w.log.info('newactivities[j].tokenMint is: ' + newactivities[j]?.tokenMint + ". oldactivities[k].tokenMint is: " + oldactivities[k]?.tokenMint) }
 			}//end for each old avtivities
 		}//end for each recieved activity
 
-		w.log.info('length of newactivities is now: ' + newactivities.length)
+		w.log.info('length of newSales is: ' + newSales.length)
 
 		//add newactivities to oldactivities
-		var storeActivities = newactivities.concat(oldactivities)//add actual new ones to old ones
+		var storeActivities = newSales.concat(oldactivities)//add actual new ones to old ones
 		storeActivities = storeActivities.slice(0, 200)//keep last 20
 
-		w.log.info('Saveing up to 100 activities. This time it is ' + storeActivities.length + ' activities')
+		w.log.info('Saveing up to 200 activities. This time it is ' + storeActivities.length + ' activities')
 
 		await saveActivities(collections[i].meslug, JSON.stringify(storeActivities))
 
+/*
 		//loop through new activities and filter out the buys
 		var buys = []
 		w.log.info('newactivities.length is ' + newactivities.length)
@@ -109,9 +117,9 @@ async function getActivities() {
 				buys.push(newactivities[m])
 			}
 		}
-
+*/
 		w.log.info('These are the new buys:')
-		w.log.info(JSON.stringify(buys))
+		w.log.info(JSON.stringify(newSales))
 
 		for (var l = 0; l < collections[i].servers.data.length; l++) {//for each server signed up to that collection
 			w.log.info(JSON.stringify(collections[i].servers.data[l]))
