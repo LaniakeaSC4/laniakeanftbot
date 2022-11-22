@@ -98,7 +98,7 @@ async function getActivities() {
 		}//end for each recieved activity
 
 		w.log.info('length of newSales is: ' + newSales.length)
-
+if (oldactivities.length > 0) {
 		//add newactivities to oldactivities
 		var storeActivities = newSales.concat(oldactivities)//add actual new ones to old ones
 		storeActivities = storeActivities.slice(0, 200)//keep last 20
@@ -106,7 +106,9 @@ async function getActivities() {
 		w.log.info('Saveing up to 200 activities. This time it is ' + storeActivities.length + ' activities')
 
 		await saveActivities(collections[i].meslug, JSON.stringify(storeActivities))
-
+} else {
+  await saveActivities(collections[i].meslug, JSON.stringify(salesActivities))
+}
 /*
 		//loop through new activities and filter out the buys
 		var buys = []
