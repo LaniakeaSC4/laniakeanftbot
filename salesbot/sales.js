@@ -63,7 +63,7 @@ async function getActivities() {
 	for (var i = 0; i < collections.length; i++) {//for each sql row (collection)
 		w.log.info(collections[i].meslug)
 		//get activities
-		var magicactivities = await getMEactivities(collections[i].meslug, 50)
+		var magicactivities = await getMEactivities(collections[i].meslug, 100)
 		var newactivities = magicactivities
 		w.log.info('typeof newactivities: ' + typeof newactivities)
 		w.log.info('length of newactivities is: ' + newactivities.length)
@@ -73,12 +73,11 @@ async function getActivities() {
 		//cut recieved activities down to just the new ones
 		var oldactivities = collections[i].me_activities
 		for (var j = 0; j < newactivities.length; j++) {
-			w.log.info('J is: ' + j)
-			w.log.info(newactivities[j]?.signature)
+			await wait(50)
 			for (var k = 0; k < oldactivities.length; k++) {
 				try {
 					if (newactivities[j].signature === oldactivities[k].signature) {
-						w.log.info('Splicing ' + j + ' as it was a match')
+						w.log.info('Splicing ' + newactivities[j].signature + ' as it was a match')
 						newactivities.splice(j, 1)
 						break
 					}//end if
@@ -90,9 +89,9 @@ async function getActivities() {
 
 		//add newactivities to oldactivities
 		var storeActivities = newactivities.concat(oldactivities)//add actual new ones to old ones
-		storeActivities = storeActivities.slice(0, 100)//keep last 20
+		storeActivities = storeActivities.slice(0, 200)//keep last 20
 
-		w.log.info('Saveing up to 50 activities. This time it is ' + storeActivities.length + ' activities')
+		w.log.info('Saveing up to 100 activities. This time it is ' + storeActivities.length + ' activities')
 
 		await saveActivities(collections[i].meslug, JSON.stringify(storeActivities))
 
@@ -101,7 +100,8 @@ async function getActivities() {
 		w.log.info('newactivities.length is ' + newactivities.length)
 		
 		for (var m = 0; m < newactivities.length; m++) {
-			w.log.info('type is: ' + newactivities[m].type)
+			await wait(50)
+			w.log.info(newactivities[m].blockTime + ': type is: ' + newactivities[m].type)
 			if (newactivities[m].type === "buyNow") {
 				buys.push(newactivities[m])
 			}
