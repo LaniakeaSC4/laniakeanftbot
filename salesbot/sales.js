@@ -89,8 +89,9 @@ async function getActivities() {
 
 		//loop through new activities and filter down to just the buys]
 		w.log.info('newactivities.length is ' + newactivities.length)
-		w.log.info('newactivities.length[0] is ' + newactivities.length[0])
+		w.log.info('newactivities[0] is ' + newactivities[0])
 		for (var m = 0; m < newactivities.length; m++) {
+			w.log.info('type is: ' + newactivities[m].type)
 			if (newactivities[m].type != "buyNow") {
 				newactivities.splice(newactivities[m],1)
 			}
