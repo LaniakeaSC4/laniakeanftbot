@@ -67,7 +67,7 @@ async function getActivities() {
 		var newactivities = magicactivities
 		w.log.info('typeof newactivities: ' + typeof newactivities)
 		w.log.info('length of newactivities is: ' + newactivities.length)
-		w.log.info('signature 0 is: ' + newactivities[0].signature)
+		w.log.info('tokenMint 0 is: ' + newactivities[0].tokenMint)
 		//
 
 		//cut recieved activities down to just the new ones
@@ -76,13 +76,15 @@ async function getActivities() {
 			await wait(50)
 			for (var k = 0; k < oldactivities.length; k++) {
 				try {
-					if (newactivities[j].signature === oldactivities[k].signature || newactivities[j].type != "buyNow") {
-						w.log.info('Splicing ' + newactivities[j].signature + ' as it was a signature match or type wasnt buynow. Type is: ' + newactivities[j].type)
+					if (((newactivities[j].tokenMint === oldactivities[k].tokenMint) && (newactivities[j].blockTime === oldactivities[k].blockTime)) || newactivities[j].type != "buyNow") {
+						w.log.info('Splicing ' + newactivities[j].tokenMint + ' as it was a tokenMint match or type wasnt buynow. Type is: ' + newactivities[j].type)
 						newactivities.splice(j, 1)
 						w.log.info('newactivities length is: ' + newactivities.length)
 						break
-					}//end if
-				} catch { w.log.info('newactivities[j].signature is: ' + newactivities[j]?.signature + ". oldactivities[k].signature is: " + oldactivities[k]?.signature) }
+					} else {
+						w.log.info(newactivities[j].tokenMint + ' didnt get filtered is it new?')
+					}
+				} catch { w.log.info('newactivities[j].tokenMint is: ' + newactivities[j]?.tokenMint + ". oldactivities[k].tokenMint is: " + oldactivities[k]?.tokenMint) }
 			}//end for each old avtivities
 		}//end for each recieved activity
 
