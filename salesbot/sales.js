@@ -1,3 +1,6 @@
+var discord = require('../clients/discordclient.js')
+const client = discord.getClient()
+
 const w = require('../tools/winston.js')
 const https = require('https')
 var db = require('../clients/pgclient.js')
@@ -131,8 +134,31 @@ async function getActivities() {
 
 		for (var l = 0; l < collections[i].servers.data.length; l++) {//for each server signed up to that collection
 			w.log.info(JSON.stringify(collections[i].servers.data[l]))
-		}
-
+			
+			for (var m = 0; m < newSales.length;m++){
+			try {
+		const channel = await client.channels.fetch(collections[i].servers.data[l].channel)
+		channel.send({
+			embeds: [
+				{
+					"title": newSales[m].collection + ' ' + newSales[m].price,
+					"thumbnail": {
+						"url": newSales[m].image,
+						"height": 75,
+						"width": 75
+					},
+					"footer": {
+						"text": "D: https://discord.gg/CgF7neAte2 | W: nftsniperbot.xyz"
+					},
+				}
+			]//end embed
+		}).catch((err) => { w.log.error('there was a message send error: ' + err) })//end message send
+	} catch (err) { w.log.error('there was an nft sending error. Perhaps channel deleted? Error was: ' + err) }
+			
+			
+			} 
+			await wait(1000)
+}//end for each new sale
 		await wait(2000)
 
 	}
