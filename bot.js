@@ -50,7 +50,7 @@ client.on('ready', async () => {
   const sales = require('./salesbot/sales.js')
   var job_salesbot = new CronJob('*/5 * * * *', function () {
     w.log.info('Cron: sales')
-    await sales.getActivities()
+    sales.getActivities()
   }, null, true)
 
 })//end client.on Ready
