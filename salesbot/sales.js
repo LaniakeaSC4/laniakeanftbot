@@ -129,9 +129,19 @@ async function getActivities() {
 						embeds: [
 							{
 								"title": tokendetails.name + ' sold for ' + newSales[m].price + 'SOL',
-								"thumbnail": {
-									"url": newSales[m].image,
-								},
+								"image": newSales[m].image,
+													"fields": [
+													  {
+							"name": "👛 __Transaction Details__",
+							"value": "Buyer; \nSeller: ",
+							"inline": false
+						}, 
+						{
+							"name": "🎯 __Collection Details__",
+							"value": "collection stats",
+							"inline": false
+						},
+					],
 								"footer": {
 									"text": "D: https://discord.gg/CgF7neAte2 | W: nftsniperbot.xyz"
 								},
