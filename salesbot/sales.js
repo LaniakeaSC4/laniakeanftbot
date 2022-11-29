@@ -64,14 +64,11 @@ async function getActivities() {
 	var collections = await sqlGetCollections()
 
 	for (var i = 0; i < collections.length; i++) {//for each sql row (collection)
-		w.log.info(collections[i].meslug)
+		
 		//get activities
 		var magicactivities = await getMEactivities(collections[i].meslug, 100)
 		var newactivities = magicactivities
-		w.log.info('typeof newactivities: ' + typeof newactivities)
-		w.log.info('length of newactivities is: ' + newactivities.length)
-		w.log.info('tokenMint 0 is: ' + newactivities[0].tokenMint)
-		//
+		w.log.info(collections[i].meslug + ': length of newactivities is: ' + newactivities.length)
 
 		var salesActivities = []
 		for (var s = 0; s < newactivities.length; s++) {
@@ -80,8 +77,7 @@ async function getActivities() {
 				salesActivities.push(newactivities[s])
 			}
 		}
-		w.log.info('salesactivities.length is: ' + salesActivities.length)
-		w.log.info(JSON.stringify(salesActivities[0]))
+		w.log.info(collections[i].meslug + ': salesactivities.length is: ' + salesActivities.length)
 
 		var oldactivities = collections[i].me_activities
 		var newSales = []
@@ -91,11 +87,11 @@ async function getActivities() {
 			for (var k = 0; k < oldactivities.length; k++) {
 				try {
 					if (oldactivities[k].findkey === salesActivities[j].findkey) {
-						w.log.info('Matched: ' + oldactivities[k].findkey)
+						//w.log.info('Matched: ' + oldactivities[k].findkey)
 						found = true
 						continue newactivities
 					} else {
-						w.log.info('did not match ' + salesActivities[j].findkey + ' is it new?')
+						//w.log.info('did not match ' + salesActivities[j].findkey + ' is it new?')
 					}
 				} catch { w.log.info('newactivities[j].tokenMint is: ' + newactivities[j]?.tokenMint + ". oldactivities[k].tokenMint is: " + oldactivities[k]?.tokenMint) }
 			}//end for each old avtivities
@@ -104,32 +100,20 @@ async function getActivities() {
 			}
 		}//end for each recieved activity
 
-		w.log.info('length of newSales is: ' + newSales.length)
+		w.log.info(collections[i].meslug + ': length of newSales is: ' + newSales.length)
 		if (oldactivities.length > 0) {
 			//add newactivities to oldactivities
 			var storeActivities = newSales.concat(oldactivities)//add actual new ones to old ones
 			storeActivities = storeActivities.slice(0, 200)//keep last 20
 
-			w.log.info('Saveing up to 200 activities. This time it is ' + storeActivities.length + ' activities')
+			w.log.info(collections[i].meslug + ': saveing up to 200 activities. This time it is ' + storeActivities.length + ' activities')
 
 			await saveActivities(collections[i].meslug, JSON.stringify(storeActivities))
 		} else {
 			await saveActivities(collections[i].meslug, JSON.stringify(salesActivities))
 		}
-		/*
-				//loop through new activities and filter out the buys
-				var buys = []
-				w.log.info('newactivities.length is ' + newactivities.length)
-				
-				for (var m = 0; m < newactivities.length; m++) {
-					await wait(50)
-					w.log.info(newactivities[m].blockTime + ': type is: ' + newactivities[m].type)
-					if (newactivities[m].type === "buyNow") {
-						buys.push(newactivities[m])
-					}
-				}
-		*/
-		w.log.info('These are the new buys:')
+
+		w.log.info(collections[i].meslug + ': these are the new buys:')
 		w.log.info(JSON.stringify(newSales))
 
 		for (var l = 0; l < collections[i].servers.data.length; l++) {//for each server signed up to that collection
@@ -141,11 +125,9 @@ async function getActivities() {
 					channel.send({
 						embeds: [
 							{
-								"title": newSales[m].collection + ' ' + newSales[m].price,
+								"title": "collection: " + newSales[m].collection + '. Price: ' + newSales[m].price,
 								"thumbnail": {
 									"url": newSales[m].image,
-									"height": 75,
-									"width": 75
 								},
 								"footer": {
 									"text": "D: https://discord.gg/CgF7neAte2 | W: nftsniperbot.xyz"
