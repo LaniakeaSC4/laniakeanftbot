@@ -6,6 +6,8 @@ const https = require('https')
 var db = require('../clients/pgclient.js')
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
+const magicEden = require('../tools/magicedenRPC.js')
+
 async function sqlGetCollections() {
 	return new Promise((resolve, reject) => {
 		var pgclient = db.getClient()
@@ -120,12 +122,13 @@ async function getActivities() {
 			w.log.info(JSON.stringify(collections[i].servers.data[l]))
 
 			for (var m = 0; m < newSales.length; m++) {
+			  var tokendetails = await magicEden.getTokenDetails(newSales[m].tokenMint)
 				try {
 					const channel = await client.channels.fetch(collections[i].servers.data[l].channel)
 					channel.send({
 						embeds: [
 							{
-								"title": "collection: " + newSales[m].collection + '. Price: ' + newSales[m].price,
+								"title": tokendetails.name + ' sold for ' + newSales[m].price + 'SOL',
 								"thumbnail": {
 									"url": newSales[m].image,
 								},
@@ -136,8 +139,9 @@ async function getActivities() {
 						]//end embed
 					}).catch((err) => { w.log.error('there was a message send error: ' + err) })//end message send
 				} catch (err) { w.log.error('there was an nft sending error. Perhaps channel deleted? Error was: ' + err) }
+				await wait(1000)
 			}
-			await wait(1000)
+			
 		}//end for each new sale
 		await wait(2000)
 	}
