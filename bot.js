@@ -47,7 +47,7 @@ client.on('ready', async () => {
   }, null, true)
   
   const sales = require('./salesbot/sales.js')
-  setInterval(sales.getActivities(),300000)
+  setInterval(await sales.getActivities(),300000)
 
 })//end client.on Ready
 
