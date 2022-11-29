@@ -46,8 +46,12 @@ client.on('ready', async () => {
     collection_stats.updateStats()
   }, null, true)
   
-  const sales = require('./salesbot/sales.js')
-  setInterval(await sales.getActivities(),300000)
+  //sales bot
+const sales = require('./salesbot/sales.js')
+var job_salesbot = new CronJob('*/5 * * * *', function() {
+  w.log.info('Cron: sales')
+  sales.getActivities()
+}, null, true)
 
 })//end client.on Ready
 
