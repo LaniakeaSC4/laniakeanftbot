@@ -129,7 +129,7 @@ async function getActivities() {
 						embeds: [
 							{
 								"title": tokendetails.name + ' sold for ' + newSales[m].price + 'SOL',
-								"image": newSales[m].image,
+								"image": {"url" : newSales[m].image} ,
 													"fields": [
 													  {
 							"name": "👛 __Transaction Details__",
